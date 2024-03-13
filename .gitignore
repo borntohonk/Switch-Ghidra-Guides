@@ -1,0 +1,8 @@
+firmware/**
+*.zip
+*.kip1
+*.nso0
+Atmosphere_Loader_Patch/
+Atmosphere_Loader_Patch/**
+scripts/__pycache__/
+scripts/__pycache__/**
