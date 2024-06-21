@@ -8,12 +8,17 @@ import os
 import argparse
 
 argParser = argparse.ArgumentParser()
+argParser.add_argument("-l", "--location", help="firmware folder location")
 argParser.add_argument("-f", "--firmware", help="firmware version number")
 args = argParser.parse_args()
 version = "%s" % args.firmware
+location = "%s" % args.location
 
 if version == "None":
     version = "NO-VERSION-PROVIDED"
+
+if location == "None":
+    location = "firmware"
 
 print("# initiating keygen if needed, or if required root keys exist")
 prod_keys = os.path.expanduser('~/.switch/prod.keys')
@@ -21,9 +26,9 @@ with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'mariko_bek' in check_key:
             print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage")
-            subprocess.run('hactoolnet -t switchfs firmware --title 0100000000000819 --romfsdir firmware/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-            subprocess.run('hactoolnet -t pk11 firmware/titleid/0100000000000819/romfs/a/package1 --outdir firmware/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
-            with open('firmware/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
+            subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+            subprocess.run(f'hactoolnet -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+            with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
                 secmon_data = decrypted_bin.read()
                 result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
                 patch = '%06X' % (result.end() + 0x32)
@@ -57,30 +62,30 @@ with open(prod_keys, 'r') as keycheck:
         
         
 print('# Extracting ES')
-subprocess.run('hactoolnet -t switchfs firmware --title 0100000000000033 --exefsdir firmware/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile('firmware/titleid/0100000000000033/exefs/main', 'compressed_es.nso0')
+subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
+shutil.copyfile(f'{location}/titleid/0100000000000033/exefs/main', 'compressed_es.nso0')
 
 print('# Extracting NIFM')
-subprocess.run('hactoolnet -t switchfs firmware --title 010000000000000f --exefsdir firmware/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile('firmware/titleid/010000000000000f/exefs/main', 'compressed_nifm.nso0')
+subprocess.run(f'hactoolnet -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
+shutil.copyfile(f'{location}/titleid/010000000000000f/exefs/main', 'compressed_nifm.nso0')
 
 print('# Extracting NIM')
-subprocess.run('hactoolnet -t switchfs firmware --title 0100000000000025 --exefsdir firmware/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile('firmware/titleid/0100000000000025/exefs/main', 'compressed_nim.nso0')
+subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
+shutil.copyfile(f'{location}/titleid/0100000000000025/exefs/main', 'compressed_nim.nso0')
 
 print('# Extracting fat32')
-subprocess.run('hactoolnet -t switchfs firmware --title 0100000000000819 --romfsdir firmware/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run('hactoolnet -t pk21 firmware/titleid/0100000000000819/romfs/nx/package2 --ini1dir firmware/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run('hactoolnet -t kip1 firmware/titleid/0100000000000819/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_fat32.kip1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t kip1 {location}titleid/0100000000000819/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_fat32.kip1', stdout = subprocess.DEVNULL)
 fat32compressed = 'compressed_fat32.kip1'
-shutil.copyfile('firmware/titleid/0100000000000819/romfs/nx/ini1/FS.kip1', fat32compressed)
+shutil.copyfile(f'{location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1', fat32compressed)
 
 print('# Extracting exfat')
-subprocess.run('hactoolnet -t switchfs firmware --title 010000000000081b --romfsdir firmware/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run('hactoolnet -t pk21 firmware/titleid/010000000000081b/romfs/nx/package2 --ini1dir firmware/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run('hactoolnet -t kip1 firmware/titleid/010000000000081b/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_exfat.kip1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t kip1 {location}/titleid/010000000000081b/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_exfat.kip1', stdout = subprocess.DEVNULL)
 exfatcompressed = 'compressed_exfat.kip1'
-shutil.copyfile('firmware/titleid/010000000000081b/romfs/nx/ini1/FS.kip1', exfatcompressed)
+shutil.copyfile(f'{location}/titleid/010000000000081b/romfs/nx/ini1/FS.kip1', exfatcompressed)
 
 
 escompressed = f'compressed_es.nso0'
