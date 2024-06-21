@@ -1,6 +1,8 @@
 This repository contains reverse engineering notes and guides for educational purposes, using open source tools such as ghidra to pry into binaries for the Nintendo Switch. It also contains basic methodology on how to operate ghidra with the intent to inspect "ARM" binaries that run on the Nintendo Switch.
 
-This repository does not host, nor contain guides or scripts to circumvent security measures to safeguard digital assets.
+This repository does not host, nor contain guides that assist with circumventing security measures that safeguard digital assets.
+
+All material exist purely for research reference.
 
 * Ghidra/Patch making tutorial:
   - Part 1A detailing how to set up ghidra and the switch loader for windows [(link)](guides/Part1A-WindowsSetup.MD)
