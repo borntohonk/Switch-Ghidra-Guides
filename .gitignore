@@ -6,3 +6,6 @@ Atmosphere_Loader_Patch/
 Atmosphere_Loader_Patch/**
 scripts/__pycache__/
 scripts/__pycache__/**
+patches/atmosphere/exefs_patches/nifm_ctest/*.ips
+patches/atmosphere/exefs_patches/ams_blanker_fix/*.ips
+patches/atmosphere/exefs_patches/es_patches/*.ips
