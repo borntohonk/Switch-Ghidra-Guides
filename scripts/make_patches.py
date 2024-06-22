@@ -37,7 +37,7 @@ with open(prod_keys, 'r') as keycheck:
                 incremented_revision = int(revision) - 0x1
                 mariko_master_kek_source_key_revision = f'mariko_master_kek_source_{incremented_revision}'
                 if mariko_master_kek_source_key_revision in check_key:
-                    print(f'# new mariko_master_kek_source already exists in prod.keys at {prod_keys}, no need to initiate keygen. Exiting.')
+                    print(f'# new mariko_master_kek_source already exists in your keyfile at {prod_keys}, no need to initiate keygen. Continuing with making patches.')
                     package1.close()
                 else:
                     package1.close()
