@@ -1,7 +1,7 @@
 import re
 import subprocess
 import os
-import argeparse
+import argparse
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
