@@ -10,9 +10,11 @@ import argparse
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location")
 argParser.add_argument("-f", "--firmware", help="firmware version number")
+argParser.add_argument("-k", "--keys", help="keyfile to use")
 args = argParser.parse_args()
 version = "%s" % args.firmware
 location = "%s" % args.location
+prod_keys = "%s" % args.keys
 
 if version == "None":
     version = "NO-VERSION-PROVIDED"
@@ -20,8 +22,10 @@ if version == "None":
 if location == "None":
     location = "firmware"
 
+if prod_keys == "None":
+    prod_keys = os.path.expanduser('~/.switch/prod.keys')
+
 print("# initiating keygen if needed, or if required root keys exist")
-prod_keys = os.path.expanduser('~/.switch/prod.keys')
 with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'mariko_bek' in check_key:

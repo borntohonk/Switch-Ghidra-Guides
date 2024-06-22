@@ -5,11 +5,16 @@ import argparse
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
+argParser.add_argument("-k", "--keys", help="keyfile to use")
 args = argParser.parse_args()
 firmware = "%s" % args.firmware
+prod_keys = "%s" % args.keys
 
 if firmware == "None":
     firmware = "firmware"
+
+if prod_keys == "None":
+    prod_keys = os.path.expanduser('~/.switch/prod.keys')
 
 prod_keys = os.path.expanduser('~/.switch/prod.keys')
 with open(prod_keys, 'r') as keycheck:
