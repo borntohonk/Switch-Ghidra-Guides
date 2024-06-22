@@ -16,7 +16,6 @@ if firmware == "None":
 if prod_keys == "None":
     prod_keys = os.path.expanduser('~/.switch/prod.keys')
 
-prod_keys = os.path.expanduser('~/.switch/prod.keys')
 with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'package1_key_' in check_key:
