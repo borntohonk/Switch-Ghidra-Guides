@@ -20,9 +20,9 @@ with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'package1_key_' in check_key:
             print('# Extracting ROMFS BootImagePackage from provided firmware files.')
-            subprocess.run(f'hactoolnet --keyset prod.keys -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+            subprocess.run(f'hactoolnet --keyset {prod_keys} -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
             print('# Extracting Package1 from ROMFS')
-            subprocess.run(f'hactoolnet --keyset prod.keys -t pk11 0100000000000819/romfs/nx/package1 --outdir 0100000000000819/romfs/nx/pkg1', stdout = subprocess.DEVNULL)
+            subprocess.run(f'hactoolnet --keyset {prod_keys} -t pk11 0100000000000819/romfs/nx/package1 --outdir 0100000000000819/romfs/nx/pkg1', stdout = subprocess.DEVNULL)
             print('# Checking if a new master_kek_source is found in Package1.')
             with open('0100000000000819/romfs/nx/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
                 secmon_data = decrypted_bin.read()

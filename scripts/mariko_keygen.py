@@ -20,7 +20,7 @@ with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'mariko_bek' in check_key:
             print('# Extracting ROMFS BootImagePackage from provided firmware files.')
-            subprocess.run(f'hactoolnet --keyset prod.keys -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+            subprocess.run(f'hactoolnet --keyset {prod_keys} -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
             with open('0100000000000819/romfs/a/package1', 'rb') as package1:
                 byte_alignment = package1.seek(0x150)
                 revision = package1.read(0x01).hex().upper()
@@ -33,7 +33,7 @@ with open(prod_keys, 'r') as keycheck:
                 else:
                     package1.close()
                     print('# Extracting Package1 from ROMFS')
-                    subprocess.run(f'hactoolnet --keyset prod.keys -t pk11 0100000000000819/romfs/a/package1 --outdir 0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+                    subprocess.run(f'hactoolnet --keyset {prod_keys} -t pk11 0100000000000819/romfs/a/package1 --outdir 0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
                     print('# Checking if a new mariko_master_kek_source is found in Package1.')
                     with open('0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
                         secmon_data = decrypted_bin.read()
