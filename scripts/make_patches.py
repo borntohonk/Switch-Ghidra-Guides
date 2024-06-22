@@ -27,41 +27,48 @@ with open(prod_keys, 'r') as keycheck:
     if 'mariko_bek' in check_key:
             print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage")
             subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-            subprocess.run(f'hactoolnet -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
-            with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
-                secmon_data = decrypted_bin.read()
-                result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
-                patch = '%06X' % (result.end() + 0x32)
-                byte_alignment = decrypted_bin.seek(result.end() + 0x32)
-                mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
-                if mariko_master_kek_source_key in check_key:
-                    print(f'Key already exists in prod.keys at {prod_keys}, no need to initiate keygen')
-                    keycheck.close()
+            with open('0100000000000819/romfs/a/package1', 'rb') as package1:
+                byte_alignment = package1.seek(0x150)
+                revision = package1.read(0x01).hex().upper()
+                incremented_revision = int(revision) - 0x1
+                mariko_master_kek_source_key_revision = f'mariko_master_kek_source_{incremented_revision}'
+                if mariko_master_kek_source_key_revision in check_key:
+                    print(f'# new mariko_master_kek_source already exists in prod.keys at {prod_keys}, no need to initiate keygen. Exiting.')
+                    package1.close()
                 else:
-                    byte_alignment = decrypted_bin.seek(0x150)
-                    revision = decrypted_bin.read(0x01).hex().upper()
-                    incremented_revision = int(revision) - 0x1
-                    mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
-                    if 'mariko_kek' in check_key:
-                        keycheck.close()
-                        os.rename(prod_keys, 'temp.keys')
-                        with open('temp.keys', 'a') as temp_keys:
-                            temp_keys.write(f'\n')
-                            temp_keys.write(f'{mariko_master_kek_source}')
-                            temp_keys.close()
-                            with open(prod_keys, 'w') as new_prod_keys:
-                                subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
-                                new_prod_keys.close()
-                                os.remove('temp.keys')
-                                print(f'# Keygen completed and output to {prod_keys}')
-                    else:
-                        keycheck.close()
-                        print('mariko_kek is missing, we cannot derive master keys, keygen will not yield viable keyset.')
+                    package1.close()
+                    print('# Extracting package1')
+                    subprocess.run(f'hactoolnet -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+                    with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
+                        secmon_data = decrypted_bin.read()
+                        result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
+                        patch = '%06X' % (result.end() + 0x32)
+                        byte_alignment = decrypted_bin.seek(result.end() + 0x32)
+                        mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
+                        byte_alignment = decrypted_bin.seek(0x150)
+                        revision = decrypted_bin.read(0x01).hex().upper()
+                        incremented_revision = int(revision) - 0x1
+                        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
+                        if 'mariko_kek' in check_key:
+                            keycheck.close()
+                            os.rename(prod_keys, 'temp.keys')
+                            with open('temp.keys', 'a') as temp_keys:
+                                temp_keys.write(f'\n')
+                                temp_keys.write(f'{mariko_master_kek_source}')
+                                temp_keys.close()
+                                with open(prod_keys, 'w') as new_prod_keys:
+                                    subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
+                                    new_prod_keys.close()
+                                    os.remove('temp.keys')
+                                    print(f'# Keygen completed and output to {prod_keys}')
+                        else:
+                            keycheck.close()
+                            print('mariko_kek is missing, we cannot derive master keys, keygen will not yield viable keyset.')
     else:
         keycheck.close()
         print('mariko_kek keys not found, cannot proceed with keygen as package1 cannot be opened')
         
-        
+
 print('# Extracting ES')
 subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
 shutil.copyfile(f'{location}/titleid/0100000000000033/exefs/main', 'compressed_es.nso0')
@@ -77,7 +84,7 @@ shutil.copyfile(f'{location}/titleid/0100000000000025/exefs/main', 'compressed_n
 print('# Extracting fat32')
 subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
 subprocess.run(f'hactoolnet -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -t kip1 {location}titleid/0100000000000819/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_fat32.kip1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -t kip1 {location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_fat32.kip1', stdout = subprocess.DEVNULL)
 fat32compressed = 'compressed_fat32.kip1'
 shutil.copyfile(f'{location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1', fat32compressed)
 

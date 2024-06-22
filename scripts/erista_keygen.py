@@ -25,32 +25,27 @@ with open(prod_keys, 'r') as keycheck:
                 result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
                 byte_alignment = decrypted_bin.seek(result.end() + 0x32)
                 erista_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
-                if erista_master_kek_source_key in check_key:
+                byte_alignment = decrypted_bin.seek(0x1e)
+                revision = decrypted_bin.read(0x01).hex().upper()
+                incremented_revision = int(revision) - 0x1
+                erista_master_kek_source = f'master_kek_source_{incremented_revision}       = ' + erista_master_kek_source_key
+                if 'tsec_root_key_' in check_key:
                     keycheck.close()
-                    print(f'# new master_kek_source already exists in prod.keys at {prod_keys}, no need to initiate keygen. Exiting.')
-                    exit()
+                    os.rename(prod_keys, 'temp.keys')
+                    with open('temp.keys', 'a') as temp_keys:
+                        temp_keys.write(f'\n')
+                        temp_keys.write(f'{erista_master_kek_source}')
+                        temp_keys.close()
+                        with open(prod_keys, 'w') as new_prod_keys:
+                            subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
+                            new_prod_keys.close()
+                            os.remove('temp.keys')
+                            print(f'# Keygen completed and output to {prod_keys}, exiting.')
+                            exit()
                 else:
-                    byte_alignment = decrypted_bin.seek(0x1e)
-                    revision = decrypted_bin.read(0x01).hex().upper()
-                    incremented_revision = int(revision) - 0x1
-                    erista_master_kek_source = f'master_kek_source_{incremented_revision}       = ' + erista_master_kek_source_key
-                    if 'tsec_root_key_' in check_key:
-                        keycheck.close()
-                        os.rename(prod_keys, 'temp.keys')
-                        with open('temp.keys', 'a') as temp_keys:
-                            temp_keys.write(f'\n')
-                            temp_keys.write(f'{erista_master_kek_source}')
-                            temp_keys.close()
-                            with open(prod_keys, 'w') as new_prod_keys:
-                                subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
-                                new_prod_keys.close()
-                                os.remove('temp.keys')
-                                print(f'# Keygen completed and output to {prod_keys}, exiting.')
-                                exit()
-                    else:
-                        keycheck.close()
-                        print(f'# tsec_root_key_%% is missing in {prod_keys}, we cannot derive a new master_kek from the new master_kek_source, keygen will not yield new keys. Exiting.')
-                        exit()
+                    keycheck.close()
+                    print(f'# tsec_root_key_%% is missing in {prod_keys}, we cannot derive a new master_kek from the new master_kek_source, keygen will not yield new keys. Exiting.')
+                    exit()
     else:
         keycheck.close()
         print(f'# package1_key_%% is missing in {prod_keys}, we cannot proceed with keygen as package1 cannot be opened for the purpose of obtaining master_kek_source. Exiting.')
