@@ -30,8 +30,9 @@ with open(prod_keys, 'r') as keycheck:
                     print(f'# new mariko_master_kek_source already exists in prod.keys at {prod_keys}, no need to initiate keygen. Exiting.')
                     exit()
                 else:
-                    revision = re.findall(r'mariko_master_kek_source_\w{2}', check_key)
-                    incremented_revision = (int(max(revision).split('mariko_master_kek_source_')[1]) + 0x1)
+                    byte_alignment = decrypted_bin.seek(0x150)
+                    revision = decrypted_bin.read(0x01).hex().upper()
+                    incremented_revision = int(revision) - 0x1
                     mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
                     if 'mariko_kek' in check_key:
                         keycheck.close()
