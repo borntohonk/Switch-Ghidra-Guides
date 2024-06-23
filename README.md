@@ -32,8 +32,8 @@ All material exist purely for research reference.
     * Usage: do "python scripts/atmosphere_loader_patch.py" and it will automatically download, make the patch for loader, and then clean up after itself. [atmosphere_loader_patch.py](scripts/atmosphere_loader_patch.py)
 
   - Python script to batch create patches for provided firmware files.
-    * Usage: put firmware files in a folder named firmware, or supply a location with -l or --location, supply keys with -k or --keys, supply a firmware version number with --firmware or -f (this number is used by hekate patches, and changelog purposes)
-    * example usage: "python scripts/make_patches.py --location temp_folder --firmware 18.1.0 --keys prod.keys"
+    * Usage: put firmware files in a folder named firmware, or supply a location with -l or --location, supply keys with -k or --keys., wotherise it will default to ~/.switch/prod.keys
+    * example usage: "python scripts/make_patches.py --location temp_folder --keys prod.keys"
     * If the end user has mariko_bek and mariko_kek (obtainable with the release.nfo for scene release of "Marvel's Spider-Man: Miles Morales" by BigBlueBox), keygen will also be attempted to be performed.
     * [make_patches.py](scripts/make_patches.py)
 

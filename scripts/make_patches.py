@@ -9,15 +9,10 @@ import argparse
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location")
-argParser.add_argument("-f", "--firmware", help="firmware version number")
 argParser.add_argument("-k", "--keys", help="keyfile to use")
 args = argParser.parse_args()
-version = "%s" % args.firmware
 location = "%s" % args.location
 prod_keys = "%s" % args.keys
-
-if version == "None":
-    version = "NO-VERSION-PROVIDED"
 
 if location == "None":
     location = "firmware"
@@ -25,13 +20,13 @@ if location == "None":
 if prod_keys == "None":
     prod_keys = os.path.expanduser('~/.switch/prod.keys')
 
-print("# initiating keygen if needed, or if required root keys exist")
+print("# initiating keygen if needed and mariko keys and master_key_00 are present")
 with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'mariko_bek' in check_key:
             print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage")
-            subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-            with open('0100000000000819/romfs/a/package1', 'rb') as package1:
+            subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+            with open(f'{location}/titleid/0100000000000819/romfs/a/package1', 'rb') as package1:
                 byte_alignment = package1.seek(0x150)
                 revision = package1.read(0x01).hex().upper()
                 incremented_revision = int(revision) - 0x1
@@ -42,7 +37,7 @@ with open(prod_keys, 'r') as keycheck:
                 else:
                     package1.close()
                     print('# Extracting package1')
-                    subprocess.run(f'hactoolnet -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+                    subprocess.run(f'hactoolnet -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
                     with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
                         secmon_data = decrypted_bin.read()
                         result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
@@ -71,42 +66,46 @@ with open(prod_keys, 'r') as keycheck:
     else:
         keycheck.close()
         print('mariko_kek keys not found, cannot proceed with keygen as package1 cannot be opened')
-        
+
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
+with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
+        byte_alignment = get_version.seek(0x68)
+        read_version_number = get_version.read(0x6).hex().upper()
+        version = (bytes.fromhex(read_version_number).decode('utf-8'))
+        print(f"# Firmware version number is: {version}")
+
+escompressed = f'{location}/titleid/0100000000000033/exefs/main'
+nifmcompressed = f'{location}/titleid/010000000000000f/exefs/main'
+nimcompressed = f'{location}/titleid/0100000000000025/exefs/main'
+esuncompressed = f'{location}/titleid/0100000000000033/exefs/u_main'
+nifmuncompressed = f'{location}/titleid/010000000000000f/exefs/u_main'
+nimuncompressed = f'{location}/titleid/0100000000000025/exefs/u_main'
+fat32compressed = f'{location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1'
+exfatcompressed = f'{location}/titleid/010000000000081b/romfs/nx/ini1/FS.kip1'
+fat32uncompressed = f'{location}/titleid/0100000000000819/romfs/nx/ini1/u_FS.kip1'
+exfatuncompressed = f'{location}/titleid/010000000000081b/romfs/nx/ini1/u_FS.kip1'
 
 print('# Extracting ES')
-subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile(f'{location}/titleid/0100000000000033/exefs/main', 'compressed_es.nso0')
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {escompressed} --uncompressed={esuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting NIFM')
-subprocess.run(f'hactoolnet -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile(f'{location}/titleid/010000000000000f/exefs/main', 'compressed_nifm.nso0')
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {nifmcompressed} --uncompressed={nifmuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting NIM')
-subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
-shutil.copyfile(f'{location}/titleid/0100000000000025/exefs/main', 'compressed_nim.nso0')
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {nimcompressed} --uncompressed={nimuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting fat32')
-subprocess.run(f'hactoolnet -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -t kip1 {location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_fat32.kip1', stdout = subprocess.DEVNULL)
-fat32compressed = 'compressed_fat32.kip1'
-shutil.copyfile(f'{location}/titleid/0100000000000819/romfs/nx/ini1/FS.kip1', fat32compressed)
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -k {prod_keys} -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -k {prod_keys} -t kip1 {fat32compressed} --uncompressed {fat32uncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting exfat')
-subprocess.run(f'hactoolnet -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -t kip1 {location}/titleid/010000000000081b/romfs/nx/ini1/FS.kip1 --uncompressed uncompressed_exfat.kip1', stdout = subprocess.DEVNULL)
-exfatcompressed = 'compressed_exfat.kip1'
-shutil.copyfile(f'{location}/titleid/010000000000081b/romfs/nx/ini1/FS.kip1', exfatcompressed)
-
-
-escompressed = f'compressed_es.nso0'
-nifmcompressed = f'compressed_nifm.nso0'
-nimcompressed = f'compressed_nim.nso0'
-exfatuncompressed = f'uncompressed_exfat.kip1'
-fat32uncompressed = f'uncompressed_fat32.kip1'
-exfatcompressed = f'compressed_exfat.kip1'
-fat32compressed = f'compressed_fat32.kip1'
+subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -k {prod_keys} -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'hactoolnet -k {prod_keys} -t kip1 {exfatcompressed} --uncompressed {exfatuncompressed}', stdout = subprocess.DEVNULL)
 
 def get_es_build_id():
     with open(escompressed, 'rb') as f:
@@ -140,8 +139,7 @@ if es_patch in os.listdir('patches/atmosphere/exefs_patches/es_patches'):
     changelog.write(f'ES related patch changelog for {version}:\n')
     changelog.write(f'ES patch for version {version} already exists as an .ips patch, and the build id is: {esbuildid}\n\n')
 else:
-    subprocess.run('hactool -t nso0 compressed_es.nso0 --uncompressed=uncompressed_es.nso0', stdout = subprocess.DEVNULL)
-    with open('uncompressed_es.nso0', 'rb') as decompressed_es_nso:
+    with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
         read_data = decompressed_es_nso.read()
         result = re.search(rb'.\x00\x91.{2}\x00\x94\xa0\x83\x00\xd1.{2}\xff\x97', read_data)
         if not result:
@@ -154,6 +152,13 @@ else:
             changelog.write(f'ES related patch changelog for {version}:\n')
             changelog.write(f'{version} ES build-id: {esbuildid}\n')
             changelog.write(f'{version} ES offset and patch at: {patch}\n\n')
+            changelog.write(f'{version} ES related patch for atmosphere fork\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry DisableTicketVerificationPatches_{version}[] = {{\n')
+            changelog.write(f'    {{ 0x{offset} ' + '"\\xE0\\x03\\x1F\\xAA"' + f', 4 }},\n')
+            changelog.write(f'}};\n')
+            changelog.write(f'\n')
+            changelog.write(f'    {{ ParseModuleId("{get_es_build_id()}"), util::size(DisableTicketVerificationPatches_{version}), DisableTicketVerificationPatches_{version} }}, /* {version} */\n')
+            changelog.write(f'\n')
             text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
             text_file.close()
 
@@ -165,8 +170,7 @@ if nifm_patch in os.listdir('patches/atmosphere/exefs_patches/nifm_ctest'):
     changelog.write(f'NIFM CTEST related patch changelog for {version}:\n')
     changelog.write(f'NIFM CTEST patch for version {version} already exists as an .ips patch, and the build id is: {nifmbuildid}\n\n')
 else:
-    subprocess.run('hactool -t nso0 compressed_nifm.nso0 --uncompressed=uncompressed_nifm.nso0', stdout = subprocess.DEVNULL)
-    with open('uncompressed_nifm.nso0', 'rb') as decompressed_nifm_nso:
+    with open(f'{nifmuncompressed}', 'rb') as decompressed_nifm_nso:
         read_data = decompressed_nifm_nso.read()
         result = re.search(rb'.{20}\xf4\x03\x00\xaa.{4}\xf3\x03\x14\xaa\xe0\x03\x14\xaa\x9f\x02\x01\x39\x7f\x8e\x04\xf8', read_data)
         if not result:
@@ -179,6 +183,13 @@ else:
             changelog.write(f'NIFM related patch changelog for {version}:\n')
             changelog.write(f'{version} NIFM CTEST build-id: {nifmbuildid}\n')
             changelog.write(f'{version} NIFM CTEST offset and patch at: {patch}\n\n')
+            changelog.write(f'{version} NIFM related patch for atmosphere fork\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry ForceCommunicationEnabledPatches_{version}[] = {{\n')
+            changelog.write(f'    {{ 0x{offset}, ' + '"\\x00\\x30\\x9A\\xD2\\x00\\x1E\\xA1\\xF2\\x61\\x01\\x00\\xD4\\xE0\\x03\\x1F\\xAA\\xC0\\x03\\x5F\\xD6"' + f', 20 }},\n')
+            changelog.write(f'}};\n')
+            changelog.write(f'\n')
+            changelog.write(f'    {{ ParseModuleId("{get_nifm_build_id()}"), util::size(ForceCommunicationEnabledPatches_{version}), ForceCommunicationEnabledPatches_{version} }}, /* {version} */\n')
+            changelog.write(f'\n')
             text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
             text_file.close()
  
@@ -190,8 +201,7 @@ if nim_patch in os.listdir('patches/atmosphere/exefs_patches/ams_blanker_fix'):
     changelog.write(f'NIM related patch changelog for {version}:\n')
     changelog.write(f'NIM patch for version {version} already exists as an .ips patch, and the build id is: {nimbuildid}\n\n')
 else:
-    subprocess.run('hactool -t nso0 compressed_nim.nso0 --uncompressed=uncompressed_nim.nso0', stdout = subprocess.DEVNULL)     
-    with open('uncompressed_nim.nso0', 'rb') as decompressed_nim_nso:
+    with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
         read_data = decompressed_nim_nso.read()
         result = re.search(rb'\x80\x0f\x00\x35\x1f\x20\x03\xd5', read_data)
         if not result:
@@ -204,6 +214,13 @@ else:
             changelog.write(f'nim related patch changelog for {version}:\n')
             changelog.write(f'{version} nim build-id: {nimbuildid}\n')
             changelog.write(f'{version} nim offset and patch at: {patch}\n\n')
+            changelog.write(f'{version} nim related patch for atmosphere fork\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry AmsProdinfoBlankerFix_{version}[] = {{\n')
+            changelog.write(f'    {{ 0x{offset}, ' + '"\\xE2\\x03\\x1F\\xAA"' + f', 4 }},\n')
+            changelog.write(f'}};\n')
+            changelog.write(f'\n')
+            changelog.write(f'    {{ ParseModuleId("{get_nim_build_id()}"), util::size(AmsProdinfoBlankerFix_{version}), AmsProdinfoBlankerFix_{version} }}, /* {version} */\n')
+            changelog.write(f'\n')
             text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
             text_file.close()
 
@@ -239,6 +256,9 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 hekate_bytes = fat32f.seek(result2.start() - 0x4)
                 fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x104) + ':0x4:' + fat32f.read(0x4).hex().upper() + ',E0031F2A\n')
                 fat32_hekate.close()
+                changelog.write(f'{version} FS-FAT32 related patch for atmosphere fork\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x4) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
         fat32f.close()
 fs_patches.close()
 
@@ -273,6 +293,9 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 hekate_bytes = exfatf.seek(result2.start() - 0x4)
                 exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x104) + ':0x4:' + exfatf.read(0x4).hex().upper() + ',E0031F2A\n')
                 exfat_hekate.close()
+                changelog.write(f'{version} FS-ExFAT related patch for atmosphere fork\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x4) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
         exfatf.close()
 fs_patches.close()
 changelog.close()
