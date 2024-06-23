@@ -2,6 +2,7 @@ import re
 import subprocess
 import os
 import argparse
+import shutil
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
@@ -33,6 +34,7 @@ with open(prod_keys, 'r') as keycheck:
                 revision = decrypted_bin.read(0x01).hex().upper()
                 incremented_revision = int(revision) - 0x1
                 erista_master_kek_source = f'master_kek_source_{incremented_revision}       = ' + erista_master_kek_source_key
+                decrypted_bin.close()
                 if 'tsec_root_key_' in check_key:
                     keycheck.close()
                     os.rename(prod_keys, 'temp.keys')
@@ -45,9 +47,11 @@ with open(prod_keys, 'r') as keycheck:
                             new_prod_keys.close()
                             os.remove('temp.keys')
                             print(f'# Keygen completed and output to {prod_keys}, exiting.')
+                            shutil.rmtree('0100000000000819')
                             exit()
                 else:
                     keycheck.close()
+                    shutil.rmtree('0100000000000819')
                     print(f'# tsec_root_key_%% is missing in {prod_keys}, we cannot derive a new master_kek from the new master_kek_source, keygen will not yield new keys. Exiting.')
                     exit()
     else:
