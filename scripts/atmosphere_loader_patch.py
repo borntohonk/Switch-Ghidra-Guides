@@ -59,7 +59,7 @@ def main():
 
     with open(_C_LOADERKIP_FILE, 'wb') as compressed_loader_file:
         compressed_loader_file.write(loader_kip)
-    os.system(f'./hactoolnet -t kip1 {_C_LOADERKIP_FILE} --uncompressed {_D_LOADERKIP_FILE}')
+    os.system(f'hactoolnet -t kip1 {_C_LOADERKIP_FILE} --uncompressed {_D_LOADERKIP_FILE}')
 
     with open(_D_LOADERKIP_FILE, 'rb') as decompressed_loader_kip:
         loader_data = decompressed_loader_kip.read()
