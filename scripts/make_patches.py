@@ -8,8 +8,8 @@ import os
 import argparse
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("-l", "--location", help="firmware folder location")
-argParser.add_argument("-k", "--keys", help="keyfile to use")
+argParser.add_argument("-l", "--location", help="firmware folder location.")
+argParser.add_argument("-k", "--keys", help="keyfile to use.")
 args = argParser.parse_args()
 location = "%s" % args.location
 prod_keys = "%s" % args.keys
@@ -20,11 +20,11 @@ if location == "None":
 if prod_keys == "None":
     prod_keys = os.path.expanduser('~/.switch/prod.keys')
 
-print("# initiating keygen if needed and mariko keys and master_key_00 are present")
+print("# initiating keygen if needed and mariko keys and master_key_00 are present.")
 with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
-    if 'mariko_bek' in check_key:
-            print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage")
+    if 'master_key_00' in check_key:
+            print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage.")
             subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
             with open(f'{location}/titleid/0100000000000819/romfs/a/package1', 'rb') as package1:
                 byte_alignment = package1.seek(0x150)
@@ -36,36 +36,40 @@ with open(prod_keys, 'r') as keycheck:
                     package1.close()
                 else:
                     package1.close()
-                    print('# Extracting package1')
-                    subprocess.run(f'hactoolnet -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
-                    with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
-                        secmon_data = decrypted_bin.read()
-                        result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
-                        patch = '%06X' % (result.end() + 0x32)
-                        byte_alignment = decrypted_bin.seek(result.end() + 0x32)
-                        mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
-                        byte_alignment = decrypted_bin.seek(0x150)
-                        revision = decrypted_bin.read(0x01).hex().upper()
-                        incremented_revision = int(revision) - 0x1
-                        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
-                        if 'mariko_kek' in check_key:
-                            keycheck.close()
-                            os.rename(prod_keys, 'temp.keys')
-                            with open('temp.keys', 'a') as temp_keys:
-                                temp_keys.write(f'\n')
-                                temp_keys.write(f'{mariko_master_kek_source}')
-                                temp_keys.close()
-                                with open(prod_keys, 'w') as new_prod_keys:
-                                    subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
-                                    new_prod_keys.close()
-                                    os.remove('temp.keys')
-                                    print(f'# Keygen completed and output to {prod_keys}')
-                        else:
-                            keycheck.close()
-                            print('mariko_kek is missing, we cannot derive master keys, keygen will not yield viable keyset.')
+                    if 'mariko_bek' in check_key:
+                        print('# Extracting package1.')
+                        subprocess.run(f'hactoolnet -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+                        with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
+                            secmon_data = decrypted_bin.read()
+                            result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
+                            patch = '%06X' % (result.end() + 0x32)
+                            byte_alignment = decrypted_bin.seek(result.end() + 0x32)
+                            mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
+                            byte_alignment = decrypted_bin.seek(0x150)
+                            revision = decrypted_bin.read(0x01).hex().upper()
+                            incremented_revision = int(revision) - 0x1
+                            mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
+                            if 'mariko_kek' in check_key:
+                                keycheck.close()
+                                os.rename(prod_keys, 'temp.keys')
+                                with open('temp.keys', 'a') as temp_keys:
+                                    temp_keys.write(f'\n')
+                                    temp_keys.write(f'{mariko_master_kek_source}')
+                                    temp_keys.close()
+                                    with open(prod_keys, 'w') as new_prod_keys:
+                                        subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
+                                        new_prod_keys.close()
+                                        os.remove('temp.keys')
+                                        print(f'# Keygen completed and output to {prod_keys}')
+                            else:
+                                keycheck.close()
+                                print('mariko_kek is missing, we cannot derive master keys, keygen will not yield viable keyset.')
+                    else:
+                        keycheck.close()
+                        print('mariko_bek key not found, cannot proceed with keygen as package1 cannot be opened.')
     else:
         keycheck.close()
-        print('mariko_kek keys not found, cannot proceed with keygen as package1 cannot be opened')
+        print('master_key_00 key not found, cannot proceed with keygen as the nca containing package1 cannot be opened.')
 
 subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
 with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
