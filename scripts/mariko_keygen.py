@@ -8,15 +8,19 @@ import hashlib
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
 argParser.add_argument("-k", "--keys", help="Where you want the keys to be saved")
+argParser.add_argument("-d", "--dev", help="Initiates dev keyset keygen", action='store_true')
 args = argParser.parse_args()
 firmware = "%s" % args.firmware
 prod_keys = "%s" % args.keys
+dev = "%s" % args.dev
 
 if firmware == "None":
     firmware = "firmware"
 
-if prod_keys == "None":
-    prod_keys = "prod.keys"
+if prod_keys == "None" and dev == "True":
+    prod_keys = "dev.keys"
+if prod_keys == "None" and dev == "False":
+    prod_keys == "prod.keys"
 
 mariko_bek_key = '6A5DXXXXXXXXXXXXXXXXXXXXXXXXXX' # fill in mariko_bek here
 mariko_kek_key = '4130XXXXXXXXXXXXXXXXXXXXXXXXXX' # fill in mariko_kek here
@@ -52,19 +56,31 @@ with open('temp.keys', 'w') as temp_keys:
     with open('0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
         secmon_data = decrypted_bin.read()
         result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
+        byte_alignment = decrypted_bin.seek(result.end() + 0x22)
+        mariko_master_kek_source_dev_key = decrypted_bin.read(0x10).hex().upper()
         byte_alignment = decrypted_bin.seek(result.end() + 0x32)
         mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
         byte_alignment = decrypted_bin.seek(0x150)
         revision = decrypted_bin.read(0x01).hex().upper()
         incremented_revision = int(revision) - 0x1
         mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_key
+        mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_revision}       = ' + mariko_master_kek_source_dev_key
         decrypted_bin.close()
         with open('temp.keys', 'a') as keygen:
             keygen.write(f'\n')
-            keygen.write(f'{mariko_master_kek_source}')
-            keygen.close()
+            if dev == "False":
+                keygen.write(f'{mariko_master_kek_source}')
+                keygen.close()
+            elif dev == "True":
+                keygen.write(f'{mariko_master_kek_source_dev}')
+                keygen.close()
+
         with open(prod_keys, 'w') as new_prod_keys:
-            subprocess.run(f'hactoolnet --keyset temp.keys -t keygen', stdout=new_prod_keys)
+            if dev == "True":
+                subprocess.run(f'hactoolnet --dev --keyset temp.keys -t keygen', stdout=new_prod_keys)
+                print(f'You just generated a dev keyset, which are only useful for developer ncas written with nnsdk keyset, and they have been output to {prod_keys}')
+            elif dev == "False":
+                subprocess.run(f'hactoolnet --keyset temp.keys -t keygen', stdout=new_prod_keys)
             new_prod_keys.close()
             os.remove('temp.keys')
             print(f'# Keygen completed and output to {prod_keys}, exiting.')
