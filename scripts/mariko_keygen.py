@@ -4,6 +4,7 @@ import argparse
 import os
 import shutil
 import hashlib
+import platform
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
@@ -18,9 +19,21 @@ if firmware == "None":
     firmware = "firmware"
 
 if prod_keys == "None" and dev == "True":
-    prod_keys = "dev.keys"
-if prod_keys == "None" and dev == "False":
-    prod_keys == "prod.keys"
+    keys = "dev.keys"
+elif prod_keys == "None" and dev == "False":
+    keys = "prod.keys"
+else: 
+    keys = prod_keys
+
+if platform.system() == "Windows":
+    hactoolnet = "tools/hactoolnet-windows.exe"
+elif platform.system() == "Linux":
+    hactoolnet = "tools/hactoolnet-linux"
+elif platform.system() == "MacOS":
+    hactoolnet = "tools/hactoolnet-macos"
+else:
+    print(f"Unknown Platform: {platform.system()}, proide your own hactoolnet")
+    hactoolnet = "hactoolnet"
 
 mariko_bek_key = '6A5DXXXXXXXXXXXXXXXXXXXXXXXXXX' # fill in mariko_bek here
 mariko_kek_key = '4130XXXXXXXXXXXXXXXXXXXXXXXXXX' # fill in mariko_kek here
@@ -51,8 +64,8 @@ with open('temp.keys', 'w') as temp_keys:
     temp_keys.write(f'\n')
     temp_keys.write(f'{master_key_00}')
     temp_keys.close()
-    subprocess.run(f'hactoolnet --keyset temp.keys -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-    subprocess.run(f'hactoolnet --keyset temp.keys -t pk11 0100000000000819/romfs/a/package1 --outdir 0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+    subprocess.run(f'{hactoolnet} --keyset temp.keys -t switchfs {firmware} --title 0100000000000819 --romfsdir 0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+    subprocess.run(f'{hactoolnet} --keyset temp.keys -t pk11 0100000000000819/romfs/a/package1 --outdir 0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
     with open('0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
         secmon_data = decrypted_bin.read()
         result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
@@ -75,14 +88,14 @@ with open('temp.keys', 'w') as temp_keys:
                 keygen.write(f'{mariko_master_kek_source_dev}')
                 keygen.close()
 
-        with open(prod_keys, 'w') as new_prod_keys:
+        with open(keys, 'w') as new_prod_keys:
             if dev == "True":
-                subprocess.run(f'hactoolnet --dev --keyset temp.keys -t keygen', stdout=new_prod_keys)
-                print(f'You just generated a dev keyset, which are only useful for developer ncas written with nnsdk keyset, and they have been output to {prod_keys}')
+                subprocess.run(f'{hactoolnet} --dev --keyset temp.keys -t keygen', stdout=new_prod_keys)
+                print(f'You just generated a dev keyset, which are only useful for developer ncas written with nnsdk keyset, and they have been output to {keys}')
             elif dev == "False":
-                subprocess.run(f'hactoolnet --keyset temp.keys -t keygen', stdout=new_prod_keys)
+                subprocess.run(f'{hactoolnet} --keyset temp.keys -t keygen', stdout=new_prod_keys)
             new_prod_keys.close()
             os.remove('temp.keys')
-            print(f'# Keygen completed and output to {prod_keys}, exiting.')
+            print(f'# Keygen completed and output to {keys}, exiting.')
             shutil.rmtree('0100000000000819')
             exit()

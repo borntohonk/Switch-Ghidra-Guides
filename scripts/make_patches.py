@@ -6,6 +6,7 @@ import shutil
 import hashlib
 import os
 import argparse
+import platform
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location.")
@@ -20,12 +21,26 @@ if location == "None":
 if prod_keys == "None":
     prod_keys = os.path.expanduser('~/.switch/prod.keys')
 
+if platform.system() == "Windows":
+    hactoolnet = "tools/hactoolnet-windows.exe"
+    hactool = "tools/hactool-windows.exe"
+elif platform.system() == "Linux":
+    hactoolnet = "tools/hactoolnet-linux"
+    hactool = "tools/hactool-linux"
+elif platform.system() == "MacOS":
+    hactoolnet = "tools/hactoolnet-macos"
+    hactool = "tools/hactool-macos"
+else:
+    print("Unknown Platform: {platform.system()}, proide your own hactool and hactoolnet")
+    hactool = "hactool"
+    hactoolnet = "hactoolnet"
+
 print("# initiating keygen if needed and mariko keys and master_key_00 are present.")
 with open(prod_keys, 'r') as keycheck:
     check_key = keycheck.read()
     if 'master_key_00' in check_key:
             print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage.")
-            subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+            subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
             with open(f'{location}/titleid/0100000000000819/romfs/a/package1', 'rb') as package1:
                 byte_alignment = package1.seek(0x150)
                 revision = package1.read(0x01).hex().upper()
@@ -38,7 +53,7 @@ with open(prod_keys, 'r') as keycheck:
                     package1.close()
                     if 'mariko_bek' in check_key:
                         print('# Extracting package1.')
-                        subprocess.run(f'hactoolnet -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+                        subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
                         with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
                             secmon_data = decrypted_bin.read()
                             result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
@@ -57,7 +72,7 @@ with open(prod_keys, 'r') as keycheck:
                                     temp_keys.write(f'{mariko_master_kek_source}')
                                     temp_keys.close()
                                     with open(prod_keys, 'w') as new_prod_keys:
-                                        subprocess.run(f'hactoolnet --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
+                                        subprocess.run(f'{hactoolnet} --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
                                         new_prod_keys.close()
                                         os.remove('temp.keys')
                                         print(f'# Keygen completed and output to {prod_keys}')
@@ -71,7 +86,7 @@ with open(prod_keys, 'r') as keycheck:
         keycheck.close()
         print('master_key_00 key not found, cannot proceed with keygen as the nca containing package1 cannot be opened.')
 
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
 with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
         byte_alignment = get_version.seek(0x68)
         read_version_number = get_version.read(0x6).hex().upper()
@@ -91,26 +106,26 @@ fat32uncompressed = f'{location}/titleid/0100000000000819/romfs/nx/ini1/u_FS.kip
 exfatuncompressed = f'{location}/titleid/010000000000081b/romfs/nx/ini1/u_FS.kip1'
 
 print('# Extracting ES')
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {escompressed} --uncompressed={esuncompressed}', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {escompressed} --uncompressed={esuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting NIFM')
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {nifmcompressed} --uncompressed={nifmuncompressed}', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {nifmcompressed} --uncompressed={nifmuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting NIM')
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactool --disablekeywarns -k {prod_keys} -t nso0 {nimcompressed} --uncompressed={nimuncompressed}', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {nimcompressed} --uncompressed={nimuncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting fat32')
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -k {prod_keys} -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -k {prod_keys} -t kip1 {fat32compressed} --uncompressed {fat32uncompressed}', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t kip1 {fat32compressed} --uncompressed {fat32uncompressed}', stdout = subprocess.DEVNULL)
 
 print('# Extracting exfat')
-subprocess.run(f'hactoolnet -k {prod_keys} -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -k {prod_keys} -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
-subprocess.run(f'hactoolnet -k {prod_keys} -t kip1 {exfatcompressed} --uncompressed {exfatuncompressed}', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} -k {prod_keys} -t kip1 {exfatcompressed} --uncompressed {exfatuncompressed}', stdout = subprocess.DEVNULL)
 
 def get_es_build_id():
     with open(escompressed, 'rb') as f:
