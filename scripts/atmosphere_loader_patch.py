@@ -9,6 +9,17 @@ from pathlib import Path
 from urllib.parse import unquote
 from urllib.request import urlopen, urlretrieve
 from zipfile import ZipFile
+import platform
+
+if platform.system() == "Windows":
+    hactoolnet = "tools/hactoolnet-windows.exe"
+elif platform.system() == "Linux":
+    hactoolnet = "tools/hactoolnet-linux"
+elif platform.system() == "MacOS":
+    hactoolnet = "tools/hactoolnet-macos"
+else:
+    print("Unknown Platform: {platform.system()}, proide your own hactoolnet")
+    hactoolnet = "hactoolnet"
 
 Path('./Atmosphere_Loader_Patch/atmosphere/kip_patches/loader_patches').mkdir(parents=True, exist_ok=True)
 atmosphere_archive_name = unquote(urlopen('https://api.github.com/repos/Atmosphere-NX/Atmosphere/releases').read().split(b'browser_download_url')[1].split(b'\"')[2].decode('utf-8').split('/')[-1])
@@ -32,7 +43,7 @@ with ZipFile(glob('./atmosphere-*.zip')[0], 'r') as amszip:
             compressed_loader_file = open('loader.kip1', 'wb')
             compressed_loader_file.write(loader_kip)
             compressed_loader_file.close()
-            os.system('hactoolnet -t kip1 loader.kip1 --uncompressed uloader.kip1')
+            subprocess.run(f'{hactoolnet} -t kip1 loader.kip1 --uncompressed uloader.kip1', stdout = subprocess.DEVNULL)
             with open('uloader.kip1', 'rb') as decompressed_loader_kip:
                 loader_data = decompressed_loader_kip.read()
                 result = re.search(b'\x00\x94\x01\xC0\xBE\x12\x1F\x00', loader_data)
