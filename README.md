@@ -15,18 +15,12 @@ All material exist purely for research reference.
 
 * Here's a list of scripts following the example Part 2 of the guide above teaches you how to do, and that this repository contains.
 
-  - Python script to derive entire keyset for the firmware version you've input, requires "mariko_bek", "mariko_kek" and "master_key_00 to be filled in.
-    * requirements: fill in the keys required into [mariko_keygen.py](scripts/mariko_keygen.py)
+  - Python script to derive entire keyset for the firmware version you have provided firmware files for.
+    * requirements: firmware files to be used with [mariko_keygen.py](scripts/mariko_keygen.py)
     * It will obtain the key source referred to as "mariko_master_kek_source_%%" from the firmware files you've provided, and output to prod.keys or a file location you've designated with -k or --keys.
-    * This script eliminates the need for "lockpick" of any kind, assuming the user already have the pre-requisite keys.
+    * This script eliminates the need for "lockpick" of any kind, as long as the user provides firmware files.
     * This script works by first extracting the nca containing package1 with master_key_00, then extracting "package1" with the "mariko_bek" (obtainable with the release.nfo for scene release of "Marvel's Spider-Man: Miles Morales" by BigBlueBox), and then proceeds in finding "mariko_master_kek_source_%%", And then transforms "mariko_master_kek_source_%%" using "mariko_kek" to become "master_kek" and subsequently sets off the key derivation chain, using the tool "hactoolnet".
     * Usage: do "python scripts/mariko_keygen.py -f folder -k prod.keys" with firmware files present in a folder called firmware, or as supplied with -f or --firmware, or store the keys at another location as supplied with -k or --keys . [mariko_keygen.py](scripts/mariko_keygen.py)
-
-  - Python script to derive entire keyset for the firmware version you've input, requires "package1_key_%%" and "tsec_root_key_%%" to be present already. (requires tsec_secret_26)
-    * It will obtain the key source referred to as "master_kek_source_%%" from the firmware files you've provided, and then initiate key derivation if needed and replace your existing "prod.keys". *
-    * This script eliminates the need for "lockpick" of any kind, assuming the user already have the pre-requisite keys.
-    * This script works by extracting "package1" with the "package1_key_%%", and then proceeds in finding "master_kek_source_%%", appending that to your existing prod.keys as defined in [Part 2](guides/Part2.MD) of the guides. And then transforms "master_kek_source_%%" using "tsec_root_key_%%" to become "master_kek" and subsequently sets off the key derivation chain, using the tool "hactoolnet".
-    * Usage: do "python scripts/erista_keygen.py -f folder -k keyfile" with firmware files present in a folder called firmware, or as supplied with -f or --firmware, or at ~/.switch/prod.keys, or as supplied with -k or --keys . [erista_keygen.py](scripts/erista_keygen.py)
 
   - Python script to generate patches for Atmospheres open-source loader re-implementation, requires lz4 from pip 
     * Usage: do "python scripts/atmosphere_loader_patch.py" and it will automatically download, make the patch for loader, and then clean up after itself. [atmosphere_loader_patch.py](scripts/atmosphere_loader_patch.py)

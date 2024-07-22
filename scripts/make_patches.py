@@ -7,6 +7,7 @@ import hashlib
 import os
 import argparse
 import platform
+from base64 import b64decode
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location.")
@@ -18,8 +19,14 @@ prod_keys = "%s" % args.keys
 if location == "None":
     location = "firmware"
 
-if prod_keys == "None":
-    prod_keys = os.path.expanduser('~/.switch/prod.keys')
+user_folder = os.path.expanduser('~/.switch')
+user_keys = os.path.expanduser('~/.switch/prod.keys')
+
+if prod_keys == "None" and os.path.exists(user_keys):
+    prod_keys = user_keys
+    shutil.copy(user_keys, "temp.keys")
+elif prod_keys == "None":
+    prod_keys = "prod.keys"
 
 if platform.system() == "Windows":
     hactoolnet = "tools/hactoolnet-windows.exe"
@@ -35,64 +42,50 @@ else:
     hactool = "hactool"
     hactoolnet = "hactoolnet"
 
-print("# initiating keygen if needed and mariko keys and master_key_00 are present.")
-with open(prod_keys, 'r') as keycheck:
-    check_key = keycheck.read()
-    if 'master_key_00' in check_key:
-            print("# Checking if latest mariko_master_kek_source is needed from package1 retrieved from BootImagePackage.")
-            subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
-            with open(f'{location}/titleid/0100000000000819/romfs/a/package1', 'rb') as package1:
-                byte_alignment = package1.seek(0x150)
-                revision = package1.read(0x01).hex().upper()
-                incremented_revision = int(revision) - 0x1
-                mariko_master_kek_source_key_revision = f'mariko_master_kek_source_{incremented_revision}'
-                if mariko_master_kek_source_key_revision in check_key:
-                    print(f'# new mariko_master_kek_source already exists in your keyfile at {prod_keys}, no need to initiate keygen. Continuing with making patches.')
-                    package1.close()
-                else:
-                    package1.close()
-                    if 'mariko_bek' in check_key:
-                        print('# Extracting package1.')
-                        subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
-                        with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
-                            secmon_data = decrypted_bin.read()
-                            result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
-                            patch = '%06X' % (result.end() + 0x32)
-                            byte_alignment = decrypted_bin.seek(result.end() + 0x32)
-                            mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
-                            byte_alignment = decrypted_bin.seek(0x150)
-                            revision = decrypted_bin.read(0x01).hex().upper()
-                            incremented_revision = int(revision) - 0x1
-                            mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = {mariko_master_kek_source_key}'
-                            if 'mariko_kek' in check_key:
-                                keycheck.close()
-                                os.rename(prod_keys, 'temp.keys')
-                                with open('temp.keys', 'a') as temp_keys:
-                                    temp_keys.write(f'\n')
-                                    temp_keys.write(f'{mariko_master_kek_source}')
-                                    temp_keys.close()
-                                    with open(prod_keys, 'w') as new_prod_keys:
-                                        subprocess.run(f'{hactoolnet} --keyset "temp.keys" -t keygen', stdout=new_prod_keys)
-                                        new_prod_keys.close()
-                                        os.remove('temp.keys')
-                                        print(f'# Keygen completed and output to {prod_keys}')
-                            else:
-                                keycheck.close()
-                                print('mariko_kek is missing, we cannot derive master keys, keygen will not yield viable keyset.')
-                    else:
-                        keycheck.close()
-                        print('mariko_bek key not found, cannot proceed with keygen as package1 cannot be opened.')
-    else:
-        keycheck.close()
-        print('master_key_00 key not found, cannot proceed with keygen as the nca containing package1 cannot be opened.')
+with open('temp.keys', 'a') as temp_keys:
+    temp_keys.write(b64decode('bWFyaWtvX2JlayAgICAgICAgICAgICAgICAgICAgICAgID0gNkE1RDE2OEIxNEU2NENBREQ3MERBOTM0QTA2Q0MyMjI=').decode('utf-8') + '\n')
+    temp_keys.write(b64decode('bWFyaWtvX2tlayAgICAgICAgICAgICAgICAgICAgICAgID0gNDEzMEI4Qjg0MkREN0NEMkVBOEZENTBEM0Q0OEI3N0M=').decode('utf-8') + '\n')
+    temp_keys.write(b64decode('bWFzdGVyX2tleV8wMCAgICAgICAgICAgICAgICAgICAgID0gQzJDQUFGRjA4OUI5QUVENTU2OTQ4NzYwNTUyNzFDN0Q=').decode('utf-8') + '\n')
+    temp_keys.close()
+    subprocess.run(f'{hactoolnet} --keyset temp.keys -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', stdout = subprocess.DEVNULL)
+    subprocess.run(f'{hactoolnet} --keyset temp.keys -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', stdout = subprocess.DEVNULL)
+    with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
+        secmon_data = decrypted_bin.read()
+        result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
+        byte_alignment = decrypted_bin.seek(result.end() + 0x22)
+        mariko_master_kek_source_dev_key = decrypted_bin.read(0x10).hex().upper()
+        byte_alignment = decrypted_bin.seek(result.end() + 0x32)
+        mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
+        byte_alignment = decrypted_bin.seek(0x150)
+        revision = decrypted_bin.read(0x01).hex().upper()
+        incremented_revision = int(revision) - 0x1
+        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = {mariko_master_kek_source_key}'
+        mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_revision}       = {mariko_master_kek_source_dev_key}'
+        decrypted_bin.close()
+        with open('temp.keys', 'a') as keygen:
+            keygen.write(f'\n')
+            keygen.write(f'{mariko_master_kek_source}')
+            keygen.close()
 
-subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
-with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
-        byte_alignment = get_version.seek(0x68)
-        read_version_number = get_version.read(0x6).hex().upper()
-        version = (bytes.fromhex(read_version_number).decode('utf-8'))
-        fork_version = version.replace('.', '_')
-        print(f"# Firmware version number is: {version}")
+        with open(prod_keys, 'w') as new_prod_keys:
+            subprocess.run(f'{hactoolnet} --keyset temp.keys -t keygen', stdout=new_prod_keys)
+            new_prod_keys.close()
+            os.remove('temp.keys')
+
+        if not os.path.exists(user_folder):
+            os.makedirs(user_folder)
+        if not os.path.exists(user_keys):
+            shutil.copy(prod_keys, user_keys)
+
+        subprocess.run(f'{hactoolnet} --keyset {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', stdout = subprocess.DEVNULL)
+        with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
+                byte_alignment = get_version.seek(0x68)
+                read_version_number = get_version.read(0x6).hex().upper()
+                version = (bytes.fromhex(read_version_number).decode('utf-8'))
+                version_ = version.replace('.', '_')
+                print(f'# Firmware version number generated keys for is: {version}')
+                print(f'# key revision generated keys for ends with _{incremented_revision}')
+                print(f'# Keygen completed and output to {prod_keys}, continuing with making patches.')
 
 escompressed = f'{location}/titleid/0100000000000033/exefs/main'
 nifmcompressed = f'{location}/titleid/010000000000000f/exefs/main'
@@ -150,7 +143,7 @@ print('fat32 sha256:', hashlib.sha256(open(fat32compressed, 'rb').read()).hexdig
 print('exfat sha256:', hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper())
 
 print(f'\n===== Making patches for {version} =====')
-changelog = open(f'./patch_changelog.txt', 'w')
+changelog = open(f'./{version_}_patch_changelog.txt', 'w')
 changelog.write(f'Patch changelog for {version}:\n\n')
 
 esbuildid = get_es_build_id()
@@ -175,11 +168,11 @@ else:
             changelog.write(f'{version} ES build-id: {esbuildid}\n')
             changelog.write(f'{version} ES offset and patch at: {patch}\n\n')
             changelog.write(f'{version} ES related patch for atmosphere fork\n')
-            changelog.write(f'constexpr inline const EmbeddedPatchEntry DisableTicketVerificationPatches_{fork_version}[] = {{\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry DisableTicketVerificationPatches_{version_}[] = {{\n')
             changelog.write(f'    {{ 0x{offset}, "\\xE0\\x03\\x1F\\xAA", 4 }},\n')
             changelog.write(f'}};\n')
             changelog.write(f'\n')
-            changelog.write(f'    {{ ParseModuleId("{get_es_build_id()}"), util::size(DisableTicketVerificationPatches_{fork_version}), DisableTicketVerificationPatches_{fork_version} }}, /* {version} */\n')
+            changelog.write(f'    {{ ParseModuleId("{get_es_build_id()}"), util::size(DisableTicketVerificationPatches_{version_}), DisableTicketVerificationPatches_{version_} }}, /* {version} */\n')
             changelog.write(f'\n')
 
 
@@ -206,11 +199,11 @@ else:
             changelog.write(f'{version} NIFM CTEST build-id: {nifmbuildid}\n')
             changelog.write(f'{version} NIFM CTEST offset and patch at: {patch}\n\n')
             changelog.write(f'{version} NIFM related patch for atmosphere fork\n')
-            changelog.write(f'constexpr inline const EmbeddedPatchEntry ForceCommunicationEnabledPatches_{fork_version}[] = {{\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry ForceCommunicationEnabledPatches_{version_}[] = {{\n')
             changelog.write(f'    {{ 0x{offset}, "\\x00\\x30\\x9A\\xD2\\x00\\x1E\\xA1\\xF2\\x61\\x01\\x00\\xD4\\xE0\\x03\\x1F\\xAA\\xC0\\x03\\x5F\\xD6", 20 }},\n')
             changelog.write(f'}};\n')
             changelog.write(f'\n')
-            changelog.write(f'    {{ ParseModuleId("{get_nifm_build_id()}"), util::size(ForceCommunicationEnabledPatches_{fork_version}), ForceCommunicationEnabledPatches_{fork_version} }}, /* {version} */\n')
+            changelog.write(f'    {{ ParseModuleId("{get_nifm_build_id()}"), util::size(ForceCommunicationEnabledPatches_{version_}), ForceCommunicationEnabledPatches_{version_} }}, /* {version} */\n')
             changelog.write(f'\n')
  
  
@@ -237,11 +230,11 @@ else:
             changelog.write(f'{version} nim build-id: {nimbuildid}\n')
             changelog.write(f'{version} nim offset and patch at: {patch}\n\n')
             changelog.write(f'{version} nim related patch for atmosphere fork\n')
-            changelog.write(f'constexpr inline const EmbeddedPatchEntry AmsProdinfoBlankerFix_{fork_version}[] = {{\n')
+            changelog.write(f'constexpr inline const EmbeddedPatchEntry AmsProdinfoBlankerFix_{version_}[] = {{\n')
             changelog.write(f'    {{ 0x{offset}, "\\xE2\\x03\\x1F\\xAA", 4 }},\n')
             changelog.write(f'}};\n')
             changelog.write(f'\n')
-            changelog.write(f'    {{ ParseModuleId("{get_nim_build_id()}"), util::size(AmsProdinfoBlankerFix_{fork_version}), AmsProdinfoBlankerFix_{fork_version} }}, /* {version} */\n')
+            changelog.write(f'    {{ ParseModuleId("{get_nim_build_id()}"), util::size(AmsProdinfoBlankerFix_{version_}), AmsProdinfoBlankerFix_{version_} }}, /* {version} */\n')
             changelog.write(f'\n')
 
 
@@ -304,7 +297,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-exFAT offset and patch at: {patch2}\n')
-                changelog.write(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n')
+                changelog.write(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
                 exfat_hekate = open('./hekate_patches/fs_patches.ini', 'a')
                 exfat_hekate.write(f'\n#FS {version}-exfat\n')
                 exfat_hekate.write(f'[FS:{exfathash[:16]}]\n')
@@ -320,7 +313,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
 fs_patches.close()
 changelog.close()
 
-with open(f'./patch_changelog.txt') as print_changelog:
+with open(f'./{version_}_patch_changelog.txt') as print_changelog:
     print(print_changelog.read())
 print_changelog.close()
 
