@@ -216,7 +216,7 @@ if nim_patch in os.listdir('patches/atmosphere/exefs_patches/ams_blanker_fix'):
 else:
     with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
         read_data = decompressed_nim_nso.read()
-        result = re.search(rb'\x80\x0f\x00\x35\x1f\x20\x03\xd5', read_data)
+        result = re.search(rb'\x60\x0F\x00\x35\x1F\x20\x03\xD5', read_data) # 19.0.0+ only
         if not result:
             changelog.write(f'nim related patch changelog for {version}:\n')
             changelog.write(f'{version} nim offset not found\n\n')
@@ -247,7 +247,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
         with open(fat32uncompressed, 'rb') as fat32f:
             read_data = fat32f.read()
             result1 = re.search(rb'\x52.{3}\x52.{3}\x52.{3}\x52.{3}\x94', read_data)
-            result2 = re.search(rb'\x08\x1C\x00\x12\x1F\x05\x00\x71\x41\x01\x00\x54', read_data)
+            result2 = re.search(rb'\x09\x1C\x00\x12\x3F\x05\x00\x71\x61\x01\x00\x54', read_data) # 19.0.0+ only
             if not result1:
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-FAT32 offset not found\n')
@@ -256,7 +256,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'{version} Second FS-FAT32 offset not found\n')
             else:
                 patch1 = '%06X%s%s' % (result1.end(), '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() - 0x4, '0004', 'E0031F2A')
+                patch2 = '%06X%s%s' % (result2.start() - 0x8, '0004', 'E0031F2A')
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-FAT32 offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-FAT32 offset and patch at: {patch2}\n')
@@ -266,12 +266,12 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 fat32_hekate.write(f'[FS:{fat32hash[:16]}]\n')
                 byte_alignment = fat32f.seek(result1.end())
                 fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.end()-0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},1F2003D5\n')
-                byte_alignment = fat32f.seek(result2.start() - 0x4)
+                byte_alignment = fat32f.seek(result2.start() - 0x8)
                 fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x104) + f':0x4:{fat32f.read(0x4).hex().upper()},E0031F2A\n')
                 fat32_hekate.close()
                 changelog.write(f'{version} FS-FAT32 related patch for atmosphere fork\n')
                 changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x4) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x8) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
         fat32f.close()
 fs_patches.close()
 
@@ -284,7 +284,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
         with open(exfatuncompressed, 'rb') as exfatf:
             read_data = exfatf.read()
             result1 = re.search(rb'\x52.{3}\x52.{3}\x52.{3}\x52.{3}\x94', read_data)
-            result2 = re.search(rb'\x08\x1C\x00\x12\x1F\x05\x00\x71\x41\x01\x00\x54', read_data)
+            result2 = re.search(rb'\x09\x1C\x00\x12\x3F\x05\x00\x71\x61\x01\x00\x54', read_data) # 19.0.0+ only
             if not result1:
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset not found\n')
@@ -293,7 +293,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'{version} Second FS-ExFAT offset not found\n')
             else:
                 patch1 = '%06X%s%s' % (result1.end(), '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() - 0x4, '0004', 'E0031F2A')
+                patch2 = '%06X%s%s' % (result2.start() - 0x8, '0004', 'E0031F2A')
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-exFAT offset and patch at: {patch2}\n')
@@ -303,12 +303,12 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 exfat_hekate.write(f'[FS:{exfathash[:16]}]\n')
                 byte_alignment = exfatf.seek(result1.end())
                 exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.end()-0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},1F2003D5\n')
-                byte_alignment = exfatf.seek(result2.start() - 0x4)
+                byte_alignment = exfatf.seek(result2.start() - 0x8)
                 exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x104) + f':0x4:{exfatf.read(0x4).hex().upper()},E0031F2A\n')
                 exfat_hekate.close()
                 changelog.write(f'{version} FS-ExFAT related patch for atmosphere fork\n')
                 changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x4) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x8) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n\n')
         exfatf.close()
 fs_patches.close()
 changelog.close()
