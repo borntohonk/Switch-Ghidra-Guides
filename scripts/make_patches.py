@@ -43,6 +43,7 @@ else:
     hactoolnet = "hactoolnet"
 
 with open('temp.keys', 'a') as temp_keys:
+    temp_keys.write('\n')
     temp_keys.write(b64decode('bWFyaWtvX2JlayAgICAgICAgICAgICAgICAgICAgICAgID0gNkE1RDE2OEIxNEU2NENBREQ3MERBOTM0QTA2Q0MyMjI=').decode('utf-8') + '\n')
     temp_keys.write(b64decode('bWFyaWtvX2tlayAgICAgICAgICAgICAgICAgICAgICAgID0gNDEzMEI4Qjg0MkREN0NEMkVBOEZENTBEM0Q0OEI3N0M=').decode('utf-8') + '\n')
     temp_keys.write(b64decode('bWFzdGVyX2tleV8wMCAgICAgICAgICAgICAgICAgICAgID0gQzJDQUFGRjA4OUI5QUVENTU2OTQ4NzYwNTUyNzFDN0Q=').decode('utf-8') + '\n')
@@ -57,10 +58,11 @@ with open('temp.keys', 'a') as temp_keys:
         byte_alignment = decrypted_bin.seek(result.end() + 0x32)
         mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
         byte_alignment = decrypted_bin.seek(0x150)
-        revision = decrypted_bin.read(0x01).hex().upper()
-        incremented_revision = int(revision) - 0x1
-        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_revision}       = {mariko_master_kek_source_key}'
-        mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_revision}       = {mariko_master_kek_source_dev_key}'
+        revision = decrypted_bin.read(0x01)
+        incremented_revision = int.from_bytes(revision) - 0x1
+        incremented_hex_revision = (hex(incremented_revision)[2:])
+        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_key}'
+        mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_dev_key}'
         decrypted_bin.close()
         with open('temp.keys', 'a') as keygen:
             keygen.write(f'\n')
@@ -84,7 +86,7 @@ with open('temp.keys', 'a') as temp_keys:
                 version = (bytes.fromhex(read_version_number).decode('utf-8'))
                 version_ = version.replace('.', '_')
                 print(f'# Firmware version number generated keys for is: {version}')
-                print(f'# key revision generated keys for ends with _{incremented_revision}')
+                print(f'# key revision generated keys for ends with _{incremented_hex_revision}')
                 print(f'# Keygen completed and output to {prod_keys}, continuing with making patches.')
 
 escompressed = f'{location}/titleid/0100000000000033/exefs/main'
@@ -154,13 +156,13 @@ if es_patch in os.listdir('patches/atmosphere/exefs_patches/es_patches'):
 else:
     with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
         read_data = decompressed_es_nso.read()
-        result = re.search(rb'.\x00\x91.{2}\x00\x94\xa0\x83\x00\xd1.{2}\xff\x97', read_data)
+        result = re.search(rb'.{2}\x00.{3}\x00\x94\xa0.{2}\xd1.{2}\xff\x97.{7}\xa9', read_data)
         if not result:
             changelog.write(f'ES related patch changelog for {version}:\n')
             changelog.write(f'{version} ES offset not found\n\n')
         else:
-            patch = '%06X%s%s' % (result.end(), '0004', 'E0031FAA')
-            offset = '%06X' % (result.end() - 0x100)
+            patch = '%06X%s%s' % (result.start() + 0x10, '0004', 'E0031FAA')
+            offset = '%06X' % (result.start() + 0x10 - 0x100)
             text_file = open('./patches/atmosphere/exefs_patches/es_patches/%s.ips' % esbuildid, 'wb')
             text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
             text_file.close()
@@ -209,34 +211,52 @@ else:
  
 nimbuildid = get_nim_build_id()
 nim_patch = f'{nimbuildid}.ips'
-       
-if nim_patch in os.listdir('patches/atmosphere/exefs_patches/ams_blanker_fix'):
-    changelog.write(f'NIM related patch changelog for {version}:\n')
-    changelog.write(f'NIM patch for version {version} already exists as an .ips patch, and the build id is: {nimbuildid}\n\n')
-else:
-    with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
-        read_data = decompressed_nim_nso.read()
-        result = re.search(rb'\x60\x0F\x00\x35\x1F\x20\x03\xD5', read_data) # 19.0.0+ only
-        if not result:
-            changelog.write(f'nim related patch changelog for {version}:\n')
-            changelog.write(f'{version} nim offset not found\n\n')
-        else:
-            patch = '%06X%s%s' % (result.end(), '0004', 'E2031FAA')
-            offset = '%06X' % (result.end() - 0x100)
-            text_file = open('./patches/atmosphere/exefs_patches/ams_blanker_fix/%s.ips' % nimbuildid, 'wb')
-            text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
-            text_file.close()
-            changelog.write(f'nim related patch changelog for {version}:\n')
-            changelog.write(f'{version} nim build-id: {nimbuildid}\n')
-            changelog.write(f'{version} nim offset and patch at: {patch}\n\n')
-            changelog.write(f'{version} nim related patch for atmosphere fork\n')
-            changelog.write(f'constexpr inline const EmbeddedPatchEntry AmsProdinfoBlankerFix_{version_}[] = {{\n')
-            changelog.write(f'    {{ 0x{offset}, "\\xE2\\x03\\x1F\\xAA", 4 }},\n')
-            changelog.write(f'}};\n')
-            changelog.write(f'\n')
-            changelog.write(f'    {{ ParseModuleId("{get_nim_build_id()}"), util::size(AmsProdinfoBlankerFix_{version_}), AmsProdinfoBlankerFix_{version_} }}, /* {version} */\n')
-            changelog.write(f'\n')
 
+if incremented_revision > 17:
+    if nim_patch in os.listdir('patches/atmosphere/exefs_patches/ams_blanker_fix'):
+        changelog.write(f'NIM related patch changelog for {version}:\n')
+        changelog.write(f'NIM patch for version {version} already exists as an .ips patch, and the build id is: {nimbuildid}\n\n')
+    else:
+        with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
+            read_data = decompressed_nim_nso.read()
+            result = re.search(rb'.\x0F\x00\x35\x1F\x20\x03\xD5', read_data)
+            if not result:
+                changelog.write(f'nim related patch changelog for {version}:\n')
+                changelog.write(f'{version} nim offset not found\n\n')
+            else:
+                patch = '%06X%s%s' % (result.start() + 0x8, '0004', 'E2031FAA')
+                offset = '%06X' % (result.start() + 0x8 - 0x100)
+                text_file = open('./patches/atmosphere/exefs_patches/ams_blanker_fix/%s.ips' % nimbuildid, 'wb')
+                text_file.write(bytes.fromhex(str(f'5041544348{patch}454F46')))
+                text_file.close()
+                changelog.write(f'nim related patch changelog for {version}:\n')
+                changelog.write(f'{version} nim build-id: {nimbuildid}\n')
+                changelog.write(f'{version} nim offset and patch at: {patch}\n\n')
+                changelog.write(f'{version} nim related patch for atmosphere fork\n')
+                changelog.write(f'constexpr inline const EmbeddedPatchEntry AmsProdinfoBlankerFix_{version_}[] = {{\n')
+                changelog.write(f'    {{ 0x{offset}, "\\xE2\\x03\\x1F\\xAA", 4 }},\n')
+                changelog.write(f'}};\n')
+                changelog.write(f'\n')
+                changelog.write(f'    {{ ParseModuleId("{get_nim_build_id()}"), util::size(AmsProdinfoBlankerFix_{version_}), AmsProdinfoBlankerFix_{version_} }}, /* {version} */\n')
+                changelog.write(f'\n')
+
+if incremented_revision < 11:
+    #below 11.0.0 == 10.0.0
+    fspattern1 = rb'.{2}\x00\x36.{7}\x71.{2}\x00\x54.{2}\x48\x39'
+    fsoffset1 = 0x0
+elif incremented_revision > 12:
+    #above == 11.0.0+
+    fspattern1 = rb'.\x94.{2}\x00\x36.\x25\x80\x52'
+    fsoffset1= 0x2
+
+if incremented_revision < 18:
+    #below 19.0.0
+    fspattern2 = rb'\x40\xf9.{3}\x94\x08.\x00\x12.\x05\x00\x71' 
+    fsoffset2 = 0x2
+else:
+    #above 19.0.0
+    fspattern2 = rb'\x40\xf9.{3}\x94.{2}\x40\xb9.{2}\x00\x12'
+    fsoffset2= 0x2
 
 fat32hash = hashlib.sha256(open(fat32compressed, 'rb').read()).hexdigest().upper()
 with open('./hekate_patches/fs_patches.ini') as fs_patches:
@@ -246,8 +266,8 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
     else:
         with open(fat32uncompressed, 'rb') as fat32f:
             read_data = fat32f.read()
-            result1 = re.search(rb'\x52.{3}\x52.{3}\x52.{3}\x52.{3}\x94', read_data)
-            result2 = re.search(rb'\x09\x1C\x00\x12\x3F\x05\x00\x71\x61\x01\x00\x54', read_data) # 19.0.0+ only
+            result1 = re.search(fspattern1, read_data)
+            result2 = re.search(fspattern2, read_data)
             if not result1:
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-FAT32 offset not found\n')
@@ -255,8 +275,8 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} Second FS-FAT32 offset not found\n')
             else:
-                patch1 = '%06X%s%s' % (result1.end(), '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() - 0x8, '0004', 'E0031F2A')
+                patch1 = '%06X%s%s' % (result1.start() + 0x2, '0004', '1F2003D5')
+                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', 'E0031F2A')
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-FAT32 offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-FAT32 offset and patch at: {patch2}\n')
@@ -264,14 +284,14 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 fat32_hekate = open('./hekate_patches/fs_patches.ini', 'a')
                 fat32_hekate.write(f'\n#FS {version}-fat32\n')
                 fat32_hekate.write(f'[FS:{fat32hash[:16]}]\n')
-                byte_alignment = fat32f.seek(result1.end())
-                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.end()-0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},1F2003D5\n')
-                byte_alignment = fat32f.seek(result2.start() - 0x8)
-                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x108) + f':0x4:{fat32f.read(0x4).hex().upper()},E0031F2A\n')
+                byte_alignment = fat32f.seek(result1.start() + fsoffset1)
+                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.start() + fsoffset1 - 0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},1F2003D5\n')
+                byte_alignment = fat32f.seek(result2.start() + fsoffset2)
+                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},E0031F2A\n')
                 fat32_hekate.close()
                 changelog.write(f'{version} FS-FAT32 related patch for atmosphere fork\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x8) + f', NoNcaHeaderSignatureCheckPatch1, sizeof(NoNcaHeaderSignatureCheckPatch1));\n\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.start() + fsoffset1) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() + fsoffset2) + f', NoNcaHeaderSignatureCheckPatch1, sizeof(NoNcaHeaderSignatureCheckPatch1));\n\n')
         fat32f.close()
 fs_patches.close()
 
@@ -283,8 +303,8 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
     else:
         with open(exfatuncompressed, 'rb') as exfatf:
             read_data = exfatf.read()
-            result1 = re.search(rb'\x52.{3}\x52.{3}\x52.{3}\x52.{3}\x94', read_data)
-            result2 = re.search(rb'\x09\x1C\x00\x12\x3F\x05\x00\x71\x61\x01\x00\x54', read_data) # 19.0.0+ only
+            result1 = re.search(fspattern1, read_data)
+            result2 = re.search(fspattern2, read_data)
             if not result1:
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset not found\n')
@@ -292,8 +312,8 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} Second FS-ExFAT offset not found\n')
             else:
-                patch1 = '%06X%s%s' % (result1.end(), '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() - 0x8, '0004', 'E0031F2A')
+                patch1 = '%06X%s%s' % (result1.start() + fsoffset1, '0004', '1F2003D5')
+                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', 'E0031F2A')
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-exFAT offset and patch at: {patch2}\n')
@@ -301,14 +321,14 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 exfat_hekate = open('./hekate_patches/fs_patches.ini', 'a')
                 exfat_hekate.write(f'\n#FS {version}-exfat\n')
                 exfat_hekate.write(f'[FS:{exfathash[:16]}]\n')
-                byte_alignment = exfatf.seek(result1.end())
-                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.end()-0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},1F2003D5\n')
-                byte_alignment = exfatf.seek(result2.start() - 0x8)
-                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start()-0x108) + f':0x4:{exfatf.read(0x4).hex().upper()},E0031F2A\n')
+                byte_alignment = exfatf.seek(result1.start() + fsoffset1)
+                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.start() + fsoffset1 - 0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},1F2003D5\n')
+                byte_alignment = exfatf.seek(result2.start() + fsoffset2)
+                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},E0031F2A\n')
                 exfat_hekate.close()
                 changelog.write(f'{version} FS-ExFAT related patch for atmosphere fork\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.end()) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
-                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() - 0x8) + f', NoNcaHeaderSignatureCheckPatch1, sizeof(NoNcaHeaderSignatureCheckPatch1));\n\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.start() + fsoffset1) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
+                changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result2.start() + fsoffset2) + f', NoNcaHeaderSignatureCheckPatch1, sizeof(NoNcaHeaderSignatureCheckPatch1));\n\n')
         exfatf.close()
 fs_patches.close()
 changelog.close()
