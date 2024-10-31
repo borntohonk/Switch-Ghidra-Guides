@@ -13,12 +13,14 @@ import platform
 
 if platform.system() == "Windows":
     hactoolnet = "tools/hactoolnet-windows.exe"
+    hshell = False
 elif platform.system() == "Linux":
     hactoolnet = "tools/hactoolnet-linux"
+    hshell = True
 elif platform.system() == "MacOS":
     hactoolnet = "tools/hactoolnet-macos"
 else:
-    print("Unknown Platform: {platform.system()}, proide your own hactoolnet")
+    print(f"Unknown Platform: {platform.system()}, proide your own hactoolnet")
     hactoolnet = "hactoolnet"
 
 Path('./Atmosphere_Loader_Patch/atmosphere/kip_patches/loader_patches').mkdir(parents=True, exist_ok=True)
@@ -43,7 +45,7 @@ with ZipFile(glob('./atmosphere-*.zip')[0], 'r') as amszip:
             compressed_loader_file = open('loader.kip1', 'wb')
             compressed_loader_file.write(loader_kip)
             compressed_loader_file.close()
-            subprocess.run(f'{hactoolnet} -t kip1 loader.kip1 --uncompressed uloader.kip1', stdout = subprocess.DEVNULL)
+            subprocess.run(f'{hactoolnet} -t kip1 loader.kip1 --uncompressed uloader.kip1', shell = hshell, stdout = subprocess.DEVNULL)
             with open('uloader.kip1', 'rb') as decompressed_loader_kip:
                 loader_data = decompressed_loader_kip.read()
                 result = re.search(b'\x00\x94\x01\xC0\xBE\x12\x1F\x00', loader_data)

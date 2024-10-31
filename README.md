@@ -20,6 +20,7 @@ All material exist purely for research reference.
     * It will obtain the key source referred to as "mariko_master_kek_source_%%" from the firmware files you've provided, and output to prod.keys or a file location you've designated with -k or --keys.
     * This script eliminates the need for "lockpick" of any kind, as long as the user provides firmware files.
     * This script works by first extracting the nca containing package1 with master_key_00, then extracting "package1" with the "mariko_bek" (obtainable with the release.nfo for scene release of "Marvel's Spider-Man: Miles Morales" by BigBlueBox), and then proceeds in finding "mariko_master_kek_source_%%", And then transforms "mariko_master_kek_source_%%" using "mariko_kek" to become "master_kek" and subsequently sets off the key derivation chain, using the tool "hactoolnet".
+    * the cryptographic logic described can be sampled with this python script, output keyfile (default "prod.keys", can be altered with -k) : [aes_sample.py](scripts/aes_sample.py)
     * Usage: do "python scripts/mariko_keygen.py -f folder -k prod.keys" with firmware files present in a folder called firmware, or as supplied with -f or --firmware, or store the keys at another location as supplied with -k or --keys . [mariko_keygen.py](scripts/mariko_keygen.py)
 
   - Python script to generate patches for Atmospheres open-source loader re-implementation, requires lz4 from pip 
