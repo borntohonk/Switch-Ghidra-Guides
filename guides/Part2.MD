@@ -4,7 +4,7 @@ Part 2 will go through the basics of getting the type of switch binaries you nee
 
 1. To obtain the latest set of keys for the purpose of decrypting the nintendo switch firmware files, you're going to want the key known as "tsec_root_key_02". How you obtain this these days is up to you to figure out on your own.
 
-2. You're going to want to save that key in a text file named keys.txt with just a single line saved in it with the f's replaced with the actual key such as this, "tsec_root_key_02 = fffffffffffffffffffffffffffffff", and then you're going to open a terminal and run "hactoolnet -k keys.txt -t keygen >> prod.keys" (if you do have the "mariko_kek" and "mariko_bek" you can consider using [mariko keygen](../scripts/mariko_keygen.py), with usage instructions in the README.md to do this process for you.)
+2. You're going to want to save that key in a text file named keys.txt with just a single line saved in it with the f's replaced with the actual key such as this, "tsec_root_key_02 = fffffffffffffffffffffffffffffff", and then you're going to open a terminal and run "hactoolnet -k keys.txt -t keygen >> prod.keys" (you can consider using this instead [aes_sample.py](../scripts/aes_sample.py, with usage instructions in the README.md to do this process for you.))
 
 3. Copy the outputting prod.keys to ~/.switch/prod.keys (this translates to /home/youruser/.switch/prod.keys and C:/users/youruser/.switch/prod.keys).
 

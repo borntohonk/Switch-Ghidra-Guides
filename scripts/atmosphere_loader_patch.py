@@ -1,7 +1,7 @@
 import os
 import re
 import shutil
-import subprocess
+import nxo64
 from glob import glob
 from hashlib import sha256
 from io import BytesIO
@@ -45,30 +45,32 @@ with ZipFile(glob('./atmosphere-*.zip')[0], 'r') as amszip:
             compressed_loader_file = open('loader.kip1', 'wb')
             compressed_loader_file.write(loader_kip)
             compressed_loader_file.close()
-            subprocess.run(f'{hactoolnet} -t kip1 loader.kip1 --uncompressed uloader.kip1', shell = hshell, stdout = subprocess.DEVNULL)
-            with open('uloader.kip1', 'rb') as decompressed_loader_kip:
-                loader_data = decompressed_loader_kip.read()
-                result = re.search(b'\x00\x94\x01\xC0\xBE\x12\x1F\x00', loader_data)
-                patch = '%06X%s%s' % (result.end(), '0001', '00')
-                hash = sha256(open('loader.kip1', 'rb').read()).hexdigest().upper()
-                print('LOADER HASH     : ' + '%s' % hash)
-                print('LOADER PATCH    : ' + patch)
-                loader_hekate = open('./hekate_patches/loader_patches.ini', 'a')
-                loader_hekate.write(f'\n#Loader Atmosphere-{atmosphere_version}-{atmosphere_hash}\n')
-                loader_hekate.write(f'[FS:{hash[:16]}]\n')
-                hekate_bytes = decompressed_loader_kip.seek(result.end())
-                loader_hekate.write('.nosigchk=0:0x' + '%04X' % (result.end()-0x100) + ':0x1:' + decompressed_loader_kip.read(0x1).hex().upper() + ',00\n')
-                decompressed_loader_kip.close()
-                package3.close()
-                amszip.close()
-                os.remove('./uloader.kip1')
-                os.remove('./loader.kip1')
-                os.remove(atmosphere_zip)
-                with open('./patches/bootloader/patches.ini', 'wb') as outfile:
-                    for filename in ['./hekate_patches/header.ini', './hekate_patches/fs_patches.ini', './hekate_patches/loader_patches.ini']:
-                        with open(filename, 'rb') as readfile:
-                            shutil.copyfileobj(readfile, outfile)
-                shutil.make_archive('patches', 'zip', 'patches')
+            with open('loader.kip1', 'rb') as compressed_loader_kip:
+                nxo64.write_file(f'uloader.kip1', nxo64.decompress_kip(compressed_loader_kip))
+                with open('uloader.kip1', 'rb') as decompressed_loader_kip:
+                    loader_data = decompressed_loader_kip.read()
+                    result = re.search(b'\x00\x94\x01\xC0\xBE\x12\x1F\x00', loader_data)
+                    patch = '%06X%s%s' % (result.end(), '0001', '00')
+                    hash = sha256(open('loader.kip1', 'rb').read()).hexdigest().upper()
+                    print('LOADER HASH     : ' + '%s' % hash)
+                    print('LOADER PATCH    : ' + patch)
+                    loader_hekate = open('./hekate_patches/loader_patches.ini', 'a')
+                    loader_hekate.write(f'\n#Loader Atmosphere-{atmosphere_version}-{atmosphere_hash}\n')
+                    loader_hekate.write(f'[FS:{hash[:16]}]\n')
+                    hekate_bytes = decompressed_loader_kip.seek(result.end())
+                    loader_hekate.write('.nosigchk=0:0x' + '%04X' % (result.end()-0x100) + ':0x1:' + decompressed_loader_kip.read(0x1).hex().upper() + ',00\n')
+                    compressed_loader_kip.close()
+                    decompressed_loader_kip.close()
+                    package3.close()
+                    amszip.close()
+                    os.remove('./uloader.kip1')
+                    os.remove('./loader.kip1')
+                    os.remove(atmosphere_zip)
+                    with open('./patches/bootloader/patches.ini', 'wb') as outfile:
+                        for filename in ['./hekate_patches/header.ini', './hekate_patches/fs_patches.ini', './hekate_patches/loader_patches.ini']:
+                            with open(filename, 'rb') as readfile:
+                                shutil.copyfileobj(readfile, outfile)
+                    shutil.make_archive('patches', 'zip', 'patches')
         else:
             print(
                 'KIP1Loader magic not found! - Script needs to be fixed, loader_kip is not correct!')

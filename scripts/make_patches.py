@@ -7,6 +7,9 @@ import hashlib
 import os
 import argparse
 import platform
+import key_sources
+import nxo64
+import aes128
 from base64 import b64decode
 
 argParser = argparse.ArgumentParser()
@@ -17,6 +20,18 @@ args = argParser.parse_args()
 location = "%s" % args.location
 prod_keys = "%s" % args.keys
 verbose = "%s" % args.verbose
+
+def decompress_main(main):
+    with open(f'{main}', 'rb') as decompressed_main:
+        return nxo64.decompress_nso(decompressed_main)
+    
+def decompress_kip(kip):
+    with open(f'{kip}', 'rb') as decompressed_kip:
+        return nxo64.decompress_kip(decompressed_kip)
+    
+def decrypt(key, decryption_key):
+	crypto = aes128.AESECB(decryption_key)
+	return crypto.decrypt(key)
 
 if location == "None":
     location = "firmware"
@@ -47,11 +62,34 @@ else:
     if verbose == "True":
         print("Unknown Platform: {platform.system()}, proide your own hactool and hactoolnet")
 
-with open('temp.keys', 'a') as temp_keys:
-    temp_keys.write('\n')
-    temp_keys.write(b64decode('bWFyaWtvX2JlayAgICAgICAgICAgICAgICAgICAgICAgID0gNkE1RDE2OEIxNEU2NENBREQ3MERBOTM0QTA2Q0MyMjI=').decode('utf-8') + '\n')
-    temp_keys.write(b64decode('bWFyaWtvX2tlayAgICAgICAgICAgICAgICAgICAgICAgID0gNDEzMEI4Qjg0MkREN0NEMkVBOEZENTBEM0Q0OEI3N0M=').decode('utf-8') + '\n')
-    temp_keys.write(b64decode('bWFzdGVyX2tleV8wMCAgICAgICAgICAgICAgICAgICAgID0gQzJDQUFGRjA4OUI5QUVENTU2OTQ4NzYwNTUyNzFDN0Q=').decode('utf-8') + '\n')
+master_keks = [decrypt(i, key_sources.mariko_kek) for i in key_sources.mariko_master_kek_sources]
+
+# generate master_key_%% from all provided master_kek_%% using master_key_source
+current_master_key = decrypt(key_sources.master_key_source, master_keks[-1])
+
+current_master_key_revision = len(key_sources.Master_Key_Sources)
+master_keys = []
+first = True
+for i in reversed(key_sources.Master_Key_Sources):
+    if first:
+        first = False
+        previous_key = i
+        next_master_key = decrypt(previous_key, current_master_key)
+        current_master_key_revision = current_master_key_revision -1
+        master_keys.append(current_master_key)
+        master_keys.append(next_master_key)
+    else:
+        key = previous_key
+        previous_key = i
+        next_master_key = decrypt(previous_key, next_master_key)
+        current_master_key_revision = current_master_key_revision -1
+        master_keys.append(next_master_key)
+
+
+with open('temp.keys', 'w') as temp_keys:
+    temp_keys.write(f'master_key_00 = ' + f'{master_keys[-1].hex().upper()}\n')
+    temp_keys.write(f'mariko_bek = ' + f'{key_sources.mariko_bek.hex().upper()}\n')
+    temp_keys.write(f'mariko_kek = ' + f'{key_sources.mariko_kek.hex().upper()}\n\n')
     temp_keys.close()
     subprocess.run(f'{hactoolnet} --keyset temp.keys -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
     subprocess.run(f'{hactoolnet} --keyset temp.keys -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', shell = hshell , stdout = subprocess.DEVNULL)
@@ -110,17 +148,17 @@ fat32uncompressed = f'{location}/titleid/0100000000000819/romfs/nx/ini1/u_FS.kip
 exfatuncompressed = f'{location}/titleid/010000000000081b/romfs/nx/ini1/u_FS.kip1'
 
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000033 --exefsdir {location}/titleid/0100000000000033/exefs/', shell = hshell, stdout = subprocess.DEVNULL)
-subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {escompressed} --uncompressed={esuncompressed}', shell = hshell, stdout = subprocess.DEVNULL)
+nxo64.write_file(f'{esuncompressed}', decompress_main(f'{escompressed}'))
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 010000000000000f --exefsdir {location}/titleid/010000000000000f/exefs/', shell = hshell, stdout = subprocess.DEVNULL)
-subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {nifmcompressed} --uncompressed={nifmuncompressed}', shell = hshell, stdout = subprocess.DEVNULL)
+nxo64.write_file(f'{nifmuncompressed}', decompress_main(f'{nifmcompressed}'))
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000025 --exefsdir {location}/titleid/0100000000000025/exefs/', shell = hshell, stdout = subprocess.DEVNULL)
-subprocess.run(f'{hactool} --disablekeywarns -k {prod_keys} -t nso0 {nimcompressed} --uncompressed={nimuncompressed}', shell = hshell, stdout = subprocess.DEVNULL)
+nxo64.write_file(f'{nimuncompressed}', decompress_main(f'{nimcompressed}'))
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/0100000000000819/romfs/nx/package2 --ini1dir {location}/titleid/0100000000000819/romfs/nx/ini1', shell = hshell, stdout = subprocess.DEVNULL)
-subprocess.run(f'{hactoolnet} -k {prod_keys} -t kip1 {fat32compressed} --uncompressed {fat32uncompressed}', shell = hshell, stdout = subprocess.DEVNULL)
+nxo64.write_file(f'{fat32uncompressed}', decompress_kip(f'{fat32compressed}'))
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', shell = hshell, stdout = subprocess.DEVNULL)
-subprocess.run(f'{hactoolnet} -k {prod_keys} -t kip1 {exfatcompressed} --uncompressed {exfatuncompressed}', shell = hshell, stdout = subprocess.DEVNULL)
+nxo64.write_file(f'{exfatuncompressed}', decompress_kip(f'{exfatcompressed}'))
 
 def get_es_build_id():
     with open(escompressed, 'rb') as f:
