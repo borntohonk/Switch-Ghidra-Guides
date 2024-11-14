@@ -283,19 +283,21 @@ if incremented_revision < 11:
     #below 11.0.0 == 10.0.0
     fspattern1 = rb'.{2}\x00\x36.{7}\x71.{2}\x00\x54.{2}\x48\x39'
     fsoffset1 = 0x0
-elif incremented_revision > 12:
+else:
     #above == 11.0.0+
     fspattern1 = rb'.\x94.{2}\x00\x36.\x25\x80\x52'
     fsoffset1= 0x2
 
-if incremented_revision < 18:
-    #below 19.0.0
+if incremented_revision < 17:
+    #below 17.0.0
     fspattern2 = rb'\x40\xf9.{3}\x94\x08.\x00\x12.\x05\x00\x71' 
     fsoffset2 = 0x2
+    patchvalue = "E0031F2A"
 else:
     #above 19.0.0
     fspattern2 = rb'\x40\xf9.{3}\x94.{2}\x40\xb9.{2}\x00\x12'
-    fsoffset2= 0x2
+    fsoffset2 = 0x2
+    patchvalue = "E0031F2A"
 
 with open('./hekate_patches/fs_patches.ini') as fs_patches:
     if fat32hash[:16] in fs_patches.read():
@@ -314,7 +316,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'{version} Second FS-FAT32 offset not found\n')
             else:
                 patch1 = '%06X%s%s' % (result1.start() + 0x2, '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', 'E0031F2A')
+                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', f'{patchvalue}')
                 changelog.write(f'FS-FAT32 patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-FAT32 offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-FAT32 offset and patch at: {patch2}\n')
@@ -325,7 +327,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 byte_alignment = fat32f.seek(result1.start() + fsoffset1)
                 fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.start() + fsoffset1 - 0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},1F2003D5\n')
                 byte_alignment = fat32f.seek(result2.start() + fsoffset2)
-                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},E0031F2A\n')
+                fat32_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{fat32f.read(0x4).hex().upper()},{patchvalue}\n')
                 fat32_hekate.close()
                 changelog.write(f'{version} FS-FAT32 related patch for atmosphere fork\n')
                 changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.start() + fsoffset1) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
@@ -350,7 +352,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 changelog.write(f'{version} Second FS-ExFAT offset not found\n')
             else:
                 patch1 = '%06X%s%s' % (result1.start() + fsoffset1, '0004', '1F2003D5')
-                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', 'E0031F2A')
+                patch2 = '%06X%s%s' % (result2.start() + fsoffset2, '0004', f'{patchvalue}')
                 changelog.write(f'FS-ExFAT patch related changelog for {version}:\n')
                 changelog.write(f'{version} First FS-ExFAT offset and patch at: {patch1}\n')
                 changelog.write(f'{version} Second FS-exFAT offset and patch at: {patch2}\n')
@@ -361,7 +363,7 @@ with open('./hekate_patches/fs_patches.ini') as fs_patches:
                 byte_alignment = exfatf.seek(result1.start() + fsoffset1)
                 exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result1.start() + fsoffset1 - 0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},1F2003D5\n')
                 byte_alignment = exfatf.seek(result2.start() + fsoffset2)
-                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},E0031F2A\n')
+                exfat_hekate.write('.nosigchk=0:0x' + '%06X' % (result2.start() + fsoffset2 - 0x100) + f':0x4:{exfatf.read(0x4).hex().upper()},{patchvalue}\n')
                 exfat_hekate.close()
                 changelog.write(f'{version} FS-ExFAT related patch for atmosphere fork\n')
                 changelog.write(f'AddPatch(fs_meta, 0x' + '%06X' % (result1.start() + fsoffset1) + f', NoNcaHeaderSignatureCheckPatch0, sizeof(NoNcaHeaderSignatureCheckPatch0));\n')
