@@ -13,12 +13,12 @@ args = argParser.parse_args()
 firmware = "%s" % args.firmware
 
 def decrypt(key, decryption_key):
-	crypto = aes128.AESECB(decryption_key)
-	return crypto.decrypt(key)
+    crypto = aes128.AESECB(decryption_key)
+    return crypto.decrypt(key)
 
 def encrypt(key, encryption_key):
-	crypto = aes128.AESECB(encryption_key)
-	return crypto.encrypt(key)
+    crypto = aes128.AESECB(encryption_key)
+    return crypto.encrypt(key)
 
 if firmware == "None":
     firmware = "firmware"
@@ -48,7 +48,6 @@ else:
     print(f"Unknown Platform: {platform.system()}, proide your own hactoolnet, falling back to backup keygen")
     hactoolnet = False
 
-# ^ todo: add latest mariko_master_kek_source from https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L26
 with open('temp.keys', 'w') as temp_keys:
     temp_keys.write(f'mariko_kek = {key_sources.mariko_kek.hex().upper()}\n')
     temp_keys.write(f'mariko_bek = {key_sources.mariko_bek.hex().upper()}\n')
@@ -105,9 +104,10 @@ with open('temp.keys', 'w') as temp_keys:
             current_master_key_revision_dev = current_master_key_revision_dev -1
             master_keys_dev.append(next_master_key_dev)
 
-	# Write master_key_%%
+    master_keys.reverse()
+    # Write master_key_%%
     count = -0x1
-    for i in reversed(master_keys):
+    for i in master_keys:
         count = count + 0x1
         keys = f'master_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
         temp_keys.write(f'{keys}\n')
