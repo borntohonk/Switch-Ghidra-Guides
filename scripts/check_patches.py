@@ -242,14 +242,14 @@ else:
 if incremented_revision < 17:
     #below 17.0.0
     fspattern2 = rb'\x40\xf9.{3}\x94\x08.\x00\x12.\x05\x00\x71'
-    # "0x40f9...9408.0012.050071", 2, 0
+    # { "nocntchk", "0x40f9...9408.0012.050071", 2, 0, bl_cond, ret0_patch, ret0_applied, true, MAKEHOSVERSION(10,0,0), MAKEHOSVERSION(18,1,0) },
     fsoffset2 = 0x2
     patchvalue = "E0031F2A"
 else:
     # above 19.0.0
     # nocntchk2
     fspattern2 = rb'\x40\xf9.{3}\x94.{2}\x40\xb9.{2}\x00\x12'
-    # "0x40f9...94..40b9..0012", 2, 0
+    # { "nocntchk2", "0x40f9...94..40b9..0012", 2, 0, bl_cond, ret0_patch, ret0_applied, true, MAKEHOSVERSION(19,0,0), FW_VER_ANY },
     fsoffset2 = 0x2
     patchvalue = "E0031F2A"
 

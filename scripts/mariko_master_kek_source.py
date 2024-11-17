@@ -154,21 +154,20 @@ with open('temp.keys', 'w') as temp_keys:
             print(f'master_kek_{incremented_revision} = ' + new_master_kek.hex().upper())
             print(f'master_key_{incremented_revision} = '  +   new_master_key.hex().upper())
             print()
-            print(formatted_vector) # "MasterKeySources" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L116-L136
+            print(f'bytes([{formatted_vector}]),') # "MasterKeySources" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L116-L136
             print(f'^ add this string to master_key_sources array ^')
-            print(formatted_master_kek_source) # "EristaMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L34-L37
+            print(f'bytes([{formatted_master_kek_source}]),') # "EristaMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L34-L37
             print(f'^ add this string to master_kek_sources array ^')
-            print(formatted_mariko_master_kek_source) # "MarikoMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L24-L27
+            print(f'bytes([{formatted_mariko_master_kek_source}]),') # "MarikoMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L24-L27
             print(f'^ add this string to mariko_master_kek_sources array ^')
             print()
             print(f'mariko_master_kek_source_dev_{incremented_revision} = {mariko_master_kek_source_dev_key.hex().upper()}')
             print(f'master_kek_dev_{incremented_revision} = ' + new_master_kek_dev.hex().upper())
             print(f'master_key_dev_{incremented_revision} = '  +   new_master_key_dev.hex().upper())
             print()
-            print(formatted_vector_dev)
+            print(f'bytes([{formatted_vector_dev}]),')
             print(f'^ add this string to master_key_sources_dev array ^') # "MasterKeySourcesDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L138-L158
-            print(formatted_mariko_master_kek_source_dev)
+            print(f'bytes([{formatted_mariko_master_kek_source_dev}]),')
             print(f'^ unused, but output for consistency ^') # "MarikoMasterKekSourceDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L29-L32
         decrypted_bin.close()
         os.remove('temp.keys')
-        
