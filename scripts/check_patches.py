@@ -9,8 +9,7 @@ import argparse
 import platform
 import key_sources
 import nxo64
-import aes128
-from base64 import b64decode
+from Cryptodome.Cipher import AES
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location.")
@@ -27,9 +26,10 @@ def decompress_kip(kip):
     with open(f'{kip}', 'rb') as decompressed_kip:
         return nxo64.decompress_kip(decompressed_kip)
     
-def decrypt(key, decryption_key):
-    crypto = aes128.AESECB(decryption_key)
-    return crypto.decrypt(key)
+def decrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.decrypt(input)
+    return output
 
 if location == "None":
     location = "firmware"

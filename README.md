@@ -15,16 +15,19 @@ All material exist purely for research reference.
 
   - Python script to obtain the latest mariko_master_kek_source_%% from provided firmware files, and provide strings to update the arrays for key_sources.py, requires lz4 from pip  
     * example usage: "python scripts/mariko_master_kek_source.py --firmware firmware" [mariko_master_kek_source.py](scripts/mariko_master_kek_source.py)
+    * requires pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex)
     * updating scripts/key_sources.py will benefit key generation for [aes_sample.py](scripts/aes_sample.py)
 
   - Python script to derive entire keyset. [aes_sample.py](scripts/aes_sample.py)
     * The cryptographic logic described can be sampled with this python script, output keyfile (default "prod.keys", can be altered with -k) : [aes_sample.py](scripts/aes_sample.py)
     * There is also a developer variant, which works the same way, [aes_sample_dev.py](scripts/aes_sample_dev.py)
+    * requires pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex)
 
   - Python script to check known patterns for sys-patch.
     * Usage: put firmware files in a folder named firmware, or supply a location with -l or --location, supply keys with -k or --keys., otherwise it will default to ~/.switch/prod.keys
     * example usage: "python scripts/check_patches.py --location temp_folder --keys prod.keys"
     * [check_patches.py](scripts/check_patches.py)
+    * requires pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex)
 
   - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0
 

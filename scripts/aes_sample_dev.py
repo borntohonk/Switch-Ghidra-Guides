@@ -1,5 +1,5 @@
-import aes128
 import argparse
+from Cryptodome.Cipher import AES
 import key_sources as key_sources
 
 argParser = argparse.ArgumentParser()
@@ -13,23 +13,24 @@ if prod_keys == "None":
 else: 
     keys = prod_keys
 
-def decrypt(key, decryption_key):
-    crypto = aes128.AESECB(decryption_key)
-    return crypto.decrypt(key)
+def decrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.decrypt(input)
+    return output
+
+def encrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.encrypt(input)
+    return output
 
 def generateKek(src, masterKey, kek_seed, key_seed):
     kek = []
     src_kek = []
 
-    crypto = aes128.AESECB(masterKey)
-    kek = crypto.decrypt(kek_seed)
-
-    crypto = aes128.AESECB(kek)
-    src_kek = crypto.decrypt(src)
-
+    kek = decrypt(kek_seed ,masterKey)
+    src_kek = decrypt(src ,kek)
     if key_seed is not None:
-        crypto = aes128.AESECB(src_kek)
-        return crypto.decrypt(key_seed)
+        return decrypt(key_seed ,src_kek)
     else:
         return src_kek
 

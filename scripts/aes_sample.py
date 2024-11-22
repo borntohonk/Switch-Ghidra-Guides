@@ -1,5 +1,5 @@
-import aes128
 import argparse
+from Cryptodome.Cipher import AES
 import key_sources as key_sources
 
 argParser = argparse.ArgumentParser()
@@ -13,23 +13,24 @@ if prod_keys == "None":
 else: 
     keys = prod_keys
 
-def decrypt(key, decryption_key):
-    crypto = aes128.AESECB(decryption_key)
-    return crypto.decrypt(key)
+def decrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.decrypt(input)
+    return output
+
+def encrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.encrypt(input)
+    return output
 
 def generateKek(src, masterKey, kek_seed, key_seed):
     kek = []
     src_kek = []
 
-    crypto = aes128.AESECB(masterKey)
-    kek = crypto.decrypt(kek_seed)
-
-    crypto = aes128.AESECB(kek)
-    src_kek = crypto.decrypt(src)
-
+    kek = decrypt(kek_seed ,masterKey)
+    src_kek = decrypt(src ,kek)
     if key_seed is not None:
-        crypto = aes128.AESECB(src_kek)
-        return crypto.decrypt(key_seed)
+        return decrypt(key_seed ,src_kek)
     else:
         return src_kek
 
@@ -102,8 +103,6 @@ with open(keys, 'w') as manual_crypto:
             current_master_key_revision = current_master_key_revision -1
             master_keys.append(next_master_key)
 
-
-
     master_keys.reverse()
     # Write master_key_%%
     count = -0x1
@@ -165,6 +164,7 @@ with open(keys, 'w') as manual_crypto:
     manual_crypto.write(f'save_mac_sd_card_key_source = ' + f'{key_sources.save_mac_sd_card_key_source.hex().upper()}\n')
     manual_crypto.write(f'sd_card_kek_source = ' + f'{key_sources.sd_card_kek_source.hex().upper()}\n\n')
 
+    manual_crypto.write(f'xci_header_key = ' + f'{key_sources.xci_header_key.hex().upper()}\n\n')
 
     # generate key_area_key_application_%% from all provided master_key_%% using key_area_key_application_source
     key_area_key_application = [generateKek(key_sources.key_area_key_application_source, i, key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source) for i in master_keys]

@@ -3,22 +3,23 @@ import subprocess
 import argparse
 import platform
 import os
-import aes128
+from Cryptodome.Cipher import AES
 import key_sources as key_sources
-from base64 import b64decode
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f", "--firmware", help="firmware folder")
 args = argParser.parse_args()
 firmware = "%s" % args.firmware
 
-def decrypt(key, decryption_key):
-    crypto = aes128.AESECB(decryption_key)
-    return crypto.decrypt(key)
+def decrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.decrypt(input)
+    return output
 
-def encrypt(key, encryption_key):
-    crypto = aes128.AESECB(encryption_key)
-    return crypto.encrypt(key)
+def encrypt(input, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    output = cipher.encrypt(input)
+    return output
 
 if firmware == "None":
     firmware = "firmware"
