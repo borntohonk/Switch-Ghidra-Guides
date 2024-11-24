@@ -34,6 +34,32 @@ def generateKek(src, masterKey, kek_seed, key_seed):
     else:
         return src_kek
 
+# HOVI_KEK = key_sources.tsec_secret_26
+# Package1_Mac_Kek_Source = key_sources.HOVI_SIG_KEY_PRD
+# Package1_Kek_Source = key_sources.HOVI_ENC_KEY_PRD
+# Tsec_Root_Kek_Source = key_sources.HOVI_KEK_KEY_PRD
+# Tsec_Hovi_IV_key = key_sources.HOVI_ENC_KEY_IV1
+
+# tsec_root_kek_00 = encrypt(Tsec_Root_Kek_Source, HOVI_KEK)
+# tsec_root_kek_01 = tsec_root_kek_00 
+# tsec_root_kek_02 = decrypt(Tsec_Root_Kek_Source, HOVI_KEK)
+# package1_kek_00 = encrypt(Package1_Kek_Source, HOVI_KEK)
+# package1_kek_01 = package1_kek_00
+# package1_kek_02 = decrypt(Package1_Kek_Source, HOVI_KEK)
+# package1_mac_kek_00 = encrypt(Package1_Mac_Kek_Source, HOVI_KEK)
+# package1_mac_kek_01 = package1_mac_kek_00
+# package1_mac_kek_02 = decrypt(Package1_Mac_Kek_Source, HOVI_KEK)
+
+# tsec_root_key_00 = encrypt(key_sources.tsec_auth_signature_00, tsec_root_kek_00)
+# tsec_root_key_01 = encrypt(key_sources.tsec_auth_signature_01, tsec_root_kek_01)
+# tsec_root_key_02 = encrypt(key_sources.tsec_auth_signature_02, tsec_root_kek_02)
+# package1_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_kek_00)
+# package1_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_kek_01)
+# package1_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_kek_02)
+# package1_mac_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_mac_kek_00)
+# package1_mac_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_mac_kek_01)
+# package1_mac_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_mac_kek_02)
+
 with open(keys, 'w') as manual_crypto:	
     manual_crypto.write(f'tsec_auth_signature_00 = ' + f'{key_sources.tsec_auth_signature_00.hex().upper()}\n')
     manual_crypto.write(f'tsec_auth_signature_01 = ' + f'{key_sources.tsec_auth_signature_01.hex().upper()}\n')
