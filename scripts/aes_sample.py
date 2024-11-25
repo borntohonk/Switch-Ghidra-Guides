@@ -1,5 +1,6 @@
 import argparse
 from Cryptodome.Cipher import AES
+from Cryptodome.Hash import SHA256
 import key_sources as key_sources
 
 argParser = argparse.ArgumentParser()
@@ -12,6 +13,11 @@ if prod_keys == "None":
     keys = "prod.keys"
 else: 
     keys = prod_keys
+
+def hash(i):
+    h = SHA256.new()
+    h.update(i)
+    return h.hexdigest()
 
 def decrypt(input, key):
     cipher = AES.new(key, AES.MODE_ECB)
@@ -33,41 +39,61 @@ def generateKek(src, masterKey, kek_seed, key_seed):
         return decrypt(key_seed ,src_kek)
     else:
         return src_kek
+    
+HAVE_SECRET_26 = False
+tsec_root_key_00 = key_sources.tsec_root_key_00
+tsec_root_key_01 = key_sources.tsec_root_key_01
+tsec_root_key_02 = key_sources.tsec_root_key_02
 
-# HOVI_KEK = key_sources.tsec_secret_26
-# Package1_Mac_Kek_Source = key_sources.HOVI_SIG_KEY_PRD
-# Package1_Kek_Source = key_sources.HOVI_ENC_KEY_PRD
-# Tsec_Root_Kek_Source = key_sources.HOVI_KEK_KEY_PRD
-# Tsec_Hovi_IV_key = key_sources.HOVI_ENC_KEY_IV1
+if key_sources.tsec_secret_26 != key_sources.zeroes:
+    if hash(key_sources.tsec_secret_26) == "cefe01c9e3eeef1a73b8c10d742ae386279b7dff30a2fbc0aabd058c1f135833":
+        HAVE_SECRET_26 = True
+        HOVI_KEK = key_sources.tsec_secret_26
+        Package1_Mac_Kek_Source = key_sources.HOVI_SIG_KEY_PRD
+        Package1_Kek_Source = key_sources.HOVI_ENC_KEY_PRD
+        Tsec_Root_Kek_Source = key_sources.HOVI_KEK_KEY_PRD
+        Tsec_Hovi_IV_key = key_sources.HOVI_ENC_KEY_IV1
 
-# tsec_root_kek_00 = encrypt(Tsec_Root_Kek_Source, HOVI_KEK)
-# tsec_root_kek_01 = tsec_root_kek_00 
-# tsec_root_kek_02 = decrypt(Tsec_Root_Kek_Source, HOVI_KEK)
-# package1_kek_00 = encrypt(Package1_Kek_Source, HOVI_KEK)
-# package1_kek_01 = package1_kek_00
-# package1_kek_02 = decrypt(Package1_Kek_Source, HOVI_KEK)
-# package1_mac_kek_00 = encrypt(Package1_Mac_Kek_Source, HOVI_KEK)
-# package1_mac_kek_01 = package1_mac_kek_00
-# package1_mac_kek_02 = decrypt(Package1_Mac_Kek_Source, HOVI_KEK)
+        tsec_root_kek_00 = encrypt(Tsec_Root_Kek_Source, HOVI_KEK)
+        tsec_root_kek_01 = tsec_root_kek_00 
+        tsec_root_kek_02 = decrypt(Tsec_Root_Kek_Source, HOVI_KEK)
+        package1_kek_00 = encrypt(Package1_Kek_Source, HOVI_KEK)
+        package1_kek_01 = package1_kek_00
+        package1_kek_02 = decrypt(Package1_Kek_Source, HOVI_KEK)
+        package1_mac_kek_00 = encrypt(Package1_Mac_Kek_Source, HOVI_KEK)
+        package1_mac_kek_01 = package1_mac_kek_00
+        package1_mac_kek_02 = decrypt(Package1_Mac_Kek_Source, HOVI_KEK)
 
-# tsec_root_key_00 = encrypt(key_sources.tsec_auth_signature_00, tsec_root_kek_00)
-# tsec_root_key_01 = encrypt(key_sources.tsec_auth_signature_01, tsec_root_kek_01)
-# tsec_root_key_02 = encrypt(key_sources.tsec_auth_signature_02, tsec_root_kek_02)
-# package1_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_kek_00)
-# package1_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_kek_01)
-# package1_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_kek_02)
-# package1_mac_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_mac_kek_00)
-# package1_mac_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_mac_kek_01)
-# package1_mac_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_mac_kek_02)
+        tsec_root_key_00 = encrypt(key_sources.tsec_auth_signature_00, tsec_root_kek_00)
+        tsec_root_key_01 = encrypt(key_sources.tsec_auth_signature_01, tsec_root_kek_01)
+        tsec_root_key_02 = encrypt(key_sources.tsec_auth_signature_02, tsec_root_kek_02)
+        package1_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_kek_00)
+        package1_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_kek_01)
+        package1_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_kek_02)
+        package1_mac_key_06 = encrypt(key_sources.tsec_auth_signature_00, package1_mac_kek_00)
+        package1_mac_key_07 = encrypt(key_sources.tsec_auth_signature_01, package1_mac_kek_01)
+        package1_mac_key_08 = encrypt(key_sources.tsec_auth_signature_02, package1_mac_kek_02)
 
-with open(keys, 'w') as manual_crypto:	
+with open(keys, 'w') as manual_crypto:
+    if HAVE_SECRET_26 == True:
+        manual_crypto.write(f'tsec_secret_26 = ' + f'{key_sources.tsec_secret_26.hex().upper()}\n\n')
+        manual_crypto.write(f'tsec_root_kek_00 = ' + f'{tsec_root_kek_00.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_kek_01 = ' + f'{tsec_root_kek_01.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_kek_02 = ' + f'{tsec_root_kek_02.hex().upper()}\n\n')
+        manual_crypto.write(f'package1_mac_kek_00 = ' + f'{package1_mac_kek_00.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_kek_01 = ' + f'{package1_mac_kek_01.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_kek_02 = ' + f'{package1_mac_kek_02.hex().upper()}\n\n')
+        manual_crypto.write(f'package1_kek_00 = ' + f'{package1_kek_00.hex().upper()}\n')
+        manual_crypto.write(f'package1_kek_01 = ' + f'{package1_kek_01.hex().upper()}\n')
+        manual_crypto.write(f'package1_kek_02 = ' + f'{package1_kek_02.hex().upper()}\n\n')
+
     manual_crypto.write(f'tsec_auth_signature_00 = ' + f'{key_sources.tsec_auth_signature_00.hex().upper()}\n')
     manual_crypto.write(f'tsec_auth_signature_01 = ' + f'{key_sources.tsec_auth_signature_01.hex().upper()}\n')
     manual_crypto.write(f'tsec_auth_signature_02 = ' + f'{key_sources.tsec_auth_signature_02.hex().upper()}\n\n')
 
-    manual_crypto.write(f'tsec_root_key_00 = ' + f'{key_sources.tsec_root_key_00.hex().upper()}\n')
-    manual_crypto.write(f'tsec_root_key_01 = ' + f'{key_sources.tsec_root_key_01.hex().upper()}\n')
-    manual_crypto.write(f'tsec_root_key_02 = ' + f'{key_sources.tsec_root_key_02.hex().upper()}\n\n')
+    manual_crypto.write(f'tsec_root_key_00 = ' + f'{tsec_root_key_00.hex().upper()}\n')
+    manual_crypto.write(f'tsec_root_key_01 = ' + f'{tsec_root_key_01.hex().upper()}\n')
+    manual_crypto.write(f'tsec_root_key_02 = ' + f'{tsec_root_key_02.hex().upper()}\n\n')
 
     manual_crypto.write(f'keyblob_mac_key_source = ' + f'{key_sources.keyblob_mac_key_source.hex().upper()}\n')
     # Write keyblob_key_source_%%
@@ -136,6 +162,14 @@ with open(keys, 'w') as manual_crypto:
         count = count + 0x1
         keys = f'master_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
         manual_crypto.write(f'{keys}\n')
+
+    if HAVE_SECRET_26 == True:
+        manual_crypto.write(f'package1_key_06 = ' + f'{package1_key_06.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_07 = ' + f'{package1_key_07.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_08 = ' + f'{package1_key_08.hex().upper()}\n\n')
+        manual_crypto.write(f'package1_mac_key_06 = ' + f'{package1_mac_key_06.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_07 = ' + f'{package1_mac_key_07.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_08 = ' + f'{package1_mac_key_08.hex().upper()}\n\n')
 
     manual_crypto.write(f'\n')
     manual_crypto.write(f'package2_key_source = ' + f'{key_sources.package2_key_source.hex().upper()}\n\n')
