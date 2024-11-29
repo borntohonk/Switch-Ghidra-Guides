@@ -9,7 +9,15 @@ import argparse
 import platform
 import key_sources
 import nxo64
-from Cryptodome.Cipher import AES
+try:
+    from Cryptodome.Cipher import AES
+except ModuleNotFoundError:
+    pass
+
+try:
+    from Crypto.Cipher import AES
+except ModuleNotFoundError:
+    pass
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-l", "--location", help="firmware folder location.")

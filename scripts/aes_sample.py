@@ -1,6 +1,18 @@
 import argparse
-from Cryptodome.Cipher import AES
-from Cryptodome.Hash import SHA256
+
+try:
+    from Cryptodome.Cipher import AES
+    from Cryptodome.Hash import SHA256
+except ModuleNotFoundError:
+    pass
+
+try:
+    from Crypto.Cipher import AES
+    from Crypto.Hash import SHA256
+except ModuleNotFoundError:
+    pass
+
+
 import key_sources as key_sources
 
 argParser = argparse.ArgumentParser()

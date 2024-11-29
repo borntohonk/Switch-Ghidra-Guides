@@ -3,7 +3,15 @@ import subprocess
 import argparse
 import platform
 import os
-from Cryptodome.Cipher import AES
+try:
+    from Cryptodome.Cipher import AES
+except ModuleNotFoundError:
+    pass
+
+try:
+    from Crypto.Cipher import AES
+except ModuleNotFoundError:
+    pass
 import key_sources as key_sources
 
 argParser = argparse.ArgumentParser()
