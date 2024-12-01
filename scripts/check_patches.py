@@ -186,9 +186,6 @@ nimbuildid = get_nim_build_id()
 fat32hash = hashlib.sha256(open(fat32compressed, 'rb').read()).hexdigest().upper()
 exfathash = hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper()
 
-esbuildid = get_es_build_id()
-es_patch = f'{esbuildid}.ips'
-
 with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
     read_data = decompressed_es_nso.read()
     result = re.search(rb'.{2}\x00.{3}\x00\x94\xa0.{2}\xd1.{2}\xff\x97.{7}\xa9', read_data)
@@ -197,14 +194,13 @@ with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
         print(f'{version} ES offset not found\n')
         print(f'Sys-patch for ES string is invalid for: {version}\n\n')
     else:
-        offset = '%06X' % (result.start() + 0x10)
-        print(f'Sys-patch for ES string still valid for: {version}\n')
-        print(f'Sys-patch ES pattern found at: {offset}\n')
-        print(f'{version} ES build-id: {esbuildid}\n\n')
-
-
-nifmbuildid = get_nifm_build_id()
-nifm_patch = f'{nifmbuildid}.ips'
+        if result.group(0)[19:20] == bytes([0x2A]) or bytes([0x92]): # mov2_cond check
+            offset = '%06X' % (result.start() + 0x10)
+            print(f'Sys-patch for ES string still valid for: {version}\n')
+            print(f'Sys-patch ES pattern found at: {offset}\n')
+            print(f'{version} ES build-id: {esbuildid}\n\n')
+        else:
+            print(f'ARM instruction does not match expected result, sys-patch for ES wont work.')
 
 with open(f'{nifmuncompressed}', 'rb') as decompressed_nifm_nso:
     read_data = decompressed_nifm_nso.read()
@@ -214,26 +210,29 @@ with open(f'{nifmuncompressed}', 'rb') as decompressed_nifm_nso:
         print(f'{version} NIFM offset not found\n')
         print(f'Sys-patch for NIFM string is invalid for: {version}\n\n')
     else:
-        offset = '%06X' % (result.start())
-        print(f'Sys-patch for NIFM string still valid for: {version}\n')
-        print(f'Sys-patch NIFM pattern found at: {offset}\n')
-        print(f'{version} NIFM build-id: {nifmbuildid}\n\n')
-
-nimbuildid = get_nim_build_id()
-nim_patch = f'{nimbuildid}.ips'
+        if result.group(0)[16:20] == bytes([0xF5, 0x03, 0x01, 0xAA]): # ctest_cond check
+            offset = '%06X' % (result.start())
+            print(f'Sys-patch for NIFM string still valid for: {version}\n')
+            print(f'Sys-patch NIFM pattern found at: {offset}\n')
+            print(f'{version} NIFM build-id: {nifmbuildid}\n\n')
+        else:
+            print("ARM instruction does not match expected result, sys-patch for NIFM won't work.")
 
 with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
     read_data = decompressed_nim_nso.read()
-    result = re.search(rb'.\x0F\x00\x35\x1F\x20\x03\xD5', read_data)
+    result = re.search(rb'.\x0F\x00\x35\x1F\x20\x03\xD5....', read_data)
     # { "nim", "0x.0F00351F2003D5", 8, 0, adr_cond, mov2_patch, mov2_applied, true, MAKEHOSVERSION(17,0,0), FW_VER_ANY },
     if not result:
         print(f'{version} NIM offset not found\n')
         print(f'Sys-patch for NIM string is invalid for: {version}\n\n')
     else:
-        offset = '%06X' % (result.start() + 0x8)
-        print(f'Sys-patch for NIM string still valid for: {version}\n')
-        print(f'Sys-patch NIM pattern found at: {offset}\n')
-        print(f'{version} NIM build-id: {nimbuildid}\n\n')
+        if result.group(0)[11:12] == bytes([0x10]): # adr_cond check
+            offset = '%06X' % (result.start() + 0x8)
+            print(f'Sys-patch for NIM string still valid for: {version}\n')
+            print(f'Sys-patch NIM pattern found at: {offset}\n')
+            print(f'{version} NIM build-id: {nimbuildid}\n\n')
+        else:
+            print("ARM instruction does not match expected result, sys-patch for NIM won't work.")
 
 if incremented_revision < 11:
     # below 11.0.0 == 10.0.0
@@ -245,7 +244,7 @@ else:
     # noncasigchk_
     fspattern1 = rb'.\x94.{2}\x00\x36.\x25\x80\x52'
     # { "noncasigchk_new", "0x.94..0036.258052", 2, 0, tbz_cond, nop_patch, nop_applied, true, MAKEHOSVERSION(17,0,0), FW_VER_ANY }, // 17.0.0 - 19.0.0+
-    fsoffset1= 0x2
+    fsoffset1 = 0x2
 
 if incremented_revision < 17:
     #below 17.0.0
@@ -272,12 +271,15 @@ with open(fat32uncompressed, 'rb') as fat32f:
         print(f'{version} Second FS-FAT32 offset not found\n')
         print(f'Sys-patch for FS-FAT32 nocntchk2 string is invalid for: {version}\n')
     else:
-        offset1 = '%06X' % (result1.start() + fsoffset1)
-        offset2 = '%06X' % (result2.start() + fsoffset2)
-        print(f'both sys-patch strings are valid for FS-FAT32 for: {version}\n')
-        print(f'{version} First Sys-patch FS-FAT32 pattern found at: {offset1}\n')
-        print(f'{version} Second Sys-patch FS-FAT32 pattern found at: {offset2}\n')
-        print(f'{version} FS-FAT32 SHA256 hash: {fat32hash}\n\n')
+        if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # tbz_cond and bl_cond check
+            offset1 = '%06X' % (result1.start() + fsoffset1)
+            offset2 = '%06X' % (result2.start() + fsoffset2)
+            print(f'both sys-patch strings are valid for FS-FAT32 for: {version}\n')
+            print(f'{version} First Sys-patch FS-FAT32 pattern found at: {offset1}\n')
+            print(f'{version} Second Sys-patch FS-FAT32 pattern found at: {offset2}\n')
+            print(f'{version} FS-FAT32 SHA256 hash: {fat32hash}\n\n')
+        else:
+            print("sys-patch won't be able to patch FS properly")
 fat32f.close()
 
 with open(exfatuncompressed, 'rb') as exfatf:
@@ -291,10 +293,13 @@ with open(exfatuncompressed, 'rb') as exfatf:
         print(f'{version} Second FS-ExFAT offset not found\n')
         print(f'Sys-patch for FS-ExFAT nocntchk2 string is invalid for: {version}\n')
     else:
-        offset1 = '%06X' % (result1.start() + fsoffset1)
-        offset2 = '%06X' % (result2.start() + fsoffset2)
-        print(f'both sys-patch strings are valid for FS-exFAT for: {version}\n')
-        print(f'{version} First Sys-patch FS-ExFAT pattern found at: {offset1}\n')
-        print(f'{version} Second Sys-patch FS-ExFAT pattern found at: {offset2}\n')
-        print(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
+        if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # bl_cond and bl_cond check
+            offset1 = '%06X' % (result1.start() + fsoffset1)
+            offset2 = '%06X' % (result2.start() + fsoffset2)
+            print(f'both sys-patch strings are valid for FS-exFAT for: {version}\n')
+            print(f'{version} First Sys-patch FS-ExFAT pattern found at: {offset1}\n')
+            print(f'{version} Second Sys-patch FS-ExFAT pattern found at: {offset2}\n')
+            print(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
+        else:
+            print("sys-patch won't be able to patch FS properly")
 exfatf.close()
