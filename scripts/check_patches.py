@@ -9,6 +9,8 @@ import argparse
 import platform
 import key_sources
 import nxo64
+import aes_sample
+
 try:
     from Cryptodome.Cipher import AES
 except ModuleNotFoundError:
@@ -47,7 +49,7 @@ user_keys = os.path.expanduser('~/.switch/prod.keys')
 
 if prod_keys == "None" and os.path.exists(user_keys):
     prod_keys = user_keys
-    shutil.copy(user_keys, "temp.keys")
+    shutil.copy(user_keys, "prod.keys")
 elif prod_keys == "None":
     prod_keys = "prod.keys"
 
@@ -67,73 +69,44 @@ else:
     hactoolnet = "hactoolnet"
     print("Unknown Platform: {platform.system()}, proide your own hactool and hactoolnet")
 
-master_keks = [decrypt(i, key_sources.mariko_kek) for i in key_sources.mariko_master_kek_sources]
+aes_sample.do_keygen()
+subprocess.run(f'{hactoolnet} --keyset prod.keys -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
+subprocess.run(f'{hactoolnet} --keyset prod.keys -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', shell = hshell , stdout = subprocess.DEVNULL)
+with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
+    secmon_data = decrypted_bin.read()
+    result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
+    byte_alignment = decrypted_bin.seek(result.end() + 0x22)
+    mariko_master_kek_source_dev_key = decrypted_bin.read(0x10).hex().upper()
+    byte_alignment = decrypted_bin.seek(result.end() + 0x32)
+    mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
+    byte_alignment = decrypted_bin.seek(0x150)
+    revision = decrypted_bin.read(0x01)
+    incremented_revision = int.from_bytes(revision, byteorder='little') - 0x1
+    incremented_hex_revision = (hex(incremented_revision)[2:])
+    mariko_master_kek_source = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_key}'
+    mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_dev_key}'
+    decrypted_bin.close()
+    with open('prod.keys', 'a') as keygen:
+        keygen.write(f'\n')
+        keygen.write(f'{mariko_master_kek_source}')
+        keygen.close()
 
-# generate master_key_%% from all provided master_kek_%% using master_key_source
-current_master_key = decrypt(key_sources.master_key_source, master_keks[-1])
+    with open(prod_keys, 'w') as new_prod_keys:
+        subprocess.run(f'{hactoolnet} --keyset prod.keys -t keygen', shell = hshell, stdout=new_prod_keys)
+        new_prod_keys.close()
+        os.remove('prod.keys')
 
-current_master_key_revision = len(key_sources.Master_Key_Sources)
-master_keys = []
-first = True
-for i in reversed(key_sources.Master_Key_Sources):
-    if first:
-        first = False
-        previous_key = i
-        next_master_key = decrypt(previous_key, current_master_key)
-        current_master_key_revision = current_master_key_revision -1
-        master_keys.append(current_master_key)
-        master_keys.append(next_master_key)
-    else:
-        key = previous_key
-        previous_key = i
-        next_master_key = decrypt(previous_key, next_master_key)
-        current_master_key_revision = current_master_key_revision -1
-        master_keys.append(next_master_key)
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+    if not os.path.exists(user_keys):
+        shutil.copy(prod_keys, user_keys)
 
-
-with open('temp.keys', 'w') as temp_keys:
-    temp_keys.write(f'master_key_00 = ' + f'{master_keys[-1].hex().upper()}\n')
-    temp_keys.write(f'header_key = ' + f'{key_sources.header_key.hex().upper()}\n')
-    temp_keys.write(f'mariko_bek = ' + f'{key_sources.mariko_bek.hex().upper()}\n')
-    temp_keys.write(f'mariko_kek = ' + f'{key_sources.mariko_kek.hex().upper()}\n\n')
-    temp_keys.close()
-    subprocess.run(f'{hactoolnet} --keyset temp.keys -t switchfs {location} --title 0100000000000819 --romfsdir {location}/titleid/0100000000000819/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
-    subprocess.run(f'{hactoolnet} --keyset temp.keys -t pk11 {location}/titleid/0100000000000819/romfs/a/package1 --outdir {location}/titleid/0100000000000819/romfs/a/pkg1', shell = hshell , stdout = subprocess.DEVNULL)
-    with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb') as decrypted_bin:
-        secmon_data = decrypted_bin.read()
-        result = re.search(b'\x4F\x59\x41\x53\x55\x4D\x49', secmon_data)
-        byte_alignment = decrypted_bin.seek(result.end() + 0x22)
-        mariko_master_kek_source_dev_key = decrypted_bin.read(0x10).hex().upper()
-        byte_alignment = decrypted_bin.seek(result.end() + 0x32)
-        mariko_master_kek_source_key = decrypted_bin.read(0x10).hex().upper()
-        byte_alignment = decrypted_bin.seek(0x150)
-        revision = decrypted_bin.read(0x01)
-        incremented_revision = int.from_bytes(revision, byteorder='little') - 0x1
-        incremented_hex_revision = (hex(incremented_revision)[2:])
-        mariko_master_kek_source = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_key}'
-        mariko_master_kek_source_dev = f'mariko_master_kek_source_{incremented_hex_revision}       = {mariko_master_kek_source_dev_key}'
-        decrypted_bin.close()
-        with open('temp.keys', 'a') as keygen:
-            keygen.write(f'\n')
-            keygen.write(f'{mariko_master_kek_source}')
-            keygen.close()
-
-        with open(prod_keys, 'w') as new_prod_keys:
-            subprocess.run(f'{hactoolnet} --keyset temp.keys -t keygen', shell = hshell, stdout=new_prod_keys)
-            new_prod_keys.close()
-            os.remove('temp.keys')
-
-        if not os.path.exists(user_folder):
-            os.makedirs(user_folder)
-        if not os.path.exists(user_keys):
-            shutil.copy(prod_keys, user_keys)
-
-        subprocess.run(f'{hactoolnet} --keyset {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
-        with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
-                byte_alignment = get_version.seek(0x68)
-                read_version_number = get_version.read(0x6).hex().upper()
-                version = (bytes.fromhex(read_version_number).decode('utf-8'))
-                version_ = version.replace('.', '_')
+    subprocess.run(f'{hactoolnet} --keyset {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
+    with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
+            byte_alignment = get_version.seek(0x68)
+            read_version_number = get_version.read(0x6).hex().upper()
+            version = (bytes.fromhex(read_version_number).decode('utf-8'))
+            version_ = version.replace('.', '_')
 
 print(f'Patch changelog for {version}:\n\n')
 print(f'# Firmware version number generated keys for is: {version}\n')
