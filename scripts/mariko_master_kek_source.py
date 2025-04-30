@@ -92,7 +92,7 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
                 # todo: if this for whatever reason is triggered, obtain newest root key
         encrypted_bin.close()
 
-    if mariko_master_kek_source_key == key_sources.mariko_master_kek_sources[-1]:
+    if mariko_master_kek_source_key in key_sources.mariko_master_kek_sources:
         new_master_kek = decrypt(mariko_master_kek_source_key, key_sources.mariko_kek)
         new_master_key = decrypt(key_sources.master_key_source, new_master_kek)
         new_master_kek_source = encrypt(new_master_kek, key_sources.tsec_root_key_02)
@@ -112,8 +112,14 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
         new_master_kek_source = encrypt(new_master_kek, key_sources.tsec_root_key_02)
         new_master_kek_dev =  decrypt(new_master_kek_source, key_sources.tsec_root_key_02_dev)
         new_master_key_dev =  decrypt(key_sources.master_key_source, new_master_kek_dev)
-        new_master_key_source_vector = encrypt(master_keys[-1], new_master_key).hex().upper()
-        new_master_key_source_vector_dev = encrypt(master_keys_dev[0], new_master_key_dev).hex().upper()
+        previous_mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
+        previous_master_kek = decrypt(previous_mariko_master_kek_source, key_sources.mariko_kek)
+        previous_master_key = decrypt(key_sources.master_key_source, previous_master_kek)
+        previous_master_kek_source = encrypt(previous_master_kek, key_sources.tsec_root_key_02)
+        previous_master_kek_dev =  decrypt(previous_master_kek_source, key_sources.tsec_root_key_02_dev)
+        previous_master_key_dev =  decrypt(key_sources.master_key_source, previous_master_kek_dev)
+        new_master_key_source_vector = encrypt(previous_master_key, new_master_key).hex().upper()
+        new_master_key_source_vector_dev = encrypt(previous_master_key_dev, new_master_key_dev).hex().upper()
         formatted_mariko_master_kek_source = '0x' + ', 0x'.join(mariko_master_kek_source_key.hex().upper()[i:i+2] for i in range(0, len(mariko_master_kek_source_key.hex().upper()), 2))
         formatted_mariko_master_kek_source_dev = '0x' + ', 0x'.join(mariko_master_kek_source_dev_key.hex().upper()[i:i+2] for i in range(0, len(mariko_master_kek_source_dev_key.hex().upper()), 2))
         formatted_vector = '0x' + ', 0x'.join(new_master_key_source_vector[i:i+2] for i in range(0, len(new_master_key_source_vector), 2))
