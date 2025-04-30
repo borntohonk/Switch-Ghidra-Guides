@@ -163,7 +163,8 @@ subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/01000000
 nxo64.write_file(f'{fat32uncompressed}', decompress_kip(f'{fat32compressed}'))
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t switchfs {location} --title 010000000000081b --romfsdir {location}/titleid/010000000000081b/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
 subprocess.run(f'{hactoolnet} -k {prod_keys} -t pk21 {location}/titleid/010000000000081b/romfs/nx/package2 --ini1dir {location}/titleid/010000000000081b/romfs/nx/ini1', shell = hshell, stdout = subprocess.DEVNULL)
-nxo64.write_file(f'{exfatuncompressed}', decompress_kip(f'{exfatcompressed}'))
+if os.path.exists(exfatuncompressed):
+    nxo64.write_file(f'{exfatuncompressed}', decompress_kip(f'{exfatcompressed}'))
 
 def get_es_build_id():
     with open(escompressed, 'rb') as f:
@@ -184,7 +185,8 @@ esbuildid = get_es_build_id()
 nifmbuildid = get_nifm_build_id()
 nimbuildid = get_nim_build_id()
 fat32hash = hashlib.sha256(open(fat32compressed, 'rb').read()).hexdigest().upper()
-exfathash = hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper()
+if os.path.exists(exfatcompressed):
+    exfathash = hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper()
 
 with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
     read_data = decompressed_es_nso.read()
@@ -282,24 +284,27 @@ with open(fat32uncompressed, 'rb') as fat32f:
             print("sys-patch won't be able to patch FS properly")
 fat32f.close()
 
-with open(exfatuncompressed, 'rb') as exfatf:
-    read_data = exfatf.read()
-    result1 = re.search(fspattern1, read_data)
-    result2 = re.search(fspattern2, read_data)
-    if not result1:
-        print(f'{version} First FS-ExFAT offset not found\n')
-        print(f'Sys-patch for FS-ExFAT noncasigchk_new string is invalid for: {version}\n')
-    elif not result2:
-        print(f'{version} Second FS-ExFAT offset not found\n')
-        print(f'Sys-patch for FS-ExFAT nocntchk2 string is invalid for: {version}\n')
-    else:
-        if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # bl_cond and bl_cond check
-            offset1 = '%06X' % (result1.start() + fsoffset1)
-            offset2 = '%06X' % (result2.start() + fsoffset2)
-            print(f'both sys-patch strings are valid for FS-exFAT for: {version}\n')
-            print(f'{version} First Sys-patch FS-ExFAT pattern found at: {offset1}\n')
-            print(f'{version} Second Sys-patch FS-ExFAT pattern found at: {offset2}\n')
-            print(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
+if os.path.exists(exfatuncompressed):
+    with open(exfatuncompressed, 'rb') as exfatf:
+        read_data = exfatf.read()
+        result1 = re.search(fspattern1, read_data)
+        result2 = re.search(fspattern2, read_data)
+        if not result1:
+            print(f'{version} First FS-ExFAT offset not found\n')
+            print(f'Sys-patch for FS-ExFAT noncasigchk_new string is invalid for: {version}\n')
+        elif not result2:
+            print(f'{version} Second FS-ExFAT offset not found\n')
+            print(f'Sys-patch for FS-ExFAT nocntchk2 string is invalid for: {version}\n')
         else:
-            print("sys-patch won't be able to patch FS properly")
-exfatf.close()
+            if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # bl_cond and bl_cond check
+                offset1 = '%06X' % (result1.start() + fsoffset1)
+                offset2 = '%06X' % (result2.start() + fsoffset2)
+                print(f'both sys-patch strings are valid for FS-exFAT for: {version}\n')
+                print(f'{version} First Sys-patch FS-ExFAT pattern found at: {offset1}\n')
+                print(f'{version} Second Sys-patch FS-ExFAT pattern found at: {offset2}\n')
+                print(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
+            else:
+                print("sys-patch won't be able to patch FS properly")
+    exfatf.close()
+else:
+    print(f'FS-exFAT was skipped for: {version}, due to missing NCA file for exfat in the provided firmware files.\n')
