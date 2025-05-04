@@ -1,16 +1,16 @@
 import argparse
+import sys
 
 try:
     from Cryptodome.Cipher import AES
     from Cryptodome.Hash import SHA256
 except ModuleNotFoundError:
-    pass
-
-try:
-    from Crypto.Cipher import AES
-    from Crypto.Hash import SHA256
-except ModuleNotFoundError:
-    pass
+    try:
+        from Crypto.Cipher import AES
+        from Crypto.Hash import SHA256
+    except ModuleNotFoundError:
+        print('Please install pycryptodome(ex) first!')
+        sys.exit(1)
 
 
 import key_sources as key_sources
@@ -149,15 +149,15 @@ def do_keygen():
             manual_crypto.write(f'{keys}\n')
         
         manual_crypto.write(f'\n')
-        manual_crypto.write(f'master_key_source = ' + f'{key_sources.master_key_source.hex().upper()}\n\n')
+        manual_crypto.write(f'master_key_source = ' + f'{key_sources.Master_Key_Source.hex().upper()}\n\n')
 
-        # generate master_key_%% from all provided master_kek_%% using master_key_source
-        current_master_key = decrypt(key_sources.master_key_source, master_keks[-1])
+        # generate master_key_%% from all provided master_kek_%% using Master_Key_Source
+        current_master_key = decrypt(key_sources.Master_Key_Source, master_keks[-1])
 
-        current_master_key_revision = len(key_sources.Master_Key_Sources)
+        current_master_key_revision = len(key_sources.Production_Master_Key_Vectors)
         master_keys = []
         first = True
-        for i in reversed(key_sources.Master_Key_Sources):
+        for i in reversed(key_sources.Production_Master_Key_Vectors):
             if first:
                 first = False
                 previous_key = i

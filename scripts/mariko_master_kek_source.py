@@ -1,17 +1,19 @@
 import re
 import subprocess
+import sys
 import argparse
 import platform
 import os
+
 try:
     from Cryptodome.Cipher import AES
 except ModuleNotFoundError:
-    pass
+    try:
+        from Crypto.Cipher import AES
+    except ModuleNotFoundError:
+        print('Please install pycryptodome(ex) first!')
+        sys.exit(1)
 
-try:
-    from Crypto.Cipher import AES
-except ModuleNotFoundError:
-    pass
 import key_sources as key_sources
 import aes_sample
 
@@ -94,10 +96,10 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
 
     if mariko_master_kek_source_key in key_sources.mariko_master_kek_sources:
         new_master_kek = decrypt(mariko_master_kek_source_key, key_sources.mariko_kek)
-        new_master_key = decrypt(key_sources.master_key_source, new_master_kek)
+        new_master_key = decrypt(key_sources.Master_Key_Source, new_master_kek)
         new_master_kek_source = encrypt(new_master_kek, key_sources.tsec_root_key_02)
         new_master_kek_dev =  decrypt(new_master_kek_source, key_sources.tsec_root_key_02_dev)
-        new_master_key_dev =  decrypt(key_sources.master_key_source, new_master_kek_dev)
+        new_master_key_dev =  decrypt(key_sources.Master_Key_Source, new_master_kek_dev)
         print(f'mariko_master_kek_source_{incremented_revision} = {mariko_master_kek_source_key.hex().upper()}')
         print(f'master_kek_source_{incremented_revision} = ' + new_master_kek_source.hex().upper())
         print(f'master_kek_{incremented_revision} = '  + new_master_kek.hex().upper())
@@ -108,16 +110,16 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
         print(f'no new master_key_source_vector')
     else:
         new_master_kek = decrypt(mariko_master_kek_source_key, key_sources.mariko_kek)
-        new_master_key = decrypt(key_sources.master_key_source, new_master_kek)
+        new_master_key = decrypt(key_sources.Master_Key_Source, new_master_kek)
         new_master_kek_source = encrypt(new_master_kek, key_sources.tsec_root_key_02)
         new_master_kek_dev =  decrypt(new_master_kek_source, key_sources.tsec_root_key_02_dev)
-        new_master_key_dev =  decrypt(key_sources.master_key_source, new_master_kek_dev)
+        new_master_key_dev =  decrypt(key_sources.Master_Key_Source, new_master_kek_dev)
         previous_mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
         previous_master_kek = decrypt(previous_mariko_master_kek_source, key_sources.mariko_kek)
-        previous_master_key = decrypt(key_sources.master_key_source, previous_master_kek)
+        previous_master_key = decrypt(key_sources.Master_Key_Source, previous_master_kek)
         previous_master_kek_source = encrypt(previous_master_kek, key_sources.tsec_root_key_02)
         previous_master_kek_dev =  decrypt(previous_master_kek_source, key_sources.tsec_root_key_02_dev)
-        previous_master_key_dev =  decrypt(key_sources.master_key_source, previous_master_kek_dev)
+        previous_master_key_dev =  decrypt(key_sources.Master_Key_Source, previous_master_kek_dev)
         new_master_key_source_vector = encrypt(previous_master_key, new_master_key).hex().upper()
         new_master_key_source_vector_dev = encrypt(previous_master_key_dev, new_master_key_dev).hex().upper()
         formatted_mariko_master_kek_source = '0x' + ', 0x'.join(mariko_master_kek_source_key.hex().upper()[i:i+2] for i in range(0, len(mariko_master_kek_source_key.hex().upper()), 2))
@@ -131,7 +133,7 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
         print(f'master_key_{incremented_revision} = '  +   new_master_key.hex().upper())
         print()
         print(f'bytes([{formatted_vector}]),') # "MasterKeySources" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L116-L136
-        print(f'^ add this string to master_key_sources array ^')
+        print(f'^ add this string to Production_Master_Key_Vectors array ^')
         print(f'bytes([{formatted_master_kek_source}]),') # "EristaMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L34-L37
         print(f'^ add this string to master_kek_sources array ^')
         print(f'bytes([{formatted_mariko_master_kek_source}]),') # "MarikoMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L24-L27
@@ -142,7 +144,7 @@ with open(f'{firmware}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
         print(f'master_key_dev_{incremented_revision} = '  +   new_master_key_dev.hex().upper())
         print()
         print(f'bytes([{formatted_vector_dev}]),')
-        print(f'^ add this string to master_key_sources_dev array ^') # "MasterKeySourcesDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L138-L158
+        print(f'^ add this string to Development_Master_Key_Vectors array ^') # "MasterKeySourcesDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L138-L158
         print(f'bytes([{formatted_mariko_master_kek_source_dev}]),')
         print(f'^ unused, but output for consistency ^') # "MarikoMasterKekSourceDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L29-L32
     decrypted_bin.close()
