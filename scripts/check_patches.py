@@ -96,11 +96,6 @@ with open(f'{location}/titleid/0100000000000819/romfs/a/pkg1/Decrypted.bin', 'rb
         new_prod_keys.close()
         os.remove('prod.keys')
 
-    if not os.path.exists(user_folder):
-        os.makedirs(user_folder)
-    if not os.path.exists(user_keys):
-        shutil.copy(prod_keys, user_keys)
-
     subprocess.run(f'{hactoolnet} --keyset {prod_keys} -t switchfs {location} --title 0100000000000809 --romfsdir {location}/titleid/0100000000000809/romfs/', shell = hshell, stdout = subprocess.DEVNULL)
     with open(f'{location}/titleid/0100000000000809/romfs/file', 'rb') as get_version:
             byte_alignment = get_version.seek(0x68)
@@ -179,14 +174,15 @@ with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
 
 with open(f'{nifmuncompressed}', 'rb') as decompressed_nifm_nso:
     read_data = decompressed_nifm_nso.read()
-    result = re.search(rb'.{20}\xf4\x03\x00\xaa.{4}\xf3\x03\x14\xaa\xe0\x03\x14\xaa\x9f\x02\x01\x39\x7f\x8e\x04\xf8', read_data)
-    # { "ctest", "....................F40300AA....F30314AAE00314AA9F0201397F8E04F8", 16, -16, ctest_cond, ctest_patch, ctest_applied, true, FW_VER_ANY },
+    result = re.search(rb'\x14.{11}\x91.{11}\x97.{15}\x14', read_data)
+    # { "ctest", "....................20F40300AA....F30314AAE00314AA9F0201397F8E04F8", 16, -16, ctest_cond, ctest_patch, ctest_applied, true, FW_VER_ANY },
+    # { "ctest2", "14...........91...........97...............14", 37, 4, b_cond, ctest_patch, ctest_applied, true, MAKEHOSVERSION(19,0,0), FW_VER_ANY }, //19.1.0 - 20.0.1+
     if not result:
         print(f'{version} NIFM offset not found\n')
         print(f'Sys-patch for NIFM string is invalid for: {version}\n\n')
     else:
-        if result.group(0)[16:20] == bytes([0xF5, 0x03, 0x01, 0xAA]): # ctest_cond check
-            offset = '%06X' % (result.start())
+        if result.group(0)[40:41] == bytes([0x14]): # ctest_cond check
+            offset = '%06X' % (result.start() + 0x29) # "+41" from start should match ctest2 sys-patch logic, but it should be +37 as sys-patch tests things stupid, then + 0x4
             print(f'Sys-patch for NIFM string still valid for: {version}\n')
             print(f'Sys-patch NIFM pattern found at: {offset}\n')
             print(f'{version} NIFM build-id: {nifmbuildid}\n\n')
