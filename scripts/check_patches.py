@@ -170,6 +170,8 @@ with open(f'{esuncompressed}', 'rb') as decompressed_es_nso:
             offset = '%06X' % (result.start() + 0x10)
             print(f'Sys-patch for ES string still valid for: {version}\n')
             print(f'Sys-patch ES pattern found at: {offset}\n')
+            print(f'The ghidra-equivalent pattern used was: .. .. 00 .. .. .. 00 94 a0 .. .. d1 .. .. ff 97 .. .. .. .. .. .. .. a9\n')
+            print(f'An arm "MOV" condition is what is supposed to be patched at this offset\n')
             print(f'{version} ES build-id: {esbuildid}\n\n')
         else:
             print(f'ARM instruction does not match expected result, sys-patch for ES wont work.')
@@ -183,11 +185,18 @@ with open(f'{nifmuncompressed}', 'rb') as decompressed_nifm_nso:
         print(f'{version} NIFM offset not found\n')
         print(f'Sys-patch for NIFM string is invalid for: {version}\n\n')
     else:
-        if result.group(0)[40:41] == bytes([0x14]): # ctest_cond check
+        if result.group(0)[40:41] == bytes([0x14]): # b_cond check (what is being patched is STP)
             offset = '%06X' % (result.start() + 0x29) # "+41" from start should match ctest2 sys-patch logic, but it should be +37 as sys-patch tests things stupid, then + 0x4
-            print(f'Sys-patch for NIFM string still valid for: {version}\n')
-            print(f'Sys-patch NIFM pattern found at: {offset}\n')
-            print(f'{version} NIFM build-id: {nifmbuildid}\n\n')
+            decompressed_nifm_nso.seek(result.start() + 0x2c)
+            if decompressed_nifm_nso.read(0x1).hex() == "a9":
+                print(f'an "STP" arm instruction with ending of 0xA9 was found proceding the pattern\n')
+                print(f'Sys-patch for NIFM string still valid for: {version}\n')
+                print(f'Sys-patch NIFM pattern found at: {offset}\n')
+                print(f'The ghidra-equivalent pattern used was: 14 .. .. .. .. .. .. .. .. .. .. .. 91 .. .. .. .. .. .. .. .. .. .. .. 97 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. 14\n')
+                print(f'An arm "STP" condition is what is supposed to be patched at the offset right after the branch arm condition tested ("B")\n')
+                print(f'{version} NIFM build-id: {nifmbuildid}\n\n')
+            else:
+                print("an STP arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.")
         else:
             print("ARM instruction does not match expected result, sys-patch for NIFM won't work.")
 
@@ -203,6 +212,8 @@ with open(f'{nimuncompressed}', 'rb') as decompressed_nim_nso:
             offset = '%06X' % (result.start() + 0x8)
             print(f'Sys-patch for NIM string still valid for: {version}\n')
             print(f'Sys-patch NIM pattern found at: {offset}\n')
+            print(f'The ghidra-equivalent pattern used was: .. 0F 00 35 1F 20 03 D5\n')
+            print(f'An arm "ADR" condition is what is supposed to be patched at the offset right after the "CBNZ and "NOP" conditions the pattern finds\n')
             print(f'{version} NIM build-id: {nimbuildid}\n\n')
         else:
             print("ARM instruction does not match expected result, sys-patch for NIM won't work.")
@@ -249,6 +260,11 @@ with open(fat32uncompressed, 'rb') as fat32f:
             offset2 = '%06X' % (result2.start() + fsoffset2)
             print(f'both sys-patch strings are valid for FS-FAT32 for: {version}\n')
             print(f'{version} First Sys-patch FS-FAT32 pattern found at: {offset1}\n')
+            print(f'The ghidra-equivalent pattern used was (11.0.0+) : .. 94 .. .. 00 36 .. 25 80 52\n')
+            print(f'An arm "TBZ" condition is what is supposed to be patched, it is found within the pattern.\n')
+            print(f'{version} Second Sys-patch FS-FAT32 pattern found at: {offset2}\n')
+            print(f'The ghidra-equivalent pattern used was (19.0.0+) : 40 f9 .. .. .. 94 .. .. 40 b9 .. .. 00 12\n')
+            print(f'An arm "BL" condition is what is supposed to be patched, it is found within the pattern.\n')
             print(f'{version} Second Sys-patch FS-FAT32 pattern found at: {offset2}\n')
             print(f'{version} FS-FAT32 SHA256 hash: {fat32hash}\n\n')
         else:
@@ -267,12 +283,16 @@ if os.path.exists(exfatuncompressed):
             print(f'{version} Second FS-ExFAT offset not found\n')
             print(f'Sys-patch for FS-ExFAT nocntchk2 string is invalid for: {version}\n')
         else:
-            if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # bl_cond and bl_cond check
+            if result1.group(0)[5:6] == bytes([0x36]) and result2.group(0)[5:6] == bytes([0x94]): # tbz_cond and bl_cond check
                 offset1 = '%06X' % (result1.start() + fsoffset1)
                 offset2 = '%06X' % (result2.start() + fsoffset2)
                 print(f'both sys-patch strings are valid for FS-exFAT for: {version}\n')
                 print(f'{version} First Sys-patch FS-ExFAT pattern found at: {offset1}\n')
+                print(f'The ghidra-equivalent pattern used was (11.0.0+) : .. 94 .. .. 00 36 .. 25 80 52\n')
+                print(f'An arm "TBZ" condition is what is supposed to be patched, it is found within the pattern.\n')
                 print(f'{version} Second Sys-patch FS-ExFAT pattern found at: {offset2}\n')
+                print(f'The ghidra-equivalent pattern used was (19.0.0+) : 40 f9 .. .. .. 94 .. .. 40 b9 .. .. 00 12\n')
+                print(f'An arm "BL" condition is what is supposed to be patched, it is found within the pattern.\n')
                 print(f'{version} FS-ExFAT SHA256 hash: {exfathash}\n\n')
             else:
                 print("sys-patch won't be able to patch FS properly")
