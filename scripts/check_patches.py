@@ -63,7 +63,7 @@ elif platform.system() == "Linux":
     hactoolnet = "tools/hactoolnet-linux"
     hactool = "tools/hactool-linux"
     hshell = True
-elif platform.system() == "MacOS":
+elif platform.system() == "Darwin":
     hactoolnet = "tools/hactoolnet-macos"
     hactool = "tools/hactool-macos"
 else:
