@@ -1,7 +1,7 @@
 import re
 import lz4.block
 
-#18.0.0 romfs/nro/netfront/core_2/default/cfi_enabled/webkit_wkc.nro.lz4
+#20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
 with open('webkit_wkc.nro.lz4', 'rb') as file:
     input_data = file.read()
     decompressed = lz4.block.decompress(input_data)
