@@ -4,7 +4,7 @@
 #
 # ===========================================================================================
 #
-# Copyright 2017 Reswitched Team
+# Copyright 2017-2025 Reswitched Team
 #
 # Permission to use, copy, modify, and/or distribute this software for any purpose with or
 # without fee is hereby granted, provided that the above copyright notice and this permission
@@ -149,15 +149,15 @@ def decompress_nso(fileobj):
     if f.read_from('4s', 0) != b'NSO0':
         raise Exception('Invalid NSO magic')
 
-    toff, tloc, tsize = f.read_from('3I', 0x10)
-    roff, rloc, rsize = f.read_from('3I', 0x20)
-    doff, dloc, dsize = f.read_from('3I', 0x30)
+    toff, tloc, tsize = f.read_from('III', 0x10)
+    roff, rloc, rsize = f.read_from('III', 0x20)
+    doff, dloc, dsize = f.read_from('III', 0x30)
 
-    tfilesize, rfilesize, dfilesize = f.read_from('3I', 0x60)
+    tfilesize, rfilesize, dfilesize = f.read_from('III', 0x60)
     bsssize = f.read_from('I', 0x3C)
 
     text = uncompress(f.read_from(tfilesize, toff), uncompressed_size=tsize)
-    ro = uncompress(f.read_from(rfilesize, roff), uncompressed_size=rsize)
+    ro   = uncompress(f.read_from(rfilesize, roff), uncompressed_size=rsize)
     data = uncompress(f.read_from(dfilesize, doff), uncompressed_size=dsize)
 
     full = text

@@ -1,6 +1,6 @@
 Part 2 of this guide assumes you have succesfully set up ghidra as described in Part1A (for windows users) or Part1B (for linux users).
 
-Part 2 Will only describe how to operate ghidra, with the intent to inspect already decrypted and decompressed binaries. The end user must already be familiar with "Nintendo Switch" file containers, how to decrypt them and how to extract the necessary files from them.
+Part 2 Will only describe how to operate ghidra, with the intent to inspect already decrypted and decompressed binaries. The end user should already be familiar with "Nintendo Switch" file containers, how to decrypt them and how to extract the necessary files from them.
 
 1. Open ghidra, make a new project where you want.
    - Click File -> import file -> Select the "uncompressed_main" file, which you should have provided yourself, from the exefs partition of the nca belonging to NIFM, and then subsequently decompressed. (make certain it says the format is Nintendo Switch Binary)

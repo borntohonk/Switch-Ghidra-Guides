@@ -14,3 +14,5 @@ hekate_patches/fs_patches.ini
 hekate_patches/loader_patches.ini
 *changelog.txt
 dev.keys
+package1
+package2

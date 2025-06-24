@@ -10,13 +10,37 @@ All material exist purely for research reference.
   - Part 2 detailing a basic introduction to ghidra, with a demonstration of how to force enable the network connectivity, within the module known as "NIFM". [(link)](guides/Part2.MD)
   - you can find the resulting "patches" for what this guide produces, at https://github.com/misson20000/exefs_patches/tree/master/atmosphere/exefs_patches/nfim_ctest
 
+
+  These scripts work independent of hactool, libhac, hactoolnet, or other third-party binaries.
+
 * Here's a list of scripts following the example Part 2 of the guide above teaches you how to do, and that this repository contains.
-  - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest. (this patch also exists in sys-patch as of version 1.5.5 and higher, though requiring to manually enable the setting.)
+
+  - Python script to process firmware files, decrypting, extracting, decompressing and outputting files of interest, and cryptographic keys derived.
+    * requires the following keys: mariko_bek (to open mariko package1), mariko_kek (to be able to derive the latest key revision in provided firmware files)
+    * put firmware nca files in folder named firmware
+    * example usage: "python scripts/process_firmware.py [process_firmware.py](scripts/process_firmware.py)
+    * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+    * updating scripts/key_sources.py will benefit key generation for [aes_sample.py](scripts/aes_sample.py)
+
+  - Python script to derive entire keyset. [aes_sample.py](scripts/aes_sample.py)
+    * The cryptographic logic described can be sampled with this python script, output keyfile (default "prod.keys", can be altered with -k) : [aes_sample.py](scripts/aes_sample.py)
+    * There is also a developer variant, which works the same way, [aes_sample_dev.py](scripts/aes_sample_dev.py)
+    * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+
+  - Python script to check known patterns for sys-patch.
+    * Usage: run [process_firmware.py](scripts/process_firmware.py) first, then the files for check_patches should be populated.
+    * example usage: "python scripts/check_patches.py"
+    * [check_patches.py](scripts/check_patches.py)
+    * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+
+  - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest. (this patch also exists in sys-patch as of version 1.5.5 and higher, though requirin to manually enable)
 
   - Python script to generate the "[disable_browser_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-browser-ca-verification)", [(link)](scripts/disable_browser_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest.
 
+
 * Credits: 
-* [@sciresm](https://github.com/SciresM) - hactool -  aes128.py
+* [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.
+* [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py)
 * [@reswitched](https://github.com/reswitched) - [(scripts/nxo64.py)](scripts/nxo64.py)
 * [@blawar](https://github.com/blawar) - for references to various things in [nut](https://github.com/blawar/nut)
 * everything else:
