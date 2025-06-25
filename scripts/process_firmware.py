@@ -44,7 +44,7 @@ def sort_nca(location):
     firmware_location = location
     for nca_file in os.listdir(firmware_location):
         ncaFull = f'{firmware_location}/{nca_file}'
-        decrypted_header, key_area_encryption_type, program_id, content_type = nca.decrypt_header(ncaFull, key_sources.header_key)
+        decrypted_header, key_area_encryption_type, program_id, content_type, aes_ctr = nca.decrypt_header(ncaFull, key_sources.header_key)
         if content_type == "ROMFS":
             mkdirp("sorted_firmware" + "/by-type/" + "romfs/" + program_id)
             try:
@@ -66,10 +66,10 @@ def sort_nca(location):
 
 def get_system_version(nca_path, mariko_master_kek_source_key):
     nca_file = nca_path
-    decrypted_header, key_area_encryption_type, program_id, content_type = nca.decrypt_header(nca_file, key_sources.header_key)
+    decrypted_header, key_area_encryption_type, program_id, content_type, aes_ctr = nca.decrypt_header(nca_file, key_sources.header_key)
     mariko_master_kek_source = mariko_master_kek_source_key
     master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source)
-    decrypted_section_0 = nca.decrypt_section_0(nca_file, key_area_key_application, decrypted_header, content_type)
+    decrypted_section_0 = nca.decrypt_section_0(nca_file, key_area_key_application, decrypted_header, content_type, aes_ctr)
     extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_0)
     result = re.search(b'\x66\x69\x6C\x65', extracted_romfs)
     system_version_file_size_location = result.start() - 0x10

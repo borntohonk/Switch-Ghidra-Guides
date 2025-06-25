@@ -2,8 +2,16 @@
 # SciresM, 2017-2025
 from struct import unpack as up, pack as pk
 from binascii import hexlify as hx, unhexlify as uhx
-from Crypto.Cipher import AES
-from Crypto.Util import Counter
+try:
+    from Cryptodome.Cipher import AES
+    from Cryptodome.Util import Counter
+except ModuleNotFoundError:
+    try:
+        from Crypto.Cipher import AES
+        from Crypto.Util import Counter
+    except ModuleNotFoundError:
+        print('Please install pycryptodome(ex) first!')
+        sys.exit(1)
 
 def sxor(s1, s2):
 	assert(len(s1) == len(s2))

@@ -38,6 +38,14 @@ All material exist purely for research reference.
   - Python script to generate the "[disable_browser_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-browser-ca-verification)", [(link)](scripts/disable_browser_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest.
 
 
+
+
+TODO: 
+extract every section of input nca (currently only do first/section_0) (ctr offset = 0x0 of section, section_0 0x0 == 0xC00)
+extract all items of romfs (not needed with current solution)
+extract all items of pfs0 (not needed with current solution)
+
+
 * Credits: 
 * [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.
 * [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py)

@@ -39,15 +39,14 @@ def decrypt_xts(input, key):
     return decrypted
 
 def decrypt_ctr(input, key, CTR):
-    ctr = Counter.new(128, initial_value=int.from_bytes(CTR, byteorder='big'))
-    cipher = AES.new(key, AES.MODE_CTR, counter=ctr)
-    output = cipher.decrypt(input)
-    return output
+    crypto = aes_128.AESCTR(key, CTR, offset=0xC00)
+    decrypted = crypto.decrypt(input)
+    return decrypted
 
 def decrypt_ecb(input, key):
-    cipher = AES.new(key, AES.MODE_ECB)
-    output = cipher.decrypt(input)
-    return output
+    crypto = aes_128.AESECB(key)
+    decrypted = crypto.decrypt(input)
+    return decrypted
 
 def decrypt_header(nca, key):
     with open(nca, 'rb') as f:
@@ -64,13 +63,17 @@ def decrypt_header(nca, key):
             key_area_encryption_type = "System"
         program_id = decrypted_header[0x210:0x218][::-1].hex().upper()
         section_0_storage_type = decrypted_header[0x402:0x403]
+        cryptoCounter = bytearray((b"\x00"*8) + decrypted_header[0x540:0x548])
+        cryptoCounter = cryptoCounter[::-1]
+        section_0 = decrypted_header[0x240:0x250]
+        section_0_sectors_start = int.from_bytes(section_0[0x0:0x4], "little", signed=False) * 0x200
         if section_0_storage_type == b'\x00':
             content_type = "ROMFS"
         elif section_0_storage_type == b'\x01':
             content_type = "PFS0"
-        return decrypted_header, key_area_encryption_type, program_id, content_type
+        return decrypted_header, key_area_encryption_type, program_id, content_type, cryptoCounter
 
-def decrypt_section_0(nca, key_area_key, decrypted_header, content_type):
+def decrypt_section_0(nca, key_area_key, decrypted_header, content_type, CTR_upper_iv):
     section_0 = decrypted_header[0x240:0x250]
     section_0_start = int.from_bytes(section_0[0x0:0x4], "little", signed=False) * 0x200
     section_0_end = int.from_bytes(section_0[0x4:0x8], "little", signed=False) * 0x200
@@ -78,10 +81,7 @@ def decrypt_section_0(nca, key_area_key, decrypted_header, content_type):
     encrypted_key_area = decrypted_header[0x300:0x340]
     decrypted_key_area = decrypt_ecb(encrypted_key_area, key_area_key)
     decrypted_key_area_key_2 = decrypted_key_area[0x20:0x30]
-    if content_type == "ROMFS":
-        ctr = bytes.fromhex("000000000000000000000000000000C0")
-    elif content_type == "PFS0":
-        ctr = bytes.fromhex("000000010000000000000000000000C0")
+    ctr = CTR_upper_iv
     with open(nca, 'rb') as f:
         data = f.read()
         f.seek(section_0_start)
@@ -89,6 +89,7 @@ def decrypt_section_0(nca, key_area_key, decrypted_header, content_type):
         #fsHeader_0_ctr = fsHeader_0[0x5A:0x62] # the c0 byte is found at 0x62
         encrypted_section_0 = f.read(section_0_size)
         decrypted_section_0 = decrypt_ctr(encrypted_section_0, decrypted_key_area_key_2, ctr)
+        #decrypted_section_0 = decrypt_ctr(encrypted_section_0, decrypted_key_area_key_2, ctr)
         return decrypted_section_0
 
 def extract_romfs(decrypted_header, decrypted_section_0):
@@ -97,3 +98,10 @@ def extract_romfs(decrypted_header, decrypted_section_0):
     romfs_end = romfs_start + romfs_size
     romfs = decrypted_section_0[romfs_start:romfs_end]
     return romfs
+
+def extract_pfs0(decrypted_header, decrypted_section_0):
+    pfs0_start = int.from_bytes(decrypted_header[0x440:0x444], "little", signed=False)
+    pfs0_size = int.from_bytes(decrypted_header[0x448:0x44C], "little", signed=False)
+    pfs0_end = pfs0_start + pfs0_size
+    pfs0 = decrypted_section_0[pfs0_start:pfs0_end]
+    return pfs0

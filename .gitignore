@@ -16,3 +16,5 @@ hekate_patches/loader_patches.ini
 dev.keys
 package1
 package2
+sorted_firmware/
+sorted_firmware/**
