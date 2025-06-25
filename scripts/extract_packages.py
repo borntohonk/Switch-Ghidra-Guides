@@ -75,33 +75,33 @@ def extract_package2(extracted_romfs):
         nca_romfs.close()
 
 def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
-        with open(package2, 'rb') as f:
-            data = f.read()
-            package2_key = pkg2_key
-            package2_header_offset = 0x100
-            f.seek(package2_header_offset)
-            encrypted_header = f.read(0x100)
-            package2_header_ctr_offset = 0x100
-            f.seek(package2_header_ctr_offset)
-            package2_header_ctr = f.read(0x10)
-            decrypted_header = decrypt_ctr(encrypted_header, package2_key, package2_header_ctr)
-            package2_header_ctr = decrypted_header[0x0:0x10]
-            package2_section_0_ctr = decrypted_header[0x10:0x20]
-            package2_section_0_size = int.from_bytes(decrypted_header[0x60:0x64], "little", signed=False)
-            f.seek(0x200)
-            package2_section_0 = f.read(package2_section_0_size)
-            decrypted_package2_section_0 = decrypt_ctr(package2_section_0, package2_key, package2_section_0_ctr)
-            fs_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x46, 0x53]), decrypted_package2_section_0)
-            fs_kip1_start = fs_result.start()
-            loader_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2_section_0)
-            loader_kip1_start = loader_result.start()
-            fs_kip1 = decrypted_package2_section_0[fs_kip1_start:loader_kip1_start]
-            with open('FS.kip1', 'wb') as fs_kip1_file:
-                fs_kip1_file.write(fs_kip1)
-                fs_kip1_file.close()
-            with open('FS.kip1', 'rb') as compressed_fs_kip:
-                nxo64.write_file(f'uFS.kip1', nxo64.decompress_kip(compressed_fs_kip))
-                compressed_fs_kip.close()
+    with open(package2, 'rb') as f:
+        data = f.read()
+        package2_key = pkg2_key
+        package2_header_offset = 0x100
+        f.seek(package2_header_offset)
+        encrypted_header = f.read(0x100)
+        package2_header_ctr_offset = 0x100
+        f.seek(package2_header_ctr_offset)
+        package2_header_ctr = f.read(0x10)
+        decrypted_header = decrypt_ctr(encrypted_header, package2_key, package2_header_ctr)
+        package2_header_ctr = decrypted_header[0x0:0x10]
+        package2_section_0_ctr = decrypted_header[0x10:0x20]
+        package2_section_0_size = int.from_bytes(decrypted_header[0x60:0x64], "little", signed=False)
+        f.seek(0x200)
+        package2_section_0 = f.read(package2_section_0_size)
+        decrypted_package2_section_0 = decrypt_ctr(package2_section_0, package2_key, package2_section_0_ctr)
+        fs_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x46, 0x53]), decrypted_package2_section_0)
+        fs_kip1_start = fs_result.start()
+        loader_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2_section_0)
+        loader_kip1_start = loader_result.start()
+        fs_kip1 = decrypted_package2_section_0[fs_kip1_start:loader_kip1_start]
+        with open('FS.kip1', 'wb') as fs_kip1_file:
+            fs_kip1_file.write(fs_kip1)
+            fs_kip1_file.close()
+        with open('FS.kip1', 'rb') as compressed_fs_kip:
+            nxo64.write_file(f'uFS.kip1', nxo64.decompress_kip(compressed_fs_kip))
+            compressed_fs_kip.close()
 
 def extract_package1(extracted_romfs):
     extracted_romfs = extracted_romfs
@@ -144,12 +144,13 @@ def get_mariko_key_sources(decrypted_package1):
 
 def process_package12(nca_path):
     nca_file = nca_path
-    decrypted_header, key_area_encryption_type, program_id, content_type, aes_ctr = nca.decrypt_header(nca_file, key_sources.header_key)
+    decrypted_header = nca.decrypt_header(nca_file, key_sources.header_key)
+    program_id = nca.get_program_id(decrypted_header)
     if program_id == "0100000000000819" or "010000000000081B":
         master_key_00 = aes_sample.master_keys(key_sources.mariko_master_kek_sources[-1])[0]
         key_area_key_application_00 = aes_sample.generateKek(key_sources.key_area_key_application_source, master_key_00, key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
-        decrypted_section_0 = nca.decrypt_section_0(nca_path, key_area_key_application_00, decrypted_header, content_type, aes_ctr)
-        extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_0)
+        decrypted_section_00 = nca.decrypt_sections(nca_file, decrypted_header, key_area_key_application_00)[0]
+        extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_00)
         encrypted_package1 = extract_package1(extracted_romfs)
         extract_package2(extracted_romfs)
         decrypted_package1 = decrypt_mariko_package1(encrypted_package1)

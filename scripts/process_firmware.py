@@ -44,33 +44,22 @@ def sort_nca(location):
     firmware_location = location
     for nca_file in os.listdir(firmware_location):
         ncaFull = f'{firmware_location}/{nca_file}'
-        decrypted_header, key_area_encryption_type, program_id, content_type, aes_ctr = nca.decrypt_header(ncaFull, key_sources.header_key)
-        if content_type == "ROMFS":
-            mkdirp("sorted_firmware" + "/by-type/" + "romfs/" + program_id)
-            try:
-                if ncaFull.endswith(".cnmt.nca"):
-                    pass
-                else:
-                    shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + "romfs/" + program_id + "/" + "data.nca")
-            except:
-                pass
-        elif content_type == "PFS0":
-            mkdirp("sorted_firmware" + "/by-type/" + "exefs/" + program_id)
-            try:
-                if ncaFull.endswith(".cnmt.nca"):
-                    pass
-                else:
-                    shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + "exefs/" + program_id + "/" + "program.nca")
-            except:
-                pass
+        decrypted_header = nca.decrypt_header(ncaFull, key_sources.header_key)
+        program_id = nca.get_program_id(decrypted_header)
+        content_type = nca.get_nca_types(decrypted_header)
+        try:
+            mkdirp("sorted_firmware" + "/by-type/" + content_type + "/" + program_id)
+            shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + content_type + "/" + program_id + "/" + "data.nca")
+        except:
+            pass
 
 def get_system_version(nca_path, mariko_master_kek_source_key):
     nca_file = nca_path
-    decrypted_header, key_area_encryption_type, program_id, content_type, aes_ctr = nca.decrypt_header(nca_file, key_sources.header_key)
+    decrypted_header = nca.decrypt_header(nca_file, key_sources.header_key)
     mariko_master_kek_source = mariko_master_kek_source_key
     master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source)
-    decrypted_section_0 = nca.decrypt_section_0(nca_file, key_area_key_application, decrypted_header, content_type, aes_ctr)
-    extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_0)
+    decrypted_section_00 = nca.decrypt_sections(nca_file, decrypted_header, key_area_key_application)[0]
+    extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_00)
     result = re.search(b'\x66\x69\x6C\x65', extracted_romfs)
     system_version_file_size_location = result.start() - 0x10
     system_version_file_size_length = system_version_file_size_location + 0x4
@@ -85,17 +74,17 @@ def get_system_version(nca_path, mariko_master_kek_source_key):
 
 if __name__ == "__main__":
     sort_nca("firmware")
-    fat32_path = Path('sorted_firmware/by-type/romfs/0100000000000819/data.nca')
-    system_version_path = Path('sorted_firmware/by-type/romfs/0100000000000809/data.nca')
+    fat32_path = Path('sorted_firmware/by-type/Data/0100000000000819/data.nca')
+    system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
     mariko_master_kek_source = extract_packages.process_package12(Path(fat32_path))
     system_version = get_system_version(system_version_path, mariko_master_kek_source)
     print(f'\nfirmware version of files provided is: {system_version}\n')
     fat32hash = sha256(open('FS.kip1', 'rb').read()).hexdigest().upper()
     print(f'{system_version} fat32 sha256 = {fat32hash}')
-    es_path = Path('sorted_firmware/by-type/exefs/0100000000000033/program.nca')
-    nifm_path = Path('sorted_firmware/by-type/exefs/010000000000000F/program.nca')
-    nim_path = Path('sorted_firmware/by-type/exefs/0100000000000025/program.nca')
-    ssl_path = Path('sorted_firmware/by-type/exefs/0100000000000024/program.nca')
+    es_path = Path('sorted_firmware/by-type/Program/0100000000000033/data.nca')
+    nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
+    nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
+    ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
     print(f'{system_version} es_buildID: {extract_exefs.prepare_exefs(es_path, "es.nso0")}') # prints buildid and outputs 
     print(f'{system_version} nifm_buildID: {extract_exefs.prepare_exefs(nifm_path, "nifm.nso0")}')
     print(f'{system_version} nim_buildID: {extract_exefs.prepare_exefs(nim_path, "nim.nso0")}')

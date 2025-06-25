@@ -41,7 +41,7 @@ if os.path.exists(compressed_exfat_path):
     exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
 
 mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
-system_version_path = Path('sorted_firmware/by-type/romfs/0100000000000809/data.nca')
+system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
 system_version = process_firmware.get_system_version(system_version_path, mariko_master_kek_source)
 version = system_version
 

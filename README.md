@@ -41,7 +41,7 @@ All material exist purely for research reference.
 
 
 TODO: 
-extract every section of input nca (currently only do first/section_0) (ctr offset = 0x0 of section, section_0 0x0 == 0xC00)
+extract every section of input nca (currently only do first/section_0) (ctr offset = 0x0 of section, section_0 0x0 == 0xC00) (prepared, but static output of section_00 currently)
 extract all items of romfs (not needed with current solution)
 extract all items of pfs0 (not needed with current solution)
 
