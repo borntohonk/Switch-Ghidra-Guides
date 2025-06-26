@@ -31,6 +31,7 @@ except ModuleNotFoundError:
 
 import os
 import re
+import key_sources as key_sources
 import aes_128
 
 def decrypt_xts(input, key):
@@ -48,134 +49,145 @@ def decrypt_ecb(input, key):
     decrypted = crypto.decrypt(input)
     return decrypted
 
-def decrypt_header(nca, key):
-    with open(nca, 'rb') as f:
-        data = f.read()
-        f.seek(0)
-        encrypted_header = f.read(0xC00)
-        decrypted_header = decrypt_xts(encrypted_header, key)
-        return decrypted_header
+def decrypt_header(header, key):
+    decrypted_header = decrypt_xts(header, key)
+    return decrypted_header
 
-def get_program_id(decrypted_header):
-    program_id = decrypted_header[0x210:0x218][::-1].hex().upper()
-    return program_id
+class SectionTableEntry:
+	def __init__(self, d):
+		self.mediaOffset = int.from_bytes(d[0x0:0x4], byteorder='little', signed=False)
+		self.mediaEndOffset = int.from_bytes(d[0x4:0x8], byteorder='little', signed=False)
 
-def get_section_amount(decrypted_header):
-    fs_section_00_first_byte = decrypted_header[0x400:0x401]
-    fs_section_01_first_byte = decrypted_header[0x600:0x601]
-    fs_section_02_first_byte = decrypted_header[0x800:0x801]
-    fs_section_03_first_byte = decrypted_header[0xA00:0xA01]
-    num_sections = 0
-    if fs_section_00_first_byte != b'\x00':
-        num_sections = num_sections + 1
-    if fs_section_01_first_byte != b'\x00':
-        num_sections = num_sections + 1
-    if fs_section_02_first_byte != b'\x00':
-        num_sections = num_sections + 1
-    if fs_section_03_first_byte != b'\x00':
-        num_sections = num_sections + 1
-    return num_sections
+		self.offset = self.mediaOffset * 0x200
+		self.endOffset = self.mediaEndOffset * 0x200
 
-def get_nca_types(decrypted_header):
-    nca_content_type = decrypted_header[0x205:0x206]
-    if nca_content_type == b'\x00':
-        content_type = "Program"
-    elif nca_content_type == b'\x01':
-        content_type = "Meta"
-    elif nca_content_type == b'\x02':
-        content_type = "Control"
-    elif nca_content_type == b'\x03':
-        content_type = "Manual"
-    elif nca_content_type == b'\x04':
-        content_type = "Data"
-    elif nca_content_type == b'\x05':
-        content_type = "PublicData"
-    return content_type
+		self.unknown1 = int.from_bytes(d[0x8:0xc], byteorder='little', signed=False)
+		self.unknown2 = int.from_bytes(d[0xc:0x10], byteorder='little', signed=False)
+		self.sha1 = None
 
-def get_fs_section_content_types(decrypted_header):
-    section_00_storage_type = decrypted_header[0x402:0x403]
-    section_01_storage_type = decrypted_header[0x602:0x603]
-    section_02_storage_type = decrypted_header[0x802:0x803]
-    section_03_storage_type = decrypted_header[0xA02:0xA03]
-    if section_00_storage_type == b'\x00':
-        fs_section_00_content_type = "ROMFS"
-    elif section_00_storage_type == b'\x01':
-        fs_section_00_content_type = "PFS0"
-    if section_01_storage_type == b'\x00':
-        fs_section_01_content_type = "ROMFS"
-    elif section_01_storage_type == b'\x01':
-        fs_section_01_content_type = "PFS0"
-    if section_02_storage_type == b'\x00':
-        fs_section_02_content_type = "ROMFS"
-    elif section_02_storage_type == b'\x01':
-        fs_section_02_content_type = "PFS0"
-    if section_03_storage_type == b'\x00':
-        fs_section_03_content_type = "ROMFS"
-    elif section_03_storage_type == b'\x01':
-        fs_section_03_content_type = "PFS0"
-    return fs_section_00_content_type, fs_section_01_content_type, fs_section_02_content_type, fs_section_03_content_type
+class FsHeader():
+    def __init__(self, fsheader):
+        self.fsheader = fsheader
+        self.version =  int.from_bytes(self.fsheader[0x0:0x2], byteorder='little', signed=False)
+        self.fsType = int.from_bytes(self.fsheader[0x2:0x3], byteorder='little', signed=False)
+        self.hashType = int.from_bytes(self.fsheader[0x3:0x4], byteorder='little', signed=False)
+        self.encryptionType = int.from_bytes(self.fsheader[0x4:0x5], byteorder='little', signed=False)
+        self.padding = self.fsheader[0x5:0x8]
+        self.hashOffset = 0x8
+        self.hashInfo = self.fsheader[0x8:0x100]
+        self.patchInfo = self.fsheader[0x100:0x140]
+        self.generation = self.fsheader[0x140:0x144]
+        self.secureValue = self.fsheader[0x144:0x148]
+        self.sparseInfo = self.fsheader[0x148:0x1A0]
+        self.reserved = self.fsheader[0x1A0:0x200]
+        self.CryptoCounterCtr = bytearray((b"\x00"*8) + self.generation + self.secureValue)[::-1]
+        fs_content_type = self.fsType
+        if fs_content_type == 0:
+            self.fsType = "ROMFS"
+        elif fs_content_type == 1:
+            self.fsType = "PFS0"
 
-def get_section_offsets(decrypted_header):
-    section_00_offset_start = int.from_bytes(decrypted_header[0x240:0x244], "little", signed=False) * 0x200
-    section_01_offset_start = int.from_bytes(decrypted_header[0x250:0x254], "little", signed=False) * 0x200
-    section_02_offset_start = int.from_bytes(decrypted_header[0x260:0x264], "little", signed=False) * 0x200
-    section_03_offset_start = int.from_bytes(decrypted_header[0x270:0x274], "little", signed=False) * 0x200
-    section_00_offset_end = int.from_bytes(decrypted_header[0x244:0x248], "little", signed=False) * 0x200
-    section_01_offset_end = int.from_bytes(decrypted_header[0x254:0x258], "little", signed=False) * 0x200
-    section_02_offset_end = int.from_bytes(decrypted_header[0x264:0x268], "little", signed=False) * 0x200
-    section_03_offset_end = int.from_bytes(decrypted_header[0x274:0x278], "little", signed=False) * 0x200
-    return section_00_offset_start, section_01_offset_start, section_02_offset_start, section_03_offset_start, section_00_offset_end, section_01_offset_end, section_02_offset_end, section_03_offset_end
+class NcaHeader():
+    def __init__(self, ncaheader):
+        self.ncaheader = ncaheader
+        self.signature1 = self.ncaheader[0x0:0x100]
+        self.signature2 = self.ncaheader[0x100:0x200]
+        self.magic = self.ncaheader[0x200:0x204]
+        self.isGameCard = int.from_bytes(self.ncaheader[0x204:0x205], byteorder='little', signed=False)
+        self.contentType = int.from_bytes(self.ncaheader[0x205:0x206], byteorder='little', signed=False)
+        self.cryptoType = int.from_bytes(self.ncaheader[0x205:0x206], byteorder='little', signed=False)
+        self.keyIndex =int.from_bytes(self.ncaheader[0x207:0x208], byteorder='little', signed=False)
+        self.size = int.from_bytes(self.ncaheader[0x208:0x210], byteorder='little', signed=False)
+        self.titleId = self.ncaheader[0x210:0x218][::-1].hex().upper()
+        self.contentIndex =int.from_bytes(self.ncaheader[0x218:0x21C], byteorder='little', signed=False)
+        self.sdkVersion = int.from_bytes(self.ncaheader[0x220:0x221], byteorder='little', signed=False)
+        self.cryptoType2 = int.from_bytes(self.ncaheader[0x220:0x221], byteorder='little', signed=False)
+        self.rightsId = self.ncaheader[0x210:0x218].hex().upper()
+        self.sectionTables = []
+        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x240:0x250]))
+        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x250:0x260]))
+        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x260:0x270]))
+        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x270:0x280]))
+        self.EncryptedKeyArea = []
+        self.EncryptedKeyArea.append(self.ncaheader[0x300:0x310])
+        self.EncryptedKeyArea.append(self.ncaheader[0x310:0x320])
+        self.EncryptedKeyArea.append(self.ncaheader[0x320:0x330])
+        self.EncryptedKeyArea.append(self.ncaheader[0x330:0x340])
+        nca_content_type = self.contentType
+        if nca_content_type == 0:
+            self.contentType = "Program"
+        elif nca_content_type == 1:
+            self.contentType = "Meta"
+        elif nca_content_type == 2:
+            self.contentType = "Control"
+        elif nca_content_type == 3:
+            self.contentType = "Manual"
+        elif nca_content_type == 4:
+            self.contentType = "Data"
+        elif nca_content_type == 5:
+            self.contentType = "PublicData"
 
-def get_crypto_counters(decrypted_header):
-    fs_section_00_crypto_counter = bytearray((b"\x00"*8) + decrypted_header[0x540:0x548])[::-1]
-    fs_section_01_crypto_counter = bytearray((b"\x00"*8) + decrypted_header[0x740:0x748])[::-1]
-    fs_section_02_crypto_counter = bytearray((b"\x00"*8) + decrypted_header[0x940:0x948])[::-1]
-    fs_section_03_crypto_counter = bytearray((b"\x00"*8) + decrypted_header[0xB40:0xB48])[::-1]
-    return fs_section_00_crypto_counter, fs_section_01_crypto_counter, fs_section_02_crypto_counter, fs_section_03_crypto_counter   
+class Nca():
+    def __init__(self, nca, key_area_key):
+        self.nca = nca
+        self.key_area_key = key_area_key
+        self.sections = []
+        with open(self.nca, 'rb') as f:
+            nca_data = f.read()
+            self.encrypted_header = nca_data[0x0:0xC00]
+            self.decrypted_nca_header = decrypt_header(self.encrypted_header, key_sources.header_key)
+            self.header = NcaHeader(self.decrypted_nca_header)
+            section_00 = nca_data[self.header.sectionTables[0].offset:self.header.sectionTables[0].endOffset]
+            section_01 = nca_data[self.header.sectionTables[1].offset:self.header.sectionTables[1].endOffset]
+            section_02 = nca_data[self.header.sectionTables[2].offset:self.header.sectionTables[2].endOffset]
+            section_03 = nca_data[self.header.sectionTables[3].offset:self.header.sectionTables[3].endOffset]
+            self.sections.append(section_00)
+            self.sections.append(section_01)
+            self.sections.append(section_02)
+            self.sections.append(section_03)
+            f.close()
+        self.titleId = self.header.titleId
+        self.sectionFilesystems = []
+        self.fsheader_00 = FsHeader(self.decrypted_nca_header[0x400:0x600])
+        self.fsheader_01 = FsHeader(self.decrypted_nca_header[0x600:0x800])
+        self.fsheader_02 = FsHeader(self.decrypted_nca_header[0x800:0xA00])
+        self.fsheader_03 = FsHeader(self.decrypted_nca_header[0xA00:0xC00])
+        self.sectionFilesystems.append(self.fsheader_00.fsType)
+        self.sectionFilesystems.append(self.fsheader_01.fsType)
+        self.sectionFilesystems.append(self.fsheader_02.fsType)
+        self.sectionFilesystems.append(self.fsheader_03.fsType)
+        self.CryptoCounterCtrs = []
+        self.CryptoCounterCtrs.append(self.fsheader_00.CryptoCounterCtr)
+        self.CryptoCounterCtrs.append(self.fsheader_01.CryptoCounterCtr)
+        self.CryptoCounterCtrs.append(self.fsheader_02.CryptoCounterCtr)
+        self.CryptoCounterCtrs.append(self.fsheader_03.CryptoCounterCtr)
+        self.CryptoCounterOffsets = []
+        self.CryptoCounterOffsets.append(self.header.sectionTables[0].offset)
+        self.CryptoCounterOffsets.append(self.header.sectionTables[1].offset)
+        self.CryptoCounterOffsets.append(self.header.sectionTables[2].offset)
+        self.CryptoCounterOffsets.append(self.header.sectionTables[3].offset)
+        self.DecryptedKeyArea = []
+        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[0], self.key_area_key))
+        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[1], self.key_area_key))
+        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[2], self.key_area_key))
+        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[3], self.key_area_key))
+        self.DecryptedKeyAreaKey2 = self.DecryptedKeyArea[2]
+        self.decrypted_sections = []
+        self.decrypted_sections.append(decrypt_ctr(self.sections[0], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[0], self.CryptoCounterOffsets[0]))
+        self.decrypted_sections.append(decrypt_ctr(self.sections[1], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[1], self.CryptoCounterOffsets[1]))
+        self.decrypted_sections.append(decrypt_ctr(self.sections[2], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[2], self.CryptoCounterOffsets[2]))
+        self.decrypted_sections.append(decrypt_ctr(self.sections[3], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[3], self.CryptoCounterOffsets[3]))
 
-def decrypt_sections(nca, decrypted_header, key_area_key):
-    program_id = get_program_id(decrypted_header)
-    section_amount = get_section_amount(decrypted_header)
-    crypto_counter_00, crypto_counter_01, crypto_counter_02, crypto_counter_03 = get_crypto_counters(decrypted_header)
-    section_00_offset_start, section_01_offset_start, section_02_offset_start, section_03_offset_start, section_00_offset_end, section_01_offset_end, section_02_offset_end, section_03_offset_end = get_section_offsets(decrypted_header)
-    section_00_content_type, section_01_content_type, section_02_content_type, section_03_content_type = get_fs_section_content_types(decrypted_header)
-    section_00_size = section_00_offset_end - section_00_offset_start
-    section_01_size = section_01_offset_end - section_01_offset_start
-    section_02_size = section_02_offset_end - section_02_offset_start
-    section_03_size = section_03_offset_end - section_03_offset_start
-    encrypted_key_area = decrypted_header[0x300:0x340]
-    decrypted_key_area = decrypt_ecb(encrypted_key_area, key_area_key)
-    decrypted_key_area_key_2 = decrypted_key_area[0x20:0x30]
-    with open(nca, 'rb') as f:
-        data = f.read()
-        if section_amount <= 4:
-            f.seek(section_03_offset_start)
-            encrypted_section_03 = f.read(section_03_size)
-            decrypted_section_03 = decrypt_ctr(encrypted_section_03, decrypted_key_area_key_2, crypto_counter_03, section_03_offset_start)
-        if section_amount <= 3:
-            f.seek(section_02_offset_start)
-            encrypted_section_02 = f.read(section_02_size)
-            decrypted_section_02 = decrypt_ctr(encrypted_section_02, decrypted_key_area_key_2, crypto_counter_02, section_02_offset_start)
-        if section_amount <= 2:
-            f.seek(section_01_offset_start)
-            encrypted_section_01 = f.read(section_01_size)
-            decrypted_section_01 = decrypt_ctr(encrypted_section_01, decrypted_key_area_key_2, crypto_counter_01, section_01_offset_start)
-        if section_amount <= 1:
-            f.seek(section_00_offset_start)
-            encrypted_section_00 = f.read(section_00_size)
-            decrypted_section_00 = decrypt_ctr(encrypted_section_00, decrypted_key_area_key_2, crypto_counter_00, section_00_offset_start)
-    return decrypted_section_00, decrypted_section_01, decrypted_section_02, decrypted_section_03
-
-def extract_romfs(decrypted_header, decrypted_section_00):
-    romfs_start = int.from_bytes(decrypted_header[0x490:0x493], "little", signed=False)
-    romfs_size = int.from_bytes(decrypted_header[0x498:0x49B], "little", signed=False)
+def extract_romfs(decrypted_nca_header, decrypted_section_00):
+    romfs_start = int.from_bytes(decrypted_nca_header[0x490:0x493], "little", signed=False)
+    romfs_size = int.from_bytes(decrypted_nca_header[0x498:0x49B], "little", signed=False)
     romfs_end = romfs_start + romfs_size
     romfs = decrypted_section_00[romfs_start:romfs_end]
     return romfs
 
-def extract_pfs0(decrypted_header, decrypted_section_00):
-    pfs0_start = int.from_bytes(decrypted_header[0x440:0x444], "little", signed=False)
-    pfs0_size = int.from_bytes(decrypted_header[0x448:0x44C], "little", signed=False)
+def extract_pfs0(decrypted_nca_header, decrypted_section_00):
+    pfs0_start = int.from_bytes(decrypted_nca_header[0x440:0x444], "little", signed=False)
+    pfs0_size = int.from_bytes(decrypted_nca_header[0x448:0x44C], "little", signed=False)
     pfs0_end = pfs0_start + pfs0_size
     pfs0 = decrypted_section_00[pfs0_start:pfs0_end]
     return pfs0

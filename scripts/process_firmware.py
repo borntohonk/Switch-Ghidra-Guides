@@ -44,22 +44,24 @@ def sort_nca(location):
     firmware_location = location
     for nca_file in os.listdir(firmware_location):
         ncaFull = f'{firmware_location}/{nca_file}'
-        decrypted_header = nca.decrypt_header(ncaFull, key_sources.header_key)
-        program_id = nca.get_program_id(decrypted_header)
-        content_type = nca.get_nca_types(decrypted_header)
+        with open(ncaFull, 'rb') as f:
+            nca_data = nca.decrypt_header(f.read(0xC00), key_sources.header_key)
+            nca_header = nca.NcaHeader(nca_data)
+            titleId = nca_header.titleId
+            content_type = nca_header.contentType
         try:
-            mkdirp("sorted_firmware" + "/by-type/" + content_type + "/" + program_id)
-            shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + content_type + "/" + program_id + "/" + "data.nca")
+            mkdirp("sorted_firmware" + "/by-type/" + content_type + "/" + titleId)
+            shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + content_type + "/" + titleId + "/" + "data.nca")
         except:
             pass
 
 def get_system_version(nca_path, mariko_master_kek_source_key):
-    nca_file = nca_path
-    decrypted_header = nca.decrypt_header(nca_file, key_sources.header_key)
     mariko_master_kek_source = mariko_master_kek_source_key
     master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source)
-    decrypted_section_00 = nca.decrypt_sections(nca_file, decrypted_header, key_area_key_application)[0]
-    extracted_romfs = nca.extract_romfs(decrypted_header, decrypted_section_00)
+    nca_file = nca.Nca(nca_path, key_area_key_application)
+    decrypted_nca_header = nca_file.decrypted_nca_header
+    decrypted_section_00 = nca_file.decrypted_sections[0]
+    extracted_romfs = nca.extract_romfs(decrypted_nca_header, decrypted_section_00)
     result = re.search(b'\x66\x69\x6C\x65', extracted_romfs)
     system_version_file_size_location = result.start() - 0x10
     system_version_file_size_length = system_version_file_size_location + 0x4

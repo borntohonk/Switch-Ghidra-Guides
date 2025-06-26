@@ -31,14 +31,15 @@ def get_build_id(extracted_pfs0):
     return extracted_pfs0[0x40:0x54].hex().upper()
 
 def prepare_exefs(nca_path, nso_out):
-    nca_file = nca_path
     nso_name = nso_out
     key_area_key_application = aes_sample.single_keygen(key_sources.mariko_master_kek_sources[-1])[6] # this relies on key_sources being updated with the latest master_mariko_source, requires mariko_bek, mariko_kek
-    decrypted_header = nca.decrypt_header(nca_file, key_sources.header_key)
-    program_id = nca.get_program_id(decrypted_header)
-    if program_id != "0100000000000819" or "010000000000081B":
-        decrypted_section_00 = nca.decrypt_sections(nca_file, decrypted_header, key_area_key_application)[0]
-        extracted_pfs0 = nca.extract_pfs0(decrypted_header, decrypted_section_00)
+    nca_file = nca.Nca(nca_path, key_area_key_application)
+    decrypted_nca_header = nca_file.decrypted_nca_header
+    decrypted_section_00 = nca_file.decrypted_sections[0]
+    titleId = nca_file.titleId
+    if titleId != "0100000000000819" or "010000000000081B":
+        decrypted_section_00 = nca_file.decrypted_sections[0]
+        extracted_pfs0 = nca.extract_pfs0(decrypted_nca_header, decrypted_section_00)
         main_exefs_end_offset = int.from_bytes(extracted_pfs0[0x18:0x1B], "little", signed=False)
         main_exefs = extracted_pfs0[0x60:main_exefs_end_offset + 0x60]
         build_id = get_build_id(main_exefs)
