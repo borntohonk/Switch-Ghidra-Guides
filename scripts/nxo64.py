@@ -153,19 +153,33 @@ def decompress_nso(fileobj):
     roff, rloc, rsize = f.read_from('III', 0x20)
     doff, dloc, dsize = f.read_from('III', 0x30)
 
-    #hoff = 0x00
-    #hfilesize = 0x100
-
     tfilesize, rfilesize, dfilesize = f.read_from('III', 0x60)
     bsssize = f.read_from('I', 0x3C)
 
-    #header = f.read_from(hfilesize, hoff)
     text = uncompress(f.read_from(tfilesize, toff), uncompressed_size=tsize)
     ro   = uncompress(f.read_from(rfilesize, roff), uncompressed_size=rsize)
     data = uncompress(f.read_from(dfilesize, doff), uncompressed_size=dsize)
 
-    #full = header
-    full = text
+    header = f.read_from(0xC, 0x0)
+    header += bytes.fromhex("38000000")
+    header += f.read_from(0x4, 0x1C) # correct
+    header += f.read_from(0x8, 0x14) # correct
+    header += f.read_from(0x4, 0x1C) # correct
+    header += f.read_from(0x2, 0x1C) # correct
+    header += f.read_from(0x2, 0x26) # correct ("C00")
+    header += f.read_from(0x8,0x24) # yes
+    header += bytes.fromhex("00000000") # yes
+    header += f.read_from(0x4, 0x34)
+    header += f.read_from(0xC,0x34) # correct
+    header += f.read_from(0x20, 0x40) # # correct
+    header += f.read_from(0x4, 0x18) # correct
+    header += f.read_from(0x4, 0x28) # correct
+    header += f.read_from(0x4, 0x38) # correct
+    header += bytes.fromhex("00000000")
+    header += f.read_from(0x90, 0x70) # correct
+
+    full = header
+    full += text
     if rloc >= len(full):
         full += b'\0' * (rloc - len(full))
     else:
