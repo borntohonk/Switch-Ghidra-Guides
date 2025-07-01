@@ -1,0 +1,40 @@
+{
+  "ngc_services": {
+    "program_identified": "NGC_services",
+    "nn::ngc::detail::IService": {
+      "_srv": "SRV_71000692D0",
+      "_hash": "a9609321a324fdd1",
+      "0": {"vt":  "0x20", "func": "0x7100000FE0", "lr": "0x71000013A8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetContentVersion", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100000FF0", "lr": "0x7100001654", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [5], "name": "Check", "wire_order": "in_buf0; in_data[0x18]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100001000", "lr": "0x7100001848", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6, 5], "name": "Mask", "wire_order": "in_u64_1; in_buf0; in_u64_0; out_buf0; in_u64_2; out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x7100001010", "lr": "0x710000145C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Reload", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x7100001020", "lr": "0x7100001A44", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [5], "name": "Check2", "wire_order": "in_buf0; in_data[0x18]; out_data[0x4]"},
+      "5": {"vt":  "0x48", "func": "0x7100001030", "lr": "0x7100001C38", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6, 5], "name": "Mask2", "wire_order": "in_data[0x18]; out_data[0x4]; buffers=[out, in]"}
+    },
+    "nn::ngc::t::detail::IService": {
+      "_srv": "SRV_71000694B8",
+      "_hash": "ad2efe8fcaa03151",
+      "_hash_alt": "66860bddcaf156c9",
+      "0": {"vt":  "0x20", "func": "0x710002C9F0", "lr": "0x710000220C", "inbytes":   "0x0", "outbytes":   "0x1", "buffers": [9], "name": "Cmd0", "wire_order": "out_data[0x1]; buffers=[in]"},
+      "1": {"vt":  "0x28", "func": "0x710002CA10", "lr": "0x71000023D0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [10, 9], "name": "Cmd1", "wire_order": "buffers=[out, in]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710006B2D0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710002AEF0", "lr": "0x710002A1F0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710002B090", "lr": "0x710002A35C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710002B1D0", "lr": "0x710002A4F8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710002B340", "lr": "0x710002A128", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710002B450", "lr": "0x710002A65C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fatal:u", "fsp-srv", "ngc:u", "ngct:u"],
+    "_invokes": {
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x1f0", "stub": "0x7100006e70", "cmd_proof_offset": "0x7100006ecc", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x71000173d0"] }
+        }
+      }
+    }
+  }
+}

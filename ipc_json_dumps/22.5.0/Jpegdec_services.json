@@ -1,0 +1,22 @@
+{
+  "jpegdec_services": {
+    "program_identified": "Jpegdec_services",
+    "nn::capsrv::sf::IDecoderControlService": {
+      "_srv": "SRV_7100051328",
+      "_hash": "3aaf8dc0617ce63c",
+      "3001": {"vt":  "0x20", "func": "0x710000B620", "lr": "0x710000BDA4", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [70, 5], "name": "DecodeJpeg", "wire_order": "out_buf0; in_buf0; in_data[0x28]"},
+      "4001": {"vt":  "0x28", "func": "0x710000B630", "lr": "0x710000BF88", "inbytes":  "0x28", "outbytes":   "0x8", "buffers": [70, 5], "name": "ShrinkJpeg", "wire_order": "in_data[0x28]; out_data[0x8]; buffers=[out, in]"},
+      "4002": {"vt":  "0x30", "func": "0x710000B640", "lr": "0x710000C178", "inbytes":  "0x30", "outbytes":   "0x8", "buffers": [70, 5], "name": "ShrinkJpegEx", "wire_order": "in_data[0x30]; out_data[0x8]; buffers=[out, in]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100051740",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710000FD40", "lr": "0x71000107F0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710000FE40", "lr": "0x710001095C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000FE50", "lr": "0x7100010AF8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710000FE60", "lr": "0x7100010728", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710000FE80", "lr": "0x7100010C5C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["caps:dc", "fatal:u"]
+  }
+}

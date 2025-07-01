@@ -1,0 +1,260 @@
+{
+  "glue_services": {
+    "program_identified": "Glue_services",
+    "nn::err::context::IWriterForSystem": {
+      "_srv": "SRV_710009E1E0",
+      "_hash": "c34f9e7e86026b02",
+      "0": {"vt":  "0x20", "lr": "0x7100001098", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::err::context::IContextRegistrar"], "_srv_outinterfaces": "SRV_710009E1E8", "name": "CreateContextRegistrar", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x7100001244", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5], "name": "CommitContext", "wire_order": "in_data[0xC]; buffers=[in]"},
+      "2": {"vt":  "0x30", "lr": "0x7100000F18", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveContext", "wire_order": "in_data[0x8]"}
+    },
+    "nn::err::context::IContextRegistrar": {
+      "_srv": "SRV_710009E1E8",
+      "_hash": "a88f530c590d77e5",
+      "0": {"vt":  "0x20", "lr": "0x7100001524", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5], "name": "Complete", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[in]"}
+    },
+    "nn::err::context::IReaderForSystem": {
+      "_srv": "SRV_710009E1F0",
+      "_hash": "c31c23c071492992",
+      "0": {"vt":  "0x20", "lr": "0x7100001850", "inbytes":   "0x8", "outbytes":  "0x10", "name": "GetContextInfo", "wire_order": "in_data[0x8]; out_data[0x10]"},
+      "1": {"vt":  "0x28", "lr": "0x71000019D4", "inbytes":   "0x8", "outbytes":   "0xC", "buffers": [6], "name": "PullContext", "wire_order": "in_data[0x8]; out_data[0xC]; buffers=[out]"},
+      "2": {"vt":  "0x30", "lr": "0x7100001BAC", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "ListContextDescriptorWithResultForDebug", "wire_order": "out_data[0x8]; buffers=[out]"}
+    },
+    "nn::err::context::IWriterForApplication": {
+      "_srv": "SRV_710009E1F8",
+      "_hash": "6eba7ff38f9cfd9e",
+      "0": {"vt":  "0x20", "lr": "0x7100001EA8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::err::context::IContextRegistrar"], "_srv_outinterfaces": "SRV_710009E1E8", "name": "CreateContextRegistrar", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x7100002054", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5], "name": "CommitContext", "wire_order": "in_data[0xC]; buffers=[in]"}
+    },
+    "nn::notification::server::INotificationServicesForApplication": {
+      "_srv": "SRV_710009E518",
+      "_hash": "1515bdac9a4f2a5c",
+      "500":  {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100003D64", "inbytes":   "0x0", "outbytes":   "0x2", "buffers": [21, 5], "name": "RegisterAlarmSetting", "wire_order": "out_data[0x2]; buffers=[in, in]"},
+      "510":  {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100003F24", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21, 5], "name": "UpdateAlarmSetting", "wire_order": "buffers=[in, in]"},
+      "520":  {"vt":  "0x30", "func": "0x710002F900", "lr": "0x710000409C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAlarmSettings", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "530":  {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x7100004254", "inbytes":   "0x2", "outbytes":   "0x4", "buffers": [6], "name": "LoadApplicationParameter", "wire_order": "in_data[0x2]; out_data[0x4]; buffers=[out]"},
+      "540":  {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100003B7C", "inbytes":   "0x2", "outbytes":   "0x0", "name": "DeleteAlarmSetting", "wire_order": "in_data[0x2]"},
+      "1000": {"vt":  "0x48", "func": "0x710002FC70", "lr": "0x71000039BC", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "Initialize", "wire_order": "in_data[0x8]"}
+    },
+    "nn::notification::server::INotificationServices": {
+      "_srv": "SRV_710009E520",
+      "_hash": "b05a37ffdddfc310",
+      "500":  {"vt":  "0x20", "func": "0x7100006680", "lr": "0x7100003D64", "inbytes":   "0x0", "outbytes":   "0x2", "buffers": [21, 5], "name": "RegisterAlarmSetting", "wire_order": "in_buf1; in_buf0; out_data[0x2]"},
+      "510":  {"vt":  "0x28", "func": "0x7100006690", "lr": "0x7100003F24", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21, 5], "name": "UpdateAlarmSetting", "wire_order": "in_buf0; in_buf1"},
+      "520":  {"vt":  "0x30", "func": "0x71000066A0", "lr": "0x710000409C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAlarmSettings", "wire_order": "out_buf0; out_data[0x4]"},
+      "530":  {"vt":  "0x38", "func": "0x71000066B0", "lr": "0x7100004254", "inbytes":   "0x2", "outbytes":   "0x4", "buffers": [6], "name": "LoadApplicationParameter", "wire_order": "in_data[0x2]; out_data[0x4]; buffers=[out]"},
+      "540":  {"vt":  "0x40", "func": "0x71000066C0", "lr": "0x7100003B7C", "inbytes":   "0x2", "outbytes":   "0x0", "name": "DeleteAlarmSetting", "wire_order": "in_data[0x2]"},
+      "1000": {"vt":  "0x48", "func": "0x71000066D0", "lr": "0x7100004888", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetNotificationCount", "wire_order": "out_data[0x4]"},
+      "1010": {"vt":  "0x50", "func": "0x71000066E0", "lr": "0x7100004B84", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "ListNotifications", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "1020": {"vt":  "0x58", "func": "0x7100006700", "lr": "0x7100004D50", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "DeleteNotification", "wire_order": "in_buf0"},
+      "1030": {"vt":  "0x60", "func": "0x7100006710", "lr": "0x7100004684", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearNotifications", "wire_order": "N/A"},
+      "1040": {"vt":  "0x68", "func": "0x7100006720", "lr": "0x7100004EB8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::notification::server::INotificationSystemEventAccessor"], "_srv_outinterfaces": "SRV_710009E528", "name": "GetNotificationSendingNotifier", "wire_order": "N/A"},
+      "1500": {"vt":  "0x70", "func": "0x7100006750", "lr": "0x710000505C", "inbytes":  "0x11", "outbytes":   "0x0", "name": "SetNotificationPresentationSetting", "wire_order": "in_data[0x11]"},
+      "1510": {"vt":  "0x78", "func": "0x7100006760", "lr": "0x71000051E0", "inbytes":   "0x1", "outbytes":  "0x10", "name": "GetNotificationPresentationSetting", "wire_order": "in_data[0x1]; out_data[0x10]"},
+      "2000": {"vt":  "0x80", "func": "0x7100006770", "lr": "0x7100005374", "inbytes":   "0x2", "outbytes":   "0x0", "buffers": [22], "name": "GetAlarmSetting", "wire_order": "in_data[0x2]; buffers=[out]"},
+      "2001": {"vt":  "0x88", "func": "0x7100006780", "lr": "0x710000552C", "inbytes":   "0x2", "outbytes":   "0x4", "buffers": [22, 6], "name": "GetAlarmSettingWithApplicationParameter", "wire_order": "in_data[0x2]; out_data[0x4]; buffers=[out, out]"},
+      "2010": {"vt":  "0x90", "func": "0x71000067A0", "lr": "0x71000045C4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetAlarmSettingIsMuted", "wire_order": "in_data[0x4]"},
+      "2020": {"vt":  "0x98", "func": "0x71000067B0", "lr": "0x71000056F0", "inbytes":   "0x2", "outbytes":   "0x1", "name": "IsAlarmSettingDeletable", "wire_order": "in_data[0x2]; out_data[0x1]"},
+      "3000": {"vt":  "0xA0", "func": "0x71000067C0", "lr": "0x710000585C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "Cmd3000", "wire_order": "buffers=[in]"},
+      "3010": {"vt":  "0xA8", "func": "0x71000067D0", "lr": "0x71000059CC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Cmd3010", "wire_order": "out_buf0; out_data[0x4]"},
+      "8000": {"vt":  "0xB0", "func": "0x71000067E0", "lr": "0x71000046FC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RegisterAppletResourceUserId", "wire_order": "in_data[0x10]"},
+      "8010": {"vt":  "0xB8", "func": "0x71000067F0", "lr": "0x7100004984", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterAppletResourceUserId", "wire_order": "in_data[0x8]"},
+      "8999": {"vt":  "0xC0", "func": "0x7100006800", "lr": "0x71000047D4", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetCurrentTime", "wire_order": "out_data[0x8]"},
+      "9000": {"vt":  "0xC8", "func": "0x7100006810", "lr": "0x7100005B80", "inbytes":   "0x2", "outbytes":  "0x10", "name": "GetAlarmSettingNextNotificationTime", "wire_order": "in_data[0x2]; out_data[0x10]"}
+    },
+    "nn::notification::server::INotificationSystemEventAccessor": {
+      "_srv": "SRV_710009E528",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 7/21 in Glue_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100005E18", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000A0810",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100030C10", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100030D7C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100030F18", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x7100030B48", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x710003107C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::arp::detail::IWriter": {
+      "_srv": "SRV_71000A0BD0",
+      "_hash": "202b9e284ceee17d",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x71000344F8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::arp::detail::IRegistrar"], "_srv_outinterfaces": "SRV_71000A0BD8", "name": "AcquireRegistrar", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100034340", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterApplicationInstance", "wire_order": "in_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x710003469C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::arp::detail::IUpdater"], "_srv_outinterfaces": "SRV_71000A0BE0", "name": "AcquireApplicationProcessPropertyUpdater", "wire_order": "in_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x710003486C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::arp::detail::IUpdater"], "_srv_outinterfaces": "SRV_71000A0BE0", "name": "AcquireApplicationCertificateUpdater", "wire_order": "in_data[0x8]"},
+      "4": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100034A44", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [21], "name": "RegisterApplicationControlProperty", "wire_order": "in_data[0x8]; buffers=[in]"}
+    },
+    "nn::arp::detail::IRegistrar": {
+      "_srv": "SRV_71000A0BD8",
+      "_hash": "d3b336034aa110bd",
+      "0": {"vt":  "0x20", "lr": "0x7100034D04", "inbytes":   "0x0", "outbytes":   "0x8", "name": "Issue", "wire_order": "out_data[0x8]"},
+      "1": {"vt":  "0x28", "lr": "0x7100034D3C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SetApplicationLaunchProperty", "wire_order": "in_data[0x10]"}
+    },
+    "nn::arp::detail::IUpdater": {
+      "_srv": "SRV_71000A0BE0",
+      "_hash": "0e23ba814e40960d",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100035118", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Issue", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x710003528C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetApplicationProcessProperty", "wire_order": "in_data[0x18]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100035154", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DeleteApplicationProcessProperty", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x7100035410", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "SetApplicationCertificate", "wire_order": "buffers=[in]"}
+    },
+    "nn::arp::detail::IReader": {
+      "_srv": "SRV_71000A0D20",
+      "_hash": "9b90dae92a618181",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100036710", "inbytes":   "0x8", "outbytes":  "0x10", "name": "GetApplicationLaunchProperty", "wire_order": "in_data[0x8]; out_data[0x10]"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100036894", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [22], "name": "GetApplicationControlProperty", "wire_order": "in_data[0x8]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100036A40", "inbytes":   "0x8", "outbytes":  "0x10", "name": "GetApplicationProcessProperty", "wire_order": "in_data[0x8]; out_data[0x10]"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x7100036BC0", "inbytes":   "0x8", "outbytes":   "0x8", "name": "GetApplicationInstanceId", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "4": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100036D38", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::arp::detail::IUnregistrationNotifier"], "_srv_outinterfaces": "SRV_71000A0D28", "name": "GetApplicationInstanceUnregistrationNotifier", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x710002FC70", "lr": "0x7100036EDC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListApplicationInstanceId", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "6": {"vt":  "0x50", "func": "0x710002FDB0", "lr": "0x7100037090", "inbytes":   "0x8", "outbytes":   "0x8", "name": "GetMicroApplicationInstanceId", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "7": {"vt":  "0x58", "func": "0x710002FEB0", "lr": "0x7100037214", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [22], "name": "GetApplicationCertificate", "wire_order": "in_data[0x8]; buffers=[out]"}
+    },
+    "nn::arp::detail::IUnregistrationNotifier": {
+      "_srv": "SRV_71000A0D28",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 13/21 in Glue_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000374D8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetReadableHandle", "wire_order": "N/A"}
+    },
+    "nn::bgtc::ITaskServiceRoot": {
+      "_srv": "SRV_71000A14B0",
+      "_hash": "b10e619b0d13dccf",
+      "100": {"vt":  "0x20", "lr": "0x710003F308", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::bgtc::ITaskService"], "_srv_outinterfaces": "SRV_71000A14B8", "name": "CreateTaskService", "wire_order": "N/A"}
+    },
+    "nn::bgtc::ITaskService": {
+      "_srv": "SRV_71000A14B8",
+      "_hash": "173c3d1189e4ccec",
+      "1":   {"vt":  "0x20", "func": "0x7100040C60", "lr": "0x710003F5E8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyTaskStarting", "wire_order": "N/A"},
+      "2":   {"vt":  "0x28", "func": "0x7100040C70", "lr": "0x710003F910", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyTaskFinished", "wire_order": "N/A"},
+      "3":   {"vt":  "0x30", "func": "0x7100040C80", "lr": "0x710003FDF8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetTriggerEvent", "wire_order": "N/A"},
+      "4":   {"vt":  "0x38", "func": "0x7100040C90", "lr": "0x710003F788", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsInHalfAwake", "wire_order": "out_data[0x1]"},
+      "5":   {"vt":  "0x40", "func": "0x7100040CA0", "lr": "0x710003FF5C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9], "name": "NotifyClientName", "wire_order": "in_buf0"},
+      "6":   {"vt":  "0x48", "func": "0x7100040CB0", "lr": "0x710003FA24", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsInFullAwake", "wire_order": "out_data[0x1]"},
+      "11":  {"vt":  "0x50", "func": "0x7100040CC0", "lr": "0x710003F728", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ScheduleTask", "wire_order": "in_data[0x4]"},
+      "12":  {"vt":  "0x58", "func": "0x7100040CD0", "lr": "0x710003F820", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetScheduledTaskInterval", "wire_order": "out_data[0x4]"},
+      "13":  {"vt":  "0x60", "func": "0x7100040CE0", "lr": "0x710003F67C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UnscheduleTask", "wire_order": "N/A"},
+      "14":  {"vt":  "0x68", "func": "0x7100040CF0", "lr": "0x71000400C8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetScheduleEvent", "wire_order": "N/A"},
+      "15":  {"vt":  "0x70", "func": "0x7100040D00", "lr": "0x710003F958", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SchedulePeriodicTask", "wire_order": "in_data[0x8]"},
+      "16":  {"vt":  "0x78", "func": "0x7100040D10", "lr": "0x710003FAD8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ScheduleStrictTask", "wire_order": "in_data[0x4]"},
+      "101": {"vt":  "0x80", "func": "0x7100040D20", "lr": "0x710003FB84", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetOperationMode", "wire_order": "out_data[0x4]"},
+      "102": {"vt":  "0x88", "func": "0x7100040D30", "lr": "0x710003FC34", "inbytes":   "0x0", "outbytes":   "0x1", "name": "WillDisconnectNetworkWhenEnteringSleep", "wire_order": "out_data[0x1]"},
+      "103": {"vt":  "0x90", "func": "0x7100040D40", "lr": "0x710003F9B8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "WillStayHalfAwakeInsteadSleep", "wire_order": "out_data[0x1]"},
+      "200": {"vt":  "0x98", "func": "0x7100040D50", "lr": "0x710003F624", "inbytes":   "0x1", "outbytes":   "0x0", "name": "EnableStayHalfAwake", "wire_order": "in_data[0x1]"}
+    },
+    "nn::bgtc::IStateControlService": {
+      "_srv": "SRV_71000A1608",
+      "_hash": "be9a43a9c450c233",
+      "1": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x710004059C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "2": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100040728", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangedEvent", "wire_order": "N/A"},
+      "3": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100040490", "inbytes":   "0x1", "outbytes":   "0x0", "name": "NotifyEnteringHalfAwake", "wire_order": "in_data[0x1]"},
+      "4": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x71000404F4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyLeavingHalfAwake", "wire_order": "N/A"},
+      "5": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100040418", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetIsUsingSleepUnsupportedDevices", "wire_order": "in_data[0x1]"}
+    },
+    "nn::pl::sharedresource::detail::IPlatformSharedResourceManager": {
+      "_srv": "SRV_71000A2310",
+      "_hash": "2d75045e029cf935",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x710004D4C8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "RequestLoad", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x710004D6A0", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetLoadState", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x710004D830", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetSize", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x710004D9C0", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetSharedMemoryAddressOffset", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x710004DB48", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSharedMemoryNativeHandle", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x710002FC70", "lr": "0x710004DCBC", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [6, 6, 6], "name": "GetSharedFontInOrderOfPriority", "wire_order": "in_data[0x8]; out_data[0x8]; buffers=[out, out, out]"},
+      "6": {"vt":  "0x50", "func": "0x710002FDB0", "lr": "0x710004DEBC", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [6, 6, 6], "name": "GetSharedFontInOrderOfPriorityForSystem", "wire_order": "in_data[0x8]; out_data[0x8]; buffers=[out, out, out]"}
+    },
+    "nn::timesrv::detail::service::IStaticService": {
+      "_srv": "SRV_71000A3A98",
+      "_hash": "585d5afa04606c18",
+      "0":   {"vt":  "0x20", "func": "0x7100061AA0", "lr": "0x7100062698", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ISystemClock"], "_srv_outinterfaces": "SRV_71000A3AA0", "name": "GetStandardUserSystemClock", "wire_order": "N/A"},
+      "1":   {"vt":  "0x28", "func": "0x7100061AD0", "lr": "0x7100062838", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ISystemClock"], "_srv_outinterfaces": "SRV_71000A3AA0", "name": "GetStandardNetworkSystemClock", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100061B00", "lr": "0x71000629D8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ISteadyClock"], "_srv_outinterfaces": "SRV_71000A3AA8", "name": "GetStandardSteadyClock", "wire_order": "N/A"},
+      "3":   {"vt":  "0x38", "func": "0x7100061B30", "lr": "0x7100062B78", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ITimeZoneService"], "_srv_outinterfaces": "SRV_71000A3AB0", "name": "GetTimeZoneService", "wire_order": "N/A"},
+      "4":   {"vt":  "0x40", "func": "0x7100061B60", "lr": "0x7100062D18", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ISystemClock"], "_srv_outinterfaces": "SRV_71000A3AA0", "name": "GetStandardLocalSystemClock", "wire_order": "N/A"},
+      "5":   {"vt":  "0x48", "func": "0x7100061B90", "lr": "0x7100062EB8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::timesrv::detail::service::ISystemClock"], "_srv_outinterfaces": "SRV_71000A3AA0", "name": "GetEphemeralNetworkSystemClock", "wire_order": "N/A"},
+      "20":  {"vt":  "0x50", "func": "0x7100061BC0", "lr": "0x7100063058", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSharedMemoryNativeHandle", "wire_order": "N/A"},
+      "50":  {"vt":  "0x58", "func": "0x7100061BD0", "lr": "0x7100062060", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetStandardSteadyClockInternalOffset", "wire_order": "in_data[0x8]"},
+      "51":  {"vt":  "0x60", "func": "0x7100061BE0", "lr": "0x7100061FB4", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetStandardSteadyClockRtcValue", "wire_order": "out_data[0x8]"},
+      "100": {"vt":  "0x68", "func": "0x7100061BF0", "lr": "0x7100062128", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "wire_order": "out_data[0x1]"},
+      "101": {"vt":  "0x70", "func": "0x7100061C00", "lr": "0x7100062298", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "wire_order": "in_data[0x1]"},
+      "102": {"vt":  "0x78", "func": "0x7100061C10", "lr": "0x71000621D8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetStandardUserSystemClockInitialYear", "wire_order": "out_data[0x4]"},
+      "200": {"vt":  "0x80", "func": "0x7100061C20", "lr": "0x710006237C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsStandardNetworkSystemClockAccuracySufficient", "wire_order": "out_data[0x1]"},
+      "201": {"vt":  "0x88", "func": "0x7100061C30", "lr": "0x7100061EC4", "inbytes":   "0x0", "outbytes":  "0x18", "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "wire_order": "out_data[0x18]"},
+      "300": {"vt":  "0x90", "func": "0x7100061C40", "lr": "0x71000631C0", "inbytes":  "0x20", "outbytes":   "0x8", "name": "CalculateMonotonicSystemClockBaseTimePoint", "wire_order": "in_data[0x20]; out_data[0x8]"},
+      "400": {"vt":  "0x98", "func": "0x7100061C50", "lr": "0x7100063354", "inbytes":   "0x1", "outbytes":   "0x0", "buffers": [26], "name": "GetClockSnapshot", "wire_order": "in_data[0x1]; buffers=[out]"},
+      "401": {"vt":  "0xA0", "func": "0x7100061C60", "lr": "0x7100063504", "inbytes":  "0x48", "outbytes":   "0x0", "buffers": [26], "name": "GetClockSnapshotFromSystemClockContext", "wire_order": "in_data[0x48]; buffers=[out]"},
+      "500": {"vt":  "0xA8", "func": "0x7100061C70", "lr": "0x71000636E4", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "name": "CalculateStandardUserSystemClockDifferenceByUser", "wire_order": "out_data[0x8]; buffers=[in, in]"},
+      "501": {"vt":  "0xB0", "func": "0x7100061C80", "lr": "0x7100063894", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "name": "CalculateSpanBetween", "wire_order": "out_data[0x8]; buffers=[in, in]"},
+      "600": {"vt":  "0xB8", "func": "0x7100061C90", "lr": "0x710006245C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetInitialLaunchEndTime", "wire_order": "out_data[0x8]"},
+      "601": {"vt":  "0xC0", "func": "0x7100061CA0", "lr": "0x7100061E70", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyInitialLaunchSettingsDone", "wire_order": "N/A"}
+    },
+    "nn::timesrv::detail::service::ISystemClock": {
+      "_srv": "SRV_71000A3AA0",
+      "_hash": "491b1d8ceb5851cc",
+      "0": {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100063DE0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetCurrentTime", "wire_order": "out_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x7100063BA0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetCurrentTime", "wire_order": "in_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100063C48", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetSystemClockContext", "wire_order": "out_data[0x20]"},
+      "3": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x7100063D1C", "inbytes":  "0x20", "outbytes":   "0x0", "name": "SetSystemClockContext", "wire_order": "in_data[0x20]"},
+      "4": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100063FB8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetOperationEventReadableHandle", "wire_order": "N/A"}
+    },
+    "nn::timesrv::detail::service::ISteadyClock": {
+      "_srv": "SRV_71000A3AA8",
+      "_hash": "bb453044b5ec2447",
+      "0":   {"vt":  "0x20", "func": "0x710002F610", "lr": "0x7100064430", "inbytes":   "0x0", "outbytes":  "0x18", "name": "GetCurrentTimePoint", "wire_order": "out_data[0x18]"},
+      "2":   {"vt":  "0x28", "func": "0x710002F8E0", "lr": "0x71000645CC", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetTestOffset", "wire_order": "out_data[0x8]"},
+      "3":   {"vt":  "0x30", "func": "0x710002F900", "lr": "0x7100064320", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetTestOffset", "wire_order": "in_data[0x8]"},
+      "100": {"vt":  "0x38", "func": "0x710002FB60", "lr": "0x71000644CC", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetRtcValue", "wire_order": "out_data[0x8]"},
+      "101": {"vt":  "0x40", "func": "0x710002E930", "lr": "0x7100064250", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsRtcResetDetected", "wire_order": "out_data[0x1]"},
+      "102": {"vt":  "0x48", "func": "0x710002FC70", "lr": "0x7100064510", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSetupResultValue", "wire_order": "out_data[0x4]"},
+      "200": {"vt":  "0x50", "func": "0x710002FDB0", "lr": "0x71000643EC", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetInternalOffset", "wire_order": "out_data[0x8]"}
+    },
+    "nn::timesrv::detail::service::ITimeZoneService": {
+      "_srv": "SRV_71000A3AB0",
+      "_hash": "8f8cc99f2cb6f8ca",
+      "_hash_alt": "9ad8af4665e8e7b8",
+      "0":   {"vt":  "0x20", "func": "0x7100066520", "lr": "0x71000648E8", "inbytes":   "0x0", "outbytes":  "0x24", "name": "GetDeviceLocationName", "wire_order": "out_data[0x24]"},
+      "1":   {"vt":  "0x28", "func": "0x7100066530", "lr": "0x7100064C5C", "inbytes":  "0x24", "outbytes":   "0x0", "name": "SetDeviceLocationName", "wire_order": "in_data[0x24]"},
+      "2":   {"vt":  "0x30", "func": "0x7100066540", "lr": "0x7100064B8C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTotalLocationNameCount", "wire_order": "out_data[0x4]"},
+      "3":   {"vt":  "0x38", "func": "0x7100066550", "lr": "0x7100064FA4", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "LoadLocationNameList", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "4":   {"vt":  "0x40", "func": "0x7100066570", "lr": "0x7100065184", "inbytes":  "0x24", "outbytes":   "0x0", "buffers": [22], "name": "LoadTimeZoneRule", "wire_order": "in_data[0x24]; buffers=[out]"},
+      "5":   {"vt":  "0x48", "func": "0x7100066580", "lr": "0x7100064AB8", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetTimeZoneRuleVersion", "wire_order": "out_data[0x10]"},
+      "6":   {"vt":  "0x50", "func": "0x7100066590", "lr": "0x7100064A04", "inbytes":   "0x0", "outbytes":  "0x40", "name": "GetDeviceLocationNameAndUpdatedTime", "wire_order": "out_data[0x40]"},
+      "7":   {"vt":  "0x58", "func": "0x71000665A0", "lr": "0x7100065340", "inbytes":  "0x24", "outbytes":   "0x0", "buffers": [33], "name": "SetDeviceLocationNameWithTimeZoneRule", "wire_order": "in_data[0x24]; buffers=[in]"},
+      "8":   {"vt":  "0x60", "func": "0x71000665B0", "lr": "0x7100065514", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22, 33], "name": "ParseTimeZoneBinary", "wire_order": "buffers=[out, in]"},
+      "20":  {"vt":  "0x68", "func": "0x71000665C0", "lr": "0x7100065688", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetDeviceLocationNameOperationEventReadableHandle", "wire_order": "N/A"},
+      "100": {"vt":  "0x70", "func": "0x71000665D0", "lr": "0x71000657F8", "inbytes":   "0x8", "outbytes":  "0x20", "buffers": [21], "name": "ToCalendarTime", "wire_order": "in_data[0x8]; out_data[0x20]; buffers=[in]"},
+      "101": {"vt":  "0x78", "func": "0x7100066600", "lr": "0x71000659C0", "inbytes":   "0x8", "outbytes":  "0x20", "name": "ToCalendarTimeWithMyRule", "wire_order": "in_data[0x8]; out_data[0x20]"},
+      "201": {"vt":  "0x80", "func": "0x7100066630", "lr": "0x7100065B5C", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [21, 10], "name": "ToPosixTime", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[in, out]"},
+      "202": {"vt":  "0x88", "func": "0x7100066670", "lr": "0x7100065D24", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [10], "name": "ToPosixTimeWithMyRule", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[out]"}
+    },
+    "_services": ["arp:r", "arp:w", "bgtc:sc", "bgtc:t", "ectx:aw", "ectx:r", "ectx:w", "fatal:u", "fsp-srv", "hshl:sys", "notif:a", "notif:s", "psc:m", "set:sys", "srepo:a", "srepo:u", "time:a", "time:al", "time:m", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x7100038d40", "cmd_proof_offset": "0x7100038d68", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100038574"] }
+        }
+      },
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100044ac0", "cmd_proof_offset": "0x7100044ad0", "cmd_proof_instruction": "mov w6,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100044720"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "21": { "name": "DeleteSaveDataFileSystem", "vt_off": "0x80", "stub": "0x710000b2b0", "cmd_proof_offset": "0x710000b2b4", "cmd_proof_instruction": "mov w2,#0x15", "cmd_hex_and_dec": "0x15 / 21", "calls": ["0x710001cd70"] },
+          "23": { "name": "CreateSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x90", "stub": "0x710000b2d0", "cmd_proof_offset": "0x710000b2d4", "cmd_proof_instruction": "mov w3,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x710001ceb0"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x710000b690", "cmd_proof_offset": "0x710000b6ec", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x710001d618"] },
+          "57": { "name": "ReadSaveDataFileSystemExtraDataBySaveDataSpaceId", "vt_off": "0x138", "stub": "0x710000b7f0", "cmd_proof_offset": "0x710000b800", "cmd_proof_instruction": "mov w5,#0x39", "cmd_hex_and_dec": "0x39 / 57", "calls": ["0x710001d104"] },
+          "58": { "name": "ReadSaveDataFileSystemExtraData", "vt_off": "0x140", "stub": "0x710000b810", "cmd_proof_offset": "0x710000b81c", "cmd_proof_instruction": "mov w4,#0x3a", "cmd_hex_and_dec": "0x3a / 58", "calls": ["0x710001cfc0"] },
+          "59": { "name": "WriteSaveDataFileSystemExtraData", "vt_off": "0x148", "stub": "0x710000b830", "cmd_proof_offset": "0x710000b83c", "cmd_proof_instruction": "mov w5,#0x3b", "cmd_hex_and_dec": "0x3b / 59", "calls": ["0x710001d158"] },
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x1f0", "stub": "0x710000c0e0", "cmd_proof_offset": "0x710000c13c", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x710001f4d0"] },
+          "611": { "name": "SetCurrentPosixTimeWithTimeDifference", "vt_off": "0x2a8", "stub": "0x710000c910", "cmd_proof_offset": "0x710000c918", "cmd_proof_instruction": "mov w3,#0x263", "cmd_hex_and_dec": "0x263 / 611", "calls": ["0x7100022a78"] },
+          "1400": { "name": "NotifyErrorContextServiceReady", "vt_off": "0x3e8", "stub": "0x710000cea0", "cmd_proof_offset": "0x710000cea8", "cmd_proof_instruction": "mov w2,#0x578", "cmd_hex_and_dec": "0x578 / 1400", "calls": ["0x710000a790"] }
+        }
+      }
+    }
+  }
+}

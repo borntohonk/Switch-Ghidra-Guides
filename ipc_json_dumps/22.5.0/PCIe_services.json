@@ -1,0 +1,56 @@
+{
+  "pcie_services": {
+    "program_identified": "PCIe_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100045820",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710000CB90", "lr": "0x710000E190", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710000CE60", "lr": "0x710000E2FC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000CE80", "lr": "0x710000E498", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710000D0E0", "lr": "0x710000E0C8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710000BF20", "lr": "0x710000E5FC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::pcie::detail::IManager": {
+      "_srv": "SRV_7100045C40",
+      "_hash": "c2209c9df6dd70c7",
+      "0": {"vt":  "0x20", "lr": "0x71000117BC", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::pcie::detail::ISession"], "_srv_outinterfaces": "SRV_7100045C48", "inhandles": [1], "outhandles": [1], "name": "RegisterClassDriver", "wire_order": "in_data[0x18]"},
+      "1": {"vt":  "0x28", "lr": "0x7100011A1C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "QueryFunctions", "wire_order": "out_data[0x4]; buffers=[out]"}
+    },
+    "nn::pcie::detail::ISession": {
+      "_srv": "SRV_7100045C48",
+      "_hash": "fb035ef6da268ea6",
+      "_hash_alt": "c37898b5a4a4cb33",
+      "0":  {"vt":  "0x20", "func": "0x7100014970", "lr": "0x710001233C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "QueryFunctions", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "1":  {"vt":  "0x28", "func": "0x71000149B0", "lr": "0x71000124EC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "AcquireFunction", "wire_order": "in_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x71000149C0", "lr": "0x7100011E40", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ReleaseFunction", "wire_order": "in_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x71000149D0", "lr": "0x7100012690", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6], "name": "GetFunctionState", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "4":  {"vt":  "0x40", "func": "0x71000149F0", "lr": "0x7100012840", "inbytes":   "0x8", "outbytes":  "0x20", "name": "GetBarProfile", "wire_order": "in_data[0x8]; out_data[0x20]"},
+      "5":  {"vt":  "0x48", "func": "0x7100014A70", "lr": "0x71000129E0", "inbytes":   "0xC", "outbytes":   "0x4", "name": "ReadConfig", "wire_order": "in_data[0xC]; out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x7100014B50", "lr": "0x7100012B5C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "WriteConfig", "wire_order": "in_data[0x10]"},
+      "7":  {"vt":  "0x58", "func": "0x7100014BC0", "lr": "0x7100012CD8", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [34], "name": "ReadBarRegion", "wire_order": "in_data[0x10]; buffers=[out]"},
+      "8":  {"vt":  "0x60", "func": "0x7100014BF0", "lr": "0x7100012E78", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [33], "name": "WriteBarRegion", "wire_order": "in_data[0x10]; buffers=[in]"},
+      "9":  {"vt":  "0x68", "func": "0x7100014C20", "lr": "0x7100013010", "inbytes":   "0x8", "outbytes":   "0x4", "name": "FindCapability", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "10": {"vt":  "0x70", "func": "0x7100014C60", "lr": "0x7100013190", "inbytes":   "0x8", "outbytes":   "0x4", "name": "FindExtendedCapability", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x7100014CA0", "lr": "0x7100013310", "inbytes":  "0x18", "outbytes":   "0x8", "name": "MapDma", "wire_order": "in_data[0x18]; out_data[0x8]"},
+      "12": {"vt":  "0x80", "func": "0x7100014CD0", "lr": "0x7100011DC0", "inbytes":  "0x10", "outbytes":   "0x0", "name": "UnmapDmaByProcVa", "wire_order": "in_data[0x10]"},
+      "13": {"vt":  "0x88", "func": "0x7100014CF0", "lr": "0x7100011F8C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "UnmapDmaByBusAddress", "wire_order": "in_data[0x10]"},
+      "14": {"vt":  "0x90", "func": "0x7100014D00", "lr": "0x7100013490", "inbytes":  "0x10", "outbytes":   "0x8", "name": "GetDmaBusAddress", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "15": {"vt":  "0x98", "func": "0x7100014D20", "lr": "0x7100013610", "inbytes":   "0x4", "outbytes":  "0x10", "name": "GetDmaBusAddressRange", "wire_order": "in_data[0x4]; out_data[0x10]"},
+      "16": {"vt":  "0xA0", "func": "0x7100014D40", "lr": "0x7100011D14", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetDmaEnable", "wire_order": "in_data[0x8]"},
+      "17": {"vt":  "0xA8", "func": "0x7100014D50", "lr": "0x710001378C", "inbytes":   "0xC", "outbytes":   "0x0", "name": "AcquireIrq", "wire_order": "in_data[0xC]"},
+      "18": {"vt":  "0xB0", "func": "0x7100014D60", "lr": "0x7100012000", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ReleaseIrq", "wire_order": "in_data[0x4]"},
+      "19": {"vt":  "0xB8", "func": "0x7100014D70", "lr": "0x71000138FC", "inbytes":   "0xC", "outbytes":   "0x0", "name": "SetIrqEnable", "wire_order": "in_data[0xC]"},
+      "20": {"vt":  "0xC0", "func": "0x7100014D80", "lr": "0x7100013A6C", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "GetIrqEvent", "wire_order": "in_data[0x8]"},
+      "21": {"vt":  "0xC8", "func": "0x7100014D90", "lr": "0x7100011F34", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetAspmEnable", "wire_order": "in_data[0x8]"},
+      "22": {"vt":  "0xD0", "func": "0x7100014DA0", "lr": "0x71000120F4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetResetUponResumeEnable", "wire_order": "in_data[0x8]"},
+      "23": {"vt":  "0xD8", "func": "0x7100014DB0", "lr": "0x7100012168", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ResetFunction", "wire_order": "in_data[0x8]"}
+    },
+    "nn::pcie::detail::ILoggedStateManager": {
+      "_srv": "SRV_7100045C50",
+      "_hash": "da662d8080ff27be",
+      "0": {"vt":  "0x20", "lr": "0x7100013D54", "inbytes":   "0x1", "outbytes":   "0x1", "buffers": [6], "name": "GetLoggedState", "wire_order": "in_data[0x1]; out_data[0x1]; buffers=[out]"},
+      "1": {"vt":  "0x28", "lr": "0x7100013F2C", "inbytes":   "0x1", "outbytes":   "0x0", "outhandles": [1], "name": "GetLoggedStateEvent", "wire_order": "in_data[0x1]"}
+    },
+    "_services": ["clkrst", "fatal:u", "pcie:log", "psc:m", "rgltr", "set:sys"]
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "bcat_services": {
+    "program_identified": "BCAT_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710026E4E8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100041010", "lr": "0x7100042610", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x710004277C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100041300", "lr": "0x7100042918", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100041560", "lr": "0x7100042548", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100040330", "lr": "0x7100042A7C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::bcat::ipc::IServiceCreator": {
+      "_srv": "SRV_7100270500",
+      "_hash": "6756a17db108e4b9",
+      "0": {"vt":  "0x20", "lr": "0x710008560C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::bcat::ipc::IBcatService"], "_srv_outinterfaces": "SRV_7100270508", "name": "CreateBcatService", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "lr": "0x710008580C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheStorageService"], "_srv_outinterfaces": "SRV_7100270528", "name": "CreateDeliveryCacheStorageService", "wire_order": "in_data[0x8]"},
+      "2": {"vt":  "0x30", "lr": "0x7100085A0C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheStorageService"], "_srv_outinterfaces": "SRV_7100270528", "name": "CreateDeliveryCacheStorageServiceWithApplicationId", "wire_order": "in_data[0x8]"}
+    },
+    "nn::bcat::ipc::IBcatService": {
+      "_srv": "SRV_7100270508",
+      "_hash": "a1341fb42db3c90f",
+      "10100": {"vt":  "0x20", "func": "0x7100089F80", "lr": "0x71000865A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheProgressService"], "_srv_outinterfaces": "SRV_7100270510", "name": "RequestSyncDeliveryCache", "wire_order": "N/A"},
+      "10101": {"vt":  "0x28", "func": "0x7100089FB0", "lr": "0x710008674C", "inbytes":  "0x20", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheProgressService"], "_srv_outinterfaces": "SRV_7100270510", "name": "RequestSyncDeliveryCacheWithDirectoryName", "wire_order": "in_data[0x20]"},
+      "10200": {"vt":  "0x30", "func": "0x7100089FE0", "lr": "0x7100085DC4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelSyncDeliveryCacheRequest", "wire_order": "N/A"},
+      "20100": {"vt":  "0x38", "func": "0x7100089FF0", "lr": "0x710008692C", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheProgressService"], "_srv_outinterfaces": "SRV_7100270510", "name": "RequestSyncDeliveryCacheWithApplicationId", "wire_order": "in_data[0x10]"},
+      "20101": {"vt":  "0x40", "func": "0x710008A020", "lr": "0x7100086B0C", "inbytes":  "0x30", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheProgressService"], "_srv_outinterfaces": "SRV_7100270510", "name": "RequestSyncDeliveryCacheWithApplicationIdAndDirectoryName", "wire_order": "in_data[0x30]"},
+      "20300": {"vt":  "0x48", "func": "0x710008A050", "lr": "0x7100086CFC", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::INotifierService"], "_srv_outinterfaces": "SRV_7100270518", "name": "GetDeliveryCacheStorageUpdateNotifier", "wire_order": "in_data[0x8]"},
+      "20301": {"vt":  "0x50", "func": "0x710008A080", "lr": "0x7100086ECC", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryTaskSuspensionService"], "_srv_outinterfaces": "SRV_7100270520", "name": "RequestSuspendDeliveryTask", "wire_order": "in_data[0x8]"},
+      "20400": {"vt":  "0x58", "func": "0x710008A0B0", "lr": "0x7100086128", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RegisterSystemApplicationDeliveryTask", "wire_order": "in_data[0x8]"},
+      "20401": {"vt":  "0x60", "func": "0x710008A0C0", "lr": "0x7100085E40", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterSystemApplicationDeliveryTask", "wire_order": "in_data[0x8]"},
+      "20410": {"vt":  "0x68", "func": "0x710008A0D0", "lr": "0x710008709C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SetSystemApplicationDeliveryTaskTimer", "wire_order": "in_data[0x10]"},
+      "20500": {"vt":  "0x70", "func": "0x710008A0E0", "lr": "0x7100086198", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StopBackgroundService", "wire_order": "N/A"},
+      "30100": {"vt":  "0x78", "func": "0x710008A0F0", "lr": "0x7100087210", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9], "name": "SetPassphrase", "wire_order": "in_u64_0; in_buf0"},
+      "30200": {"vt":  "0x80", "func": "0x710008A100", "lr": "0x7100086304", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RegisterDeliveryTask", "wire_order": "in_data[0x10]"},
+      "30201": {"vt":  "0x88", "func": "0x710008A110", "lr": "0x7100086240", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterDeliveryTask", "wire_order": "in_data[0x8]"},
+      "30202": {"vt":  "0x90", "func": "0x710008A120", "lr": "0x7100085ECC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "BlockDeliveryTask", "wire_order": "in_data[0x8]"},
+      "30203": {"vt":  "0x98", "func": "0x710008A130", "lr": "0x7100086364", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnblockDeliveryTask", "wire_order": "in_data[0x8]"},
+      "30210": {"vt":  "0xA0", "func": "0x710008A140", "lr": "0x71000873BC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SetDeliveryTaskTimer", "wire_order": "in_data[0x10]"},
+      "30300": {"vt":  "0xA8", "func": "0x710008A150", "lr": "0x7100085FEC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "RegisterSystemApplicationDeliveryTasks", "wire_order": "N/A"},
+      "90100": {"vt":  "0xB0", "func": "0x710008A160", "lr": "0x710008752C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetDeliveryTaskList", "wire_order": "out_buf0; out_data[0x4]"},
+      "90101": {"vt":  "0xB8", "func": "0x710008A170", "lr": "0x71000876DC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetDeliveryTaskListForSystem", "wire_order": "out_buf0; out_data[0x4]"},
+      "90200": {"vt":  "0xC0", "func": "0x710008A180", "lr": "0x7100087894", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [6], "name": "GetDeliveryList", "wire_order": "out_buf0; in_data[0x8]; out_data[0x8]"},
+      "90201": {"vt":  "0xC8", "func": "0x710008A190", "lr": "0x71000863C0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ClearDeliveryCacheStorage", "wire_order": "in_u64_0"},
+      "90202": {"vt":  "0xD0", "func": "0x710008A1A0", "lr": "0x7100085D50", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearDeliveryTaskSubscriptionStatus", "wire_order": "N/A"},
+      "90300": {"vt":  "0xD8", "func": "0x710008A1B0", "lr": "0x7100087A4C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetPushNotificationLog", "wire_order": "out_buf0; out_data[0x4]"},
+      "90301": {"vt":  "0xE0", "func": "0x710008A1C0", "lr": "0x7100087C00", "inbytes":   "0x8", "outbytes":  "0x30", "name": "GetDeliveryCacheStorageUsage", "wire_order": "in_data[0x8]; out_data[0x30]"}
+    },
+    "nn::bcat::ipc::IDeliveryCacheProgressService": {
+      "_srv": "SRV_7100270510",
+      "_hash": "3eea8516787b1f52",
+      "0": {"vt":  "0x20", "lr": "0x7100087EC8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x7100088030", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetImpl", "wire_order": "buffers=[out]"}
+    },
+    "nn::bcat::ipc::INotifierService": {
+      "_srv": "SRV_7100270518",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 5/21 in BCAT_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000882B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"}
+    },
+    "nn::bcat::ipc::IDeliveryTaskSuspensionService": {
+      "_srv": "SRV_7100270520",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 6/21 in BCAT_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100088538", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"}
+    },
+    "nn::bcat::ipc::IDeliveryCacheStorageService": {
+      "_srv": "SRV_7100270528",
+      "_hash": "f1b1c907b0a914ec",
+      "0":  {"vt":  "0x20", "lr": "0x7100088808", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheFileService"], "_srv_outinterfaces": "SRV_7100270530", "name": "CreateFileService", "wire_order": "N/A"},
+      "1":  {"vt":  "0x28", "lr": "0x71000889A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::bcat::ipc::IDeliveryCacheDirectoryService"], "_srv_outinterfaces": "SRV_7100270538", "name": "CreateDirectoryService", "wire_order": "N/A"},
+      "10": {"vt":  "0x30", "lr": "0x7100088B4C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "EnumerateDeliveryCacheDirectory", "wire_order": "out_data[0x4]; buffers=[out]"}
+    },
+    "nn::bcat::ipc::IDeliveryCacheFileService": {
+      "_srv": "SRV_7100270530",
+      "_hash": "8040b7b09b1f2a48",
+      "0": {"vt":  "0x20", "func": "0x7100041010", "lr": "0x7100088F08", "inbytes":  "0x40", "outbytes":   "0x0", "name": "Open", "wire_order": "in_data[0x40]"},
+      "1": {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000891C4", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [6], "name": "Read", "wire_order": "in_data[0x8]; out_data[0x8]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x7100041300", "lr": "0x7100088FE4", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x7100041560", "lr": "0x7100088E54", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetDigest", "wire_order": "out_data[0x10]"}
+    },
+    "nn::bcat::ipc::IDeliveryCacheDirectoryService": {
+      "_srv": "SRV_7100270538",
+      "_hash": "4f41a0f3af0f2fa6",
+      "0": {"vt":  "0x20", "lr": "0x71000894A0", "inbytes":  "0x20", "outbytes":   "0x0", "name": "Open", "wire_order": "in_data[0x20]"},
+      "1": {"vt":  "0x28", "lr": "0x710008978C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Read", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "lr": "0x71000894F0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCount", "wire_order": "out_data[0x4]"}
+    },
+    "nn::mnpp::detail::ipc::IServiceForApplication": {
+      "_srv": "SRV_7100271898",
+      "_hash": "41a78668d76c08f8",
+      "0": {"vt":  "0x20", "lr": "0x71000BAC3C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "Initialize", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "lr": "0x71000BADD0", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5], "name": "SubmitEvent", "wire_order": "in_data[0x10]; buffers=[in]"}
+    },
+    "nn::mnpp::detail::ipc::IServiceForSystem": {
+      "_srv": "SRV_71002718A0",
+      "_hash": "921804241ae4f88b",
+      "0":   {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000BB2AC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "Cmd0", "wire_order": "in_data[0x18]"},
+      "10":  {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000BB454", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5, 5], "name": "Cmd10", "wire_order": "in_data[0x10]; buffers=[in, in]"},
+      "100": {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000BB138", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd100", "wire_order": "in_data[0x10]"},
+      "200": {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000BB644", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [22], "name": "Cmd200", "wire_order": "in_data[0x10]; buffers=[out]"}
+    },
+    "nn::mnpp::detail::ipc::IServiceForWebBrowser": {
+      "_srv": "SRV_71002718A8",
+      "_hash": "f5402ae3bc75cda4",
+      "0":   {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000BB954", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5, 6], "name": "Cmd0", "wire_order": "in_data[0x10]; buffers=[in, out]"},
+      "1":   {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000BBB48", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5, 5, 6], "name": "Cmd1", "wire_order": "in_data[0x10]; buffers=[in, in, out]"},
+      "10":  {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000BBD44", "inbytes":  "0x10", "outbytes":   "0x1", "buffers": [6], "name": "Cmd10", "wire_order": "in_data[0x10]; out_data[0x1]; buffers=[out]"},
+      "20":  {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000BBF1C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd20", "wire_order": "in_data[0x10]"},
+      "100": {"vt":  "0x40", "func": "0x7100040330", "lr": "0x71000BC0B8", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5, 5, 6], "name": "Cmd100", "wire_order": "in_data[0x10]; buffers=[in, in, out]"}
+    },
+    "nn::news::detail::ipc::IServiceCreator": {
+      "_srv": "SRV_7100272890",
+      "_hash": "8bd488e7058616bc",
+      "0": {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000F4D38", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::news::detail::ipc::INewsService"], "_srv_outinterfaces": "SRV_7100272898", "name": "CreateNewsService", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000F4ED8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::news::detail::ipc::INewArrivalEventHolder"], "_srv_outinterfaces": "SRV_71002728A8", "name": "CreateNewlyArrivedEventHolder", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000F5078", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::news::detail::ipc::INewsDataService"], "_srv_outinterfaces": "SRV_71002728B0", "name": "CreateNewsDataService", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000F5218", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::news::detail::ipc::IDeviceNewsDatabaseService"], "_srv_outinterfaces": "SRV_71002728B8", "name": "CreateNewsDatabaseService", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x7100040330", "lr": "0x71000F53B8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::news::detail::ipc::IOverwriteEventHolder"], "_srv_outinterfaces": "SRV_71002728C0", "name": "CreateOverwriteEventHolder", "wire_order": "N/A"}
+    },
+    "nn::news::detail::ipc::INewsService": {
+      "_srv": "SRV_7100272898",
+      "_hash": "e4cfd637e2db6ea6",
+      "10100": {"vt":  "0x20", "func": "0x71000FFEA0", "lr": "0x71000F5C6C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "PostLocalNews", "wire_order": "in_buf0"},
+      "20100": {"vt":  "0x28", "func": "0x71000FFEB0", "lr": "0x71000F5DE0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9], "name": "SetPassphrase", "wire_order": "in_u64_0; in_buf0"},
+      "30100": {"vt":  "0x30", "func": "0x71000FFEC0", "lr": "0x71000F5F8C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [9], "name": "GetSubscriptionStatus", "wire_order": "in_buf0; out_data[0x4]"},
+      "30101": {"vt":  "0x38", "func": "0x71000FFED0", "lr": "0x71000F6144", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "GetTopicList", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "30110": {"vt":  "0x40", "func": "0x71000FFEE0", "lr": "0x71000F56F8", "inbytes":   "0x0", "outbytes":  "0x10", "name": "Cmd3110", "wire_order": "out_data[0x10]"},
+      "30200": {"vt":  "0x48", "func": "0x71000FFEF0", "lr": "0x71000F58E8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsSystemUpdateRequired", "wire_order": "out_data[0x1]"},
+      "30201": {"vt":  "0x50", "func": "0x71000FFF00", "lr": "0x71000F6310", "inbytes":   "0x2", "outbytes":   "0x1", "name": "Cmd301", "wire_order": "in_data[0x2]; out_data[0x1]"},
+      "30210": {"vt":  "0x58", "func": "0x71000FFF10", "lr": "0x71000F59B0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd30210", "wire_order": "out_data[0x4]"},
+      "30300": {"vt":  "0x60", "func": "0x71000FFF20", "lr": "0x71000F647C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9], "name": "RequestImmediateReception", "wire_order": "in_buf0"},
+      "30500": {"vt":  "0x68", "func": "0x71000FFF30", "lr": "0x71000F65F0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9], "outinterfaces": ["nn::news::detail::ipc::IDownloadContext"], "_srv_outinterfaces": "SRV_71002728A0", "inhandles": [1], "name": "Cmd30500", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "40100": {"vt":  "0x70", "func": "0x71000FFF60", "lr": "0x71000F6840", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [9], "name": "SetSubscriptionStatus", "wire_order": "in_buf0; in_data[0x4]"},
+      "40101": {"vt":  "0x78", "func": "0x71000FFF70", "lr": "0x71000F5A68", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestAutoSubscription", "wire_order": "in_data[0x8]"},
+      "40200": {"vt":  "0x80", "func": "0x71000FFF80", "lr": "0x71000F57C8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearStorage", "wire_order": "N/A"},
+      "40201": {"vt":  "0x88", "func": "0x71000FFF90", "lr": "0x71000F5AD8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearSubscriptionStatusAll", "wire_order": "N/A"},
+      "90100": {"vt":  "0x90", "func": "0x71000FFFA0", "lr": "0x71000F69EC", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "GetNewsDatabaseDump", "wire_order": "out_buf0; out_data[0x8]"}
+    },
+    "nn::news::detail::ipc::IDownloadContext": {
+      "_srv": "SRV_71002728A0",
+      "_hash": "efc5cb08108a4ba8",
+      "0": {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000F7078", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Get", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000F6D90", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000F6DD4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000F6E7C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"},
+      "4": {"vt":  "0x40", "func": "0x7100040330", "lr": "0x71000F6CD4", "inbytes":   "0x0", "outbytes":  "0x48", "name": "Cmd4", "wire_order": "out_data[0x48]"}
+    },
+    "nn::news::detail::ipc::INewArrivalEventHolder": {
+      "_srv": "SRV_71002728A8",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 16/21 in BCAT_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000F72F8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Get", "wire_order": "N/A"}
+    },
+    "nn::news::detail::ipc::INewsDataService": {
+      "_srv": "SRV_71002728B0",
+      "_hash": "8931d70d261b4b72",
+      "0":    {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000F7B2C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9], "name": "Open", "wire_order": "buffers=[in]"},
+      "1":    {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000F7768", "inbytes":  "0x48", "outbytes":   "0x0", "name": "OpenWithNewsRecordV1", "wire_order": "in_data[0x48]"},
+      "2":    {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000F7CA4", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [6], "name": "Read", "wire_order": "in_data[0x8]; out_data[0x8]; buffers=[out]"},
+      "3":    {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000F76A4", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"},
+      "1001": {"vt":  "0x40", "func": "0x7100040330", "lr": "0x71000F7864", "inbytes":  "0x80", "outbytes":   "0x0", "name": "OpenWithNewsRecord", "wire_order": "in_data[0x80]"},
+      "1100": {"vt":  "0x48", "func": "0x7100041670", "lr": "0x71000F75C4", "inbytes":  "0x18", "outbytes":   "0x0", "name": "Cmd1100", "wire_order": "in_data[0x18]"}
+    },
+    "nn::news::detail::ipc::IDeviceNewsDatabaseService": {
+      "_srv": "SRV_71002728B8",
+      "_hash": "e06c09ffdf09adbb",
+      "0":    {"vt":  "0x20", "func": "0x7100041010", "lr": "0x71000F7FEC", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6, 9, 9], "name": "GetListV1", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out, in, in]"},
+      "1":    {"vt":  "0x28", "func": "0x71000412E0", "lr": "0x71000F81DC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [9], "name": "Count", "wire_order": "out_data[0x4]; buffers=[in]"},
+      "2":    {"vt":  "0x30", "func": "0x7100041300", "lr": "0x71000F8398", "inbytes":   "0x1", "outbytes":   "0x4", "buffers": [9, 9], "name": "CountWithKey", "wire_order": "in_data[0x1]; out_data[0x4]; buffers=[in, in]"},
+      "3":    {"vt":  "0x38", "func": "0x7100041560", "lr": "0x71000F8584", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [9, 9], "name": "UpdateIntegerValue", "wire_order": "in_data[0x4]; buffers=[in, in]"},
+      "4":    {"vt":  "0x40", "func": "0x7100040330", "lr": "0x71000F8744", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [9, 9], "name": "UpdateIntegerValueWithAddition", "wire_order": "in_data[0x4]; buffers=[in, in]"},
+      "5":    {"vt":  "0x48", "func": "0x7100041670", "lr": "0x71000F8904", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9, 9, 9], "name": "UpdateStringValue", "wire_order": "buffers=[in, in, in]"},
+      "1000": {"vt":  "0x50", "func": "0x71000417B0", "lr": "0x71000F8A9C", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6, 9, 9], "name": "GetList", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out, in, in]"}
+    },
+    "nn::news::detail::ipc::IOverwriteEventHolder": {
+      "_srv": "SRV_71002728C0",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 19/21 in BCAT_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000F8D98", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Get", "wire_order": "N/A"}
+    },
+    "nn::prepo::detail::ipc::IPrepoService": {
+      "_srv": "SRV_71002753A0",
+      "_hash": "85c62d4eae1df4e4",
+      "10100": {"vt":  "0x20", "func": "0x7100047BA0", "lr": "0x71001D28A4", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportOld", "wire_order": "in_data[0x8]; buffers=[in, in]"},
+      "10101": {"vt":  "0x28", "func": "0x7100001200", "lr": "0x71001D2A84", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportWithUserOld", "wire_order": "in_data[0x18]; buffers=[in, in]"},
+      "10102": {"vt":  "0x30", "func": "0x71001CF930", "lr": "0x71001D2C74", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportOld2", "wire_order": "in_buf0; in_buf1; in_data[0x8]"},
+      "10103": {"vt":  "0x38", "func": "0x71001CF940", "lr": "0x71001D2E54", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportWithUserOld2", "wire_order": "in_buf0; in_buf1; in_data[0x18]"},
+      "10104": {"vt":  "0x40", "func": "0x71001CF950", "lr": "0x71001D3044", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportOld3", "wire_order": "in_buf0; in_buf1; in_data[0x8]"},
+      "10105": {"vt":  "0x48", "func": "0x71001CF960", "lr": "0x71001D3224", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportWithUserOld3", "wire_order": "in_data[0x18]; buffers=[in, in]"},
+      "10106": {"vt":  "0x50", "func": "0x71001CF970", "lr": "0x71001D3414", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReport", "wire_order": "in_data[0x10]; buffers=[in, in]"},
+      "10107": {"vt":  "0x58", "func": "0x71001CF980", "lr": "0x71001D35F4", "inbytes":  "0x20", "outbytes":   "0x0", "buffers": [9, 5], "pid": true, "name": "SaveReportWithUser", "wire_order": "in_u64_3; in_u64_2; in_u64_1; in_buf0; in_u64_0; in_buf1"},
+      "10200": {"vt":  "0x60", "func": "0x71001CF9A0", "lr": "0x71001D2460", "inbytes":   "0x0", "outbytes":   "0x0", "name": "RequestImmediateTransmission", "wire_order": "N/A"},
+      "10300": {"vt":  "0x68", "func": "0x71001CF9B0", "lr": "0x71001D1F9C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTransmissionStatus", "wire_order": "out_data[0x4]"},
+      "10400": {"vt":  "0x70", "func": "0x71001CF9D0", "lr": "0x71001D22B8", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSystemSessionId", "wire_order": "out_data[0x8]"},
+      "10500": {"vt":  "0x78", "func": "0x71001CF9F0", "lr": "0x71001D37E0", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [9], "pid": true, "outinterfaces": ["nn::prepo::detail::ipc::IAsyncContext"], "_srv_outinterfaces": "SRV_71002753A8", "inhandles": [1], "name": "SendReportWithUser", "wire_order": "in_buf0; in_data[0x28]"},
+      "10501": {"vt":  "0x80", "func": "0x71001CFA10", "lr": "0x71001D3A80", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [9], "pid": true, "outinterfaces": ["nn::prepo::detail::ipc::IAsyncContext"], "_srv_outinterfaces": "SRV_71002753A8", "inhandles": [1], "name": "SendReport", "wire_order": "in_buf0; in_data[0x18]"},
+      "20100": {"vt":  "0x88", "func": "0x71001CFA30", "lr": "0x71001D3D14", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [9, 5], "name": "SaveSystemReportOld", "wire_order": "in_buf0; in_buf1; in_data[0x8]"},
+      "20101": {"vt":  "0x90", "func": "0x71001CFA40", "lr": "0x71001D3ED4", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [9, 5], "name": "SaveSystemReportWithUserOld", "wire_order": "in_buf0; in_buf1; in_data[0x18]"},
+      "20102": {"vt":  "0x98", "func": "0x71001CFA50", "lr": "0x71001D40A8", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [9, 5], "name": "SaveSystemReport", "wire_order": "in_buf0; in_buf1; in_data[0x10]"},
+      "20103": {"vt":  "0xA0", "func": "0x71001CFA60", "lr": "0x71001D4264", "inbytes":  "0x20", "outbytes":   "0x0", "buffers": [9, 5], "name": "SaveSystemReportWithUser", "wire_order": "in_buf0; in_buf1; in_data[0x20]"},
+      "20200": {"vt":  "0xA8", "func": "0x71001CFA70", "lr": "0x71001D23A8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOperationMode", "wire_order": "in_data[0x8]"},
+      "30100": {"vt":  "0xB0", "func": "0x71001CFA90", "lr": "0x71001D1E70", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearStorage", "wire_order": "N/A"},
+      "30200": {"vt":  "0xB8", "func": "0x71001CFAB0", "lr": "0x71001D2400", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearStatistics", "wire_order": "N/A"},
+      "30300": {"vt":  "0xC0", "func": "0x71001CFAD0", "lr": "0x71001D2104", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetStorageUsage", "wire_order": "out_data[0x10]"},
+      "30400": {"vt":  "0xC8", "func": "0x71001CFAF0", "lr": "0x71001D4440", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "GetStatistics", "wire_order": "out_buf0"},
+      "30401": {"vt":  "0xD0", "func": "0x71001CFB10", "lr": "0x71001D45AC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetThroughputHistory", "wire_order": "out_buf0; out_data[0x4]"},
+      "30500": {"vt":  "0xD8", "func": "0x71001CFB20", "lr": "0x71001D2634", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetLastUploadError", "wire_order": "N/A"},
+      "30600": {"vt":  "0xE0", "func": "0x71001CFB30", "lr": "0x71001D21C8", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetApplicationUploadSummary", "wire_order": "out_data[0x10]"},
+      "40100": {"vt":  "0xE8", "func": "0x71001CFB50", "lr": "0x71001D2584", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsUserAgreementCheckEnabled", "wire_order": "out_data[0x1]"},
+      "40101": {"vt":  "0xF0", "func": "0x71001CFB60", "lr": "0x71001D1EE0", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetUserAgreementCheckEnabled", "wire_order": "in_data[0x1]"},
+      "50100": {"vt":  "0xF8", "func": "0x71001CFB70", "lr": "0x71001D475C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "ReadAllApplicationReportFiles", "wire_order": "out_buf0; out_data[0x8]"},
+      "90100": {"vt": "0x100", "func": "0x7100002200", "lr": "0x71001D490C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "ReadAllReportFiles", "wire_order": "out_data[0x8]; buffers=[out]"}
+    },
+    "nn::prepo::detail::ipc::IAsyncContext": {
+      "_srv": "SRV_71002753A8",
+      "_hash": "6678150a46c02966",
+      "_likely_basis": "DB position 21/21 in BCAT_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71001D4D88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x71001D4BF0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "lr": "0x71001D4C2C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"}
+    },
+    "_services": ["acc:e:u2", "arp:r", "bcat:a", "bcat:m", "bcat:s", "bcat:u", "bgtc:t", "bsd:a", "bsd:s", "bsd:u", "dauth:0", "erpt:c", "fatal:u", "fsp-srv", "mnpp:app", "mnpp:sys", "mnpp:web", "news:a", "news:c", "news:m", "news:p", "news:v", "nifm:a", "nifm:s", "nifm:u", "npns:s", "nsd:a", "nsd:u", "ovln:snd", "prepo:a2", "prepo:m", "prepo:s", "prepo:u", "psc:m", "set:sys", "sfdnsres", "srepo:a", "srepo:u", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x71000b53f0", "cmd_proof_offset": "0x71000b5418", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000b4b04"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x71000481e0", "cmd_proof_offset": "0x71000481e4", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x7100044b80"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "17": { "name": "OpenHostFileSystem", "vt_off": "0x68", "stub": "0x710000e0a0", "cmd_proof_offset": "0x710000e0f8", "cmd_proof_instruction": "mov w4,#0x11", "cmd_hex_and_dec": "0x11 / 17", "calls": ["0x710002216c"] },
+          "23": { "name": "CreateSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x90", "stub": "0x710000e200", "cmd_proof_offset": "0x710000e204", "cmd_proof_instruction": "mov w3,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x710001f310"] },
+          "32": { "name": "ExtendSaveDataFileSystem", "vt_off": "0xd8", "stub": "0x710000e3e0", "cmd_proof_offset": "0x710000e3e8", "cmd_proof_instruction": "mov w5,#0x20", "cmd_hex_and_dec": "0x20 / 32", "calls": ["0x710001f408", "0x710001f4dc"] },
+          "36": { "name": "OpenHostFileSystemWithOption", "vt_off": "0xf8", "stub": "0x710000e420", "cmd_proof_offset": "0x710000e480", "cmd_proof_instruction": "mov w5,#0x24", "cmd_hex_and_dec": "0x24 / 36", "calls": ["0x7100022104"] },
+          "51": { "name": "OpenSaveDataFileSystem", "vt_off": "0x120", "stub": "0x710000e510", "cmd_proof_offset": "0x710000e56c", "cmd_proof_instruction": "mov w4,#0x33", "cmd_hex_and_dec": "0x33 / 51", "calls": ["0x7100021e6c"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x710000e5c0", "cmd_proof_offset": "0x710000e61c", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x71000200c8"] },
+          "57": { "name": "ReadSaveDataFileSystemExtraDataBySaveDataSpaceId", "vt_off": "0x138", "stub": "0x710000e720", "cmd_proof_offset": "0x710000e730", "cmd_proof_instruction": "mov w5,#0x39", "cmd_hex_and_dec": "0x39 / 57", "calls": ["0x710001f704"] },
+          "58": { "name": "ReadSaveDataFileSystemExtraData", "vt_off": "0x140", "stub": "0x710000e740", "cmd_proof_offset": "0x710000e74c", "cmd_proof_instruction": "mov w4,#0x3a", "cmd_hex_and_dec": "0x3a / 58", "calls": ["0x710001f5c0", "0x710001f860", "0x710001f990"] },
+          "59": { "name": "WriteSaveDataFileSystemExtraData", "vt_off": "0x148", "stub": "0x710000e760", "cmd_proof_offset": "0x710000e76c", "cmd_proof_instruction": "mov w5,#0x3b", "cmd_hex_and_dec": "0x3b / 59", "calls": ["0x710001f758"] }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001cafb0", "cmd_proof_offset": "0x71001cafdc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001ca734", "0x71001ca8b4", "0x71001caa34"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001cafb0", "cmd_proof_offset": "0x71001cafdc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001ca734", "0x71001ca8b4", "0x71001caa34"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001cafb0", "cmd_proof_offset": "0x71001cafdc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001ca734", "0x71001ca8b4", "0x71001caa34"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "ldn_services": {
+    "program_identified": "LDN_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000E0ED0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100020B00", "lr": "0x7100022100", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100020DD0", "lr": "0x710002226C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100020DF0", "lr": "0x7100022408", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100021050", "lr": "0x7100022038", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710001FE90", "lr": "0x710002256C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::ldn::detail::IUserServiceCreator": {
+      "_srv": "SRV_71000E1D30",
+      "_hash": "6906166f23529413",
+      "_likely_basis": "DB position 2/13 in LDN_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x710002F528", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ldn::detail::IUserLocalCommunicationService"], "_srv_outinterfaces": "SRV_71000E1D38", "name": "CreateUserLocalCommunicationService", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x710002F6C8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ldn::detail::IClientProcessMonitor"], "_srv_outinterfaces": "SRV_71000E1D40", "name": "CreateClientProcessMonitor", "wire_order": "N/A"}
+    },
+    "nn::ldn::detail::IUserLocalCommunicationService": {
+      "_srv": "SRV_71000E1D38",
+      "_hash": "1d4a32a21e16ea55",
+      "_hash_alt": "671bb4ad81193d91",
+      "0":   {"vt":  "0x20", "func": "0x7100048BF0", "lr": "0x7100031D2C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "1":   {"vt":  "0x28", "func": "0x7100048C00", "lr": "0x7100032180", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetNetworkInfo", "wire_order": "buffers=[out]"},
+      "2":   {"vt":  "0x30", "func": "0x7100048C10", "lr": "0x7100031BB0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetIpv4Address", "wire_order": "out_data[0x8]"},
+      "3":   {"vt":  "0x38", "func": "0x7100048C20", "lr": "0x7100031DC4", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetDisconnectReason", "wire_order": "out_data[0x2]"},
+      "4":   {"vt":  "0x40", "func": "0x7100048C30", "lr": "0x7100031E9C", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetSecurityParameter", "wire_order": "out_data[0x20]"},
+      "5":   {"vt":  "0x48", "func": "0x7100048C40", "lr": "0x7100031C88", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetNetworkConfig", "wire_order": "out_data[0x20]"},
+      "100": {"vt":  "0x50", "func": "0x7100048C50", "lr": "0x7100030878", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangeEvent", "wire_order": "N/A"},
+      "101": {"vt":  "0x58", "func": "0x7100048C60", "lr": "0x71000309E4", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26, 10], "name": "GetNetworkInfoAndHistory", "wire_order": "buffers=[out, out]"},
+      "102": {"vt":  "0x60", "func": "0x7100048C70", "lr": "0x7100030B64", "inbytes":  "0x68", "outbytes":   "0x2", "buffers": [34], "name": "Scan", "wire_order": "out_buf0; in_data[0x68]; out_data[0x2]"},
+      "103": {"vt":  "0x68", "func": "0x7100048C90", "lr": "0x7100030D84", "inbytes":  "0x68", "outbytes":   "0x2", "buffers": [34], "name": "ScanPrivate", "wire_order": "out_buf0; in_data[0x68]; out_data[0x2]"},
+      "104": {"vt":  "0x70", "func": "0x7100048CB0", "lr": "0x7100030384", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWirelessControllerPolicy", "wire_order": "in_data[0x4]"},
+      "105": {"vt":  "0x78", "func": "0x7100048CC0", "lr": "0x7100030278", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWirelessAudioPolicy", "wire_order": "in_data[0x4]"},
+      "106": {"vt":  "0x80", "func": "0x7100048CD0", "lr": "0x71000302F4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetProtocol", "wire_order": "in_data[0x4]"},
+      "200": {"vt":  "0x88", "func": "0x7100048CE0", "lr": "0x71000303E8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "OpenAccessPoint", "wire_order": "N/A"},
+      "201": {"vt":  "0x90", "func": "0x7100048CF0", "lr": "0x71000300F0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CloseAccessPoint", "wire_order": "N/A"},
+      "202": {"vt":  "0x98", "func": "0x7100048D00", "lr": "0x7100030F9C", "inbytes":  "0x98", "outbytes":   "0x0", "name": "CreateNetwork", "wire_order": "in_data[0x98]"},
+      "203": {"vt":  "0xA0", "func": "0x7100048D10", "lr": "0x7100031124", "inbytes":  "0xB8", "outbytes":   "0x0", "buffers": [9], "name": "CreateNetworkPrivate", "wire_order": "in_buf0; in_data[0xB8]"},
+      "204": {"vt":  "0xA8", "func": "0x7100048D20", "lr": "0x7100030094", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DestroyNetwork", "wire_order": "N/A"},
+      "205": {"vt":  "0xB0", "func": "0x7100048D30", "lr": "0x710003046C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Reject", "wire_order": "in_data[0x4]"},
+      "206": {"vt":  "0xB8", "func": "0x7100048D40", "lr": "0x71000312EC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "SetAdvertiseData", "wire_order": "in_buf0"},
+      "207": {"vt":  "0xC0", "func": "0x7100048D50", "lr": "0x710003003C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetStationAcceptPolicy", "wire_order": "in_data[0x1]"},
+      "208": {"vt":  "0xC8", "func": "0x7100048D60", "lr": "0x710003013C", "inbytes":   "0x6", "outbytes":   "0x0", "name": "AddAcceptFilterEntry", "wire_order": "in_data[0x6]"},
+      "209": {"vt":  "0xD0", "func": "0x7100048D70", "lr": "0x71000301D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearAcceptFilter", "wire_order": "N/A"},
+      "300": {"vt":  "0xD8", "func": "0x7100048D80", "lr": "0x7100030430", "inbytes":   "0x0", "outbytes":   "0x0", "name": "OpenStation", "wire_order": "N/A"},
+      "301": {"vt":  "0xE0", "func": "0x7100048D90", "lr": "0x7100030218", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CloseStation", "wire_order": "N/A"},
+      "302": {"vt":  "0xE8", "func": "0x7100048DA0", "lr": "0x7100031464", "inbytes":  "0x7C", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "Connect", "wire_order": "in_buf0; in_data[0x7C]"},
+      "303": {"vt":  "0xF0", "func": "0x7100048DB0", "lr": "0x710003165C", "inbytes":  "0xC0", "outbytes":   "0x0", "name": "ConnectPrivate", "wire_order": "in_data[0xC0]"},
+      "304": {"vt":  "0xF8", "func": "0x7100048DC0", "lr": "0x7100030000", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Disconnect", "wire_order": "N/A"},
+      "400": {"vt": "0x138", "func": "0x7100048E90", "lr": "0x710002FB8C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "Initialize", "wire_order": "in_data[0x8]"},
+      "401": {"vt": "0x140", "func": "0x7100048EA0", "lr": "0x710002F990", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Finalize", "wire_order": "N/A"},
+      "402": {"vt": "0x148", "func": "0x7100048EB0", "lr": "0x710002FD1C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "InitializeWithVersion", "wire_order": "in_data[0x10]"},
+      "403": {"vt": "0x150", "func": "0x7100048EC0", "lr": "0x710002F9E0", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetOperationMode", "wire_order": "in_data[0x4]"},
+      "500": {"vt": "0x100", "func": "0x7100048DD0", "lr": "0x710003066C", "inbytes":  "0x80", "outbytes":   "0x0", "name": "EnableActionFrame", "wire_order": "in_data[0x80]"},
+      "501": {"vt": "0x108", "func": "0x7100048DE0", "lr": "0x71000305B8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableActionFrame", "wire_order": "N/A"},
+      "502": {"vt": "0x110", "func": "0x7100048DF0", "lr": "0x71000317FC", "inbytes":  "0x14", "outbytes":   "0x0", "buffers": [33], "name": "SendActionFrame", "wire_order": "in_buf0; in_data[0x14]"},
+      "503": {"vt": "0x118", "func": "0x7100048E10", "lr": "0x71000319B4", "inbytes":   "0x4", "outbytes":  "0x18", "buffers": [34], "name": "RecvActionFrame", "wire_order": "in_data[0x4]; out_data[0x18]; buffers=[out]"},
+      "505": {"vt": "0x120", "func": "0x7100048E60", "lr": "0x710002FF0C", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetHomeChannel", "wire_order": "in_data[0x2]"},
+      "600": {"vt": "0x128", "func": "0x7100048E70", "lr": "0x71000304DC", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetTxPower", "wire_order": "in_data[0x2]"},
+      "601": {"vt": "0x130", "func": "0x7100048E80", "lr": "0x710002FFB4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetTxPower", "wire_order": "N/A"}
+    },
+    "nn::ldn::detail::IClientProcessMonitor": {
+      "_srv": "SRV_71000E1D40",
+      "_hash": "166257a15e12298f",
+      "0": {"vt":  "0x20", "lr": "0x710003240C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "RegisterClient", "wire_order": "in_data[0x8]"}
+    },
+    "nn::ldn::detail::ISystemServiceCreator": {
+      "_srv": "SRV_71000E1D88",
+      "_hash": "6906166f23529413",
+      "_likely_basis": "DB position 5/13 in LDN_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100032708", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ldn::detail::ISystemLocalCommunicationService"], "_srv_outinterfaces": "SRV_71000E1D90", "name": "CreateSystemLocalCommunicationService", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x71000328A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ldn::detail::IClientProcessMonitor"], "_srv_outinterfaces": "SRV_71000E1D40", "name": "CreateClientProcessMonitor", "wire_order": "N/A"}
+    },
+    "nn::ldn::detail::ISystemLocalCommunicationService": {
+      "_srv": "SRV_71000E1D90",
+      "_hash": "b75e918526f04832",
+      "_hash_alt": "48cb1520e25c0349",
+      "0":   {"vt":  "0x20", "func": "0x7100048BF0", "lr": "0x7100031D2C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "1":   {"vt":  "0x28", "func": "0x7100048C00", "lr": "0x7100032180", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetNetworkInfo", "wire_order": "buffers=[out]"},
+      "2":   {"vt":  "0x30", "func": "0x7100048C10", "lr": "0x7100031BB0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetIpv4Address", "wire_order": "out_data[0x8]"},
+      "3":   {"vt":  "0x38", "func": "0x7100048C20", "lr": "0x7100031DC4", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetDisconnectReason", "wire_order": "out_data[0x2]"},
+      "4":   {"vt":  "0x40", "func": "0x7100048C30", "lr": "0x7100031E9C", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetSecurityParameter", "wire_order": "out_data[0x20]"},
+      "5":   {"vt":  "0x48", "func": "0x7100048C40", "lr": "0x7100031C88", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetNetworkConfig", "wire_order": "out_data[0x20]"},
+      "100": {"vt":  "0x50", "func": "0x7100048C50", "lr": "0x7100030878", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangeEvent", "wire_order": "N/A"},
+      "101": {"vt":  "0x58", "func": "0x7100048C60", "lr": "0x71000309E4", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26, 10], "name": "GetNetworkInfoAndHistory", "wire_order": "buffers=[out, out]"},
+      "102": {"vt":  "0x60", "func": "0x7100048C70", "lr": "0x7100030B64", "inbytes":  "0x68", "outbytes":   "0x2", "buffers": [34], "name": "Scan", "wire_order": "out_buf0; in_data[0x68]; out_data[0x2]"},
+      "103": {"vt":  "0x68", "func": "0x7100048C90", "lr": "0x7100030D84", "inbytes":  "0x68", "outbytes":   "0x2", "buffers": [34], "name": "ScanPrivate", "wire_order": "out_buf0; in_data[0x68]; out_data[0x2]"},
+      "104": {"vt":  "0x70", "func": "0x7100048CB0", "lr": "0x7100030384", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWirelessControllerPolicy", "wire_order": "in_data[0x4]"},
+      "105": {"vt":  "0x78", "func": "0x7100048CC0", "lr": "0x7100030278", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWirelessAudioPolicy", "wire_order": "in_data[0x4]"},
+      "106": {"vt":  "0x80", "func": "0x7100048CD0", "lr": "0x71000302F4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetProtocol", "wire_order": "in_data[0x4]"},
+      "200": {"vt":  "0x88", "func": "0x7100048CE0", "lr": "0x71000303E8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "OpenAccessPoint", "wire_order": "N/A"},
+      "201": {"vt":  "0x90", "func": "0x7100048CF0", "lr": "0x71000300F0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CloseAccessPoint", "wire_order": "N/A"},
+      "202": {"vt":  "0x98", "func": "0x7100048D00", "lr": "0x7100030F9C", "inbytes":  "0x98", "outbytes":   "0x0", "name": "CreateNetwork", "wire_order": "in_data[0x98]"},
+      "203": {"vt":  "0xA0", "func": "0x7100048D10", "lr": "0x7100031124", "inbytes":  "0xB8", "outbytes":   "0x0", "buffers": [9], "name": "CreateNetworkPrivate", "wire_order": "in_buf0; in_data[0xB8]"},
+      "204": {"vt":  "0xA8", "func": "0x7100048D20", "lr": "0x7100030094", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DestroyNetwork", "wire_order": "N/A"},
+      "205": {"vt":  "0xB0", "func": "0x7100048D30", "lr": "0x710003046C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Reject", "wire_order": "in_data[0x4]"},
+      "206": {"vt":  "0xB8", "func": "0x7100048D40", "lr": "0x71000312EC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "SetAdvertiseData", "wire_order": "in_buf0"},
+      "207": {"vt":  "0xC0", "func": "0x7100048D50", "lr": "0x710003003C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetStationAcceptPolicy", "wire_order": "in_data[0x1]"},
+      "208": {"vt":  "0xC8", "func": "0x7100048D60", "lr": "0x710003013C", "inbytes":   "0x6", "outbytes":   "0x0", "name": "AddAcceptFilterEntry", "wire_order": "in_data[0x6]"},
+      "209": {"vt":  "0xD0", "func": "0x7100048D70", "lr": "0x71000301D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearAcceptFilter", "wire_order": "N/A"},
+      "300": {"vt":  "0xD8", "func": "0x7100048D80", "lr": "0x7100030430", "inbytes":   "0x0", "outbytes":   "0x0", "name": "OpenStation", "wire_order": "N/A"},
+      "301": {"vt":  "0xE0", "func": "0x7100048D90", "lr": "0x7100030218", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CloseStation", "wire_order": "N/A"},
+      "302": {"vt":  "0xE8", "func": "0x7100048DA0", "lr": "0x7100031464", "inbytes":  "0x7C", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "Connect", "wire_order": "in_buf0; in_data[0x7C]"},
+      "303": {"vt":  "0xF0", "func": "0x7100048DB0", "lr": "0x710003165C", "inbytes":  "0xC0", "outbytes":   "0x0", "name": "ConnectPrivate", "wire_order": "in_data[0xC0]"},
+      "304": {"vt":  "0xF8", "func": "0x7100048DC0", "lr": "0x7100030000", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Disconnect", "wire_order": "N/A"},
+      "400": {"vt": "0x138", "func": "0x7100048E90", "lr": "0x7100032D7C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "Initialize", "wire_order": "in_data[0x8]"},
+      "401": {"vt": "0x140", "func": "0x7100048EA0", "lr": "0x7100032B9C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Finalize", "wire_order": "N/A"},
+      "402": {"vt": "0x148", "func": "0x7100048EC0", "lr": "0x7100032BDC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetOperationMode", "wire_order": "in_data[0x4]"},
+      "403": {"vt": "0x150", "func": "0x7100048EB0", "lr": "0x7100032F0C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "InitializeWithVersion", "wire_order": "in_data[0x10]"},
+      "404": {"vt": "0x158", "func": "0x7100048F50", "lr": "0x710003309C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "InitializeWithPriority", "wire_order": "in_u64_1; in_u64_0"},
+      "500": {"vt": "0x100", "func": "0x7100048DD0", "lr": "0x710003066C", "inbytes":  "0x80", "outbytes":   "0x0", "name": "EnableActionFrame", "wire_order": "in_data[0x80]"},
+      "501": {"vt": "0x108", "func": "0x7100048DE0", "lr": "0x71000305B8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableActionFrame", "wire_order": "N/A"},
+      "502": {"vt": "0x110", "func": "0x7100048DF0", "lr": "0x71000317FC", "inbytes":  "0x14", "outbytes":   "0x0", "buffers": [33], "name": "SendActionFrame", "wire_order": "in_buf0; in_data[0x14]"},
+      "503": {"vt": "0x118", "func": "0x7100048E10", "lr": "0x71000319B4", "inbytes":   "0x4", "outbytes":  "0x18", "buffers": [34], "name": "RecvActionFrame", "wire_order": "in_data[0x4]; out_data[0x18]; buffers=[out]"},
+      "505": {"vt": "0x120", "func": "0x7100048E60", "lr": "0x710002FF0C", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetHomeChannel", "wire_order": "in_data[0x2]"},
+      "600": {"vt": "0x128", "func": "0x7100048E70", "lr": "0x71000304DC", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetTxPower", "wire_order": "in_data[0x2]"},
+      "601": {"vt": "0x130", "func": "0x7100048E80", "lr": "0x710002FFB4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetTxPower", "wire_order": "N/A"}
+    },
+    "nn::ldn::detail::IMonitorServiceCreator": {
+      "_srv": "SRV_71000E1E08",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 7/13 in LDN_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000333C8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ldn::detail::IMonitorService"], "_srv_outinterfaces": "SRV_71000E1E10", "name": "CreateMonitorService", "wire_order": "N/A"}
+    },
+    "nn::ldn::detail::IMonitorService": {
+      "_srv": "SRV_71000E1E10",
+      "_hash": "8e7714669ad311bd",
+      "0":   {"vt":  "0x20", "func": "0x7100020B00", "lr": "0x7100031D2C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "1":   {"vt":  "0x28", "func": "0x7100020DD0", "lr": "0x7100032180", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetNetworkInfo", "wire_order": "buffers=[out]"},
+      "2":   {"vt":  "0x30", "func": "0x7100020DF0", "lr": "0x7100031BB0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetIpv4Address", "wire_order": "out_data[0x8]"},
+      "3":   {"vt":  "0x38", "func": "0x7100021050", "lr": "0x7100031DC4", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetDisconnectReason", "wire_order": "out_data[0x2]"},
+      "4":   {"vt":  "0x40", "func": "0x710001FE90", "lr": "0x7100031E9C", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetSecurityParameter", "wire_order": "out_data[0x20]"},
+      "5":   {"vt":  "0x48", "func": "0x7100021160", "lr": "0x7100031C88", "inbytes":   "0x0", "outbytes":  "0x20", "name": "GetNetworkConfig", "wire_order": "out_data[0x20]"},
+      "100": {"vt":  "0x50", "func": "0x71000212A0", "lr": "0x7100033688", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Initialize", "wire_order": "N/A"},
+      "101": {"vt":  "0x58", "func": "0x71000213A0", "lr": "0x71000336C4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Finalize", "wire_order": "N/A"}
+    },
+    "nn::lp2p::detail::ISfServiceCreator": {
+      "_srv": "SRV_71000E6CF0",
+      "_hash": "18c722f6486ff924",
+      "0": {"vt":  "0x20", "lr": "0x710008C00C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::lp2p::detail::ISfService"], "_srv_outinterfaces": "SRV_71000E6CF8", "name": "CreateNetworkService", "wire_order": "in_data[0x10]"},
+      "8": {"vt":  "0x28", "lr": "0x710008C20C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::lp2p::detail::ISfServiceMonitor"], "_srv_outinterfaces": "SRV_71000E6D00", "name": "CreateNetworkServiceMonitor", "wire_order": "in_data[0x8]"}
+    },
+    "nn::lp2p::detail::ISfService": {
+      "_srv": "SRV_71000E6CF8",
+      "_hash": "a2d9daa1f329d4d4",
+      "_hash_alt": "b286d538feee0d4c",
+      "0":    {"vt":  "0x20", "func": "0x710005BBF0", "lr": "0x710008C640", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Initialize", "wire_order": "N/A"},
+      "512":  {"vt":  "0x28", "func": "0x710005B940", "lr": "0x710008C914", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [25, 34], "buffer_entry_sizes": ["0x301", "0x0"], "name": "Scan", "wire_order": "out_data[0x4]; buffers=[in, out]"},
+      "768":  {"vt":  "0x30", "func": "0x710005BAF0", "lr": "0x710008CAE0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [49], "name": "CreateGroup", "wire_order": "in_buf0"},
+      "776":  {"vt":  "0x38", "func": "0x710005BB00", "lr": "0x710008C5D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DestroyGroup", "wire_order": "N/A"},
+      "784":  {"vt":  "0x40", "func": "0x710005BB10", "lr": "0x710008CC4C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "SetAdvertiseData", "wire_order": "buffers=[in]"},
+      "1536": {"vt":  "0x48", "func": "0x710005BB20", "lr": "0x710008CDCC", "inbytes":  "0x14", "outbytes":   "0x0", "buffers": [33], "name": "SendToOtherGroup", "wire_order": "in_data[0x14]; buffers=[in]"},
+      "1544": {"vt":  "0x50", "func": "0x71000A8FA0", "lr": "0x710008CF84", "inbytes":   "0x4", "outbytes":  "0x14", "buffers": [34], "name": "RecvFromOtherGroup", "wire_order": "in_data[0x4]; out_data[0x14]; buffers=[out]"},
+      "1552": {"vt":  "0x58", "func": "0x710005BB70", "lr": "0x710008C738", "inbytes":   "0x6", "outbytes":   "0x0", "name": "AddAcceptableGroupId", "wire_order": "in_data[0x6]"},
+      "1560": {"vt":  "0x60", "func": "0x710005BBB0", "lr": "0x710008C54C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearAcceptableGroupId", "wire_order": "N/A"}
+    },
+    "nn::lp2p::detail::ISfServiceMonitor": {
+      "_srv": "SRV_71000E6D00",
+      "_hash": "d47b1b0a13c4c455",
+      "_hash_alt": "89b89b6e378d2ea0",
+      "0":   {"vt":  "0x20", "func": "0x71000139C0", "lr": "0x710008D2B4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Initialize", "wire_order": "N/A"},
+      "256": {"vt":  "0x28", "func": "0x71000139D0", "lr": "0x710008D858", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "AttachNetworkInterfaceStateChangeEvent", "wire_order": "N/A"},
+      "264": {"vt":  "0x30", "func": "0x7100089510", "lr": "0x710008D49C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetNetworkInterfaceLastError", "wire_order": "N/A"},
+      "272": {"vt":  "0x38", "func": "0x7100089520", "lr": "0x710008D3CC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetRole", "wire_order": "out_data[0x1]"},
+      "280": {"vt":  "0x40", "func": "0x7100089570", "lr": "0x710008D9BC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetAdvertiseData", "wire_order": "out_buf0; out_data[0x4]"},
+      "281": {"vt":  "0x48", "func": "0x7100089580", "lr": "0x710008DB7C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetAdvertiseData2", "wire_order": "out_buf0; out_data[0x4]"},
+      "288": {"vt":  "0x50", "func": "0x71000895A0", "lr": "0x710008DD40", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [50], "name": "GetGroupInfo", "wire_order": "out_buf0"},
+      "296": {"vt":  "0x58", "func": "0x7100052000", "lr": "0x710008DEB4", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [50, 49], "name": "GetGroupInfo2", "wire_order": "buffers=[out, in]"},
+      "304": {"vt":  "0x60", "func": "0x71000895B0", "lr": "0x710008D554", "inbytes":   "0x0", "outbytes":  "0x80", "name": "GetGroupOwner", "wire_order": "out_data[0x80]"},
+      "312": {"vt":  "0x68", "func": "0x71000895C0", "lr": "0x710008E020", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetIpConfig", "wire_order": "buffers=[out]"},
+      "320": {"vt":  "0x70", "func": "0x71000895E0", "lr": "0x710008D60C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetLinkLevel", "wire_order": "out_data[0x4]"},
+      "328": {"vt":  "0x78", "func": "0x71000895F0", "lr": "0x710008E188", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "AttachJoinEvent", "wire_order": "N/A"},
+      "336": {"vt":  "0x80", "func": "0x7100089600", "lr": "0x710008E2EC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetMembers", "wire_order": "out_data[0x4]; buffers=[out]"}
+    },
+    "nn::lp2p::monitor::detail::ISfMonitorServiceCreator": {
+      "_srv": "SRV_71000E6D08",
+      "_hash": "7e19f5a7addb8c7a",
+      "0": {"vt":  "0x20", "lr": "0x710008E5BC", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::lp2p::monitor::detail::ISfMonitorService"], "_srv_outinterfaces": "SRV_71000E6D10", "name": "CreateMonitorService", "wire_order": "in_data[0x10]"}
+    },
+    "nn::lp2p::monitor::detail::ISfMonitorService": {
+      "_srv": "SRV_71000E6D10",
+      "_hash": "9500afbbdd5d4443",
+      "0":   {"vt":  "0x20", "lr": "0x710008E8DC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Initialize", "wire_order": "N/A"},
+      "288": {"vt":  "0x28", "lr": "0x710008EB30", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [50], "name": "GetGroupInfo", "wire_order": "buffers=[out]"},
+      "320": {"vt":  "0x30", "lr": "0x710008E92C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetLinkLevel", "wire_order": "out_data[0x4]"}
+    },
+    "_services": ["arp:r", "bsd:a", "bsd:s", "bsd:u", "fatal:u", "ifcfg", "ldn:m", "ldn:s", "ldn:u", "lp2p:app", "lp2p:m", "lp2p:sys", "nifm:a", "nifm:s", "nifm:u", "set:sys", "spl:mig", "wlan:p"],
+    "_invokes": {
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x7100014010", "cmd_proof_offset": "0x7100014014", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x710000f8f0"] }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x710004db60", "cmd_proof_offset": "0x710004db8c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004d2e4", "0x710004d464", "0x710004d5e4"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x710004db60", "cmd_proof_offset": "0x710004db8c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004d2e4", "0x710004d464", "0x710004d5e4"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x710004db60", "cmd_proof_offset": "0x710004db8c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004d2e4", "0x710004d464", "0x710004d5e4"] }
+        }
+      }
+    }
+  }
+}

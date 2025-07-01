@@ -1,0 +1,136 @@
+{
+  "grc_services": {
+    "program_identified": "GRC_services",
+    "nn::grcsrv::IGrcService": {
+      "_srv": "SRV_71003773C8",
+      "_hash": "94cf7f17319ff354",
+      "1":    {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x7100000D1C", "inbytes":  "0x28", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IContinuousRecorder"], "_srv_outinterfaces": "SRV_71003773D0", "inhandles": [1], "name": "OpenContinuousRecorder", "wire_order": "in_data[0x28]"},
+      "2":    {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x7100000F4C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IGameMovieTrimmer"], "_srv_outinterfaces": "SRV_71003773D8", "inhandles": [1], "name": "OpenGameMovieTrimmer", "wire_order": "in_data[0x8]"},
+      "3":    {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x710000116C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IOffscreenRecorder"], "_srv_outinterfaces": "SRV_71003773E0", "inhandles": [1], "name": "OpenOffscreenRecorder", "wire_order": "in_data[0x8]"},
+      "10":   {"vt":  "0x38", "func": "0x710003B210", "lr": "0x710000138C", "inbytes":  "0x20", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IContinuousRecorder"], "_srv_outinterfaces": "SRV_71003773D0", "name": "Cmd10", "wire_order": "in_data[0x20]"},
+      "101":  {"vt":  "0x40", "func": "0x7100039CE0", "lr": "0x710000156C", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IMovieMaker"], "_srv_outinterfaces": "SRV_71003773E8", "name": "CreateMovieMaker", "wire_order": "in_data[0x18]"},
+      "110":  {"vt":  "0x48", "func": "0x710003B320", "lr": "0x710000175C", "inbytes":  "0x20", "outbytes":   "0x0", "outinterfaces": ["nn::grcsrv::IMovieWriter"], "_srv_outinterfaces": "SRV_71003773F8", "inhandles": [1], "name": "Cmd110", "wire_order": "in_data[0x20]"},
+      "9903": {"vt":  "0x50", "func": "0x710003B460", "lr": "0x7100000B48", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOffscreenRecordingMarker", "wire_order": "in_data[0x8]"}
+    },
+    "nn::grcsrv::IContinuousRecorder": {
+      "_srv": "SRV_71003773D0",
+      "_hash": "f6f2d97e7d1470a6",
+      "2":  {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x7100001C14", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StopRecording", "wire_order": "N/A"},
+      "4":  {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x7100001AC4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UpdateRecordingStartTick", "wire_order": "N/A"},
+      "5":  {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x7100001CDC", "inbytes":  "0x20", "outbytes":   "0x0", "name": "Cmd5", "wire_order": "in_data[0x20]"},
+      "10": {"vt":  "0x38", "func": "0x710003B210", "lr": "0x7100001F88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetNotFlushingEvent", "wire_order": "N/A"},
+      "11": {"vt":  "0x40", "func": "0x7100039CE0", "lr": "0x71000020F0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "StartFlush", "wire_order": "buffers=[in]"},
+      "12": {"vt":  "0x48", "func": "0x710003B320", "lr": "0x7100001B7C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelFlush", "wire_order": "N/A"},
+      "13": {"vt":  "0x50", "func": "0x710003B460", "lr": "0x7100001DC0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ResetFlushTime", "wire_order": "in_data[0x8]"},
+      "14": {"vt":  "0x58", "func": "0x710003B560", "lr": "0x7100002260", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "outhandles": [1], "name": "StartFlushWithEvent", "wire_order": "buffers=[in]"}
+    },
+    "nn::grcsrv::IGameMovieTrimmer": {
+      "_srv": "SRV_71003773D8",
+      "_hash": "a77b405dfe6c64ee",
+      "1":  {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x710000272C", "inbytes":  "0x48", "outbytes":   "0x0", "name": "BeginTrim", "wire_order": "in_data[0x48]"},
+      "2":  {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x7100002550", "inbytes":   "0x0", "outbytes":  "0x40", "name": "EndTrim", "wire_order": "out_data[0x40]"},
+      "10": {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x71000028C8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetNotTrimmingEvent", "wire_order": "N/A"},
+      "20": {"vt":  "0x38", "func": "0x710003B210", "lr": "0x7100002A34", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [69], "name": "SetThumbnailRgba", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "21": {"vt":  "0x40", "func": "0x7100039CE0", "lr": "0x7100002BE4", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [69], "name": "Cmd21", "wire_order": "in_data[0x8]; buffers=[in]"}
+    },
+    "nn::grcsrv::IOffscreenRecorder": {
+      "_srv": "SRV_71003773E0",
+      "_hash": "202b690ab02d9721",
+      "201": {"vt":  "0x20", "func": "0x71000592E0", "lr": "0x7100003050", "inbytes":   "0x8", "outbytes":   "0x8", "name": "CreateOffscreenLayer", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "202": {"vt":  "0x28", "func": "0x7100013030", "lr": "0x7100002EC0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DestroyOffscreenLayer", "wire_order": "in_data[0x8]"}
+    },
+    "nn::grcsrv::IMovieMaker": {
+      "_srv": "SRV_71003773E8",
+      "_hash": "8444d6fdd0780dd3",
+      "2":  {"vt":  "0x20", "func": "0x7100040AB4", "lr": "0x71000037C8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nns::hosbinder::IHOSBinderDriver"], "_srv_outinterfaces": "SRV_71003773F0", "name": "CreateVideoProxy", "wire_order": "N/A"},
+      "9":  {"vt":  "0x28", "func": "0x7100040AC4", "lr": "0x7100003444", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetAlbumShimLibraryVersion", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x30", "func": "0x7100040AD4", "lr": "0x7100003970", "inbytes":   "0x8", "outbytes":   "0x4", "name": "OpenOffscreenLayer", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "11": {"vt":  "0x38", "func": "0x7100040AE0", "lr": "0x7100003534", "inbytes":   "0x8", "outbytes":   "0x0", "name": "CloseOffscreenLayer", "wire_order": "in_data[0x8]"},
+      "20": {"vt":  "0x40", "func": "0x7100040AEC", "lr": "0x71000035F4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "StartOffscreenRecording", "wire_order": "in_data[0x8]"},
+      "21": {"vt":  "0x48", "func": "0x7100040AF8", "lr": "0x7100003384", "inbytes":   "0x8", "outbytes":   "0x0", "name": "AbortOffscreenRecording", "wire_order": "in_data[0x8]"},
+      "22": {"vt":  "0x50", "func": "0x7100040B04", "lr": "0x710000349C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestOffscreenRecordingFinishReady", "wire_order": "in_data[0x8]"},
+      "23": {"vt":  "0x58", "func": "0x7100040B14", "lr": "0x7100003AF0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "CompleteOffscreenRecordingFinish", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "24": {"vt":  "0x60", "func": "0x7100040B28", "lr": "0x7100003C9C", "inbytes":  "0x88", "outbytes":   "0x0", "name": "StartOffscreenRecordingEx", "wire_order": "in_data[0x88]"},
+      "25": {"vt":  "0x68", "func": "0x7100040B38", "lr": "0x7100003E28", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5, 5], "name": "CompleteOffscreenRecordingFinishEx0", "wire_order": "in_data[0x10]; buffers=[in, in]"},
+      "26": {"vt":  "0x70", "func": "0x7100040B44", "lr": "0x7100003FFC", "inbytes":  "0x10", "outbytes":  "0x20", "buffers": [5, 5], "name": "CompleteOffscreenRecordingFinishEx1", "wire_order": "in_data[0x10]; out_data[0x20]; buffers=[in, in]"},
+      "30": {"vt":  "0x78", "func": "0x7100040B60", "lr": "0x71000033EC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "GetOffscreenLayerError", "wire_order": "in_data[0x8]"},
+      "41": {"vt":  "0x80", "func": "0x7100040B78", "lr": "0x71000041D4", "inbytes":   "0x8", "outbytes":   "0x8", "buffers": [5], "name": "EncodeOffscreenLayerAudioSample", "wire_order": "in_data[0x8]; out_data[0x8]; buffers=[in]"},
+      "50": {"vt":  "0x88", "func": "0x7100040BC8", "lr": "0x710000438C", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "GetOffscreenLayerRecordingFinishReadyEvent", "wire_order": "in_data[0x8]"},
+      "52": {"vt":  "0x90", "func": "0x7100040BDC", "lr": "0x710000452C", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "GetOffscreenLayerAudioEncodeReadyEvent", "wire_order": "in_data[0x8]"}
+    },
+    "nns::hosbinder::IHOSBinderDriver": {
+      "_srv": "SRV_71003773F0",
+      "_hash": "40136fee5fc6747e",
+      "_hash_alt": "fc99016c7cf2622c",
+      "0": {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x7100004938", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5, 6], "name": "TransactParcel", "wire_order": "in_data[0xC]; buffers=[in, out]"},
+      "1": {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x7100004720", "inbytes":   "0xC", "outbytes":   "0x0", "name": "AdjustRefcount", "wire_order": "in_data[0xC]"},
+      "2": {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x7100004AFC", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "GetNativeHandle", "wire_order": "in_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x710003B210", "lr": "0x7100004CA8", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [33, 34], "name": "TransactParcelAuto", "wire_order": "in_data[0xC]; buffers=[in, out]"}
+    },
+    "nn::grcsrv::IMovieWriter": {
+      "_srv": "SRV_71003773F8",
+      "_hash": "a21e7dc8342d0dba",
+      "0":   {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x7100005034", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd0", "wire_order": "in_data[0x8]"},
+      "10":  {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x71000051D8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd10", "wire_order": "N/A"},
+      "20":  {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x7100004FD0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd20", "wire_order": "N/A"},
+      "100": {"vt":  "0x38", "func": "0x710003B210", "lr": "0x7100005090", "inbytes":  "0x80", "outbytes":   "0x0", "name": "Cmd100", "wire_order": "in_data[0x80]"},
+      "110": {"vt":  "0x40", "func": "0x7100039CE0", "lr": "0x7100005370", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "Cmd110", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "120": {"vt":  "0x48", "func": "0x710003B320", "lr": "0x71000051A0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd120", "wire_order": "N/A"},
+      "130": {"vt":  "0x50", "func": "0x710003B460", "lr": "0x7100005528", "inbytes":   "0x8", "outbytes":  "0x20", "buffers": [5, 5], "name": "Cmd130", "wire_order": "in_data[0x8]; out_data[0x20]; buffers=[in, in]"}
+    },
+    "nn::grcsrv::IRemoteVideoTransfer": {
+      "_srv": "SRV_7100377568",
+      "_hash": "ac91787c32436cf2",
+      "1": {"vt":  "0x20", "func": "0x710004E1A0", "lr": "0x7100006010", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Initialize", "wire_order": "N/A"},
+      "2": {"vt":  "0x28", "func": "0x710004E1F0", "lr": "0x7100006264", "inbytes":   "0x4", "outbytes":  "0x10", "buffers": [6], "name": "Transfer", "wire_order": "in_data[0x4]; out_data[0x10]; buffers=[out]"},
+      "3": {"vt":  "0x30", "func": "0x710004E260", "lr": "0x7100006060", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd3", "wire_order": "out_data[0x1]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71003796B8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710003ACC0", "lr": "0x710003C2C0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710003AF90", "lr": "0x710003C42C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710003AFB0", "lr": "0x710003C5C8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710003B210", "lr": "0x710003C1F8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100039CE0", "lr": "0x710003C72C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["audrec:u", "caps:c", "caps:sc", "dispdrv", "fatal:u", "fsp-srv", "grc:c", "grc:d", "nvdrv", "nvdrv:s", "nvmemp", "ovln:snd", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "audrec:u": {
+        "interface": "nn::audio::detail::IFinalOutputRecorderManager",
+        "commands": {
+          "0": { "name": "OpenFinalOutputRecorder", "vt_off": "0x20", "stub": "0x71000828b0", "cmd_proof_offset": "0x7100082920", "cmd_proof_instruction": "mov w6,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100081ea4"] }
+        }
+      },
+      "dispdrv": {
+        "interface": "nns::hosbinder::IHOSBinderDriver",
+        "commands": {
+          "0": { "name": "TransactParcel", "vt_off": "0x38", "stub": "0x71000712e0", "cmd_proof_offset": "0x710007134c", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100069b80", "0x7100074fb0", "0x7100075020", "0x710007508c"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "9": { "name": "OpenDataFileSystemByProgramId", "vt_off": "0x40", "stub": "0x7100011020", "cmd_proof_offset": "0x7100011074", "cmd_proof_instruction": "mov w3,#0x9", "cmd_hex_and_dec": "0x9 / 9", "calls": ["0x710001f518"] },
+          "17": { "name": "OpenHostFileSystem", "vt_off": "0x68", "stub": "0x71000112f0", "cmd_proof_offset": "0x7100011348", "cmd_proof_instruction": "mov w4,#0x11", "cmd_hex_and_dec": "0x11 / 17", "calls": ["0x710001d5fc"] },
+          "18": { "name": "OpenSdCardFileSystem", "vt_off": "0x70", "stub": "0x7100011390", "cmd_proof_offset": "0x71000113d4", "cmd_proof_instruction": "mov w2,#0x12", "cmd_hex_and_dec": "0x12 / 18", "calls": ["0x7100022cc8", "0x7100022d38", "0x7100022d78", "0x7100022dbc", "0x7100022e00", "0x7100022e44", "0x7100022e88", "0x7100022ecc", "0x7100022f10", "0x7100022f54"] },
+          "36": { "name": "OpenHostFileSystemWithOption", "vt_off": "0xf8", "stub": "0x7100011670", "cmd_proof_offset": "0x71000116d0", "cmd_proof_instruction": "mov w5,#0x24", "cmd_hex_and_dec": "0x24 / 36", "calls": ["0x710001d594"] },
+          "201": { "name": "OpenDataStorageByProgramId", "vt_off": "0x1e8", "stub": "0x71000121c0", "cmd_proof_offset": "0x7100012214", "cmd_proof_instruction": "mov w3,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "calls": ["0x710001f3a8"] },
+          "204": { "name": "OpenDataFileSystemWithProgramIndex", "vt_off": "0x200", "stub": "0x71000123a0", "cmd_proof_offset": "0x71000123f4", "cmd_proof_instruction": "mov w3,#0xcc", "cmd_hex_and_dec": "0xcc / 204", "calls": ["0x710001f584"] },
+          "205": { "name": "OpenDataStorageWithProgramIndex", "vt_off": "0x208", "stub": "0x7100012440", "cmd_proof_offset": "0x7100012494", "cmd_proof_instruction": "mov w3,#0xcd", "cmd_hex_and_dec": "0xcd / 205", "calls": ["0x710001f414"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x220", "stub": "0x7100012650", "cmd_proof_offset": "0x7100012694", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x7100022fcc"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "0": { "name": "IsSdCardInserted", "vt_off": "0x20", "stub": "0x7100018fd0", "cmd_proof_offset": "0x7100018fd4", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100023008", "0x7100023080", "0x71000230b0", "0x71000230e0", "0x7100023110", "0x7100023140", "0x7100023170", "0x71000231a0", "0x71000231d0", "0x7100023200"] }
+          }
+        }
+      },
+      "nvmemp": {
+        "commands": {
+          "1": { "vt_off": "0x28", "stub": "0x71000a0730", "cmd_proof_offset": "0x71000a0734", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x710009fda8"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "olsc_services": {
+    "program_identified": "OLSC_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71001E0740",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100042390", "lr": "0x7100043990", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100043AFC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100042680", "lr": "0x7100043C98", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71000438C8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x7100043DFC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::olsc::srv::IServiceGetter": {
+      "_srv": "SRV_71001EEAB8",
+      "_hash": "ff2f79cfd909fadc",
+      "10000": {"vt":  "0x20", "lr": "0x71001162F8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IOlscServiceForSystemService"], "_srv_outinterfaces": "SRV_71001EEAC0", "name": "GetOlscServiceForSystemService", "wire_order": "N/A"}
+    },
+    "nn::olsc::srv::IOlscServiceForSystemService": {
+      "_srv": "SRV_71001EEAC0",
+      "_hash": "6b76ae1d5a465e98",
+      "0":     {"vt":  "0x28", "func": "0x7100086D20", "lr": "0x7100118B18", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::ITransferTaskListController"], "_srv_outinterfaces": "SRV_71001EEAD0", "name": "GetTransferTaskListController", "wire_order": "N/A"},
+      "1":     {"vt":  "0x30", "func": "0x7100086D50", "lr": "0x7100118CBC", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRemoteStorageController"], "_srv_outinterfaces": "SRV_71001EEAE8", "name": "GetRemoteStorageController", "wire_order": "in_data[0x10]"},
+      "2":     {"vt":  "0x38", "func": "0x7100086D80", "lr": "0x7100118E98", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IDaemonController"], "_srv_outinterfaces": "SRV_71001EEAF8", "name": "GetDaemonController", "wire_order": "N/A"},
+      "10":    {"vt":  "0x40", "func": "0x7100086DB0", "lr": "0x7100118190", "inbytes":  "0x10", "outbytes":   "0x0", "name": "PrepareDeleteUserProperty", "wire_order": "in_data[0x10]"},
+      "11":    {"vt":  "0x48", "func": "0x7100086DC0", "lr": "0x710011903C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "DeleteUserSaveDataProperty", "wire_order": "in_data[0x18]"},
+      "12":    {"vt":  "0x50", "func": "0x7100086DD0", "lr": "0x71001182A0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "InvalidateMountCache", "wire_order": "N/A"},
+      "13":    {"vt":  "0x58", "func": "0x7100086DE0", "lr": "0x71001180E0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DeleteDeviceSaveDataProperty", "wire_order": "in_u64_0"},
+      "100":   {"vt":  "0x60", "func": "0x7100086DF0", "lr": "0x71001191C4", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "ListTransferTaskErrorInfo", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "101":   {"vt":  "0x68", "func": "0x7100086E00", "lr": "0x7100117FF0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTransferTaskErrorInfoCount", "wire_order": "out_data[0x4]"},
+      "102":   {"vt":  "0x70", "func": "0x7100086E10", "lr": "0x710011938C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "RemoveTransferTaskErrorInfo0", "wire_order": "in_data[0x18]"},
+      "103":   {"vt":  "0x78", "func": "0x7100086E20", "lr": "0x7100119510", "inbytes":  "0x18", "outbytes":  "0x30", "name": "GetTransferTaskErrorInfo0", "wire_order": "in_u64_0; in_u64_1; in_u64_2; out_data[0x30]"},
+      "104":   {"vt":  "0x80", "func": "0x7100086E30", "lr": "0x71001196A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::INativeHandleHolder"], "_srv_outinterfaces": "SRV_71001EEAD8", "name": "GetTransferTaskErrorInfoUpdateNativeHandleHolder", "wire_order": "N/A"},
+      "105":   {"vt":  "0x88", "func": "0x7100086E60", "lr": "0x7100119850", "inbytes":  "0x18", "outbytes":  "0x30", "name": "GetTransferTaskErrorInfo", "wire_order": "in_u64_0; in_u64_1; in_u64_2; out_data[0x30]"},
+      "200":   {"vt":  "0x90", "func": "0x7100086E70", "lr": "0x71001199F0", "inbytes":   "0x8", "outbytes":   "0x2", "name": "GetDataTransferPolicy", "wire_order": "in_data[0x8]; out_data[0x2]"},
+      "201":   {"vt":  "0x98", "func": "0x7100086E80", "lr": "0x7100118334", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DeleteDataTransferPolicyCache", "wire_order": "in_data[0x8]"},
+      "203":   {"vt":  "0xA0", "func": "0x7100086E90", "lr": "0x7100119B6C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestUpdateDataTransferPolicyCacheAsync", "wire_order": "buffers=[in]"},
+      "204":   {"vt":  "0xA8", "func": "0x7100086EC0", "lr": "0x7100118094", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearDataTransferPolicyCache", "wire_order": "N/A"},
+      "205":   {"vt":  "0xB0", "func": "0x7100086ED0", "lr": "0x7100119D5C", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncDataTransferPolicyRequest"], "_srv_outinterfaces": "SRV_71001EEB10", "name": "RequestGetDataTransferPolicyAsync", "wire_order": "in_data[0x10]"},
+      "206":   {"vt":  "0xB8", "func": "0x7100086F00", "lr": "0x7100119F3C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "Cmd206", "wire_order": "buffers=[in]"},
+      "207":   {"vt":  "0xC0", "func": "0x7100086F30", "lr": "0x710011A12C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "Cmd207", "wire_order": "buffers=[in]"},
+      "208":   {"vt":  "0xC8", "func": "0x7100086F60", "lr": "0x710011A31C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "Cmd208", "wire_order": "buffers=[in]"},
+      "209":   {"vt":  "0xD0", "func": "0x7100086F90", "lr": "0x710011A510", "inbytes":   "0x8", "outbytes":   "0x2", "name": "Cmd209", "wire_order": "in_data[0x8]; out_data[0x2]"},
+      "300":   {"vt":  "0xD8", "func": "0x7100086FA0", "lr": "0x710011A690", "inbytes":  "0x18", "outbytes":  "0x18", "name": "GetUserSaveDataProperty", "wire_order": "in_u64_2; in_u64_0; in_u64_1; out_data[0x18]"},
+      "301":   {"vt":  "0xE0", "func": "0x7100086FB0", "lr": "0x710011A81C", "inbytes":  "0x30", "outbytes":   "0x0", "name": "SetUserSaveDataProperty", "wire_order": "in_data[0x30]"},
+      "302":   {"vt":  "0xE8", "func": "0x7100086FC0", "lr": "0x710011A9A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "Cmd02", "wire_order": "N/A"},
+      "400":   {"vt":  "0xF0", "func": "0x7100086FF0", "lr": "0x7100117A08", "inbytes":  "0x10", "outbytes":   "0x0", "name": "CleanupSaveDataBackupContextForSpecificApplications", "wire_order": "in_data[0x10]"},
+      "900":   {"vt":  "0xF8", "func": "0x7100087000", "lr": "0x71001179A4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DeleteAllTransferTask", "wire_order": "N/A"},
+      "902":   {"vt": "0x100", "func": "0x7100087010", "lr": "0x7100117D5C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteAllSeriesInfo", "wire_order": "in_data[0x10]"},
+      "903":   {"vt": "0x108", "func": "0x7100087020", "lr": "0x7100117C54", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteAllSdaInfoCache", "wire_order": "in_data[0x10]"},
+      "904":   {"vt": "0x110", "func": "0x7100087030", "lr": "0x7100117E88", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteAllApplicationSetting", "wire_order": "in_data[0x10]"},
+      "905":   {"vt": "0x118", "func": "0x7100087040", "lr": "0x7100117EE0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DeleteAllTransferTaskErrorInfo", "wire_order": "N/A"},
+      "906":   {"vt": "0x120", "func": "0x7100087050", "lr": "0x7100117CC4", "inbytes":  "0x30", "outbytes":   "0x0", "name": "RegisterTransferTaskErrorInfo", "wire_order": "in_data[0x30]"},
+      "907":   {"vt": "0x128", "func": "0x7100087060", "lr": "0x7100117B38", "inbytes":  "0x78", "outbytes":   "0x0", "name": "AddSaveDataArchiveInfoCache", "wire_order": "in_data[0x78]"},
+      "908":   {"vt": "0x130", "func": "0x7100087070", "lr": "0x710011AB4C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "DeleteSeriesInfo", "wire_order": "in_u64_0; in_u64_1; in_u64_2"},
+      "909":   {"vt": "0x138", "func": "0x7100087080", "lr": "0x710011ACD0", "inbytes":  "0x18", "outbytes":  "0x10", "name": "GetSeriesInfo", "wire_order": "in_data[0x18]; out_data[0x10]"},
+      "910":   {"vt": "0x140", "func": "0x7100086E10", "lr": "0x710011AE5C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "RemoveTransferTaskErrorInfo", "wire_order": "in_data[0x18]"},
+      "911":   {"vt": "0x148", "func": "0x71000870B0", "lr": "0x7100117DCC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteAllSeriesInfoForSaveDataBackup", "wire_order": "in_data[0x10]"},
+      "912":   {"vt": "0x150", "func": "0x71000870C0", "lr": "0x710011AFDC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "DeleteSeriesInfoForSaveDataBackup", "wire_order": "in_u64_0; in_u64_1; in_u64_2"},
+      "913":   {"vt": "0x158", "func": "0x71000870D0", "lr": "0x710011B160", "inbytes":  "0x18", "outbytes":  "0x10", "name": "GetSeriesInfoForSaveDataBackup", "wire_order": "in_data[0x18]; out_data[0x10]"},
+      "914":   {"vt": "0x160", "func": "0x7100087100", "lr": "0x710011B2F0", "inbytes":  "0x10", "outbytes":   "0x8", "name": "Cmd914", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "915":   {"vt": "0x168", "func": "0x7100087110", "lr": "0x710011B46C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd915", "wire_order": "in_u64_0; in_u32_1; in_u32_0"},
+      "1000":  {"vt": "0x170", "func": "0x7100087120", "lr": "0x710011B5DC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncPlayablePlatformRequest"], "_srv_outinterfaces": "SRV_71001EEAF0", "name": "Cmd1000", "wire_order": "buffers=[in]"},
+      "1100":  {"vt": "0x178", "func": "0x7100087150", "lr": "0x7100116768", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RepairUpdateIssueInfoCacheAync", "wire_order": "N/A"},
+      "1110":  {"vt": "0x180", "func": "0x7100087180", "lr": "0x7100116910", "inbytes":   "0x8", "outbytes":  "0x20", "name": "RepairGetIssueInfo", "wire_order": "in_data[0x8]; out_data[0x20]"},
+      "1111":  {"vt": "0x188", "func": "0x7100087190", "lr": "0x7100116A94", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "RepairListIssueInfo", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "1112":  {"vt": "0x190", "func": "0x71000871A0", "lr": "0x7100116C64", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "RepairListOperationPermissionInfo", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "1113":  {"vt": "0x198", "func": "0x71000871B0", "lr": "0x7100116E34", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "RepairListDataInfoForRepairedSaveDataDownload", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "1114":  {"vt": "0x1A0", "func": "0x71000871C0", "lr": "0x7100117004", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "RepairListDataInfoForOriginalSaveDataDownload", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "1120":  {"vt": "0x1A8", "func": "0x71000871D0", "lr": "0x71001171CC", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RepairUploadSaveDataAsync", "wire_order": "in_data[0x8]"},
+      "1121":  {"vt": "0x1B0", "func": "0x7100087200", "lr": "0x710011739C", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RepairUploadSaveDataAsync1", "wire_order": "in_data[0x18]"},
+      "1122":  {"vt": "0x1B8", "func": "0x7100087230", "lr": "0x710011758C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RepairDownloadRepairedSaveDataAsync", "wire_order": "in_data[0x8]"},
+      "1123":  {"vt": "0x1C0", "func": "0x7100087260", "lr": "0x710011775C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RepairDownloadOriginalSaveDataAsync", "wire_order": "in_data[0x8]"},
+      "1124":  {"vt": "0x1C8", "func": "0x7100087290", "lr": "0x71001165D0", "inbytes":   "0x0", "outbytes":  "0x20", "name": "RepairGetOperationProgressInfo", "wire_order": "out_data[0x20]"},
+      "10000": {"vt":  "0x20", "func": "0x7100086CF0", "lr": "0x71001162F8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IOlscServiceForSystemService"], "_srv_outinterfaces": "SRV_71001EEAC0", "name": "GetOlscServiceForSystemService", "wire_order": "N/A"}
+    },
+    "nn::olsc::srv::IAsyncResult": {
+      "_srv": "SRV_71001EEAC8",
+      "_hash": "7ace7c7085f89876",
+      "0": {"vt":  "0x20", "func": "0x7100042390", "lr": "0x710011879C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100118738", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100042680", "lr": "0x71001187E4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAvailable", "wire_order": "out_data[0x1]"},
+      "3": {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71001189B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"}
+    },
+    "nn::olsc::srv::ITransferTaskListController": {
+      "_srv": "SRV_71001EEAD0",
+      "_hash": "443d2d5d88e5cea8",
+      "0":  {"vt":  "0x20", "func": "0x710008FC30", "lr": "0x710011B8FC", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTransferTaskCountForOcean", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710008FC40", "lr": "0x710011C2B0", "inbytes":   "0x8", "outbytes":  "0x30", "name": "GetTransferTaskInfoForOcean", "wire_order": "in_data[0x8]; out_data[0x30]"},
+      "2":  {"vt":  "0x30", "func": "0x710008FC50", "lr": "0x710011C444", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "ListTransferTaskInfoForOcean", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x710008FC60", "lr": "0x710011BBA8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DeleteTransferTaskForOcean", "wire_order": "in_data[0x8]"},
+      "4":  {"vt":  "0x40", "func": "0x710008FC70", "lr": "0x710011BAB0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RaiseTransferTaskPriorityForOcean", "wire_order": "in_data[0x8]"},
+      "5":  {"vt":  "0x48", "func": "0x710008FC80", "lr": "0x710011C608", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::INativeHandleHolder"], "_srv_outinterfaces": "SRV_71001EEAD8", "name": "GetTransferTaskEndEventNativeHandleHolder", "wire_order": "N/A"},
+      "6":  {"vt":  "0x50", "func": "0x710008FCB0", "lr": "0x710011C7B0", "inbytes":   "0x8", "outbytes":  "0x18", "name": "GetTransferTaskProgressForOcean", "wire_order": "in_data[0x8]; out_data[0x18]"},
+      "7":  {"vt":  "0x58", "func": "0x710008FCC0", "lr": "0x710011BC00", "inbytes":   "0x8", "outbytes":   "0x0", "name": "GetTransferTaskLastResultForOcean", "wire_order": "in_data[0x8]"},
+      "8":  {"vt":  "0x60", "func": "0x710008FCD0", "lr": "0x710011C928", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRemoteStorageController"], "_srv_outinterfaces": "SRV_71001EEAE0", "name": "StopNextTransferTaskExecution", "wire_order": "N/A"},
+      "9":  {"vt":  "0x68", "func": "0x710008FD00", "lr": "0x710011CAC8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::INativeHandleHolder"], "_srv_outinterfaces": "SRV_71001EEAD8", "name": "GetTransferTaskStartEventNativeHandleHolder", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x710008FD30", "lr": "0x710011BD98", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SuspendTransferTaskForOcean", "wire_order": "in_data[0x8]"},
+      "11": {"vt":  "0x78", "func": "0x710008FD40", "lr": "0x710011BA00", "inbytes":   "0x0", "outbytes":  "0x30", "name": "GetCurrentTransferTaskInfoForOcean", "wire_order": "out_data[0x30]"},
+      "12": {"vt":  "0x80", "func": "0x710008FD50", "lr": "0x710011CC70", "inbytes":  "0x18", "outbytes":  "0x30", "name": "FindTransferTaskInfoForOcean", "wire_order": "in_data[0x18]; out_data[0x30]"},
+      "13": {"vt":  "0x88", "func": "0x710008FD60", "lr": "0x710011BD30", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelCurrentRepairTransferTask", "wire_order": "N/A"},
+      "14": {"vt":  "0x90", "func": "0x710008FD70", "lr": "0x710011CE10", "inbytes":   "0x8", "outbytes":  "0x18", "name": "GetRepairTransferTaskProgress", "wire_order": "in_data[0x8]; out_data[0x18]"},
+      "15": {"vt":  "0x98", "func": "0x710008FD80", "lr": "0x710011BB68", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnsureExecutableForRepairTransferTask", "wire_order": "N/A"},
+      "16": {"vt":  "0xA0", "func": "0x710008FD90", "lr": "0x710011CF90", "inbytes":   "0x1", "outbytes":   "0x4", "name": "GetTransferTaskCount", "wire_order": "in_data[0x1]; out_data[0x4]"},
+      "17": {"vt":  "0xA8", "func": "0x710008FDA0", "lr": "0x710011D120", "inbytes":  "0x10", "outbytes":  "0x30", "name": "GetTransferTaskInfo", "wire_order": "in_data[0x10]; out_data[0x30]"},
+      "18": {"vt":  "0xB0", "func": "0x710008FDB0", "lr": "0x710011D2B4", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "ListTransferTaskInfo", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "19": {"vt":  "0xB8", "func": "0x710008FDC0", "lr": "0x710011BE94", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteTransferTask", "wire_order": "in_data[0x10]"},
+      "20": {"vt":  "0xC0", "func": "0x710008FDD0", "lr": "0x710011BCA0", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RaiseTransferTaskPriority", "wire_order": "in_u64_1; in_u64_0"},
+      "21": {"vt":  "0xC8", "func": "0x710008FDE0", "lr": "0x710011D490", "inbytes":  "0x10", "outbytes":  "0x18", "name": "GetTransferTaskProgress", "wire_order": "in_u64_1; in_u64_0; out_data[0x18]"},
+      "22": {"vt":  "0xD0", "func": "0x710008FDF0", "lr": "0x710011BE28", "inbytes":  "0x10", "outbytes":   "0x0", "name": "GetTransferTaskLastResult", "wire_order": "in_u64_1; in_u64_0"},
+      "23": {"vt":  "0xD8", "func": "0x710008FE00", "lr": "0x710011BF70", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SuspendTransferTask", "wire_order": "in_data[0x10]"},
+      "24": {"vt":  "0xE0", "func": "0x710008FE10", "lr": "0x710011D620", "inbytes":   "0x1", "outbytes":  "0x30", "name": "GetCurrentTransferTaskInfo", "wire_order": "in_data[0x1]; out_data[0x30]"},
+      "25": {"vt":  "0xE8", "func": "0x710008FE20", "lr": "0x710011D7D0", "inbytes":  "0x20", "outbytes":  "0x30", "name": "FindTransferTaskInfo", "wire_order": "in_data[0x20]; out_data[0x30]"},
+      "26": {"vt":  "0xF0", "func": "0x710008FE30", "lr": "0x710011D968", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRemoteStorageController"], "_srv_outinterfaces": "SRV_71001EEAE0", "name": "Cmd26", "wire_order": "N/A"},
+      "27": {"vt":  "0xF8", "func": "0x710008FE60", "lr": "0x710011DB08", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRemoteStorageController"], "_srv_outinterfaces": "SRV_71001EEAE0", "name": "Cmd27", "wire_order": "N/A"},
+      "28": {"vt": "0x100", "func": "0x710008FE90", "lr": "0x710011DCB0", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd28", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "29": {"vt": "0x108", "func": "0x710008FEA0", "lr": "0x710011C06C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd29", "wire_order": "out_data[0x1]"},
+      "30": {"vt": "0x110", "func": "0x710008FEB0", "lr": "0x710011DE30", "inbytes":   "0x1", "outbytes":  "0x38", "name": "Cmd30", "wire_order": "in_data[0x1]; out_data[0x38]"}
+    },
+    "nn::olsc::srv::INativeHandleHolder": {
+      "_srv": "SRV_71001EEAD8",
+      "_hash": "e75f6a0a19f5fa67",
+      "_likely_basis": "DB position 6/17 in OLSC_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x710011E108", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetNativeHandle", "wire_order": "N/A"}
+    },
+    "nn::olsc::srv::IRemoteStorageController": {
+      "_srv": "SRV_71001EEAE8",
+      "_hash": "8c5896a494cc2c14",
+      "0":   {"vt":  "0x20", "func": "0x710008F930", "lr": "0x710011EA70", "inbytes":   "0x8", "outbytes":   "0x8", "name": "RegisterUploadSaveDataTransferTask", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "1":   {"vt":  "0x28", "func": "0x710008F940", "lr": "0x710011EBF0", "inbytes":   "0x8", "outbytes":   "0x8", "name": "RegisterDownloadSaveDataTransferTask", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "3":   {"vt":  "0x30", "func": "0x710008F950", "lr": "0x710011E67C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCount", "wire_order": "out_data[0x4]"},
+      "6":   {"vt":  "0x38", "func": "0x710008F960", "lr": "0x710011E640", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearDataInfoCache", "wire_order": "N/A"},
+      "7":   {"vt":  "0x40", "func": "0x710008F970", "lr": "0x710011ED68", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestUpdateDataInfoCacheAsync", "wire_order": "N/A"},
+      "8":   {"vt":  "0x48", "func": "0x710008F9A0", "lr": "0x710011EF0C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestUpdateDataInfoCacheOfSpecifiedApplicationAsync", "wire_order": "in_data[0x8]"},
+      "9":   {"vt":  "0x50", "func": "0x710008F9D0", "lr": "0x710011E5EC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DeleteDataInfoCache", "wire_order": "in_u64_0"},
+      "10":  {"vt":  "0x58", "func": "0x710008F9E0", "lr": "0x710011F0E0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "GetDataNewness", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "11":  {"vt":  "0x60", "func": "0x710008F9F0", "lr": "0x710011F24C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestDeleteDataAsync", "wire_order": "in_data[0x8]"},
+      "12":  {"vt":  "0x68", "func": "0x710008FA20", "lr": "0x710011F420", "inbytes":  "0x10", "outbytes":   "0x8", "name": "RegisterUploadSaveDataTransferTaskDetail", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "13":  {"vt":  "0x70", "func": "0x710008FA30", "lr": "0x710011F598", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestRegisterNotificationTokenAsync", "wire_order": "N/A"},
+      "14":  {"vt":  "0x78", "func": "0x710008FA60", "lr": "0x710011F740", "inbytes":   "0x8", "outbytes":   "0x1", "name": "GetDataNewnessByApplicationId", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "15":  {"vt":  "0x80", "func": "0x710008FA70", "lr": "0x710011F8B0", "inbytes":  "0x10", "outbytes":   "0x8", "name": "RegisterUploadSaveDataTransferTaskForAutonomyRegistration", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "16":  {"vt":  "0x88", "func": "0x710008FA80", "lr": "0x710011FA28", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestCleanupToDeleteSaveDataArchiveAsync", "wire_order": "N/A"},
+      "17":  {"vt":  "0x90", "func": "0x710008FAB0", "lr": "0x710011FBD4", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "ListDataInfo", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "18":  {"vt":  "0x98", "func": "0x710008FAC0", "lr": "0x710011FDA0", "inbytes":   "0x8", "outbytes":  "0x30", "name": "GetDataInfo", "wire_order": "in_data[0x8]; out_data[0x30]"},
+      "19":  {"vt":  "0xA0", "func": "0x710008FAD0", "lr": "0x710011FF28", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::INativeHandleHolder"], "_srv_outinterfaces": "SRV_71001EEAD8", "name": "GetDataInfoCacheUpdateNativeHandleHolder", "wire_order": "N/A"},
+      "20":  {"vt":  "0xA8", "func": "0x710008FB00", "lr": "0x71001200C8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "RequestUpdateSaveDataBackupInfoCacheAsync", "wire_order": "N/A"},
+      "21":  {"vt":  "0xB0", "func": "0x710008FB30", "lr": "0x710012026C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListLoadedDataInfo", "wire_order": "out_buf0; out_data[0x4]"},
+      "22":  {"vt":  "0xB8", "func": "0x710008FB40", "lr": "0x7100120440", "inbytes":   "0x8", "outbytes":  "0x20", "name": "GetLoadedDataInfo", "wire_order": "in_data[0x8]; out_data[0x20]"},
+      "23":  {"vt":  "0xC0", "func": "0x710008FB50", "lr": "0x710011E4BC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ApplyLoadedData", "wire_order": "in_data[0x8]"},
+      "24":  {"vt":  "0xC8", "func": "0x710008FB60", "lr": "0x710011E7AC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DeleteLoadedData", "wire_order": "in_u64_0"},
+      "25":  {"vt":  "0xD0", "func": "0x710008FB70", "lr": "0x71001205D0", "inbytes":  "0x10", "outbytes":   "0x8", "name": "RegisterDownloadSaveDataTransferTaskForAutonomyRegistration", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "26":  {"vt":  "0xD8", "func": "0x710008FB80", "lr": "0x7100120754", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "Cmd26", "wire_order": "out_buf0; in_data[0x8]; out_data[0x4]"},
+      "27":  {"vt":  "0xE0", "func": "0x710008FB90", "lr": "0x7100120920", "inbytes":   "0x8", "outbytes":  "0x38", "name": "Cmd27", "wire_order": "in_data[0x8]; out_data[0x38]"},
+      "28":  {"vt":  "0xE8", "func": "0x710008FBA0", "lr": "0x7100120AC0", "inbytes":   "0x8", "outbytes":  "0x10", "name": "Cmd28", "wire_order": "in_data[0x8]; out_data[0x10]"},
+      "29":  {"vt":  "0xF0", "func": "0x710008FBB0", "lr": "0x7100120C38", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "Cmd29", "wire_order": "N/A"},
+      "800": {"vt":  "0xF8", "func": "0x710008FBE0", "lr": "0x7100120DDC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "outinterfaces": ["nn::olsc::srv::IAsyncPlayablePlatformRequest"], "_srv_outinterfaces": "SRV_71001EEAF0", "name": "Cmd800", "wire_order": "buffers=[in]"},
+      "900": {"vt": "0x100", "func": "0x710008FC10", "lr": "0x710011E894", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetLoadedDataMissing", "wire_order": "in_u64_0"},
+      "901": {"vt": "0x108", "func": "0x710008FC20", "lr": "0x710011E434", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd901", "wire_order": "in_data[0x8]"}
+    },
+    "nn::olsc::srv::IAsyncPlayablePlatformRequest": {
+      "_srv": "SRV_71001EEAF0",
+      "_hash": "93369b134785f547",
+      "0":   {"vt":  "0x20", "func": "0x7100042390", "lr": "0x710011879C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd0", "wire_order": "N/A"},
+      "1":   {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100118738", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd1", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100042680", "lr": "0x71001187E4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd2", "wire_order": "out_data[0x1]"},
+      "3":   {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71001189B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Cmd3", "wire_order": "N/A"},
+      "100": {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x71001210EC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Cmd100", "wire_order": "out_data[0x4]; buffers=[out]"}
+    },
+    "nn::olsc::srv::IDaemonController": {
+      "_srv": "SRV_71001EEAF8",
+      "_hash": "8d4b639ca51c384c",
+      "0":  {"vt":  "0x20", "func": "0x7100042390", "lr": "0x7100121640", "inbytes":  "0x18", "outbytes":   "0x1", "name": "GetApplicationAutoTransferSetting", "wire_order": "in_data[0x18]; out_data[0x1]"},
+      "1":  {"vt":  "0x28", "func": "0x7100042660", "lr": "0x71001217BC", "inbytes":  "0x20", "outbytes":   "0x0", "name": "SetApplicationAutoTransferSetting", "wire_order": "in_data[0x20]"},
+      "2":  {"vt":  "0x30", "func": "0x7100042680", "lr": "0x7100121940", "inbytes":  "0x10", "outbytes":   "0x1", "name": "GetGlobalAutoUploadSetting", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "3":  {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x7100121ABC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetGlobalAutoUploadSetting", "wire_order": "in_data[0x18]"},
+      "4":  {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x7100121410", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RunTransferTaskAutonomyRegistration", "wire_order": "in_data[0x10]"},
+      "5":  {"vt":  "0x48", "func": "0x71000429F0", "lr": "0x7100121C40", "inbytes":  "0x10", "outbytes":   "0x1", "name": "GetGlobalAutoDownloadSetting", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "6":  {"vt":  "0x50", "func": "0x7100042B30", "lr": "0x7100121DBC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetGlobalAutoDownloadSetting", "wire_order": "in_data[0x18]"},
+      "10": {"vt":  "0x58", "func": "0x7100042C30", "lr": "0x7100121F3C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IForbiddenSaveDataIndication"], "_srv_outinterfaces": "SRV_71001EEB00", "name": "CreateForbiddenSaveDataInidication", "wire_order": "in_data[0x8]"},
+      "11": {"vt":  "0x60", "func": "0x7100042D10", "lr": "0x7100122108", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRemoteStorageController"], "_srv_outinterfaces": "SRV_71001EEAE0", "name": "StopAutonomyTaskExecution", "wire_order": "N/A"},
+      "12": {"vt":  "0x68", "func": "0x7100042E00", "lr": "0x71001222B0", "inbytes":  "0x10", "outbytes":   "0x1", "name": "GetAutonomyTaskStatus", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "13": {"vt":  "0x70", "func": "0x7100000650", "lr": "0x7100122428", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IRateLimiter", null], "_srv_outinterfaces": "SRV_71001EEB08", "name": "Cmd13", "wire_order": "N/A"}
+    },
+    "nn::olsc::srv::IForbiddenSaveDataIndication": {
+      "_srv": "SRV_71001EEB00",
+      "_hash": "ed990669d25d5086",
+      "0": {"vt":  "0x20", "lr": "0x710012271C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "Update", "wire_order": "buffers=[in]"}
+    },
+    "nn::olsc::srv::IRateLimiter": {
+      "_srv": "SRV_71001EEB08",
+      "_hash": "39c2406e560d91c6",
+      "100": {"vt":  "0x20", "lr": "0x71001228EC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd100", "wire_order": "in_data[0x8]"}
+    },
+    "nn::olsc::srv::IAsyncDataTransferPolicyRequest": {
+      "_srv": "SRV_71001EEB10",
+      "_hash": "f700807cfe62825d",
+      "0":   {"vt":  "0x20", "func": "0x7100042390", "lr": "0x710011879C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "1":   {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100118738", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100042680", "lr": "0x71001187E4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAvailable", "wire_order": "out_data[0x1]"},
+      "3":   {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71001189B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"},
+      "100": {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x7100122BB0", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetDataTransferPolicy", "wire_order": "out_data[0x2]"}
+    },
+    "nn::olsc::srv::IOlscServiceForApplication": {
+      "_srv": "SRV_71001EEB18",
+      "_hash": "15eb11cfcec65cf7",
+      "0":  {"vt":  "0x20", "func": "0x7100000900", "lr": "0x71001230DC", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "name": "Initialize", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x28", "func": "0x7100000910", "lr": "0x710012326C", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "VerifySaveDataBackupLicenseAsync", "wire_order": "in_data[0x10]"},
+      "13": {"vt":  "0x30", "func": "0x7100000920", "lr": "0x7100123450", "inbytes":  "0x10", "outbytes":   "0x1", "name": "GetSaveDataBackupSetting", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "14": {"vt":  "0x38", "func": "0x7100003B90", "lr": "0x71001235CC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetSaveDataBackupSettingEnabled", "wire_order": "in_data[0x18]"},
+      "15": {"vt":  "0x40", "func": "0x7100080760", "lr": "0x7100123754", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5], "name": "SetCustomData", "wire_order": "in_buf0; in_data[0x10]"},
+      "16": {"vt":  "0x48", "func": "0x71001154C0", "lr": "0x7100122EA8", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteSaveDataBackupSetting", "wire_order": "in_data[0x10]"},
+      "18": {"vt":  "0x50", "func": "0x7100003890", "lr": "0x7100123944", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [22], "name": "GetSaveDataBackupInfoCache", "wire_order": "in_u64_1; in_u64_0; out_buf0"},
+      "19": {"vt":  "0x58", "func": "0x71001154D0", "lr": "0x7100123AEC", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "UpdateSaveDataBackupInfoCacheAsync", "wire_order": "in_data[0x10]"},
+      "22": {"vt":  "0x60", "func": "0x71001154E0", "lr": "0x7100123CCC", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncResult"], "_srv_outinterfaces": "SRV_71001EEAC8", "name": "DeleteSaveDataBackupAsync", "wire_order": "in_data[0x18]"},
+      "25": {"vt":  "0x68", "func": "0x71000816A0", "lr": "0x7100123EAC", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncListData"], "_srv_outinterfaces": "SRV_71001EEB20", "inhandles": [1], "name": "ListDownloadableSaveDataBackupInfoAsync", "wire_order": "in_u64_1; in_u64_0; in_u64_2"},
+      "26": {"vt":  "0x70", "func": "0x710000CEF0", "lr": "0x71001240DC", "inbytes":  "0x18", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncTransferRequest"], "_srv_outinterfaces": "SRV_71001EEB28", "name": "DownloadSaveDataBackupAsync", "wire_order": "in_data[0x18]"},
+      "27": {"vt":  "0x78", "func": "0x71001154F0", "lr": "0x71001242BC", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::olsc::srv::IAsyncTransferRequest"], "_srv_outinterfaces": "SRV_71001EEB28", "name": "UploadSaveDataBackupAsync", "wire_order": "in_data[0x10]"}
+    },
+    "nn::olsc::srv::IAsyncListData": {
+      "_srv": "SRV_71001EEB20",
+      "_hash": "49802d6792202fc9",
+      "0":   {"vt":  "0x20", "func": "0x7100042390", "lr": "0x710011879C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "1":   {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100118738", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100042680", "lr": "0x71001187E4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAvailable", "wire_order": "out_data[0x1]"},
+      "3":   {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71001189B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"},
+      "100": {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x71001245B8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDataCount", "wire_order": "out_data[0x4]"},
+      "101": {"vt":  "0x48", "func": "0x71000429F0", "lr": "0x7100124734", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "GetData", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"}
+    },
+    "nn::olsc::srv::IAsyncTransferRequest": {
+      "_srv": "SRV_71001EEB28",
+      "_hash": "464a0f147e872f4c",
+      "0":   {"vt":  "0x20", "func": "0x7100042390", "lr": "0x710011879C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "1":   {"vt":  "0x28", "func": "0x7100042660", "lr": "0x7100118738", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100042680", "lr": "0x71001187E4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAvailable", "wire_order": "out_data[0x1]"},
+      "3":   {"vt":  "0x38", "func": "0x71000428E0", "lr": "0x71001189B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEvent", "wire_order": "N/A"},
+      "100": {"vt":  "0x40", "func": "0x71000416C0", "lr": "0x7100124A20", "inbytes":   "0x0", "outbytes":  "0x30", "name": "GetOperationProgressInfo", "wire_order": "out_data[0x30]"}
+    },
+    "nn::sprofile::srv::ISProfileBgAgentForSystemProcess": {
+      "_srv": "SRV_71001F1AA8",
+      "_hash": "b10e619b0d13dccf",
+      "_likely_basis": "DB position 16/17 in OLSC_services, anchored",
+      "100": {"vt":  "0x20", "lr": "0x7100145D68", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::IBgAgentContoller"], "_srv_outinterfaces": "SRV_71001F1AB0", "name": "OpenBgAgentController", "wire_order": "N/A"}
+    },
+    "nn::sprofile::srv::IBgAgentContoller": {
+      "_srv": "SRV_71001F1AB0",
+      "_hash": "b283a428c833fef6",
+      "100": {"vt":  "0x20", "lr": "0x7100145F48", "inbytes":   "0x0", "outbytes":   "0x0", "name": "RequestDefaultProfileDownload", "wire_order": "N/A"}
+    },
+    "_services": ["acc:e:u1", "arp:r", "bgtc:t", "bsd:a", "bsd:s", "bsd:u", "dauth:0", "erpt:c", "fatal:u", "fsp-srv", "mnpp:sys", "nifm:a", "nifm:s", "nifm:u", "npns:s", "nsd:a", "nsd:u", "olsc:s", "olsc:u", "psc:m", "set:sys", "sfdnsres", "spbg:sp", "sprof:bg", "sprof:sp", "srepo:a", "srepo:u", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x7100115370", "cmd_proof_offset": "0x7100115398", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100114a34"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x7100048ed0", "cmd_proof_offset": "0x7100048ed4", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x7100045f00"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "23": { "name": "CreateSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x90", "stub": "0x710000d060", "cmd_proof_offset": "0x710000d064", "cmd_proof_instruction": "mov w3,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x7100021720"] },
+          "32": { "name": "ExtendSaveDataFileSystem", "vt_off": "0xd8", "stub": "0x710000d240", "cmd_proof_offset": "0x710000d248", "cmd_proof_instruction": "mov w5,#0x20", "cmd_hex_and_dec": "0x20 / 32", "calls": ["0x7100021848"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x710000d420", "cmd_proof_offset": "0x710000d47c", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x7100022628"] },
+          "57": { "name": "ReadSaveDataFileSystemExtraDataBySaveDataSpaceId", "vt_off": "0x138", "stub": "0x710000d580", "cmd_proof_offset": "0x710000d590", "cmd_proof_instruction": "mov w5,#0x39", "cmd_hex_and_dec": "0x39 / 57", "calls": ["0x7100021938", "0x7100021a74", "0x7100021bd8", "0x7100021d18", "0x7100021e58"] },
+          "59": { "name": "WriteSaveDataFileSystemExtraData", "vt_off": "0x148", "stub": "0x710000d5c0", "cmd_proof_offset": "0x710000d5cc", "cmd_proof_instruction": "mov w5,#0x3b", "cmd_hex_and_dec": "0x3b / 59", "calls": ["0x7100021ac8"] },
+          "61": { "name": "OpenSaveDataInfoReaderBySaveDataSpaceId", "vt_off": "0x158", "stub": "0x710000d670", "cmd_proof_offset": "0x710000d6c4", "cmd_proof_instruction": "mov w3,#0x3d", "cmd_hex_and_dec": "0x3d / 61", "calls": ["0x710002139c"] },
+          "67": { "name": "FindSaveDataWithFilter", "vt_off": "0x180", "stub": "0x710000d880", "cmd_proof_offset": "0x710000d890", "cmd_proof_instruction": "mov w6,#0x43", "cmd_hex_and_dec": "0x43 / 67", "calls": ["0x7100021554"] },
+          "82": { "name": "OpenSaveDataTransferManagerVersion2", "vt_off": "0x1b8", "stub": "0x710000db10", "cmd_proof_offset": "0x710000db54", "cmd_proof_instruction": "mov w2,#0x52", "cmd_hex_and_dec": "0x52 / 82", "calls": ["0x71000242b8"] },
+          "83": { "name": "OpenSaveDataTransferProhibiter", "vt_off": "0x1c0", "stub": "0x710000dba0", "cmd_proof_offset": "0x710000dbf4", "cmd_proof_instruction": "mov w3,#0x53", "cmd_hex_and_dec": "0x53 / 83", "calls": ["0x7100024e34"] },
+          "88": { "name": "OpenSaveDataTransferManagerForSaveDataRepairWithPolicy", "vt_off": "0x1e8", "stub": "0x710000de50", "cmd_proof_offset": "0x710000dea4", "cmd_proof_instruction": "mov w3,#0x58", "cmd_hex_and_dec": "0x58 / 88", "calls": ["0x7100026840"] },
+          "616": { "name": "GetSaveDataCommitId", "vt_off": "0x308", "stub": "0x710000eb40", "cmd_proof_offset": "0x710000eb48", "cmd_proof_instruction": "mov w4,#0x268", "cmd_hex_and_dec": "0x268 / 616", "calls": ["0x7100021f7c"] }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100081310", "cmd_proof_offset": "0x710008133c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100080a94", "0x7100080c14", "0x7100080d94"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100081310", "cmd_proof_offset": "0x710008133c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100080a94", "0x7100080c14", "0x7100080d94"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100081310", "cmd_proof_offset": "0x710008133c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100080a94", "0x7100080c14", "0x7100080d94"] }
+        }
+      },
+      "olsc:s": {
+        "interface": "nn::olsc::srv::IServiceGetter",
+        "commands": {
+          "100": { "vt_off": "0x90", "stub": "0x710012a700", "cmd_proof_offset": "0x710012a714", "cmd_proof_instruction": "mov w5,#0x64", "cmd_hex_and_dec": "0x64 / 100", "calls": ["0x7100129e38"] },
+          "102": { "vt_off": "0xa0", "stub": "0x710012a730", "cmd_proof_offset": "0x710012a734", "cmd_proof_instruction": "mov w3,#0x66", "cmd_hex_and_dec": "0x66 / 102", "calls": ["0x7100129ecc"] },
+          "201": { "vt_off": "0xc8", "stub": "0x710012a800", "cmd_proof_offset": "0x710012a804", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "calls": ["0x7100129f6c"] },
+          "203": { "vt_off": "0xd0", "stub": "0x710012a810", "cmd_proof_offset": "0x710012a85c", "cmd_proof_instruction": "mov w4,#0xcb", "cmd_hex_and_dec": "0xcb / 203", "calls": ["0x7100129e78"] }
+        }
+      },
+      "sprof:sp": {
+        "interface": "nn::sprofile::srv::IServiceGetter",
+        "commands": {
+          "0": { "name": "OpenSprofileServiceForSystemProcess", "vt_off": "0x20", "stub": "0x710013ca70", "cmd_proof_offset": "0x710013ca98", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710013c500", "0x710013c5b0", "0x710013e460", "0x710013e520", "0x710013e5d0"] }
+        }
+      }
+    }
+  }
+}

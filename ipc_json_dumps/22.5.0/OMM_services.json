@@ -1,0 +1,232 @@
+{
+  "omm_services": {
+    "program_identified": "OMM_services",
+    "nn::spsm::detail::IPowerStateInterface": {
+      "_srv": "SRV_710010A488",
+      "_hash": "37e8d2fd17be2b18",
+      "0":  {"vt":  "0x20", "func": "0x7100001BB0", "lr": "0x7100000B18", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCurrentState", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x7100001BC0", "lr": "0x7100001298", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "EnterSleep", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x7100001BD0", "lr": "0x7100000C04", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetLastWakeReason", "wire_order": "out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x7100001BE0", "lr": "0x7100000F40", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Shutdown", "wire_order": "in_data[0x1]"},
+      "4":  {"vt":  "0x40", "func": "0x7100001BF0", "lr": "0x71000013F8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetNotificationMessageEventHandle", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100001C00", "lr": "0x7100000CB0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ReceiveNotificationMessage", "wire_order": "out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x7100001C10", "lr": "0x7100000DB8", "inbytes":   "0x0", "outbytes":  "0x50", "name": "AnalyzeLogForLastSleepWakeSequence", "wire_order": "out_data[0x50]"},
+      "7":  {"vt":  "0x58", "func": "0x7100001C20", "lr": "0x7100000E5C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetEventLog", "wire_order": "N/A"},
+      "8":  {"vt":  "0x60", "func": "0x7100001C30", "lr": "0x710000155C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "AnalyzePerformanceLogForLastSleepWakeSequence", "wire_order": "out_buf0"},
+      "9":  {"vt":  "0x68", "func": "0x7100001C40", "lr": "0x7100001030", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ChangeHomeButtonLongPressingTime", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x70", "func": "0x7100001C50", "lr": "0x7100000BAC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "PutErrorState", "wire_order": "N/A"},
+      "12": {"vt":  "0x78", "func": "0x7100001C60", "lr": "0x7100000D64", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EmulatePowerButtonPressedBriefly", "wire_order": "N/A"},
+      "13": {"vt":  "0x80", "func": "0x7100001C70", "lr": "0x7100000BD8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EmulatePowerButtonPressedFor7Sec", "wire_order": "N/A"},
+      "14": {"vt":  "0x88", "func": "0x7100001C80", "lr": "0x7100000B4C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetAlwaysRebootFlag", "wire_order": "in_data[0x1]"},
+      "15": {"vt":  "0x90", "func": "0x7100001C90", "lr": "0x7100000EA0", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Cmd15", "wire_order": "in_data[0x4]"},
+      "16": {"vt":  "0x98", "func": "0x7100001CA0", "lr": "0x7100000EEC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd16", "wire_order": "in_data[0x8]"}
+    },
+    "nn::omm::srv::IDisplayLayerControl": {
+      "_srv": "SRV_710010A7F0",
+      "_hash": "73b06047d85d1967",
+      "100": {"vt":  "0x20", "func": "0x7100001BB0", "lr": "0x7100002278", "inbytes":   "0x0", "outbytes":   "0x8", "name": "Cmd100", "wire_order": "out_data[0x8]"},
+      "101": {"vt":  "0x28", "func": "0x7100001BC0", "lr": "0x71000023EC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd101", "wire_order": "in_data[0x8]"},
+      "110": {"vt":  "0x30", "func": "0x7100001BD0", "lr": "0x7100002560", "inbytes":  "0x10", "outbytes":   "0x8", "name": "Cmd110", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "111": {"vt":  "0x38", "func": "0x7100001BE0", "lr": "0x71000026DC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd111", "wire_order": "in_u64_0; in_u64_1"},
+      "200": {"vt":  "0x40", "func": "0x7100001BF0", "lr": "0x7100002848", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd200", "wire_order": "N/A"},
+      "210": {"vt":  "0x48", "func": "0x7100001C00", "lr": "0x7100002978", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd210", "wire_order": "N/A"},
+      "300": {"vt":  "0x50", "func": "0x7100001C10", "lr": "0x7100002AA8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd300", "wire_order": "out_data[0x1]"},
+      "301": {"vt":  "0x58", "func": "0x7100001C20", "lr": "0x7100002C08", "inbytes":   "0x0", "outbytes":   "0x8", "name": "Cmd301", "wire_order": "out_data[0x8]"},
+      "302": {"vt":  "0x60", "func": "0x7100001C30", "lr": "0x7100002D7C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd302", "wire_order": "in_data[0x8]"},
+      "303": {"vt":  "0x68", "func": "0x7100001C40", "lr": "0x7100002EF0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd303", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "304": {"vt":  "0x70", "func": "0x7100001C50", "lr": "0x7100003060", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd304", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "305": {"vt":  "0x78", "func": "0x7100001C60", "lr": "0x71000031D0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd305", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "306": {"vt":  "0x80", "func": "0x7100001C70", "lr": "0x7100003340", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd306", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "307": {"vt":  "0x88", "func": "0x7100001C80", "lr": "0x71000034B0", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd307", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "308": {"vt":  "0x90", "func": "0x7100001C90", "lr": "0x7100003620", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd308", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "309": {"vt":  "0x98", "func": "0x7100001CA0", "lr": "0x7100003790", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd309", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "310": {"vt":  "0xA0", "func": "0x7100001CB0", "lr": "0x7100003900", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd310", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "311": {"vt":  "0xA8", "func": "0x7100001CC0", "lr": "0x7100003A70", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd311", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "312": {"vt":  "0xB0", "func": "0x7100001CD0", "lr": "0x7100003BE0", "inbytes":  "0x10", "outbytes":   "0x1", "name": "Cmd312", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "313": {"vt":  "0xB8", "func": "0x7100001CE0", "lr": "0x7100003D50", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd313", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "314": {"vt":  "0xC0", "func": "0x7100001CF0", "lr": "0x7100003EC0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd314", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "315": {"vt":  "0xC8", "func": "0x7100001D00", "lr": "0x7100004030", "inbytes":   "0x8", "outbytes":   "0x1", "name": "Cmd315", "wire_order": "in_data[0x8]; out_data[0x1]"},
+      "316": {"vt":  "0xD0", "func": "0x7100001D10", "lr": "0x71000041A0", "inbytes":   "0x8", "outbytes":   "0x8", "name": "Cmd316", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "330": {"vt":  "0xD8", "func": "0x7100001D20", "lr": "0x710000431C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd330", "wire_order": "in_u64_1; in_u64_0"},
+      "340": {"vt":  "0xE0", "func": "0x7100001D30", "lr": "0x7100004490", "inbytes":   "0x8", "outbytes":   "0x8", "name": "Cmd340", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "341": {"vt":  "0xE8", "func": "0x7100001D40", "lr": "0x7100004610", "inbytes":   "0x8", "outbytes":   "0x8", "name": "Cmd341", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "342": {"vt":  "0xF0", "func": "0x7100001D50", "lr": "0x7100004790", "inbytes":   "0x8", "outbytes":   "0x8", "name": "Cmd342", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "343": {"vt":  "0xF8", "func": "0x7100001D60", "lr": "0x7100004910", "inbytes":   "0x8", "outbytes":   "0x8", "name": "Cmd343", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "344": {"vt": "0x100", "func": "0x7100001D70", "lr": "0x7100004A8C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd344", "wire_order": "in_data[0x10]"},
+      "345": {"vt": "0x108", "func": "0x7100001D80", "lr": "0x7100004BFC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd345", "wire_order": "in_u64_1; in_u64_0"},
+      "346": {"vt": "0x110", "func": "0x7100001D90", "lr": "0x7100004D6C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd346", "wire_order": "in_data[0x10]"},
+      "350": {"vt": "0x118", "func": "0x7100001DA0", "lr": "0x7100004EEC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd350", "wire_order": "in_u64_1; in_u64_0"},
+      "351": {"vt": "0x120", "func": "0x7100001DB0", "lr": "0x710000505C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd351", "wire_order": "in_u64_1; in_u64_0"},
+      "360": {"vt": "0x128", "func": "0x7100001DC0", "lr": "0x71000051CC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd360", "wire_order": "in_u64_0"},
+      "361": {"vt": "0x130", "func": "0x7100001DD0", "lr": "0x710000533C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd361", "wire_order": "in_u64_0"},
+      "370": {"vt": "0x138", "func": "0x7100001DE0", "lr": "0x71000054AC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd370", "wire_order": "in_u64_0"},
+      "371": {"vt": "0x140", "func": "0x7100001DF0", "lr": "0x710000561C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd371", "wire_order": "in_data[0x8]"},
+      "400": {"vt": "0x148", "func": "0x7100001E00", "lr": "0x710000578C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd400", "wire_order": "in_data[0x1]"},
+      "410": {"vt": "0x150", "func": "0x7100001E10", "lr": "0x71000058FC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Cmd410", "wire_order": "in_data[0x4]"},
+      "500": {"vt": "0x158", "func": "0x7100001E20", "lr": "0x7100005A70", "inbytes":  "0x10", "outbytes":   "0x0", "inhandles": [1], "name": "CmdInitializeApplicationCopyrightSharedBuffer", "wire_order": "in_data[0x10]"},
+      "501": {"vt": "0x160", "func": "0x7100001E80", "lr": "0x7100005C18", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FinalizeApplicationCopyrightSharedBuffer", "wire_order": "N/A"},
+      "510": {"vt": "0x168", "func": "0x7100001E90", "lr": "0x7100005D58", "inbytes":  "0x14", "outbytes":   "0x0", "buffers": [69], "name": "Cmd510", "wire_order": "in_buf0; in_data[0x14]"},
+      "520": {"vt": "0x170", "func": "0x7100001EB0", "lr": "0x7100005EE8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd520", "wire_order": "out_data[0x1]"},
+      "540": {"vt": "0x178", "func": "0x7100001EC0", "lr": "0x710000604C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd540", "wire_order": "in_data[0x1]"},
+      "610": {"vt": "0x180", "func": "0x7100001ED0", "lr": "0x71000061C0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "Cmd610", "wire_order": "in_buf0"},
+      "611": {"vt": "0x188", "func": "0x7100001EE0", "lr": "0x7100006330", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "Cmd611", "wire_order": "in_buf0"},
+      "612": {"vt": "0x190", "func": "0x7100001EF0", "lr": "0x71000064A0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "Cmd612", "wire_order": "in_buf0"},
+      "700": {"vt": "0x198", "func": "0x7100001F00", "lr": "0x7100006610", "inbytes":  "0x10", "outbytes":   "0x8", "name": "Cmd700", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "701": {"vt": "0x1A0", "func": "0x7100001F10", "lr": "0x710000678C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd701", "wire_order": "in_data[0x10]"},
+      "710": {"vt": "0x1A8", "func": "0x7100001F20", "lr": "0x71000068FC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Cmd710", "wire_order": "in_data[0x4]"},
+      "711": {"vt": "0x1B0", "func": "0x7100001F30", "lr": "0x7100006A6C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd711", "wire_order": "in_data[0x10]"},
+      "720": {"vt": "0x1B8", "func": "0x7100001F40", "lr": "0x7100006BF4", "inbytes":   "0x4", "outbytes":   "0x1", "buffers": [6], "name": "CopyImageFromCaptureBuffer", "wire_order": "out_buf0; in_data[0x4]; out_data[0x1]"},
+      "721": {"vt": "0x1C0", "func": "0x7100001F60", "lr": "0x7100006DAC", "inbytes":   "0xC", "outbytes":   "0x0", "name": "Cmd721", "wire_order": "in_data[0xC]"},
+      "722": {"vt": "0x1C8", "func": "0x7100001F70", "lr": "0x7100006F1C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd722", "wire_order": "in_data[0x8]"},
+      "800": {"vt": "0x1D0", "func": "0x7100001F80", "lr": "0x7100007088", "inbytes":   "0x0", "outbytes":   "0x8", "name": "Cmd800", "wire_order": "out_data[0x8]"},
+      "810": {"vt": "0x1D8", "func": "0x7100001F90", "lr": "0x71000071FC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "Cmd810", "wire_order": "in_data[0x10]"},
+      "900": {"vt": "0x1E0", "func": "0x7100001FA0", "lr": "0x710000736C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [69], "name": "Cmd900", "wire_order": "in_buf0"}
+    },
+    "nn::idle::detail::IPolicyManagerSystem": {
+      "_srv": "SRV_710010A9D8",
+      "_hash": "be389407a7b948a6",
+      "0": {"vt":  "0x20", "func": "0x7100040680", "lr": "0x71000081D8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetAutoPowerDownEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100040950", "lr": "0x7100007E94", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAutoPowerDownRequested", "wire_order": "out_data[0x1]"},
+      "3": {"vt":  "0x30", "func": "0x7100040970", "lr": "0x7100007F58", "inbytes":  "0x30", "outbytes":   "0x0", "name": "SetHandlingContext", "wire_order": "in_data[0x30]"},
+      "4": {"vt":  "0x38", "func": "0x7100040BD0", "lr": "0x7100008024", "inbytes":   "0x0", "outbytes":   "0x0", "name": "LoadAndApplySettings", "wire_order": "N/A"},
+      "5": {"vt":  "0x40", "func": "0x710003F7F0", "lr": "0x7100007E44", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ReportUserIsActive", "wire_order": "N/A"}
+    },
+    "nn::omm::detail::IOperationModeManager": {
+      "_srv": "SRV_710010AE38",
+      "_hash": "038fb1eb7eaf0e81",
+      "0":   {"vt":  "0x20", "func": "0x7100001BB0", "lr": "0x7100009020", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetOperationMode", "wire_order": "out_data[0x1]"},
+      "1":   {"vt":  "0x28", "func": "0x7100001BC0", "lr": "0x7100009F88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetOperationModeChangeEvent", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x7100001BD0", "lr": "0x71000095B4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableAudioVisual", "wire_order": "N/A"},
+      "3":   {"vt":  "0x38", "func": "0x7100001BE0", "lr": "0x71000096CC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableAudioVisual", "wire_order": "N/A"},
+      "4":   {"vt":  "0x40", "func": "0x7100001BF0", "lr": "0x710000A0E8", "inbytes":   "0x0", "outbytes":   "0x0", "inhandles": [1], "name": "EnterSleepAndWait", "wire_order": "N/A"},
+      "5":   {"vt":  "0x48", "func": "0x7100001C00", "lr": "0x710000954C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetCradleStatus", "wire_order": "out_data[0x1]"},
+      "6":   {"vt":  "0x50", "func": "0x7100001C10", "lr": "0x7100009688", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FadeInDisplay", "wire_order": "N/A"},
+      "7":   {"vt":  "0x58", "func": "0x7100001C20", "lr": "0x71000097B8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FadeOutDisplay", "wire_order": "N/A"},
+      "8":   {"vt":  "0x60", "func": "0x7100001C30", "lr": "0x7100009710", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetCradleFwVersion", "wire_order": "out_data[0x10]"},
+      "9":   {"vt":  "0x68", "func": "0x7100001C40", "lr": "0x71000093A8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyCecSettingsChanged", "wire_order": "N/A"},
+      "10":  {"vt":  "0x70", "func": "0x7100001C50", "lr": "0x710000981C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetOperationModePolicy", "wire_order": "in_data[0x1]"},
+      "11":  {"vt":  "0x78", "func": "0x7100001C60", "lr": "0x7100009430", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetDefaultDisplayResolution", "wire_order": "out_data[0x8]"},
+      "12":  {"vt":  "0x80", "func": "0x7100001C70", "lr": "0x710000A238", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetDefaultDisplayResolutionChangeEvent", "wire_order": "N/A"},
+      "13":  {"vt":  "0x88", "func": "0x7100001C80", "lr": "0x71000093EC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UpdateDefaultDisplayResolution", "wire_order": "N/A"},
+      "14":  {"vt":  "0x90", "func": "0x7100001C90", "lr": "0x710000963C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "ShouldSleepOnBoot", "wire_order": "out_data[0x1]"},
+      "15":  {"vt":  "0x98", "func": "0x7100001CA0", "lr": "0x71000092E0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyHdcpApplicationExecutionStarted", "wire_order": "N/A"},
+      "16":  {"vt":  "0xA0", "func": "0x7100001CB0", "lr": "0x710000929C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyHdcpApplicationExecutionFinished", "wire_order": "N/A"},
+      "17":  {"vt":  "0xA8", "func": "0x7100001CC0", "lr": "0x71000095F8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyHdcpApplicationDrawingStarted", "wire_order": "N/A"},
+      "18":  {"vt":  "0xB0", "func": "0x7100001CD0", "lr": "0x7100009898", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyHdcpApplicationDrawingFinished", "wire_order": "N/A"},
+      "19":  {"vt":  "0xB8", "func": "0x7100001CE0", "lr": "0x710000A398", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetHdcpAuthenticationFailedEvent", "wire_order": "N/A"},
+      "20":  {"vt":  "0xC0", "func": "0x7100001CF0", "lr": "0x7100009B94", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetHdcpAuthenticationFailedEmulationEnabled", "wire_order": "out_data[0x1]"},
+      "21":  {"vt":  "0xC8", "func": "0x7100001D00", "lr": "0x7100009328", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetHdcpAuthenticationFailedEmulation", "wire_order": "in_data[0x1]"},
+      "22":  {"vt":  "0xD0", "func": "0x7100001D10", "lr": "0x710000A4F8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetHdcpStateChangeEvent", "wire_order": "N/A"},
+      "23":  {"vt":  "0xD8", "func": "0x7100001D20", "lr": "0x7100009A28", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetHdcpState", "wire_order": "out_data[0x1]"},
+      "24":  {"vt":  "0xE0", "func": "0x7100001D30", "lr": "0x71000098DC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ShowCardUpdateProcessing", "wire_order": "N/A"},
+      "25":  {"vt":  "0xE8", "func": "0x7100001D40", "lr": "0x7100009924", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetApplicationCecSettingsAndNotifyChanged", "wire_order": "in_data[0x4]"},
+      "26":  {"vt":  "0xF0", "func": "0x7100001D50", "lr": "0x7100009AD4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetOperationModeSystemInfo", "wire_order": "out_data[0x4]"},
+      "27":  {"vt":  "0xF8", "func": "0x7100001D60", "lr": "0x710000A658", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetAppletFullAwakingSystemEvent", "wire_order": "N/A"},
+      "28":  {"vt": "0x100", "func": "0x7100001D70", "lr": "0x710000A7BC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::omm::detail::ICradleFirmwareUpdater"], "_srv_outinterfaces": "SRV_710010AE40", "name": "CreateCradleFirmwareUpdater", "wire_order": "in_data[0x4]"},
+      "29":  {"vt": "0x108", "func": "0x7100001D80", "lr": "0x710000A988", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCradleStatusChangeEvent", "wire_order": "N/A"},
+      "40":  {"vt": "0x110", "func": "0x7100001D90", "lr": "0x71000099DC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd40", "wire_order": "out_data[0x1]"},
+      "41":  {"vt": "0x118", "func": "0x7100001DA0", "lr": "0x71000091AC", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd41", "wire_order": "in_data[0x1]"},
+      "50":  {"vt": "0x120", "func": "0x7100001DB0", "lr": "0x710000920C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "Cmd50", "wire_order": "out_data[0x8]"},
+      "300": {"vt": "0x128", "func": "0x7100001DC0", "lr": "0x710000913C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd300", "wire_order": "in_data[0x1]"},
+      "301": {"vt": "0x130", "func": "0x7100001DD0", "lr": "0x7100009C40", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd301", "wire_order": "N/A"},
+      "500": {"vt": "0x138", "func": "0x7100001DE0", "lr": "0x7100009CEC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "LblSwitchBacklightOnForAm", "wire_order": "in_u64_0"},
+      "501": {"vt": "0x140", "func": "0x7100001DF0", "lr": "0x7100009C84", "inbytes":   "0x8", "outbytes":   "0x0", "name": "LblSwitchBacklightOffForAm", "wire_order": "in_data[0x8]"},
+      "502": {"vt": "0x148", "func": "0x7100001E00", "lr": "0x7100009090", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd502", "wire_order": "in_data[0x8]"},
+      "503": {"vt": "0x150", "func": "0x7100001E10", "lr": "0x7100009D3C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd503", "wire_order": "in_data[0x8]"},
+      "504": {"vt": "0x158", "func": "0x7100001E20", "lr": "0x710000AAE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Cmd504", "wire_order": "N/A"},
+      "900": {"vt": "0x160", "func": "0x7100001E80", "lr": "0x71000090F4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "HideStartupLogo", "wire_order": "N/A"}
+    },
+    "nn::omm::detail::ICradleFirmwareUpdater": {
+      "_srv": "SRV_710010AE40",
+      "_hash": "ccd8b1449076168d",
+      "0": {"vt":  "0x20", "func": "0x7100040680", "lr": "0x710000AF00", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Start", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100040950", "lr": "0x710000AFE8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Finish", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100040970", "lr": "0x710000AD80", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetUpdateDeviceStatus", "wire_order": "out_data[0x10]"},
+      "3": {"vt":  "0x38", "func": "0x7100040BD0", "lr": "0x710000AF44", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetUpdateProgress", "wire_order": "out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710003F7F0", "lr": "0x710000B248", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetUpdateDeviceStatusChangeEvent", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x7100040CE0", "lr": "0x710000AE30", "inbytes":   "0x0", "outbytes":   "0xC", "name": "GetUpdateProgress2", "wire_order": "out_data[0xC]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710010DDB0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100040680", "lr": "0x7100041C80", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100040950", "lr": "0x7100041DEC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100040970", "lr": "0x7100041F88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100040BD0", "lr": "0x7100041BB8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710003F7F0", "lr": "0x71000420EC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["apm:sys", "audctl", "bgtc:sc", "bgtc:t", "caps:sc", "cec-mgr", "erpt:c", "fatal:u", "fsp-srv", "hid:dbg", "hid:sys", "hshl:sys", "idle:sys", "ins:r", "notif:s", "pm:bm", "prepo:a2", "prepo:m", "prepo:s", "prepo:u", "psc:c", "psc:m", "set:cal", "set:sys", "srepo:a", "srepo:u", "time:al", "time:p", "usb:hs", "usb:pd", "usb:pd:c", "xcd:sys"],
+    "_invokes": {
+      "audctl": {
+        "interface": "nn::audioctrl::detail::IAudioController",
+        "commands": {
+          "7": { "name": "SetDefaultTarget", "vt_off": "0x58", "stub": "0x710006bf00", "cmd_proof_offset": "0x710006bf08", "cmd_proof_instruction": "mov w4,#0x7", "cmd_hex_and_dec": "0x7 / 7", "calls": ["0x710006bb10"] },
+          "23": { "name": "SetSystemOutputMasterVolume", "vt_off": "0xc0", "stub": "0x710006bfc0", "cmd_proof_offset": "0x710006bfc8", "cmd_proof_instruction": "mov w2,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x710006bb7c"] },
+          "43": { "name": "Cmd43", "vt_off": "0x110", "stub": "0x710006c090", "cmd_proof_offset": "0x710006c098", "cmd_proof_instruction": "mov w3,#0x2b", "cmd_hex_and_dec": "0x2b / 43", "calls": ["0x710006ba94"] },
+          "5000": { "name": "Cmd5000", "vt_off": "0x118", "stub": "0x710006c0a0", "cmd_proof_offset": "0x710006c0e4", "cmd_proof_instruction": "mov w2,#0x1388", "cmd_hex_and_dec": "0x1388 / 5000", "calls": ["0x710006bca4"] }
+        }
+      },
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x71000578b0", "cmd_proof_offset": "0x71000578d8", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100057094"] }
+        }
+      },
+      "cec-mgr": {
+        "interface": "nn::cec::ICecManager",
+        "commands": {
+          "1": { "name": "UnregisterCallback", "vt_off": "0x28", "stub": "0x710004c9e0", "cmd_proof_offset": "0x710004c9e8", "cmd_proof_instruction": "mov w3,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x710004b3c0"] },
+          "2": { "name": "TriggerSystemEvent", "vt_off": "0x30", "stub": "0x710004c9f0", "cmd_proof_offset": "0x710004c9f8", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x710004b3a0"] },
+          "3": { "name": "PerformAction", "vt_off": "0x38", "stub": "0x710004ca00", "cmd_proof_offset": "0x710004ca08", "cmd_proof_instruction": "mov w5,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x710004b5b0", "0x710004b720", "0x710004b890", "0x710004ba00", "0x710004bb70", "0x710004bce0"] },
+          "4": { "name": "QueryState", "vt_off": "0x40", "stub": "0x710004ca10", "cmd_proof_offset": "0x710004ca18", "cmd_proof_instruction": "mov w5,#0x4", "cmd_hex_and_dec": "0x4 / 4", "calls": ["0x710004bfd0", "0x710004c1b0", "0x710004c390", "0x710004c570"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x228", "stub": "0x71000113d0", "cmd_proof_offset": "0x710001142c", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x7100029890"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x258", "stub": "0x71000117c0", "cmd_proof_offset": "0x7100011804", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x7100023c4c", "0x7100025e7c"] },
+          "500": { "name": "OpenSdCardDetectionEventNotifier", "vt_off": "0x260", "stub": "0x7100011850", "cmd_proof_offset": "0x7100011894", "cmd_proof_instruction": "mov w2,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "calls": ["0x71000238d0", "0x71000239a8", "0x71000239e4", "0x7100023a20", "0x7100023a5c", "0x7100023a98", "0x7100023ad4", "0x7100023b10", "0x7100023b4c", "0x7100023b88"] },
+          "501": { "name": "OpenGameCardDetectionEventNotifier", "vt_off": "0x268", "stub": "0x71000118e0", "cmd_proof_offset": "0x7100011924", "cmd_proof_instruction": "mov w2,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "calls": ["0x7100025d40"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "0": { "name": "IsSdCardInserted", "vt_off": "0x20", "stub": "0x710001e300", "cmd_proof_offset": "0x710001e304", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100023c88", "0x7100023d00", "0x7100023d30", "0x7100023d60", "0x7100023d90", "0x7100023dc0", "0x7100023df0", "0x7100023e20", "0x7100023e50", "0x7100023e80"] },
+            "200": { "name": "IsGameCardInserted", "vt_off": "0xc8", "stub": "0x710001e490", "cmd_proof_offset": "0x710001e494", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "calls": ["0x7100025eb8"] }
+          }
+        }
+      },
+      "ins:r": {
+        "interface": "nn::ins::IReceiverManager",
+        "commands": {
+          "0": { "name": "GetInputSourceState", "vt_off": "0x20", "stub": "0x7100050090", "cmd_proof_offset": "0x7100050098", "cmd_proof_instruction": "mov w3,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004fe78"] },
+          "1": { "name": "GetTriggerTargetEvent", "vt_off": "0x28", "stub": "0x71000500a0", "cmd_proof_offset": "0x71000500a8", "cmd_proof_instruction": "mov w4,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x710004fef0"] }
+        }
+      },
+      "prepo:a2": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20200": { "name": "SetOperationMode", "vt_off": "0xa8", "stub": "0x710006e870", "cmd_proof_offset": "0x710006e874", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "calls": ["0x710006dc88"] }
+        }
+      },
+      "prepo:m": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20200": { "name": "SetOperationMode", "vt_off": "0xa8", "stub": "0x710006e870", "cmd_proof_offset": "0x710006e874", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "calls": ["0x710006dc88"] }
+        }
+      },
+      "prepo:s": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20200": { "name": "SetOperationMode", "vt_off": "0xa8", "stub": "0x710006e870", "cmd_proof_offset": "0x710006e874", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "calls": ["0x710006dc88"] }
+        }
+      },
+      "prepo:u": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20200": { "name": "SetOperationMode", "vt_off": "0xa8", "stub": "0x710006e870", "cmd_proof_offset": "0x710006e874", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "calls": ["0x710006dc88"] }
+        }
+      }
+    }
+  }
+}

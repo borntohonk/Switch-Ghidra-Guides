@@ -1,0 +1,34 @@
+{
+  "capmtp_services": {
+    "program_identified": "Capmtp_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710006D7C8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x71000105E0", "lr": "0x7100011BE0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000108B0", "lr": "0x7100011D4C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000108D0", "lr": "0x7100011EE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100010B30", "lr": "0x7100011B18", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710000F830", "lr": "0x710001204C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::capmtp::ICapmtpRootSession": {
+      "_srv": "SRV_710006DCF8",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 2/3 in Capmtp_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x710002D21C", "lr": "0x710001B5F8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::capmtp::ICapmtpInterface"], "_srv_outinterfaces": "SRV_710006DD00", "name": "CreateInterface", "wire_order": "N/A"}
+    },
+    "nn::capmtp::ICapmtpInterface": {
+      "_srv": "SRV_710006DD00",
+      "_hash": "262c6f64e62e9dc8",
+      "0": {"vt":  "0x20", "func": "0x710001D100", "lr": "0x710001BD18", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [5], "inhandles": [1], "name": "Initialize", "wire_order": "in_data[0x10]; buffers=[in]"},
+      "1": {"vt":  "0x28", "func": "0x710001D108", "lr": "0x710001B928", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Finalize", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x710001D160", "lr": "0x710001B9E8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Enable", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100000100", "lr": "0x710001B970", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Disable", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x710001D168", "lr": "0x710001BB40", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetConnectionStateChangeEvent", "wire_order": "out_data[0x1]"},
+      "5": {"vt":  "0x48", "func": "0x710001D178", "lr": "0x710001BEE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "IsEnabled", "wire_order": "N/A"},
+      "6": {"vt":  "0x50", "func": "0x710001D198", "lr": "0x710001BA8C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsConnected", "wire_order": "out_data[0x1]"},
+      "7": {"vt":  "0x58", "func": "0x710001D1B0", "lr": "0x710001C048", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetUpdatedErrorEvent", "wire_order": "N/A"},
+      "8": {"vt":  "0x60", "func": "0x710001D1BC", "lr": "0x710001B8DC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetLastError", "wire_order": "N/A"}
+    },
+    "_services": ["capmtp", "caps:a", "caps:ss", "fatal:u", "ns:am2", "ns:ec", "ns:rid", "ns:ro", "ns:rt", "ns:su", "ns:vm", "ns:web", "set:sys", "usb:ds"]
+  }
+}

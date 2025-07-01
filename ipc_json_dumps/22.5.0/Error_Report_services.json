@@ -1,0 +1,164 @@
+{
+  "error_report_services": {
+    "program_identified": "Error_Report_services",
+    "nn::erpt::sf::IContext": {
+      "_srv": "SRV_710008BBF8",
+      "_hash": "fd9618870dd6b8ce",
+      "0":  {"vt":  "0x20", "func": "0x710002D8C0", "lr": "0x710002E1A0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5, 5], "name": "SubmitContext", "wire_order": "buffers=[in, in]"},
+      "1":  {"vt":  "0x28", "func": "0x710002D8D0", "lr": "0x710002E328", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "CreateReportV0", "wire_order": "in_data[0x4]; buffers=[in, in, in]"},
+      "2":  {"vt":  "0x30", "func": "0x710002D8E0", "lr": "0x710002DC9C", "inbytes":  "0x20", "outbytes":   "0x0", "name": "SetInitialLaunchSettingsCompletionTime", "wire_order": "in_data[0x20]"},
+      "3":  {"vt":  "0x38", "func": "0x710002D8F0", "lr": "0x710002DC60", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearInitialLaunchSettingsCompletionTime", "wire_order": "N/A"},
+      "5":  {"vt":  "0x40", "func": "0x710002D900", "lr": "0x710002E50C", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5, 5, 5, 5, 5, 5], "name": "CreateReportWithAdditionalContext", "wire_order": "in_data[0xC]; buffers=[in, in, in, in, in, in]"},
+      "6":  {"vt":  "0x48", "func": "0x710002D910", "lr": "0x710002E6F4", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "SubmitMultipleContext", "wire_order": "buffers=[in, in, in]"},
+      "7":  {"vt":  "0x50", "func": "0x710002D920", "lr": "0x710002DD60", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RegisterRunningApplicationInfo", "wire_order": "in_data[0x10]"},
+      "8":  {"vt":  "0x58", "func": "0x710002D930", "lr": "0x710002DE28", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UnregisterRunningApplicationInfo", "wire_order": "N/A"},
+      "9":  {"vt":  "0x60", "func": "0x710002D940", "lr": "0x710002E890", "inbytes":   "0x0", "outbytes":  "0x14", "buffers": [5, 5], "name": "SubmitAttachment", "wire_order": "out_data[0x14]; buffers=[in, in]"},
+      "10": {"vt":  "0x68", "func": "0x710002D950", "lr": "0x710002EA6C", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "CreateReportWithAttachments", "wire_order": "in_data[0xC]; buffers=[in, in, in]"},
+      "11": {"vt":  "0x70", "func": "0x710002D960", "lr": "0x710002EC4C", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "CreateReportV1", "wire_order": "in_data[0x8]; buffers=[in, in, in]"},
+      "12": {"vt":  "0x78", "func": "0x710002D970", "lr": "0x710002EE1C", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "CreateReport", "wire_order": "in_data[0xC]; buffers=[in, in, in]"},
+      "13": {"vt":  "0x80", "func": "0x710002D980", "lr": "0x710002EFF0", "inbytes":   "0x0", "outbytes":  "0x14", "buffers": [5, 5], "name": "SubmitAttachmentWithLz4Compression", "wire_order": "out_data[0x14]; buffers=[in, in]"},
+      "14": {"vt":  "0x88", "func": "0x710002D990", "lr": "0x710002F1CC", "inbytes":  "0x20", "outbytes":   "0x0", "buffers": [5, 5, 5, 5], "name": "CreateReportWithSpecifiedReprotId", "wire_order": "in_data[0x20]; buffers=[in, in, in, in]"},
+      "20": {"vt":  "0x90", "func": "0x710002D9A0", "lr": "0x710002DE64", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RegisterRunningApplet", "wire_order": "in_data[0x8]"},
+      "21": {"vt":  "0x98", "func": "0x710002D9B0", "lr": "0x710002DEC0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterRunningApplet", "wire_order": "in_data[0x8]"},
+      "22": {"vt":  "0xA0", "func": "0x710002D9C0", "lr": "0x710002E004", "inbytes":  "0x10", "outbytes":   "0x0", "name": "UpdateAppletSuspendedDuration", "wire_order": "in_u64_0; in_u64_1"},
+      "30": {"vt":  "0xA8", "func": "0x710002D9D0", "lr": "0x710002DF48", "inbytes":   "0x0", "outbytes":   "0x0", "name": "InvalidateForcedShutdownDetection", "wire_order": "N/A"},
+      "40": {"vt":  "0xB0", "func": "0x710002D9E0", "lr": "0x710002DB80", "inbytes":   "0x0", "outbytes":   "0x0", "name": "WaitForReportCreation", "wire_order": "N/A"}
+    },
+    "nn::erpt::sf::ISession": {
+      "_srv": "SRV_710008BC68",
+      "_hash": "0aaf250609d753f7",
+      "0": {"vt":  "0x20", "lr": "0x710002F678", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::erpt::sf::IReport"], "_srv_outinterfaces": "SRV_710008BC70", "name": "OpenReport", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x710002F818", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::erpt::sf::IManager"], "_srv_outinterfaces": "SRV_710008BC78", "name": "OpenManager", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "lr": "0x710002F9B8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::erpt::sf::IAttachment"], "_srv_outinterfaces": "SRV_710008BC80", "name": "OpenAttachment", "wire_order": "N/A"}
+    },
+    "nn::erpt::sf::IReport": {
+      "_srv": "SRV_710008BC70",
+      "_hash": "876e6bf2989a7ff2",
+      "_likely_basis": "DB position 3/13 in Error_Report_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x710002FDD4", "inbytes":  "0x14", "outbytes":   "0x0", "name": "Open", "wire_order": "in_data[0x14]"},
+      "1": {"vt":  "0x28", "func": "0x710003F580", "lr": "0x710003015C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Read", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x710002FC94", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetFlags", "wire_order": "in_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x710003F800", "lr": "0x710002FE90", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetFlags", "wire_order": "out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710003E3C0", "lr": "0x710002FF50", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Close", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x710003F910", "lr": "0x710002FD0C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"}
+    },
+    "nn::erpt::sf::IManager": {
+      "_srv": "SRV_710008BC78",
+      "_hash": "f1adf99e98ecd9a3",
+      "0":  {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x7100030970", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6], "name": "GetReportList", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "1":  {"vt":  "0x28", "func": "0x710003F580", "lr": "0x7100030B18", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x7100030714", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CleanupReports", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x710003F800", "lr": "0x710003049C", "inbytes":  "0x14", "outbytes":   "0x0", "name": "DeleteReport", "wire_order": "in_data[0x14]"},
+      "4":  {"vt":  "0x40", "func": "0x710003E3C0", "lr": "0x7100030664", "inbytes":   "0x0", "outbytes":  "0x38", "name": "GetStorageUsageStatistics", "wire_order": "out_data[0x38]"},
+      "6":  {"vt":  "0x48", "func": "0x710003F910", "lr": "0x7100030C84", "inbytes":  "0x14", "outbytes":   "0x4", "buffers": [6], "name": "GetAttachmentList", "wire_order": "in_data[0x14]; out_data[0x4]; buffers=[out]"},
+      "7":  {"vt":  "0x50", "func": "0x710003FA50", "lr": "0x7100030E50", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [50], "name": "PopNotifiableErrorCodes", "wire_order": "buffers=[out]"},
+      "10": {"vt":  "0x58", "func": "0x710003FB50", "lr": "0x7100030584", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetReportSizeMax", "wire_order": "out_data[0x4]"}
+    },
+    "nn::erpt::sf::IAttachment": {
+      "_srv": "SRV_710008BC80",
+      "_hash": "876e6bf2989a7ff2",
+      "_likely_basis": "DB position 5/13 in Error_Report_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x7100031234", "inbytes":  "0x14", "outbytes":   "0x0", "name": "Open", "wire_order": "in_data[0x14]"},
+      "1": {"vt":  "0x28", "func": "0x710003F580", "lr": "0x71000315BC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Read", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x71000310F4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetFlags", "wire_order": "in_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x710003F800", "lr": "0x71000312F0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetFlags", "wire_order": "out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710003E3C0", "lr": "0x71000313B0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Close", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x710003F910", "lr": "0x710003116C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710008C438",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x71000408B0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710003F580", "lr": "0x7100040A1C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x7100040BB8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710003F800", "lr": "0x71000407E8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710003E3C0", "lr": "0x7100040D1C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::sprofile::srv::IServiceGetter": {
+      "_srv": "SRV_710008DAA8",
+      "_hash": "6906166f23529413",
+      "0": {"vt":  "0x20", "lr": "0x710004D608", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::ISprofileServiceForSystemProcess"], "_srv_outinterfaces": "SRV_710008DAB0", "name": "OpenSprofileServiceForSystemProcess", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x710004D7A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::ISprofileServiceForBgAgent"], "_srv_outinterfaces": "SRV_710008DAD0", "name": "OpenSprofileServiceForBgAgent", "wire_order": "N/A"}
+    },
+    "nn::sprofile::srv::ISprofileServiceForSystemProcess": {
+      "_srv": "SRV_710008DAB0",
+      "_hash": "068f560c5bbe80d0",
+      "100": {"vt":  "0x20", "lr": "0x710004DAB8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::IProfileReader"], "_srv_outinterfaces": "SRV_710008DAB8", "name": "OpenProfileReader", "wire_order": "N/A"},
+      "101": {"vt":  "0x28", "lr": "0x710004DC58", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::IProfileUpdateObserver"], "_srv_outinterfaces": "SRV_710008DAC0", "name": "OpenProfileUpdateObserver", "wire_order": "N/A"},
+      "900": {"vt":  "0x30", "lr": "0x710004DDF8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::IProfileControllerForDebug"], "_srv_outinterfaces": "SRV_710008DAC8", "name": "OpenProfileControllerForDebug", "wire_order": "N/A"}
+    },
+    "nn::sprofile::srv::IProfileReader": {
+      "_srv": "SRV_710008DAB8",
+      "_hash": "a3ee550d1d55baf5",
+      "0": {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x710004E100", "inbytes":   "0xE", "outbytes":   "0x8", "name": "GetSigned64", "wire_order": "in_data[0xE]; out_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x710003F580", "lr": "0x710004E2A0", "inbytes":   "0xE", "outbytes":   "0x8", "name": "GetUnsigned64", "wire_order": "in_data[0xE]; out_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x710004E440", "inbytes":   "0xE", "outbytes":   "0x4", "name": "GetSigned32", "wire_order": "in_data[0xE]; out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x710003F800", "lr": "0x710004E5E0", "inbytes":   "0xE", "outbytes":   "0x4", "name": "GetUnsigned32", "wire_order": "in_data[0xE]; out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710003E3C0", "lr": "0x710004E780", "inbytes":   "0xE", "outbytes":   "0x1", "name": "GetByte", "wire_order": "in_data[0xE]; out_data[0x1]"}
+    },
+    "nn::sprofile::srv::IProfileUpdateObserver": {
+      "_srv": "SRV_710008DAC0",
+      "_hash": "9331c44da497091a",
+      "0": {"vt":  "0x20", "lr": "0x710004EA40", "inbytes":   "0x7", "outbytes":   "0x0", "name": "Listen", "wire_order": "in_data[0x7]"},
+      "1": {"vt":  "0x28", "lr": "0x710004EAB8", "inbytes":   "0x7", "outbytes":   "0x0", "name": "Unlisten", "wire_order": "in_data[0x7]"},
+      "2": {"vt":  "0x30", "lr": "0x710004EC48", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"}
+    },
+    "nn::sprofile::srv::IProfileControllerForDebug": {
+      "_srv": "SRV_710008DAC8",
+      "_hash": "3c1c98566e42344a",
+      "2000": {"vt":  "0x20", "lr": "0x710004EEC8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Reset", "wire_order": "N/A"},
+      "2001": {"vt":  "0x28", "lr": "0x710004F010", "inbytes":   "0xE", "outbytes":  "0x10", "name": "GetRaw", "wire_order": "in_data[0xE]; out_data[0x10]"}
+    },
+    "nn::sprofile::srv::ISprofileServiceForBgAgent": {
+      "_srv": "SRV_710008DAD0",
+      "_hash": "62f2f18d7b34576f",
+      "100":  {"vt":  "0x20", "func": "0x710003F2B0", "lr": "0x710004F468", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sprofile::srv::IProfileImporter"], "_srv_outinterfaces": "SRV_710008DAD8", "name": "OpenProfileImporter", "wire_order": "N/A"},
+      "200":  {"vt":  "0x28", "func": "0x710003F580", "lr": "0x710004F614", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [21, 6], "name": "ReadMetadata", "wire_order": "out_data[0x4]; buffers=[in, out]"},
+      "201":  {"vt":  "0x30", "func": "0x710003F5A0", "lr": "0x710004F7D0", "inbytes":   "0x7", "outbytes":   "0x1", "name": "IsUpdateNeeded", "wire_order": "in_data[0x7]; out_data[0x1]"},
+      "2000": {"vt":  "0x38", "func": "0x710003F800", "lr": "0x710004F308", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Reset", "wire_order": "N/A"}
+    },
+    "nn::sprofile::srv::IProfileImporter": {
+      "_srv": "SRV_710008DAD8",
+      "_hash": "8bae7807d1c64e3b",
+      "0": {"vt":  "0x20", "lr": "0x710004FBE0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "ImportData", "wire_order": "buffers=[in]"},
+      "1": {"vt":  "0x28", "lr": "0x710004FA80", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Commit", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "lr": "0x710004FD50", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "ImportMetadata", "wire_order": "buffers=[in]"}
+    },
+    "_services": ["csrng", "ectx:r", "erpt:c", "erpt:r", "fatal:u", "fsp-srv", "psc:m", "set:sys", "sprof:bg", "sprof:sp", "srepo:a", "srepo:u", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "csrng": {
+        "interface": "nn::spl::detail::IRandomInterface",
+        "commands": {
+          "0": { "name": "GenerateRandomBytes", "vt_off": "0x20", "stub": "0x710003ba20", "cmd_proof_offset": "0x710003ba28", "cmd_proof_instruction": "mov w3,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710003b93c"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "23": { "name": "CreateSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x90", "stub": "0x7100006d10", "cmd_proof_offset": "0x7100006d14", "cmd_proof_instruction": "mov w3,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x7100005ea0"] },
+          "28": { "name": "DeleteSaveDataFileSystemBySaveDataAttribute", "vt_off": "0xb8", "stub": "0x7100006d70", "cmd_proof_offset": "0x7100006d78", "cmd_proof_instruction": "mov w3,#0x1c", "cmd_hex_and_dec": "0x1c / 28", "calls": ["0x7100005d54"] },
+          "32": { "name": "ExtendSaveDataFileSystem", "vt_off": "0xd8", "stub": "0x7100006ef0", "cmd_proof_offset": "0x7100006ef8", "cmd_proof_instruction": "mov w5,#0x20", "cmd_hex_and_dec": "0x20 / 32", "calls": ["0x7100005f9c"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x71000070d0", "cmd_proof_offset": "0x710000712c", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x7100015658"] },
+          "58": { "name": "ReadSaveDataFileSystemExtraData", "vt_off": "0x140", "stub": "0x7100007250", "cmd_proof_offset": "0x710000725c", "cmd_proof_instruction": "mov w4,#0x3a", "cmd_hex_and_dec": "0x3a / 58", "calls": ["0x7100006080", "0x71000061b0"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x220", "stub": "0x7100007f10", "cmd_proof_offset": "0x7100007f54", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x7100017c74", "0x7100017dd8", "0x7100017f24", "0x710001807c", "0x7100018258", "0x71000183a0", "0x710001876c", "0x7100018bcc", "0x7100018ce0", "0x7100018e60", "0x7100018f90", "0x71000190bc"] },
+          "800": { "name": "GetAndClearErrorInfo", "vt_off": "0x330", "stub": "0x7100008520", "cmd_proof_offset": "0x7100008528", "cmd_proof_instruction": "mov w3,#0x320", "cmd_hex_and_dec": "0x320 / 800", "calls": ["0x7100019214"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "5": { "name": "GetAndClearSdCardErrorInfo", "vt_off": "0x48", "stub": "0x710000fc40", "cmd_proof_offset": "0x710000fc4c", "cmd_proof_instruction": "mov w6,#0x5", "cmd_hex_and_dec": "0x5 / 5", "calls": ["0x71000187ac", "0x7100018920", "0x7100018964", "0x71000189a8", "0x71000189ec", "0x7100018a30", "0x7100018a74", "0x7100018ab8", "0x7100018afc", "0x7100018b40"] },
+            "100": { "name": "GetMmcCid", "vt_off": "0x68", "stub": "0x710000fca0", "cmd_proof_offset": "0x710000fcac", "cmd_proof_instruction": "mov w4,#0x64", "cmd_hex_and_dec": "0x64 / 100", "calls": ["0x7100017e0c"] },
+            "101": { "name": "GetMmcSpeedMode", "vt_off": "0x70", "stub": "0x710000fcc0", "cmd_proof_offset": "0x710000fcc4", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "calls": ["0x7100017ca4"] },
+            "112": { "name": "GetMmcPatrolCount", "vt_off": "0x88", "stub": "0x710000fcf0", "cmd_proof_offset": "0x710000fcf4", "cmd_proof_instruction": "mov w2,#0x70", "cmd_hex_and_dec": "0x70 / 112", "calls": ["0x7100017f50"] },
+            "113": { "name": "GetAndClearMmcErrorInfo", "vt_off": "0x90", "stub": "0x710000fd00", "cmd_proof_offset": "0x710000fd0c", "cmd_proof_instruction": "mov w6,#0x71", "cmd_hex_and_dec": "0x71 / 113", "calls": ["0x71000180bc"] },
+            "114": { "name": "GetMmcExtendedCsd", "vt_off": "0x98", "stub": "0x710000fd20", "cmd_proof_offset": "0x710000fd2c", "cmd_proof_instruction": "mov w4,#0x72", "cmd_hex_and_dec": "0x72 / 114", "calls": ["0x710001828c"] },
+            "200": { "name": "IsGameCardInserted", "vt_off": "0xc8", "stub": "0x710000fd90", "cmd_proof_offset": "0x710000fd94", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "calls": ["0x7100018c08"] },
+            "208": { "name": "GetGameCardIdSet", "vt_off": "0x108", "stub": "0x710000fe40", "cmd_proof_offset": "0x710000fe4c", "cmd_proof_instruction": "mov w4,#0xd0", "cmd_hex_and_dec": "0xd0 / 208", "calls": ["0x7100018d1c"] },
+            "217": { "name": "GetGameCardErrorReportInfo", "vt_off": "0x150", "stub": "0x710000ff40", "cmd_proof_offset": "0x710000ff44", "cmd_proof_instruction": "mov w2,#0xd9", "cmd_hex_and_dec": "0xd9 / 217", "calls": ["0x7100018e8c"] },
+            "218": { "name": "GetGameCardDeviceId", "vt_off": "0x158", "stub": "0x710000ff50", "cmd_proof_offset": "0x710000ff5c", "cmd_proof_instruction": "mov w4,#0xda", "cmd_hex_and_dec": "0xda / 218", "calls": ["0x71000190f8"] },
+            "226": { "name": "GetGameCardDetailedErrorReportInfo", "vt_off": "0x198", "stub": "0x7100010070", "cmd_proof_offset": "0x710001007c", "cmd_proof_instruction": "mov w4,#0xe2", "cmd_hex_and_dec": "0xe2 / 226", "calls": ["0x7100018fc8"] }
+          }
+        }
+      }
+    }
+  }
+}

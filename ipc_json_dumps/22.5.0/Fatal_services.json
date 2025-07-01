@@ -1,0 +1,45 @@
+{
+  "fatal_services": {
+    "program_identified": "Fatal_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710006DED0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100023A70", "lr": "0x7100024BE0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100023D40", "lr": "0x7100024D4C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100023D60", "lr": "0x7100024EE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100023FC0", "lr": "0x7100024B18", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100022C90", "lr": "0x710002504C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::fatalsrv::IService": {
+      "_srv": "SRV_710006E380",
+      "_hash": "a4e5069ff9353809",
+      "0": {"vt":  "0x20", "func": "0x7100023A70", "lr": "0x7100029A2C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "ThrowFatal", "wire_order": "in_data[0x10]"},
+      "1": {"vt":  "0x28", "func": "0x7100023D40", "lr": "0x7100029BBC", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "ThrowFatalWithPolicy", "wire_order": "in_data[0x10]"},
+      "2": {"vt":  "0x30", "func": "0x7100023D60", "lr": "0x7100029D54", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [21], "pid": true, "name": "ThrowFatalWithCpuContext", "wire_order": "in_data[0x10]; buffers=[in]"},
+      "3": {"vt":  "0x38", "func": "0x7100023FC0", "lr": "0x7100029828", "inbytes":  "0x38", "outbytes":   "0x0", "name": "Cmd3", "wire_order": "in_data[0x38]"}
+    },
+    "nn::fatalsrv::IPrivateService": {
+      "_srv": "SRV_710006E388",
+      "_hash": "ead4bc61bad3bbd4",
+      "0":  {"vt":  "0x20", "func": "0x7100039E20", "lr": "0x710002A058", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetFatalEvent", "wire_order": "N/A"},
+      "10": {"vt":  "0x28", "func": "0x7100039ED0", "lr": "0x710002A1C0", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [22], "name": "GetFatalContext", "wire_order": "out_data[0x10]; buffers=[out]"}
+    },
+    "_services": ["clkrst", "erpt:c", "fatal:p", "fatal:u", "fsp-srv", "i2c:pcv", "pm:info", "set:sys"],
+    "_invokes": {
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x1f0", "stub": "0x7100009150", "cmd_proof_offset": "0x71000091ac", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x7100003fc0"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x220", "stub": "0x7100009540", "cmd_proof_offset": "0x7100009584", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x7100017d74", "0x7100017e8c", "0x7100017f98"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "200": { "name": "IsGameCardInserted", "vt_off": "0xc8", "stub": "0x7100010c30", "cmd_proof_offset": "0x7100010c34", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "calls": ["0x7100017ec8"] },
+            "202": { "name": "GetGameCardHandle", "vt_off": "0xd8", "stub": "0x7100010c50", "cmd_proof_offset": "0x7100010c54", "cmd_proof_instruction": "mov w2,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x7100017da0"] },
+            "205": { "name": "GetGameCardAttribute", "vt_off": "0xf0", "stub": "0x7100010c80", "cmd_proof_offset": "0x7100010c88", "cmd_proof_instruction": "mov w3,#0xcd", "cmd_hex_and_dec": "0xcd / 205", "calls": ["0x7100017fc8"] }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "network_interface_services": {
+    "program_identified": "Network_Interface_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710010FFE0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710002F020", "lr": "0x7100030190", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710002F2F0", "lr": "0x71000302FC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710002F310", "lr": "0x7100030498", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710002F570", "lr": "0x71000300C8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710002E240", "lr": "0x71000305FC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::nifm::detail::IStaticService": {
+      "_srv": "SRV_71001125E8",
+      "_hash": "62bf1089b51b2d5a",
+      "4": {"vt":  "0x20", "func": "0x710007F720", "lr": "0x710007F8F8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::nifm::detail::IGeneralService"], "_srv_outinterfaces": "SRV_71001125F0", "name": "CreateGeneralServiceOld", "wire_order": "N/A"},
+      "5": {"vt":  "0x28", "func": "0x710007F750", "lr": "0x710007FA9C", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::nifm::detail::IGeneralService"], "_srv_outinterfaces": "SRV_71001125F0", "name": "CreateGeneralService", "wire_order": "in_data[0x8]"}
+    },
+    "nn::nifm::detail::IGeneralService": {
+      "_srv": "SRV_71001125F0",
+      "_hash": "7ccec72f830c4b53",
+      "_hash_alt": "5a8a1704d1036029",
+      "1":  {"vt":  "0x20", "func": "0x71000878C0", "lr": "0x710007FEC0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetClientId", "wire_order": "buffers=[out]"},
+      "2":  {"vt":  "0x28", "func": "0x71000878D0", "lr": "0x7100080028", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::nifm::detail::IScanRequest"], "_srv_outinterfaces": "SRV_71001125F8", "name": "CreateScanRequest", "wire_order": "N/A"},
+      "4":  {"vt":  "0x30", "func": "0x7100087900", "lr": "0x71000801CC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::nifm::detail::IRequest"], "_srv_outinterfaces": "SRV_7100112600", "name": "CreateRequest", "wire_order": "in_data[0x4]"},
+      "5":  {"vt":  "0x38", "func": "0x7100087930", "lr": "0x71000803A0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetCurrentNetworkProfile", "wire_order": "buffers=[out]"},
+      "6":  {"vt":  "0x40", "func": "0x7100087940", "lr": "0x7100080514", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [10], "name": "EnumerateNetworkInterfaces", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "7":  {"vt":  "0x48", "func": "0x7100087960", "lr": "0x71000806E4", "inbytes":   "0x1", "outbytes":   "0x4", "buffers": [6], "name": "EnumerateNetworkProfiles", "wire_order": "in_data[0x1]; out_data[0x4]; buffers=[out]"},
+      "8":  {"vt":  "0x50", "func": "0x7100087980", "lr": "0x71000808D4", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "GetNetworkProfile", "wire_order": "in_data[0x10]; buffers=[out]"},
+      "9":  {"vt":  "0x58", "func": "0x7100087990", "lr": "0x7100080A80", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "SetNetworkProfile", "wire_order": "out_data[0x10]; buffers=[in]"},
+      "10": {"vt":  "0x60", "func": "0x71000879A0", "lr": "0x7100080C2C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RemoveNetworkProfile", "wire_order": "in_data[0x10]"},
+      "11": {"vt":  "0x68", "func": "0x71000879B0", "lr": "0x7100080D9C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetScanDataOld", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "12": {"vt":  "0x70", "func": "0x71000879D0", "lr": "0x7100080F68", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCurrentIpAddress", "wire_order": "out_data[0x4]"},
+      "13": {"vt":  "0x78", "func": "0x71000879E0", "lr": "0x71000810E0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetCurrentAccessPointOld", "wire_order": "buffers=[out]"},
+      "14": {"vt":  "0x80", "func": "0x71000879F0", "lr": "0x7100081250", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [25], "buffer_entry_sizes": ["0x301"], "outinterfaces": ["nn::nifm::detail::INetworkProfile"], "_srv_outinterfaces": "SRV_7100112608", "name": "CreateTemporaryNetworkProfile", "wire_order": "out_data[0x10]; buffers=[in]"},
+      "15": {"vt":  "0x88", "func": "0x7100087A20", "lr": "0x7100081448", "inbytes":   "0x0", "outbytes":  "0x16", "name": "GetCurrentIpConfigInfo", "wire_order": "out_data[0x16]"},
+      "16": {"vt":  "0x90", "func": "0x7100087A30", "lr": "0x71000815CC", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetWirelessCommunicationEnabled", "wire_order": "in_data[0x1]"},
+      "17": {"vt":  "0x98", "func": "0x7100087A40", "lr": "0x7100081738", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsWirelessCommunicationEnabled", "wire_order": "out_data[0x1]"},
+      "18": {"vt":  "0xA0", "func": "0x7100087A50", "lr": "0x7100081898", "inbytes":   "0x0", "outbytes":   "0x3", "name": "GetInternetConnectionStatus", "wire_order": "out_data[0x3]"},
+      "19": {"vt":  "0xA8", "func": "0x7100087A60", "lr": "0x7100081A0C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetEthernetCommunicationEnabled", "wire_order": "in_data[0x1]"},
+      "20": {"vt":  "0xB0", "func": "0x7100087A70", "lr": "0x7100081B78", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsEthernetCommunicationEnabled", "wire_order": "out_data[0x1]"},
+      "21": {"vt":  "0xB8", "func": "0x7100087A80", "lr": "0x7100081CE0", "inbytes":   "0x0", "outbytes":   "0x1", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "IsAnyInternetRequestAccepted", "wire_order": "out_data[0x1]; buffers=[in]"},
+      "22": {"vt":  "0xC0", "func": "0x7100087A90", "lr": "0x7100081E88", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAnyForegroundRequestAccepted", "wire_order": "out_data[0x1]"},
+      "23": {"vt":  "0xC8", "func": "0x7100087AA0", "lr": "0x7100081FE8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "PutToSleep", "wire_order": "N/A"},
+      "24": {"vt":  "0xD0", "func": "0x7100087AB0", "lr": "0x7100082118", "inbytes":   "0x0", "outbytes":   "0x0", "name": "WakeUp", "wire_order": "N/A"},
+      "25": {"vt":  "0xD8", "func": "0x7100087AC0", "lr": "0x7100082248", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetSsidListVersion", "wire_order": "out_data[0x10]"},
+      "26": {"vt":  "0xE0", "func": "0x7100087AD0", "lr": "0x71000823C0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "SetExclusiveClient", "wire_order": "buffers=[in]"},
+      "27": {"vt":  "0xE8", "func": "0x7100087B00", "lr": "0x7100082530", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetDefaultIpSetting", "wire_order": "out_buf0"},
+      "28": {"vt":  "0xF0", "func": "0x7100087B10", "lr": "0x71000826A0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "SetDefaultIpSetting", "wire_order": "in_buf0"},
+      "29": {"vt":  "0xF8", "func": "0x7100087B20", "lr": "0x710008280C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetWirelessCommunicationEnabledForTest", "wire_order": "in_data[0x1]"},
+      "30": {"vt": "0x100", "func": "0x7100087B30", "lr": "0x710008297C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetEthernetCommunicationEnabledForTest", "wire_order": "in_data[0x1]"},
+      "31": {"vt": "0x108", "func": "0x7100087B40", "lr": "0x7100082AE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetTelemetorySystemEventReadableHandle", "wire_order": "N/A"},
+      "32": {"vt": "0x110", "func": "0x7100087B50", "lr": "0x7100082C50", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "GetTelemetryInfo", "wire_order": "buffers=[out]"},
+      "33": {"vt": "0x118", "func": "0x7100087B60", "lr": "0x7100082DB8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ConfirmSystemAvailability", "wire_order": "N/A"},
+      "34": {"vt": "0x120", "func": "0x7100087B70", "lr": "0x7100082EEC", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetBackgroundRequestEnabled", "wire_order": "in_data[0x1]"},
+      "35": {"vt": "0x128", "func": "0x7100087B80", "lr": "0x710008305C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetScanData", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "36": {"vt": "0x130", "func": "0x7100087BA0", "lr": "0x7100083230", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetCurrentAccessPoint", "wire_order": "buffers=[out]"},
+      "37": {"vt": "0x138", "func": "0x7100087BB0", "lr": "0x7100083398", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Shutdown", "wire_order": "N/A"},
+      "38": {"vt": "0x140", "func": "0x7100087BC0", "lr": "0x71000834CC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetAllowedChannels", "wire_order": "out_buf0; out_data[0x4]"},
+      "39": {"vt": "0x148", "func": "0x7100087BE0", "lr": "0x710008367C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "NotifyApplicationSuspended", "wire_order": "in_data[0x8]"},
+      "40": {"vt": "0x150", "func": "0x7100087BF0", "lr": "0x71000837EC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetAcceptableNetworkTypeFlag", "wire_order": "in_data[0x4]"},
+      "41": {"vt": "0x158", "func": "0x7100087C00", "lr": "0x7100083958", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAcceptableNetworkTypeFlag", "wire_order": "out_data[0x4]"},
+      "42": {"vt": "0x160", "func": "0x7100087C10", "lr": "0x7100083AC8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyConnectionStateChanged", "wire_order": "N/A"},
+      "43": {"vt": "0x168", "func": "0x7100087C20", "lr": "0x7100083BFC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWowlDelayedWakeTime", "wire_order": "in_data[0x4]"},
+      "44": {"vt": "0x170", "func": "0x7100087C30", "lr": "0x7100083D68", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsWiredConnectionAvailable", "wire_order": "out_data[0x1]"},
+      "45": {"vt": "0x178", "func": "0x7100087C40", "lr": "0x7100083EC8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsNetworkEmulationFeatureEnabled", "wire_order": "out_data[0x1]"},
+      "46": {"vt": "0x180", "func": "0x7100087C50", "lr": "0x710008402C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SelectActiveNetworkEmulationProfileIdForDebug", "wire_order": "in_data[0x4]"},
+      "47": {"vt": "0x188", "func": "0x7100087C60", "lr": "0x71000841A4", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "GetScanData", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "48": {"vt": "0x190", "func": "0x7100087C80", "lr": "0x7100084378", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetActiveNetworkEmulationProfileId", "wire_order": "N/A"},
+      "49": {"vt": "0x198", "func": "0x7100087C90", "lr": "0x71000844A8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetActiveNetworkEmulationProfileId", "wire_order": "out_data[0x4]"},
+      "50": {"vt": "0x1A0", "func": "0x7100087CA0", "lr": "0x7100084618", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsRewriteFeatureEnabled", "wire_order": "out_data[0x1]"},
+      "51": {"vt": "0x1A8", "func": "0x7100087CB0", "lr": "0x7100084788", "inbytes":   "0x1", "outbytes":   "0x8", "buffers": [21], "name": "CreateRewriteRule", "wire_order": "in_data[0x1]; out_data[0x8]; buffers=[in]"},
+      "52": {"vt": "0x1B0", "func": "0x7100087CC0", "lr": "0x710008495C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DestroyRewriteRule", "wire_order": "in_data[0x8]"},
+      "53": {"vt": "0x1B8", "func": "0x7100087CD0", "lr": "0x7100084AC8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsActiveNetworkEmulationProfileIdSelected", "wire_order": "out_data[0x1]"},
+      "54": {"vt": "0x1C0", "func": "0x7100087CE0", "lr": "0x7100084C2C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SelectDefaultNetworkEmulationProfileId", "wire_order": "in_data[0x4]"},
+      "55": {"vt": "0x1C8", "func": "0x7100087CF0", "lr": "0x7100084D98", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDefaultNetworkEmulationProfileId", "wire_order": "out_data[0x4]"},
+      "56": {"vt": "0x1D0", "func": "0x7100087D00", "lr": "0x7100084F14", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [50], "name": "GetNetworkEmulationProfile", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "57": {"vt": "0x1D8", "func": "0x7100087D10", "lr": "0x71000850BC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWowlTcpKeepAliveTimeout", "wire_order": "in_data[0x4]"}
+    },
+    "nn::nifm::detail::IScanRequest": {
+      "_srv": "SRV_71001125F8",
+      "_hash": "ab773463a4e2c3ae",
+      "0": {"vt":  "0x20", "func": "0x710001EB70", "lr": "0x7100085424", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Submit", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100060AD0", "lr": "0x7100085388", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsProcessing", "wire_order": "out_data[0x1]"},
+      "2": {"vt":  "0x30", "func": "0x710001EC10", "lr": "0x71000853C4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710001EC20", "lr": "0x71000855F8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSystemEventReadableHandle", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x7100096350", "lr": "0x710008575C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9], "name": "SetChannels", "wire_order": "buffers=[in]"}
+    },
+    "nn::nifm::detail::IRequest": {
+      "_srv": "SRV_7100112600",
+      "_hash": "47b26e59444a7a02",
+      "0":  {"vt":  "0x20", "func": "0x71000878C0", "lr": "0x7100085A04", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRequestState", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000878D0", "lr": "0x71000860F8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x7100087900", "lr": "0x7100086A68", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1, 1], "name": "GetSystemEventReadableHandles", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x7100087930", "lr": "0x71000860BC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "4":  {"vt":  "0x40", "func": "0x7100087940", "lr": "0x7100085D58", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Submit", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100087960", "lr": "0x7100085F78", "inbytes":  "0x24", "outbytes":   "0x0", "name": "SetRequirement", "wire_order": "in_data[0x24]"},
+      "6":  {"vt":  "0x50", "func": "0x7100087980", "lr": "0x7100086204", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRequirementPreset", "wire_order": "in_data[0x4]"},
+      "8":  {"vt":  "0x58", "func": "0x7100087990", "lr": "0x7100086260", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetPriority", "wire_order": "in_data[0x1]"},
+      "9":  {"vt":  "0x60", "func": "0x71000879A0", "lr": "0x71000864B8", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SetNetworkProfileId", "wire_order": "in_data[0x10]"},
+      "10": {"vt":  "0x68", "func": "0x71000879B0", "lr": "0x71000863E8", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetRejectable", "wire_order": "in_data[0x1]"},
+      "11": {"vt":  "0x70", "func": "0x71000879D0", "lr": "0x7100085CE0", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetConnectionConfirmationOption", "wire_order": "in_data[0x1]"},
+      "12": {"vt":  "0x78", "func": "0x71000879E0", "lr": "0x7100086060", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetPersistent", "wire_order": "in_data[0x1]"},
+      "13": {"vt":  "0x80", "func": "0x71000879F0", "lr": "0x7100085E68", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetInstant", "wire_order": "in_data[0x1]"},
+      "14": {"vt":  "0x88", "func": "0x7100087A20", "lr": "0x7100085B90", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetSustainable", "wire_order": "in_data[0x2]"},
+      "15": {"vt":  "0x90", "func": "0x7100087A30", "lr": "0x71000862BC", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetRawPriority", "wire_order": "in_data[0x1]"},
+      "16": {"vt":  "0x98", "func": "0x7100087A40", "lr": "0x7100086388", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetGreedy", "wire_order": "in_data[0x1]"},
+      "17": {"vt":  "0xA0", "func": "0x7100087A50", "lr": "0x7100086634", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetSharable", "wire_order": "in_data[0x1]"},
+      "18": {"vt":  "0xA8", "func": "0x7100087A60", "lr": "0x7100086568", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRequirementByRevision", "wire_order": "in_data[0x4]"},
+      "19": {"vt":  "0xB0", "func": "0x7100087A70", "lr": "0x7100085A9C", "inbytes":   "0x0", "outbytes":  "0x24", "name": "GetRequirement", "wire_order": "out_data[0x24]"},
+      "20": {"vt":  "0xB8", "func": "0x7100087A80", "lr": "0x7100085EC4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRevision", "wire_order": "out_data[0x4]"},
+      "21": {"vt":  "0xC0", "func": "0x7100087A90", "lr": "0x7100086C14", "inbytes":   "0x4", "outbytes":   "0xC", "buffers": [6], "name": "GetAppletInfo", "wire_order": "in_data[0x4]; out_data[0xC]; buffers=[out]"},
+      "22": {"vt":  "0xC8", "func": "0x7100087AA0", "lr": "0x7100086DF0", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [22], "name": "GetAdditionalInfo", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "23": {"vt":  "0xD0", "func": "0x7100087AB0", "lr": "0x7100085D98", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetKeptInSleep", "wire_order": "in_data[0x1]"},
+      "24": {"vt":  "0xD8", "func": "0x7100087AC0", "lr": "0x7100085C84", "inbytes":   "0x4", "outbytes":   "0x0", "name": "RegisterSocketDescriptor", "wire_order": "in_data[0x4]"},
+      "25": {"vt":  "0xE0", "func": "0x7100087AD0", "lr": "0x71000861A8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "UnregisterSocketDescriptor", "wire_order": "in_data[0x4]"},
+      "26": {"vt":  "0xE8", "func": "0x7100087B00", "lr": "0x7100086FA0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [26], "name": "GetNetworkAccessStatus", "wire_order": "out_buf0"}
+    },
+    "nn::nifm::detail::INetworkProfile": {
+      "_srv": "SRV_7100112608",
+      "_hash": "9186d82e4065851c",
+      "0": {"vt":  "0x20", "func": "0x710008B900", "lr": "0x71000873E0", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "Update", "wire_order": "in_buf0; out_data[0x10]"},
+      "1": {"vt":  "0x28", "func": "0x710008B910", "lr": "0x7100087590", "inbytes":  "0x10", "outbytes":  "0x10", "name": "PersistOld", "wire_order": "in_data[0x10]; out_data[0x10]"},
+      "2": {"vt":  "0x30", "func": "0x710008B920", "lr": "0x7100087254", "inbytes":   "0x0", "outbytes":  "0x10", "name": "Persist", "wire_order": "out_data[0x10]"}
+    },
+    "_services": ["arp:r", "bgtc:sc", "bgtc:t", "bsd:a", "bsd:s", "bsd:u", "fatal:u", "fsp-srv", "ifcfg", "nifm:a", "nifm:s", "nifm:u", "nsd:a", "nsd:u", "psc:m", "set:sys", "sfdnsres", "srepo:a", "srepo:u", "ssl:s", "wlan:p"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x710005fc60", "cmd_proof_offset": "0x710005fc88", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710005f5f4"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x710001f260", "cmd_proof_offset": "0x710001f264", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x710001b9b0"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x1f0", "stub": "0x71000a1f50", "cmd_proof_offset": "0x71000a1fac", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x710009cab0"] }
+        }
+      },
+      "set:sys": {
+        "interface": "nn::settings::ISystemSettingsServer",
+        "commands": {
+          "0": { "name": "SetLanguageCode", "vt_off": "0x20", "stub": "0x71000b3010", "cmd_proof_offset": "0x71000b3014", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100089330", "0x71000895d0"] },
+          "7": { "name": "GetLockScreenFlag", "vt_off": "0x50", "stub": "0x71000b3090", "cmd_proof_offset": "0x71000b3094", "cmd_proof_instruction": "mov w2,#0x7", "cmd_hex_and_dec": "0x7 / 7", "calls": ["0x71000690ec", "0x7100087f08"] },
+          "12": { "name": "Cmd12", "vt_off": "0x78", "stub": "0x71000b30f0", "cmd_proof_offset": "0x71000b30f8", "cmd_proof_instruction": "mov w4,#0xc", "cmd_hex_and_dec": "0xc / 12", "calls": ["0x710007b674", "0x710007b698"] }
+        }
+      }
+    }
+  }
+}

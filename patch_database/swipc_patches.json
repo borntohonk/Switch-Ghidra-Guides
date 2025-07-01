@@ -1,0 +1,162 @@
+{
+    "es": {
+        "file": "out/programs/ETicket_services",
+        "output": {
+            "dir": "out/exefs_patches/es_patches"
+        },
+        "rules": [
+            {
+                "pattern": "A0630091????FE97A08300D1????FE97",
+                "patch": "E0031FAA",
+                "offset": 16,
+                "match_position": 0
+            }
+        ]
+    },
+    "nim": {
+        "file": "out/programs/NIM_services",
+        "output": {
+            "dir": "out/exefs_patches/nim_patches"
+        },
+        "rules": [
+            { "pattern": "41????4C????????????C0035FD6", "patch": "E0031F2AC0035FD6", "offset": 14 },
+            { "pattern": "03D5??????????????????????????????97????0094????00??????????61", "patch": "E2031FAA", "offset": 2 }
+        ]
+    },
+    "nifm": {
+        "file": "out/programs/Network_Interface_services",
+        "output": {
+            "dir": "out/exefs_patches/nifm_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "03??AA??????AA??????????????????0314AA????14AA",
+                "patch": "00309AD2001EA1F2610100D4E0031FAAC0035FD6",
+                "offset": -17,
+                "match_position": 0
+            }
+        ]
+    },
+    "olsc": {
+        "file": "out/programs/OLSC_services",
+        "output": {
+            "dir": "out/exefs_patches/olsc_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "00??73????F9????4039",
+                "patch": "200080D2",
+                "offset": 42,
+                "match_position": 0
+            }
+        ]
+    },
+    "am": {
+        "file": "out/programs/Applet_Manager_services",
+        "output": {
+            "dir": "out/exefs_patches/am_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "682646391F0500716100005460420691794DFF97",
+                "patch": "1F2003D5",
+                "offset": 16,
+                "match_position": 0
+            }
+        ]
+    },
+    "usb": {
+        "file": "out/programs/USB_services",
+        "output": {
+            "dir": "out/exefs_patches/usb_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "FFC300D1FD7B02A9FD83009188",
+                "patch": "20008052C0035FD6",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "FFC300D1FD7B02A9FD83009188",
+                "patch": "20008052C0035FD6",
+                "offset": 0,
+                "match_position": 1
+            }
+        ]
+    },
+    "ssl": {
+        "file": "out/programs/SSL_services",
+        "output": {
+            "dir": "out/exefs_patches/ssl_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "08008012.9120591.F1E00F..84200B9",
+                "patch": "080080D2",
+                "offset": 16,
+                "match_position": 0
+            },
+            {
+                "pattern": "880600121F0D0071A0000054",
+                "patch": "13000014",
+                "offset": 8,
+                "match_position": 0
+            },
+            {
+                "pattern": "88160012",
+                "patch": "08000852",
+                "offset": 8,
+                "match_position": 0
+            }
+        ]
+    },
+    "ns": {
+        "file": "out/programs/NS_services",
+        "output": {
+            "dir": "out/exefs_patches/ns_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "35E8134039F4031F??68020039",
+                "patch": "1F2003D5",
+                "offset": 9,
+                "match_position": 1
+            }
+        ]
+    },
+    "fs": {
+        "file": "out/programs/Filesystem_services",
+        "output": {
+            "dir": "out/exefs_patches/fs_patches",
+            "hekate": "out/hekate/hekate.txt"
+        },
+        "rules": [
+            { "pattern": "40F9????????????40B9091C", "patch": "E0031F2A", "offset": 2 },
+            { "pattern": "0694????00??42??0091", "patch": "1F2003D5", "offset": -18 },
+            { "pattern": "FD7BBEA9F???0??9FD030091??408052??01AE7202408052", "patch": "80", "offset": 13 },
+            { "pattern": "FD7BBEA9F???0??9FD030091??408052??01AE7202408052", "patch": "80", "offset": 37 },
+            { "pattern": "00000000FD7BBDA9F50B00F9F44F02A9FD030091F30300AA??2?0094080C4039??0?00????0???????0?????????0094", "patch": "E0031F2AC0035FD6", "offset": 4 }
+        ]
+    },
+    "fs-exfat": {
+        "file": "out/programs/Filesystem_services_exfat",
+        "output": {
+            "dir": "out/exefs_patches/fs_patches",
+            "hekate": "out/hekate/hekate_exfat.txt"
+        },
+        "rules": [
+            { "pattern": "40F9????????????40B9091C", "patch": "E0031F2A", "offset": 2 },
+            { "pattern": "0694????00??42??0091", "patch": "1F2003D5", "offset": -18 },
+            { "pattern": "FD7BBEA9F???0??9FD030091??408052??01AE7202408052", "patch": "80", "offset": 13 },
+            { "pattern": "FD7BBEA9F???0??9FD030091??408052??01AE7202408052", "patch": "80", "offset": 37 },
+            { "pattern": "00000000FD7BBDA9F50B00F9F44F02A9FD030091F30300AA??2?0094080C4039??0?00????0???????0?????????0094", "patch": "E0031F2AC0035FD6", "offset": 4 }
+        ]
+    }
+}

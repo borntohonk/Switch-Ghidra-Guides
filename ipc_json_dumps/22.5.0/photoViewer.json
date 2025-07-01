@@ -1,0 +1,135 @@
+{
+  "photoviewer": {
+    "_services": ["acc:su", "acc:u0", "acc:u1", "appletAE", "audctl", "audout:u", "audren:u", "bsd:a", "bsd:s", "bsd:u", "caps:a", "caps:ss", "dispdrv", "fatal:u", "fsp-srv", "hid:dbg", "hid:sys", "lp2p:app", "lp2p:sys", "ngc:u", "nifm:a", "nifm:s", "nifm:u", "ns:am2", "ns:ec", "ns:rid", "ns:ro", "ns:rt", "ns:su", "ns:vm", "ns:web", "nsd:a", "nsd:u", "nvdrv", "nvdrv:a", "nvmemp", "pctl:a", "pctl:r", "pctl:s", "prepo:a2", "prepo:m", "prepo:s", "prepo:u", "set:sys", "sfdnsres", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "audctl": {
+        "interface": "nn::audioctrl::detail::IAudioController",
+        "commands": {
+          "2": { "name": "GetTargetVolumeMin", "vt_off": "0x30", "stub": "0x7100097850", "cmd_proof_offset": "0x7100097854", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100234378"] },
+          "3": { "name": "GetTargetVolumeMax", "vt_off": "0x38", "stub": "0x71001e1d20", "cmd_proof_offset": "0x71001e1d24", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x7100234318"] },
+          "5000": { "name": "Cmd5000", "vt_off": "0x118", "stub": "0x7100234820", "cmd_proof_offset": "0x7100234864", "cmd_proof_instruction": "mov w2,#0x1388", "cmd_hex_and_dec": "0x1388 / 5000", "calls": ["0x7100234424"] }
+        }
+      },
+      "audren:u": {
+        "interface": "nn::audio::detail::IAudioRendererManager",
+        "commands": {
+          "0": { "name": "OpenAudioRenderer", "vt_off": "0x20", "stub": "0x71001e1710", "cmd_proof_offset": "0x71001e1788", "cmd_proof_instruction": "mov w7,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001dde60"] },
+          "1": { "name": "GetWorkBufferSize", "vt_off": "0x28", "stub": "0x71001e17e0", "cmd_proof_offset": "0x71001e17e4", "cmd_proof_instruction": "mov w3,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x71001ddc30"] },
+          "4": { "name": "GetAudioDeviceServiceWithRevisionInfo", "vt_off": "0x40", "stub": "0x71001e1960", "cmd_proof_offset": "0x71001e19bc", "cmd_proof_instruction": "mov w4,#0x4", "cmd_hex_and_dec": "0x4 / 4", "calls": ["0x71001db298"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x7100155970", "cmd_proof_offset": "0x7100155974", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x71001503a0"] }
+        }
+      },
+      "dispdrv": {
+        "interface": "nns::hosbinder::IHOSBinderDriver",
+        "commands": {
+          "0": { "name": "TransactParcel", "vt_off": "0x28", "stub": "0x71000ba940", "cmd_proof_offset": "0x71000ba988", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000b24a8", "0x71000c0d60", "0x71000c0dd0"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "9": { "name": "OpenDataFileSystemByProgramId", "vt_off": "0x40", "stub": "0x7100170e40", "cmd_proof_offset": "0x7100170e94", "cmd_proof_instruction": "mov w3,#0x9", "cmd_hex_and_dec": "0x9 / 9", "calls": ["0x7100184658"] },
+          "17": { "name": "OpenHostFileSystem", "vt_off": "0x68", "stub": "0x7100171110", "cmd_proof_offset": "0x7100171168", "cmd_proof_instruction": "mov w4,#0x11", "cmd_hex_and_dec": "0x11 / 17", "calls": ["0x7100181eac"] },
+          "18": { "name": "OpenSdCardFileSystem", "vt_off": "0x70", "stub": "0x71001711b0", "cmd_proof_offset": "0x71001711f4", "cmd_proof_instruction": "mov w2,#0x12", "cmd_hex_and_dec": "0x12 / 18", "calls": ["0x7100184c28", "0x7100184c98", "0x7100184cd8", "0x7100184d1c", "0x7100184d60", "0x7100184da4", "0x7100184de8", "0x7100184e2c", "0x7100184e70", "0x7100184eb4"] },
+          "36": { "name": "OpenHostFileSystemWithOption", "vt_off": "0xf8", "stub": "0x7100171490", "cmd_proof_offset": "0x71001714f0", "cmd_proof_instruction": "mov w5,#0x24", "cmd_hex_and_dec": "0x24 / 36", "calls": ["0x7100181e44"] },
+          "201": { "name": "OpenDataStorageByProgramId", "vt_off": "0x220", "stub": "0x7100172420", "cmd_proof_offset": "0x7100172474", "cmd_proof_instruction": "mov w3,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "calls": ["0x71001844e8"] },
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x228", "stub": "0x71001724c0", "cmd_proof_offset": "0x710017251c", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x71001852a0"] },
+          "204": { "name": "OpenDataFileSystemWithProgramIndex", "vt_off": "0x238", "stub": "0x7100172600", "cmd_proof_offset": "0x7100172654", "cmd_proof_instruction": "mov w3,#0xcc", "cmd_hex_and_dec": "0xcc / 204", "calls": ["0x71001846c4"] },
+          "205": { "name": "OpenDataStorageWithProgramIndex", "vt_off": "0x240", "stub": "0x71001726a0", "cmd_proof_offset": "0x71001726f4", "cmd_proof_instruction": "mov w3,#0xcd", "cmd_hex_and_dec": "0xcd / 205", "calls": ["0x7100184554"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x258", "stub": "0x71001728b0", "cmd_proof_offset": "0x71001728f4", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x7100184f2c"] },
+          "1005": { "name": "GetGlobalAccessLogMode", "vt_off": "0x398", "stub": "0x7100172f30", "cmd_proof_offset": "0x7100172f34", "cmd_proof_instruction": "mov w2,#0x3ed", "cmd_hex_and_dec": "0x3ed / 1005", "calls": ["0x7100185694"] },
+          "1006": { "name": "OutputAccessLogToSdCard", "vt_off": "0x3a0", "stub": "0x7100172f40", "cmd_proof_offset": "0x7100172f48", "cmd_proof_instruction": "mov w3,#0x3ee", "cmd_hex_and_dec": "0x3ee / 1006", "calls": ["0x7100185ea4", "0x7100185f34", "0x7100186238", "0x7100186314", "0x71001863f8"] },
+          "1011": { "name": "GetProgramIndexForAccessLog", "vt_off": "0x3c0", "stub": "0x7100173000", "cmd_proof_offset": "0x7100173004", "cmd_proof_instruction": "mov w3,#0x3f3", "cmd_hex_and_dec": "0x3f3 / 1011", "calls": ["0x7100185888"] },
+          "1016": { "name": "FlushAccessLogOnSdCard", "vt_off": "0x3d8", "stub": "0x7100173020", "cmd_proof_offset": "0x7100173024", "cmd_proof_instruction": "mov w1,#0x3f8", "cmd_hex_and_dec": "0x3f8 / 1016", "calls": ["0x7100185f90", "0x7100186360", "0x7100186444"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "0": { "name": "IsSdCardInserted", "vt_off": "0x20", "stub": "0x710017d400", "cmd_proof_offset": "0x710017d404", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100184f68", "0x7100184fe0", "0x7100185010", "0x7100185040", "0x7100185070", "0x71001850a0", "0x71001850d0", "0x7100185100", "0x7100185130", "0x7100185160"] }
+          }
+        }
+      },
+      "lp2p:app": {
+        "interface": "nn::lp2p::detail::ISfServiceCreator",
+        "commands": {
+          "0": { "name": "CreateNetworkService", "vt_off": "0x20", "stub": "0x7100222d10", "cmd_proof_offset": "0x7100222d6c", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100222680"] },
+          "8": { "name": "CreateNetworkServiceMonitor", "vt_off": "0x28", "stub": "0x7100222dc0", "cmd_proof_offset": "0x7100222e14", "cmd_proof_instruction": "mov w3,#0x8", "cmd_hex_and_dec": "0x8 / 8", "calls": ["0x71002226e0"] }
+        },
+        "sub_interfaces": {
+          "0 (nn::lp2p::detail::ISfService)": {
+            "0": { "name": "Initialize", "vt_off": "0x20", "stub": "0x71000051e0", "cmd_proof_offset": "0x71000051e4", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100222694"] }
+          },
+          "8 (nn::lp2p::detail::ISfServiceMonitor)": {
+            "0": { "name": "Initialize", "vt_off": "0x20", "stub": "0x71000051e0", "cmd_proof_offset": "0x71000051e4", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71002226f4"] }
+          }
+        }
+      },
+      "lp2p:sys": {
+        "interface": "nn::lp2p::detail::ISfServiceCreator",
+        "commands": {
+          "0": { "name": "CreateNetworkService", "vt_off": "0x20", "stub": "0x7100222d10", "cmd_proof_offset": "0x7100222d6c", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100222680"] },
+          "8": { "name": "CreateNetworkServiceMonitor", "vt_off": "0x28", "stub": "0x7100222dc0", "cmd_proof_offset": "0x7100222e14", "cmd_proof_instruction": "mov w3,#0x8", "cmd_hex_and_dec": "0x8 / 8", "calls": ["0x71002226e0"] }
+        },
+        "sub_interfaces": {
+          "0 (nn::lp2p::detail::ISfService)": {
+            "0": { "name": "Initialize", "vt_off": "0x20", "stub": "0x71000051e0", "cmd_proof_offset": "0x71000051e4", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100222694"] }
+          },
+          "8 (nn::lp2p::detail::ISfServiceMonitor)": {
+            "0": { "name": "Initialize", "vt_off": "0x20", "stub": "0x71000051e0", "cmd_proof_offset": "0x71000051e4", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71002226f4"] }
+          }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100213330", "cmd_proof_offset": "0x710021335c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100212ab4", "0x7100212c34", "0x7100212db4"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100213330", "cmd_proof_offset": "0x710021335c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100212ab4", "0x7100212c34", "0x7100212db4"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x7100213330", "cmd_proof_offset": "0x710021335c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100212ab4", "0x7100212c34", "0x7100212db4"] }
+        }
+      },
+      "nvmemp": {
+        "commands": {
+          "1": { "vt_off": "0x28", "stub": "0x71000cf220", "cmd_proof_offset": "0x71000cf224", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x71000ce898"] }
+        }
+      },
+      "prepo:a2": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x7100045eb0", "cmd_proof_offset": "0x7100045ec8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x7100048804"] }
+        }
+      },
+      "prepo:m": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x7100045eb0", "cmd_proof_offset": "0x7100045ec8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x7100048804"] }
+        }
+      },
+      "prepo:s": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x7100045eb0", "cmd_proof_offset": "0x7100045ec8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x7100048804"] }
+        }
+      },
+      "prepo:u": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x7100045eb0", "cmd_proof_offset": "0x7100045ec8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x7100048804"] }
+        }
+      }
+    }
+  }
+}

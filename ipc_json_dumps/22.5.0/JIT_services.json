@@ -1,0 +1,28 @@
+{
+  "jit_services": {
+    "program_identified": "JIT_services",
+    "nn::jitsrv::IJitService": {
+      "_srv": "SRV_710003D1A8",
+      "_hash": "6f602dc6769c5dc5",
+      "0": {"vt":  "0x20", "func": "0x71000168D0", "lr": "0x7100000880", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::jitsrv::IJitEnvironment"], "_srv_outinterfaces": "SRV_710003D1B0", "inhandles": [1, 1, 1], "name": "CreateJitEnvironment", "wire_order": "in_data[0x10]"}
+    },
+    "nn::jitsrv::IJitEnvironment": {
+      "_srv": "SRV_710003D1B0",
+      "_hash": "6eb64595b652d795",
+      "0":    {"vt":  "0x30", "func": "0x710001DFE0", "lr": "0x7100000C48", "inbytes":  "0x50", "outbytes":  "0x28", "buffers": [5, 6], "name": "GenerateCode", "wire_order": "out_buf0; in_buf0; in_data[0x50]; out_data[0x28]"},
+      "1":    {"vt":  "0x38", "func": "0x71000168D0", "lr": "0x7100000E88", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [5, 6], "name": "Control", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[in, out]"},
+      "1000": {"vt":  "0x20", "func": "0x710001DFA0", "lr": "0x7100001204", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5, 5], "inhandles": [1], "name": "LoadPlugin", "wire_order": "in_data[0x8]; buffers=[in, in]"},
+      "1001": {"vt":  "0x28", "func": "0x710001DFC0", "lr": "0x710000106C", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetCodeAddress", "wire_order": "out_data[0x10]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710003D928",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100019D90", "lr": "0x710001A840", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100019E90", "lr": "0x710001A9AC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100019EA0", "lr": "0x710001AB48", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100019EB0", "lr": "0x710001A778", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100019ED0", "lr": "0x710001ACAC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fatal:u", "jit:u", "set:sys"]
+  }
+}

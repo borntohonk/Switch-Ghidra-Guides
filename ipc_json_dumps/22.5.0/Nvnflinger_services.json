@@ -1,0 +1,43 @@
+{
+  "nvnflinger_services": {
+    "nns::hosbinder::IHOSBinderDriver": {
+      "_srv": "SRV_71000F4FE8",
+      "_hash": "40136fee5fc6747e",
+      "_hash_alt": "fc99016c7cf2622c",
+      "0": {"vt":  "0x20", "func": "0x710005BC80", "lr": "0x710004EA48", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [5, 6], "name": "TransactParcel", "wire_order": "out_buf0; in_buf0; in_data[0xC]"},
+      "1": {"vt":  "0x28", "func": "0x710005BC90", "lr": "0x710004E830", "inbytes":   "0xC", "outbytes":   "0x0", "name": "AdjustRefcount", "wire_order": "in_data[0xC]"},
+      "2": {"vt":  "0x30", "func": "0x710005BCA0", "lr": "0x710004EC0C", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "GetNativeHandle", "wire_order": "in_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x71000059F0", "lr": "0x710004EDB8", "inbytes":   "0xC", "outbytes":   "0x0", "buffers": [33, 34], "name": "TransactParcelAuto", "wire_order": "in_data[0xC]; buffers=[in, out]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000F5510",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x71000060C0", "lr": "0x7100052F00", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000060C0", "lr": "0x710005306C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710004C310", "lr": "0x7100053208", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710004C330", "lr": "0x7100052E38", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710004C3B0", "lr": "0x710005336C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["dispdrv", "fatal:u", "fsp-srv", "nvdrv", "nvdrv:s", "nvmemp", "psc:m", "set:sys"],
+    "_invokes": {
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "9": { "name": "OpenDataFileSystemByProgramId", "vt_off": "0x40", "stub": "0x7100089a80", "cmd_proof_offset": "0x7100089ad4", "cmd_proof_instruction": "mov w3,#0x9", "cmd_hex_and_dec": "0x9 / 9", "calls": ["0x7100097b58"] },
+          "17": { "name": "OpenHostFileSystem", "vt_off": "0x68", "stub": "0x7100089d50", "cmd_proof_offset": "0x7100089da8", "cmd_proof_instruction": "mov w4,#0x11", "cmd_hex_and_dec": "0x11 / 17", "calls": ["0x710008693c"] },
+          "18": { "name": "OpenSdCardFileSystem", "vt_off": "0x70", "stub": "0x7100089df0", "cmd_proof_offset": "0x7100089e34", "cmd_proof_instruction": "mov w2,#0x12", "cmd_hex_and_dec": "0x12 / 18", "calls": ["0x710009b3e8", "0x710009b458", "0x710009b498", "0x710009b4dc", "0x710009b520", "0x710009b564", "0x710009b5a8", "0x710009b5ec", "0x710009b630", "0x710009b674"] },
+          "36": { "name": "OpenHostFileSystemWithOption", "vt_off": "0xf8", "stub": "0x710008a0d0", "cmd_proof_offset": "0x710008a130", "cmd_proof_instruction": "mov w5,#0x24", "cmd_hex_and_dec": "0x24 / 36", "calls": ["0x71000868d4"] },
+          "201": { "name": "OpenDataStorageByProgramId", "vt_off": "0x1e8", "stub": "0x710008ac20", "cmd_proof_offset": "0x710008ac74", "cmd_proof_instruction": "mov w3,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "calls": ["0x71000979e8"] },
+          "204": { "name": "OpenDataFileSystemWithProgramIndex", "vt_off": "0x200", "stub": "0x710008ae00", "cmd_proof_offset": "0x710008ae54", "cmd_proof_instruction": "mov w3,#0xcc", "cmd_hex_and_dec": "0xcc / 204", "calls": ["0x7100097bc4"] },
+          "205": { "name": "OpenDataStorageWithProgramIndex", "vt_off": "0x208", "stub": "0x710008aea0", "cmd_proof_offset": "0x710008aef4", "cmd_proof_instruction": "mov w3,#0xcd", "cmd_hex_and_dec": "0xcd / 205", "calls": ["0x7100097a54"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x220", "stub": "0x710008b0b0", "cmd_proof_offset": "0x710008b0f4", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x710009b6ec"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "0": { "name": "IsSdCardInserted", "vt_off": "0x20", "stub": "0x7100091a00", "cmd_proof_offset": "0x7100091a04", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710009b728", "0x710009b7a0", "0x710009b7d0", "0x710009b800", "0x710009b830", "0x710009b860", "0x710009b890", "0x710009b8c0", "0x710009b8f0", "0x710009b920"] }
+          }
+        }
+      }
+    }
+  }
+}

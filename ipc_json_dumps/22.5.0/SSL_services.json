@@ -1,0 +1,153 @@
+{
+  "ssl_services": {
+    "program_identified": "SSL_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100306958",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100231E90", "lr": "0x710001F470", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100139760", "lr": "0x710001F5DC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100231EA0", "lr": "0x710001F778", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100231EB0", "lr": "0x710001F3A8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100231AC0", "lr": "0x710001F8DC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::ssl::sf::ISslService": {
+      "_srv": "SRV_710030FE28",
+      "_hash": "2a345e0db75c6222",
+      "0":  {"vt":  "0x20", "func": "0x710010D5CC", "lr": "0x710010D8A0", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::ssl::sf::ISslContext"], "_srv_outinterfaces": "SRV_710030FE30", "name": "CreateContext", "wire_order": "in_data[0x10]"},
+      "1":  {"vt":  "0x28", "func": "0x710010D5FC", "lr": "0x710010DA6C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetContextCount", "wire_order": "out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x710010D604", "lr": "0x710010DBA4", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6, 5], "name": "GetCertificates", "wire_order": "in_buf0; out_buf0; out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x710010D60C", "lr": "0x710010DD2C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [5], "name": "GetCertificateBufSize", "wire_order": "in_buf0; out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x710010D614", "lr": "0x710010DEB4", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [6, 5], "name": "DebugIoctl", "wire_order": "in_data[0x8]; buffers=[out, in]"},
+      "5":  {"vt":  "0x48", "func": "0x710010D61C", "lr": "0x710010E044", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetInterfaceVersion", "wire_order": "in_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x710010D624", "lr": "0x710010E180", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5], "name": "FlushSessionCache", "wire_order": "in_buf0; in_data[0x4]; out_data[0x4]"},
+      "7":  {"vt":  "0x58", "func": "0x710010D63C", "lr": "0x710010E334", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5], "name": "SetDebugOption", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "8":  {"vt":  "0x60", "func": "0x710010D648", "lr": "0x710010E4BC", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6], "name": "GetDebugOption", "wire_order": "out_buf0; in_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x710010D654", "lr": "0x710010E638", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearTls12FallbackFlag", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x710010D65C", "lr": "0x710010E74C", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6, 6], "name": "GetCertificateByIndex", "wire_order": "out_buf1; out_buf0; in_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x710010D664", "lr": "0x710010E8D4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTrustedCertificateCount", "wire_order": "out_data[0x4]"}
+    },
+    "nn::ssl::sf::ISslContext": {
+      "_srv": "SRV_710030FE30",
+      "_hash": "2a55207f410edea1",
+      "0":  {"vt":  "0x20", "func": "0x71002320E0", "lr": "0x710010EB50", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOption", "wire_order": "in_data[0x8]"},
+      "1":  {"vt":  "0x28", "func": "0x71002320F0", "lr": "0x710010EC88", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetOption", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x7100232100", "lr": "0x710010EDE4", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ssl::sf::ISslConnection"], "_srv_outinterfaces": "SRV_710030FE38", "name": "CreateConnection", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x7100232130", "lr": "0x710010EF54", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetConnectionCount", "wire_order": "out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x7100232150", "lr": "0x710010F090", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [5], "name": "ImportServerPki", "wire_order": "in_buf0; in_data[0x4]; out_data[0x8]"},
+      "5":  {"vt":  "0x48", "func": "0x7100232160", "lr": "0x710010F240", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [5, 5], "name": "ImportClientPki", "wire_order": "out_data[0x8]; buffers=[in, in]"},
+      "6":  {"vt":  "0x50", "func": "0x7100232170", "lr": "0x710010F3CC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveServerPki", "wire_order": "in_data[0x8]"},
+      "7":  {"vt":  "0x58", "func": "0x7100232190", "lr": "0x710010F504", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveClientPki", "wire_order": "in_data[0x8]"},
+      "8":  {"vt":  "0x60", "func": "0x7100231A70", "lr": "0x710010F63C", "inbytes":   "0x4", "outbytes":   "0x8", "name": "RegisterInternalPki", "wire_order": "in_data[0x4]; out_data[0x8]"},
+      "9":  {"vt":  "0x68", "func": "0x71002321B0", "lr": "0x710010F79C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "AddPolicyOid", "wire_order": "buffers=[in]"},
+      "10": {"vt":  "0x70", "func": "0x71002321C0", "lr": "0x710010F8EC", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [5], "name": "ImportCrl", "wire_order": "out_data[0x8]; buffers=[in]"},
+      "11": {"vt":  "0x78", "func": "0x71002321D0", "lr": "0x710010FA6C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveCrl", "wire_order": "in_data[0x8]"},
+      "12": {"vt":  "0x80", "func": "0x7100232200", "lr": "0x710010FBAC", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [5, 5], "name": "ImportClientCertKeyPki", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[in, in]"},
+      "13": {"vt":  "0x88", "func": "0x7100027D30", "lr": "0x710010FD74", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [6, 6, 5], "name": "GeneratePrivateKeyAndCert", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[out, out, in]"}
+    },
+    "nn::ssl::sf::ISslConnection": {
+      "_srv": "SRV_710030FE38",
+      "_hash": "05b306c9f9ebf63c",
+      "0":  {"vt":  "0x20", "func": "0x710010AFFC", "lr": "0x71001100E8", "inbytes":   "0x4", "outbytes":   "0x4", "name": "SetSocketDescriptor", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710010B004", "lr": "0x7100110248", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetHostName", "wire_order": "in_buf0"},
+      "2":  {"vt":  "0x30", "func": "0x710010B00C", "lr": "0x710011039C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetVerifyOption", "wire_order": "in_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x710010B018", "lr": "0x71001104D4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetIoMode", "wire_order": "in_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x710010B024", "lr": "0x7100110604", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSocketDescriptor", "wire_order": "out_data[0x4]"},
+      "5":  {"vt":  "0x48", "func": "0x710010B02C", "lr": "0x7100110738", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetHostName", "wire_order": "out_buf0; out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x710010B034", "lr": "0x71001108B0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetVerifyOption", "wire_order": "out_data[0x4]"},
+      "7":  {"vt":  "0x58", "func": "0x710010B03C", "lr": "0x71001109E0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetIoMode", "wire_order": "out_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x710010B044", "lr": "0x7100110B10", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DoHandshake", "wire_order": "N/A"},
+      "9":  {"vt":  "0x68", "func": "0x710010B04C", "lr": "0x7100110C18", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "DoHandshakeGetServerCert", "wire_order": "out_buf0; out_data[0x8]"},
+      "10": {"vt":  "0x70", "func": "0x710010B054", "lr": "0x7100110D9C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Read", "wire_order": "out_buf0; out_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x710010B05C", "lr": "0x7100110F18", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [5], "name": "Write", "wire_order": "in_buf0; out_data[0x4]"},
+      "12": {"vt":  "0x80", "func": "0x710010B064", "lr": "0x7100111090", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Pending", "wire_order": "out_data[0x4]"},
+      "13": {"vt":  "0x88", "func": "0x710010B06C", "lr": "0x71001111C4", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "Peek", "wire_order": "out_buf0; out_data[0x4]"},
+      "14": {"vt":  "0x90", "func": "0x710010B074", "lr": "0x7100111344", "inbytes":   "0x8", "outbytes":   "0x4", "name": "Poll", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "15": {"vt":  "0x98", "func": "0x710010B080", "lr": "0x71001114A0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetVerifyCertError", "wire_order": "N/A"},
+      "16": {"vt":  "0xA0", "func": "0x710010B088", "lr": "0x71001115A4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetNeededServerCertBufferSize", "wire_order": "out_data[0x4]"},
+      "17": {"vt":  "0xA8", "func": "0x710010B090", "lr": "0x71001116DC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetSessionCacheMode", "wire_order": "in_data[0x4]"},
+      "18": {"vt":  "0xB0", "func": "0x710010B09C", "lr": "0x710011180C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSessionCacheMode", "wire_order": "out_data[0x4]"},
+      "19": {"vt":  "0xB8", "func": "0x710010B0A4", "lr": "0x710011193C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FlushSessionCache", "wire_order": "N/A"},
+      "20": {"vt":  "0xC0", "func": "0x710010B0AC", "lr": "0x7100111A48", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRenegotiationMode", "wire_order": "in_data[0x4]"},
+      "21": {"vt":  "0xC8", "func": "0x710010B0B8", "lr": "0x7100111B78", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRenegotiationMode", "wire_order": "out_data[0x4]"},
+      "22": {"vt":  "0xD0", "func": "0x710010B0C0", "lr": "0x7100111CB0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOption", "wire_order": "in_data[0x8]"},
+      "23": {"vt":  "0xD8", "func": "0x710010B0CC", "lr": "0x7100111DF0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "GetOption", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "24": {"vt":  "0xE0", "func": "0x710010B0D8", "lr": "0x7100111F4C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "GetVerifyCertErrors", "wire_order": "out_buf0; out_data[0x8]"},
+      "25": {"vt":  "0xE8", "func": "0x710010B0E0", "lr": "0x71001120D8", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6], "name": "GetCipherInfo", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "26": {"vt":  "0xF0", "func": "0x710010B0F0", "lr": "0x7100112258", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetNextAlpnProto", "wire_order": "in_buf0"},
+      "27": {"vt":  "0xF8", "func": "0x710010B0F8", "lr": "0x71001123A8", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6], "name": "GetNextAlpnProto", "wire_order": "out_buf0; out_data[0x8]"},
+      "28": {"vt": "0x100", "func": "0x710010B100", "lr": "0x7100112534", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5], "name": "SetDtlsSocketDescriptor", "wire_order": "in_buf0; in_data[0x4]; out_data[0x4]"},
+      "29": {"vt": "0x108", "func": "0x710010B110", "lr": "0x71001126E0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetDtlsHandshakeTimeout", "wire_order": "out_buf0"},
+      "30": {"vt": "0x110", "func": "0x710010B118", "lr": "0x7100112834", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetPrivateOption", "wire_order": "in_data[0x8]"},
+      "31": {"vt": "0x118", "func": "0x710010B124", "lr": "0x7100112968", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetSrtpCiphers", "wire_order": "in_buf0"},
+      "32": {"vt": "0x120", "func": "0x710010B12C", "lr": "0x7100112AB4", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetSrtpCipher", "wire_order": "out_data[0x2]"},
+      "33": {"vt": "0x128", "func": "0x710010B134", "lr": "0x7100112BF0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6, 5, 5], "name": "ExportKeyingMaterial", "wire_order": "in_buf1; out_buf0; in_buf0"},
+      "34": {"vt": "0x130", "func": "0x710010B13C", "lr": "0x7100112D5C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetIoTimeout", "wire_order": "in_data[0x4]"},
+      "35": {"vt": "0x138", "func": "0x710010B144", "lr": "0x7100112E8C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetIoTimeout", "wire_order": "out_data[0x4]"},
+      "36": {"vt": "0x140", "func": "0x710010B14C", "lr": "0x7100112FC0", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetSessionTicket", "wire_order": "out_buf0; out_data[0x4]"},
+      "37": {"vt": "0x148", "func": "0x710010B154", "lr": "0x710011313C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetSessionTicket", "wire_order": "in_buf0"}
+    },
+    "nn::ssl::sf::ISslServiceForSystem": {
+      "_srv": "SRV_71003100B8",
+      "_hash": "bd31a052d1645aee",
+      "0":   {"vt":  "0x20", "func": "0x710010D5CC", "lr": "0x710010D8A0", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::ssl::sf::ISslContext"], "_srv_outinterfaces": "SRV_710030FE30", "name": "CreateContext", "wire_order": "in_data[0x10]"},
+      "1":   {"vt":  "0x28", "func": "0x710010D5FC", "lr": "0x710010DA6C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetContextCount", "wire_order": "out_data[0x4]"},
+      "2":   {"vt":  "0x30", "func": "0x710010D604", "lr": "0x710010DBA4", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6, 5], "name": "GetCertificates", "wire_order": "in_buf0; out_buf0; out_data[0x4]"},
+      "3":   {"vt":  "0x38", "func": "0x710010D60C", "lr": "0x710010DD2C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [5], "name": "GetCertificateBufSize", "wire_order": "in_buf0; out_data[0x4]"},
+      "4":   {"vt":  "0x40", "func": "0x710010D614", "lr": "0x710010DEB4", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [6, 5], "name": "DebugIoctl", "wire_order": "in_data[0x8]; buffers=[out, in]"},
+      "5":   {"vt":  "0x48", "func": "0x710010D61C", "lr": "0x710010E044", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetInterfaceVersion", "wire_order": "in_data[0x4]"},
+      "6":   {"vt":  "0x50", "func": "0x710010D624", "lr": "0x710010E180", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5], "name": "FlushSessionCache", "wire_order": "in_buf0; in_data[0x4]; out_data[0x4]"},
+      "7":   {"vt":  "0x58", "func": "0x710010D63C", "lr": "0x710010E334", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5], "name": "SetDebugOption", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "8":   {"vt":  "0x60", "func": "0x710010D648", "lr": "0x710010E4BC", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6], "name": "GetDebugOption", "wire_order": "out_buf0; in_data[0x4]"},
+      "9":   {"vt":  "0x68", "func": "0x710010D654", "lr": "0x710010E638", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearTls12FallbackFlag", "wire_order": "N/A"},
+      "10":  {"vt":  "0x70", "func": "0x710010D65C", "lr": "0x710010E74C", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6, 6], "name": "GetCertificateByIndex", "wire_order": "out_buf1; out_buf0; in_data[0x4]"},
+      "11":  {"vt":  "0x78", "func": "0x710010D664", "lr": "0x710010E8D4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTrustedCertificateCount", "wire_order": "out_data[0x4]"},
+      "100": {"vt":  "0x80", "func": "0x71001132E4", "lr": "0x7100113548", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::ssl::sf::ISslContextForSystem"], "_srv_outinterfaces": "SRV_71003100C0", "name": "CreateContextForSystem", "wire_order": "in_data[0x10]"},
+      "101": {"vt":  "0x88", "func": "0x7100113314", "lr": "0x710011371C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetThreadCoreMask", "wire_order": "in_data[0x8]"},
+      "102": {"vt":  "0x90", "func": "0x710011331C", "lr": "0x710011384C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetThreadCoreMask", "wire_order": "out_data[0x8]"},
+      "103": {"vt":  "0x98", "func": "0x7100113324", "lr": "0x7100113990", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5, 5, 5], "name": "VerifySignature", "wire_order": "in_data[0x4]; buffers=[in, in, in]"}
+    },
+    "nn::ssl::sf::ISslContextForSystem": {
+      "_srv": "SRV_71003100C0",
+      "_hash": "b0bea17313f6e82d",
+      "0":   {"vt":  "0x20", "func": "0x710010CD04", "lr": "0x710010EB50", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOption", "wire_order": "in_data[0x8]"},
+      "1":   {"vt":  "0x28", "func": "0x710010CD10", "lr": "0x710010EC88", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetOption", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "2":   {"vt":  "0x30", "func": "0x710010CD1C", "lr": "0x710010EDE4", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ssl::sf::ISslConnection"], "_srv_outinterfaces": "SRV_710030FE38", "name": "CreateConnection", "wire_order": "N/A"},
+      "3":   {"vt":  "0x38", "func": "0x710010CD48", "lr": "0x710010EF54", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetConnectionCount", "wire_order": "out_data[0x4]"},
+      "4":   {"vt":  "0x40", "func": "0x710010CD50", "lr": "0x710010F090", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [5], "name": "ImportServerPki", "wire_order": "in_buf0; in_data[0x4]; out_data[0x8]"},
+      "5":   {"vt":  "0x48", "func": "0x710010CD68", "lr": "0x710010F240", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [5, 5], "name": "ImportClientPki", "wire_order": "in_buf1; in_buf0; out_data[0x8]"},
+      "6":   {"vt":  "0x50", "func": "0x710010CD80", "lr": "0x710010F3CC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveServerPki", "wire_order": "in_data[0x8]"},
+      "7":   {"vt":  "0x58", "func": "0x710010CD88", "lr": "0x710010F504", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveClientPki", "wire_order": "in_data[0x8]"},
+      "8":   {"vt":  "0x60", "func": "0x710010CD90", "lr": "0x710010F63C", "inbytes":   "0x4", "outbytes":   "0x8", "name": "RegisterInternalPki", "wire_order": "in_data[0x4]; out_data[0x8]"},
+      "9":   {"vt":  "0x68", "func": "0x710010CD9C", "lr": "0x710010F79C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "AddPolicyOid", "wire_order": "in_buf0"},
+      "10":  {"vt":  "0x70", "func": "0x710010CDA4", "lr": "0x710010F8EC", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [5], "name": "ImportCrl", "wire_order": "in_buf0; out_data[0x8]"},
+      "11":  {"vt":  "0x78", "func": "0x710010CDB4", "lr": "0x710010FA6C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RemoveCrl", "wire_order": "in_data[0x8]"},
+      "12":  {"vt":  "0x80", "func": "0x710010CDBC", "lr": "0x710010FBAC", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [5, 5], "name": "ImportClientCertKeyPki", "wire_order": "in_buf0; in_buf1; in_data[0x4]; out_data[0x8]"},
+      "13":  {"vt":  "0x88", "func": "0x710010CDC8", "lr": "0x710010FD74", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [6, 6, 5], "name": "GeneratePrivateKeyAndCert", "wire_order": "out_buf1; in_buf0; out_buf0; in_data[0x4]; out_data[0x8]"},
+      "100": {"vt":  "0x90", "func": "0x710010CD1C", "lr": "0x7100113C10", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::ssl::sf::ISslConnection"], "_srv_outinterfaces": "SRV_710030FE38", "name": "CreateConnectionEx", "wire_order": "N/A"}
+    },
+    "_services": ["arp:r", "bsd:a", "bsd:s", "bsd:u", "csrng", "erpt:c", "fatal:u", "fsp-srv", "nsd:a", "nsd:u", "set:cal", "set:sys", "sfdnsres", "spl:ssl", "srepo:a", "srepo:u", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x7100027ab0", "cmd_proof_offset": "0x7100027ab4", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x71000232e0"] }
+        }
+      },
+      "csrng": {
+        "interface": "nn::spl::detail::IRandomInterface",
+        "commands": {
+          "0": { "name": "GenerateRandomBytes", "vt_off": "0x20", "stub": "0x710014a1d0", "cmd_proof_offset": "0x710014a1d8", "cmd_proof_instruction": "mov w3,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710014a0fc"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "21": { "name": "DeleteSaveDataFileSystem", "vt_off": "0x80", "stub": "0x7100136d10", "cmd_proof_offset": "0x7100136d14", "cmd_proof_instruction": "mov w2,#0x15", "cmd_hex_and_dec": "0x15 / 21", "calls": ["0x7100145eb0"] },
+          "37": { "name": "CreateSaveDataFileSystemWithCreationInfo2", "vt_off": "0x100", "stub": "0x7100137000", "cmd_proof_offset": "0x7100137008", "cmd_proof_instruction": "mov w3,#0x25", "cmd_hex_and_dec": "0x25 / 37", "calls": ["0x7100146010"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x71001370f0", "cmd_proof_offset": "0x710013714c", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x7100149e98"] },
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x1f0", "stub": "0x7100137b40", "cmd_proof_offset": "0x7100137b9c", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x7100146a00"] }
+        }
+      }
+    }
+  }
+}

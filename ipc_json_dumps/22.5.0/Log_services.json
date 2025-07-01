@@ -1,0 +1,38 @@
+{
+  "log_services": {
+    "program_identified": "Log_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710001A770",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710000A290", "lr": "0x710000B400", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710000A560", "lr": "0x710000B56C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000A580", "lr": "0x710000B708", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710000A7E0", "lr": "0x710000B338", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000094B0", "lr": "0x710000B86C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::lm::ILogService": {
+      "_srv": "SRV_710001AA90",
+      "_hash": "fc2696b950876c4c",
+      "0": {"vt":  "0x20", "func": "0x7100010870", "lr": "0x710000F4BC", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::lm::ILogger"], "_srv_outinterfaces": "SRV_710001AA98", "name": "OpenLogger", "wire_order": "in_data[0x8]"}
+    },
+    "nn::lm::ILogger": {
+      "_srv": "SRV_710001AA98",
+      "_hash": "77db5741a0fb3461",
+      "0":  {"vt":  "0x20", "func": "0x710000A290", "lr": "0x710000F9DC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "Log", "wire_order": "buffers=[in]"},
+      "1":  {"vt":  "0x28", "func": "0x710000A560", "lr": "0x710000F820", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDestination", "wire_order": "in_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x710000A580", "lr": "0x710000FB4C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "TransmitHashedLog", "wire_order": "buffers=[in]"},
+      "3":  {"vt":  "0x38", "func": "0x710000A7E0", "lr": "0x710000FCC0", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [33], "name": "DevNotify", "wire_order": "in_data[0x28]; buffers=[in]"},
+      "11": {"vt":  "0x40", "func": "0x71000094B0", "lr": "0x710000FE78", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::lm::ISharedMemoryAccessor"], "_srv_outinterfaces": "SRV_710001AAA0", "name": "OpenSharedMemoryAccessorForHashedLog", "wire_order": "N/A"}
+    },
+    "nn::lm::ISharedMemoryAccessor": {
+      "_srv": "SRV_710001AAA0",
+      "_hash": "1183f0d34f30f574",
+      "_likely_basis": "DB position 4/4 in Log_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x7100007550", "lr": "0x710001018C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetBufferSize", "wire_order": "out_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x7100007570", "lr": "0x7100010308", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSharedMemoryHandle", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100007590", "lr": "0x7100010468", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCanPushEventHandle", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x71000075A0", "lr": "0x71000105C8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCanPopEventHandle", "wire_order": "N/A"}
+    },
+    "_services": ["fatal:u", "psc:m"]
+  }
+}

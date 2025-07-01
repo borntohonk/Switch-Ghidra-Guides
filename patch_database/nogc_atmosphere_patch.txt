@@ -1,0 +1,48 @@
+                case FsVersion_19_0_0:
+                    AddPatch(fs_meta, 0x195C75, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x195E75, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x16F170, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_19_0_0_Exfat:
+                    AddPatch(fs_meta, 0x1A14A5, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1A16A5, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x17A9A0, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_20_0_0:
+                case FsVersion_20_1_0:
+                    AddPatch(fs_meta, 0x1A7E25, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1A8025, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x17C250, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_20_0_0_Exfat:
+                case FsVersion_20_1_0_Exfat:
+                    AddPatch(fs_meta, 0x1B3745, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1B3945, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x187B70, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_21_0_0:
+                case FsVersion_21_2_0:
+                    AddPatch(fs_meta, 0x1AC9ED, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1ACA05, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x17FBE0, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_21_0_0_Exfat:
+                case FsVersion_21_2_0_Exfat:
+                    AddPatch(fs_meta, 0x1B7B4D, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1B7B65, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x18AD40, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_22_0_0:
+                case FsVersion_22_5_0:
+                    AddPatch(fs_meta, 0x1B023D, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1B0255, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x183060, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                case FsVersion_22_0_0_Exfat:
+                case FsVersion_22_5_0_Exfat:
+                    AddPatch(fs_meta, 0x1BB42D, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x1BB445, NogcPatch0, sizeof(NogcPatch0));
+                    AddPatch(fs_meta, 0x18E250, NogcPatch1, sizeof(NogcPatch1));
+                    break;
+                default:
+                    break;

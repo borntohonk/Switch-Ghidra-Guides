@@ -1,0 +1,160 @@
+{
+  "ptm_services": {
+    "program_identified": "PTM_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100099A10",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x7100021C00", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x7100021D6C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x7100021F08", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x7100021B38", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710001F770", "lr": "0x710002206C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::apm::IManager": {
+      "_srv": "SRV_7100099E78",
+      "_hash": "01bf237f44aaa7f2",
+      "_likely_basis": "DB position 2/13 in PTM_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100025738", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::apm::ISession"], "_srv_outinterfaces": "SRV_7100099E80", "name": "OpenSession", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x71000254F0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetPerformanceMode", "wire_order": "out_data[0x4]"},
+      "6": {"vt":  "0x30", "lr": "0x71000255B8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsCpuOverclockEnabled", "wire_order": "out_data[0x1]"}
+    },
+    "nn::apm::ISession": {
+      "_srv": "SRV_7100099E80",
+      "_hash": "2835d33c2e483dfd",
+      "_likely_basis": "DB position 3/13 in PTM_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100025A00", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetPerformanceConfiguration", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "lr": "0x7100025C10", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetPerformanceConfiguration", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "lr": "0x7100025A7C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetCpuOverclockEnabled", "wire_order": "in_data[0x1]"}
+    },
+    "nn::apm::ISystemManager": {
+      "_srv": "SRV_7100099E88",
+      "_hash": "5131df2753ed1ff7",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x7100026064", "inbytes":   "0x4", "outbytes":   "0x0", "name": "RequestPerformanceMode", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x71000264FC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "GetPerformanceEvent", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x7100026104", "inbytes":   "0x0", "outbytes":  "0x28", "name": "GetThrottlingState", "wire_order": "out_data[0x28]"},
+      "3": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x7100025F70", "inbytes":   "0x0", "outbytes":  "0x28", "name": "GetLastThrottlingState", "wire_order": "out_data[0x28]"},
+      "4": {"vt":  "0x40", "func": "0x710001F770", "lr": "0x7100026200", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearLastThrottlingState", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x7100020C60", "lr": "0x7100026024", "inbytes":   "0x0", "outbytes":   "0x0", "name": "LoadAndApplySettings", "wire_order": "N/A"},
+      "6": {"vt":  "0x50", "func": "0x7100020DA0", "lr": "0x71000261A8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetCpuBoostMode", "wire_order": "in_data[0x4]"},
+      "7": {"vt":  "0x58", "func": "0x7100020EA0", "lr": "0x71000262A0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCurrentPerformanceConfiguration", "wire_order": "out_data[0x4]"},
+      "8": {"vt":  "0x60", "func": "0x7100020F80", "lr": "0x7100025EC8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCurrentPerformanceMode", "wire_order": "out_data[0x4]"}
+    },
+    "nn::fan::detail::IManager": {
+      "_srv": "SRV_710009A3F8",
+      "_hash": "246ad8dff6992567",
+      "0": {"vt":  "0x20", "lr": "0x710002F6EC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::fan::detail::IController"], "_srv_outinterfaces": "SRV_710009A400", "name": "OpenController", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x28", "lr": "0x710002F8C0", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetRpm", "wire_order": "in_data[0x4]; out_data[0x4]"}
+    },
+    "nn::fan::detail::IController": {
+      "_srv": "SRV_710009A400",
+      "_hash": "467de2003d4cc793",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x710002FE9C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRotationSpeedLevel", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x710002FBC4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRotationSpeedLevel", "wire_order": "out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x710002FC88", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetActualRotationSpeedLevel", "wire_order": "out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x710002FD48", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableFan", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x710001F770", "lr": "0x710002FB74", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableFan", "wire_order": "N/A"}
+    },
+    "nn::fgm::ISession": {
+      "_srv": "SRV_710009A8E0",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 7/13 in PTM_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100033A58", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::fgm::IRequest"], "_srv_outinterfaces": "SRV_710009A8E8", "name": "Initialize", "wire_order": "N/A"}
+    },
+    "nn::fgm::IRequest": {
+      "_srv": "SRV_710009A8E8",
+      "_hash": "83e900208282224a",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x7100033FEC", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "outhandles": [1], "name": "Initialize", "wire_order": "in_data[0x10]"},
+      "1": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x7100033D2C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Set", "wire_order": "in_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x7100033DD8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Get", "wire_order": "out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x7100033D78", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"}
+    },
+    "nn::psm::IPsmServer": {
+      "_srv": "SRV_710009DE68",
+      "_hash": "452daed2dc69bd77",
+      "0":  {"vt":  "0x20", "func": "0x710002AC20", "lr": "0x710004C0E4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetBatteryChargePercentage", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710001D780", "lr": "0x710004C548", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetChargerType", "wire_order": "out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x710004E550", "lr": "0x710004C464", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableBatteryCharging", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x7100050DB0", "lr": "0x710004C750", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableBatteryCharging", "wire_order": "N/A"},
+      "4":  {"vt":  "0x40", "func": "0x7100050DD0", "lr": "0x710004C78C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsBatteryChargingEnabled", "wire_order": "out_data[0x1]"},
+      "5":  {"vt":  "0x48", "func": "0x7100050DF0", "lr": "0x710004C48C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "AcquireControllerPowerSupply", "wire_order": "N/A"},
+      "6":  {"vt":  "0x50", "func": "0x7100050E00", "lr": "0x710004C58C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ReleaseControllerPowerSupply", "wire_order": "N/A"},
+      "7":  {"vt":  "0x58", "func": "0x7100050E10", "lr": "0x710004CCE8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::psm::IPsmSession"], "_srv_outinterfaces": "SRV_710009DE70", "name": "OpenSession", "wire_order": "N/A"},
+      "8":  {"vt":  "0x60", "func": "0x7100050E20", "lr": "0x710004C880", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableEnoughPowerChargeEmulation", "wire_order": "N/A"},
+      "9":  {"vt":  "0x68", "func": "0x7100050E30", "lr": "0x710004C844", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableEnoughPowerChargeEmulation", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x7100050E40", "lr": "0x710004C2DC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableFastBatteryCharging", "wire_order": "N/A"},
+      "11": {"vt":  "0x78", "func": "0x7100050E50", "lr": "0x710004C4C8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableFastBatteryCharging", "wire_order": "N/A"},
+      "12": {"vt":  "0x80", "func": "0x7100050E60", "lr": "0x710004C378", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetBatteryVoltageState", "wire_order": "out_data[0x4]"},
+      "13": {"vt":  "0x88", "func": "0x7100050E80", "lr": "0x710004C1A4", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetRawBatteryChargePercentage", "wire_order": "out_data[0x8]"},
+      "14": {"vt":  "0x90", "func": "0x7100050EA0", "lr": "0x710004C5E8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsEnoughPowerSupplied", "wire_order": "out_data[0x1]"},
+      "15": {"vt":  "0x98", "func": "0x7100050EB0", "lr": "0x710004C694", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetBatteryAgePercentage", "wire_order": "out_data[0x8]"},
+      "16": {"vt":  "0xA0", "func": "0x7100050EC0", "lr": "0x710004CE88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetBatteryChargeInfoEvent", "wire_order": "N/A"},
+      "17": {"vt":  "0xA8", "func": "0x7100050ED0", "lr": "0x710004C91C", "inbytes":   "0x0", "outbytes":  "0x54", "name": "GetBatteryChargeInfoFields", "wire_order": "out_data[0x54]"},
+      "18": {"vt":  "0xB0", "func": "0x7100036600", "lr": "0x710004CFE8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetBatteryChargeCalibratedEvent", "wire_order": "N/A"},
+      "19": {"vt":  "0xB8", "func": "0x7100050EE0", "lr": "0x710004C428", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd19", "wire_order": "N/A"},
+      "20": {"vt":  "0xC0", "func": "0x7100050EF0", "lr": "0x710004C9E0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd20", "wire_order": "N/A"},
+      "22": {"vt":  "0xC8", "func": "0x7100050F00", "lr": "0x710004C148", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd22", "wire_order": "out_data[0x1]"},
+      "23": {"vt":  "0xD0", "func": "0x7100050F10", "lr": "0x710004C31C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd23", "wire_order": "in_data[0x1]"},
+      "24": {"vt":  "0xD8", "func": "0x7100050F30", "lr": "0x710004C298", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd24", "wire_order": "out_data[0x4]"},
+      "25": {"vt":  "0xE0", "func": "0x710004F220", "lr": "0x710004C504", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd25", "wire_order": "out_data[0x4]"},
+      "26": {"vt":  "0xE8", "func": "0x710004B180", "lr": "0x710004C254", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd26", "wire_order": "out_data[0x1]"},
+      "27": {"vt":  "0xF0", "func": "0x7100050F50", "lr": "0x710004CA68", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd27", "wire_order": "out_data[0x4]"}
+    },
+    "nn::psm::IPsmSession": {
+      "_srv": "SRV_710009DE70",
+      "_hash": "b942d1910cdacf8a",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x710004D628", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "BindStateChangeEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x710004D3D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UnbindStateChangeEvent", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x710004D284", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetChargerTypeChangeEventEnabled", "wire_order": "in_data[0x1]"},
+      "3": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x710004D36C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetPowerSupplyChangeEventEnabled", "wire_order": "in_data[0x1]"},
+      "4": {"vt":  "0x40", "func": "0x710001F770", "lr": "0x710004D460", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetBatteryVoltageStateChangeEventEnabled", "wire_order": "in_data[0x1]"},
+      "5": {"vt":  "0x48", "func": "0x7100020C60", "lr": "0x710004D304", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd5", "wire_order": "in_data[0x1]"}
+    },
+    "nn::tc::IManager": {
+      "_srv": "SRV_710009EFE0",
+      "_hash": "71bb46edde28fec6",
+      "0":  {"vt":  "0x20", "func": "0x710002E330", "lr": "0x710005C3BC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetOperationMode", "wire_order": "in_data[0x4]"},
+      "2":  {"vt":  "0x28", "func": "0x7100030750", "lr": "0x710005CBA0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "IsActionAllowed", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "3":  {"vt":  "0x30", "func": "0x7100030760", "lr": "0x710005C6E4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "EnableVirtualTemperature", "wire_order": "in_data[0x4]"},
+      "4":  {"vt":  "0x38", "func": "0x710002AC70", "lr": "0x710005C684", "inbytes":   "0x4", "outbytes":   "0x0", "name": "DisableVirtualTemperature", "wire_order": "in_data[0x4]"},
+      "5":  {"vt":  "0x40", "func": "0x7100030770", "lr": "0x710005C43C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetVirtualTemperature", "wire_order": "in_data[0x8]"},
+      "6":  {"vt":  "0x48", "func": "0x7100030780", "lr": "0x710005C5A0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableFanControl", "wire_order": "N/A"},
+      "7":  {"vt":  "0x50", "func": "0x7100030790", "lr": "0x710005C7D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableFanControl", "wire_order": "N/A"},
+      "8":  {"vt":  "0x58", "func": "0x71000307A0", "lr": "0x710005C810", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsFanControlEnabled", "wire_order": "out_data[0x1]"},
+      "9":  {"vt":  "0x60", "func": "0x71000307B0", "lr": "0x710005C924", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSkinTemperatureMilliC", "wire_order": "out_data[0x4]"},
+      "10": {"vt":  "0x68", "func": "0x71000307C0", "lr": "0x710005C8C0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "LoadAndApplySettings", "wire_order": "N/A"},
+      "11": {"vt":  "0x70", "func": "0x71000307D0", "lr": "0x710005CD08", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Cmd11", "wire_order": "N/A"},
+      "12": {"vt":  "0x78", "func": "0x71000307E0", "lr": "0x710005C5E0", "inbytes":   "0x0", "outbytes":  "0x20", "name": "Cmd12", "wire_order": "out_data[0x20]"},
+      "13": {"vt":  "0x80", "func": "0x710002ACC0", "lr": "0x710005C498", "inbytes":   "0x0", "outbytes":  "0x70", "name": "Cmd13", "wire_order": "out_data[0x70]"}
+    },
+    "nn::ts::server::ITsManager": {
+      "_srv": "SRV_710009F7C8",
+      "_hash": "34e53bed12120348",
+      "4": {"vt":  "0x20", "lr": "0x7100061FFC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::ts::server::ISession"], "_srv_outinterfaces": "SRV_710009F7D0", "name": "OpenSession", "wire_order": "in_data[0x4]"}
+    },
+    "nn::ts::server::ISession": {
+      "_srv": "SRV_710009F7D0",
+      "_hash": "d515faed09561d42",
+      "0": {"vt":  "0x20", "func": "0x7100020600", "lr": "0x7100062480", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetTemperatureRange", "wire_order": "out_data[0x8]"},
+      "2": {"vt":  "0x28", "func": "0x71000208D0", "lr": "0x710006257C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetMeasurementMode", "wire_order": "in_data[0x1]"},
+      "4": {"vt":  "0x30", "func": "0x71000208F0", "lr": "0x71000622FC", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTemperature", "wire_order": "out_data[0x4]"},
+      "5": {"vt":  "0x38", "func": "0x7100020B50", "lr": "0x7100062534", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetAlertThreshold", "wire_order": "in_data[0x4]"},
+      "6": {"vt":  "0x40", "func": "0x710001F770", "lr": "0x7100062648", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetThermThreshold", "wire_order": "in_data[0x4]"},
+      "7": {"vt":  "0x48", "func": "0x7100020C60", "lr": "0x71000623C4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTemperatureWithError", "wire_order": "out_data[0x4]"}
+    },
+    "_services": ["apm:am", "apm:sys", "clkrst", "clkrst:i", "erpt:c", "fatal:u", "fgm:0", "fgm:9", "hshl:set", "i2c:pcv", "ins:r", "pinmux", "psc:m", "set:cal", "set:sys", "srepo:a", "srepo:u", "time:a", "time:r", "time:s", "time:su", "time:u", "usb:pd", "usb:pm"],
+    "_invokes": {
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100030c70", "cmd_proof_offset": "0x7100030c80", "cmd_proof_instruction": "mov w6,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100030960"] }
+        }
+      },
+      "ins:r": {
+        "interface": "nn::ins::IReceiverManager",
+        "commands": {
+          "0": { "name": "GetInputSourceState", "vt_off": "0x20", "stub": "0x710004b0e0", "cmd_proof_offset": "0x710004b0e8", "cmd_proof_instruction": "mov w3,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710005d068"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,292 @@
+{
+  "audio_services": {
+    "program_identified": "Audio_services",
+    "nn::audioctrl::detail::IAudioController": {
+      "_srv": "SRV_7100178DB8",
+      "_hash": "c0389c40b05f4b85",
+      "0":     {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x7100022E70", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetTargetVolume", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "1":     {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x7100022560", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetTargetVolume", "wire_order": "in_data[0x8]"},
+      "2":     {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x71000224F4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTargetVolumeMin", "wire_order": "out_data[0x4]"},
+      "3":     {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x71000225B8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetTargetVolumeMax", "wire_order": "out_data[0x4]"},
+      "4":     {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x7100022FF0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "IsTargetMute", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "5":     {"vt":  "0x48", "func": "0x7100024500", "lr": "0x7100022740", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetTargetMute", "wire_order": "in_data[0x8]"},
+      "6":     {"vt":  "0x50", "func": "0x7100024510", "lr": "0x7100023158", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "IsTargetConnected", "wire_order": "N/A"},
+      "7":     {"vt":  "0x58", "func": "0x7100024520", "lr": "0x71000232BC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetDefaultTarget", "wire_order": "in_data[0x18]"},
+      "8":     {"vt":  "0x60", "func": "0x7100024530", "lr": "0x7100022954", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDefaultTarget", "wire_order": "out_data[0x4]"},
+      "9":     {"vt":  "0x68", "func": "0x7100024540", "lr": "0x7100023430", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetAudioOutputMode", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "10":    {"vt":  "0x70", "func": "0x7100024550", "lr": "0x71000228CC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetAudioOutputMode", "wire_order": "in_u64_0"},
+      "13":    {"vt":  "0x78", "func": "0x7100024560", "lr": "0x71000235B0", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetOutputModeSetting", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "14":    {"vt":  "0x80", "func": "0x7100024570", "lr": "0x7100022864", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetOutputModeSetting", "wire_order": "in_data[0x8]"},
+      "15":    {"vt":  "0x88", "func": "0x7100024580", "lr": "0x7100022478", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetOutputTarget", "wire_order": "in_data[0x4]"},
+      "16":    {"vt":  "0x90", "func": "0x7100024590", "lr": "0x71000227B0", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetInputTargetForceEnabled", "wire_order": "in_data[0x1]"},
+      "17":    {"vt":  "0x98", "func": "0x71000245A0", "lr": "0x7100022410", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetHeadphoneOutputLevelMode", "wire_order": "in_data[0x4]"},
+      "18":    {"vt":  "0xA0", "func": "0x71000245B0", "lr": "0x71000229A8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetHeadphoneOutputLevelMode", "wire_order": "out_data[0x4]"},
+      "19":    {"vt":  "0xA8", "func": "0x71000245C0", "lr": "0x71000223BC", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetForceMonauralOutputModeEnabled", "wire_order": "in_data[0x1]"},
+      "20":    {"vt":  "0xB0", "func": "0x71000245D0", "lr": "0x710002268C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsForceMonauralOutputModeEnabled", "wire_order": "out_data[0x1]"},
+      "22":    {"vt":  "0xB8", "func": "0x71000245E0", "lr": "0x7100022A40", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NotifyHeadphoneVolumeWarningDisplayedEvent", "wire_order": "N/A"},
+      "23":    {"vt":  "0xC0", "func": "0x71000245F0", "lr": "0x7100022A98", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetSystemOutputMasterVolume", "wire_order": "in_data[0x4]"},
+      "24":    {"vt":  "0xC8", "func": "0x7100024600", "lr": "0x7100022B48", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSystemOutputMasterVolume", "wire_order": "out_data[0x4]"},
+      "25":    {"vt":  "0xD0", "func": "0x7100024610", "lr": "0x71000229E8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "GetAudioVolumeDataForPlayReport", "wire_order": "in_u64_0"},
+      "30":    {"vt":  "0xD8", "func": "0x7100024620", "lr": "0x710002232C", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetSpeakerAutoMuteEnabled", "wire_order": "in_data[0x1]"},
+      "31":    {"vt":  "0xE0", "func": "0x7100024630", "lr": "0x710002237C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsSpeakerAutoMuteEnabled", "wire_order": "out_data[0x1]"},
+      "32":    {"vt":  "0xE8", "func": "0x7100024640", "lr": "0x7100022824", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetActiveOutputTarget", "wire_order": "out_data[0x4]"},
+      "33":    {"vt":  "0xF0", "func": "0x7100024650", "lr": "0x7100023734", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [26], "name": "GetTargetDeviceInfo", "wire_order": "out_buf0; in_data[0x4]"},
+      "34":    {"vt":  "0xF8", "func": "0x7100024660", "lr": "0x71000238D8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "AcquireTargetNotification", "wire_order": "N/A"},
+      "40":    {"vt": "0x100", "func": "0x7100024670", "lr": "0x7100023A44", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [22], "name": "GetSystemInformationForDebug", "wire_order": "out_buf0; in_data[0x4]"},
+      "42":    {"vt": "0x108", "func": "0x7100024680", "lr": "0x7100022C24", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetNativeVolumeForDebug", "wire_order": "in_data[0x8]"},
+      "43":    {"vt": "0x110", "func": "0x7100024690", "lr": "0x7100023BF0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "Cmd43", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "5000":  {"vt": "0x118", "func": "0x71000246A0", "lr": "0x7100023D58", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::audioctrl::detail::IAudioController"], "_srv_outinterfaces": "SRV_7100178DB8", "name": "Cmd5000", "wire_order": "N/A"},
+      "10100": {"vt": "0x120", "func": "0x71000246D0", "lr": "0x7100023F00", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "GetAudioVolumeDataForPlayReport", "wire_order": "out_buf0"},
+      "10101": {"vt": "0x128", "func": "0x71000246E0", "lr": "0x7100024068", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "BindAudioVolumeUpdateEventForPlayReport", "wire_order": "N/A"},
+      "10200": {"vt": "0x130", "func": "0x71000246F0", "lr": "0x71000241D0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "Cmd10200", "wire_order": "out_buf0"},
+      "50003": {"vt": "0x138", "func": "0x7100024700", "lr": "0x710002433C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [9], "name": "SetForceOverrideExternalDeviceNameForDebug", "wire_order": "in_buf0"},
+      "50004": {"vt": "0x140", "func": "0x7100024710", "lr": "0x71000222D8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearForceOverrideExternalDeviceNameForDebug", "wire_order": "N/A"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100179AC0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x7100031F70", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x71000320DC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x7100032278", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x7100031EA8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x71000323DC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::audio::detail::IAudioSystemManagerForApplet": {
+      "_srv": "SRV_710017A120",
+      "_hash": "57eb97d04ffae776",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x7100036C80", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RegisterAppletResourceUserId", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x7100036EA4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnregisterAppletResourceUserId", "wire_order": "in_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x7100036D68", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RequestSuspendAudio", "wire_order": "in_data[0x10]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x7100036E34", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RequestResumeAudio", "wire_order": "in_data[0x10]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x7100037080", "inbytes":   "0x8", "outbytes":   "0x4", "name": "GetAudioOutputProcessMasterVolume", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "5": {"vt":  "0x48", "func": "0x7100030FD0", "lr": "0x71000371FC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetAudioOutputProcessMasterVolume", "wire_order": "in_data[0x18]"},
+      "6": {"vt":  "0x50", "func": "0x7100031110", "lr": "0x7100037370", "inbytes":   "0x8", "outbytes":   "0x4", "name": "GetAudioInputProcessMasterVolume", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "7": {"vt":  "0x58", "func": "0x7100031210", "lr": "0x71000374EC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetAudioInputProcessMasterVolume", "wire_order": "in_data[0x18]"},
+      "8": {"vt":  "0x60", "func": "0x71000312F0", "lr": "0x7100037660", "inbytes":   "0x8", "outbytes":   "0x4", "name": "GetAudioOutputProcessRecordVolume", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "9": {"vt":  "0x68", "func": "0x71000313E0", "lr": "0x71000377DC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "SetAudioOutputProcessRecordVolume", "wire_order": "in_data[0x18]"}
+    },
+    "nn::audio::detail::IAudioSystemManagerForDebugger": {
+      "_srv": "SRV_710017A290",
+      "_hash": "3c3c0d8e93ea8fbd",
+      "_likely_basis": "DB position 4/16 in Audio_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100038348", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestSuspendAudioForDebug", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "lr": "0x71000383A8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestResumeAudioForDebug", "wire_order": "in_data[0x8]"}
+    },
+    "nn::audio::detail::IAudioSnoopManager": {
+      "_srv": "SRV_710017A298",
+      "_hash": "caeb56da6662214b",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x71000386C0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "GetDspStatistics", "wire_order": "buffers=[out]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710003882C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetAppletStateSummaries", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x71000389E0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [21], "name": "SetDspStatisticsParameter", "wire_order": "buffers=[in]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x7100038B50", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [22], "name": "GetDspStatisticsParameter", "wire_order": "buffers=[out]"}
+    },
+    "nn::audio::detail::IAudioRendererManager": {
+      "_srv": "SRV_710017A458",
+      "_hash": "4c450b68d9628b7d",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x710003A3EC", "inbytes":  "0x48", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::audio::detail::IAudioRenderer"], "_srv_outinterfaces": "SRV_710017A460", "inhandles": [1, 1], "name": "OpenAudioRenderer", "wire_order": "in_data[0x48]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710003A6A0", "inbytes":  "0x34", "outbytes":   "0x8", "name": "GetWorkBufferSize", "wire_order": "in_data[0x34]; out_data[0x8]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x710003A83C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::audio::detail::IAudioDevice"], "_srv_outinterfaces": "SRV_710017A468", "name": "GetAudioDeviceService", "wire_order": "in_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x710003AA0C", "inbytes":  "0x50", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::audio::detail::IAudioRenderer"], "_srv_outinterfaces": "SRV_710017A460", "inhandles": [1], "name": "OpenAudioRendererForManualExecution", "wire_order": "in_data[0x50]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x710003AC8C", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::audio::detail::IAudioDevice"], "_srv_outinterfaces": "SRV_710017A468", "name": "GetAudioDeviceServiceWithRevisionInfo", "wire_order": "in_data[0x10]"}
+    },
+    "nn::audio::detail::IAudioRenderer": {
+      "_srv": "SRV_710017A460",
+      "_hash": "42fb62f927eab0a0",
+      "_hash_alt": "38c8c78da0f97f0b",
+      "0":  {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x710003AF9C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSampleRate", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x710003B198", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSampleCount", "wire_order": "out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x710003B0E8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetMixBufferCount", "wire_order": "out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x710003B134", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x710003B614", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6, 6, 5], "name": "RequestUpdate", "wire_order": "buffers=[out, out, in]"},
+      "5":  {"vt":  "0x48", "func": "0x7100024500", "lr": "0x710003B208", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Start", "wire_order": "N/A"},
+      "6":  {"vt":  "0x50", "func": "0x7100024510", "lr": "0x710003B2F8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Stop", "wire_order": "N/A"},
+      "7":  {"vt":  "0x58", "func": "0x7100024520", "lr": "0x710003B798", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "QuerySystemEvent", "wire_order": "N/A"},
+      "8":  {"vt":  "0x60", "func": "0x7100024530", "lr": "0x710003B3C8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRenderingTimeLimit", "wire_order": "in_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x7100024540", "lr": "0x710003B09C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRenderingTimeLimit", "wire_order": "out_data[0x4]"},
+      "10": {"vt":  "0x70", "func": "0x7100024550", "lr": "0x710003B904", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [34, 34, 33], "name": "RequestUpdateAuto", "wire_order": "buffers=[out, out, in]"},
+      "11": {"vt":  "0x78", "func": "0x7100024560", "lr": "0x710003AFE8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ExecuteAudioRendererRendering", "wire_order": "N/A"},
+      "12": {"vt":  "0x80", "func": "0x7100024570", "lr": "0x710003B048", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetVoiceDropParameter", "wire_order": "in_data[0x4]"},
+      "13": {"vt":  "0x88", "func": "0x7100024580", "lr": "0x710003B238", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetVoiceDropParameter", "wire_order": "out_data[0x4]"}
+    },
+    "nn::audio::detail::IAudioDevice": {
+      "_srv": "SRV_710017A468",
+      "_hash": "0d56ef8c5a8a8bc2",
+      "_hash_alt": "4c749e9a92de7b54",
+      "0":  {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x710003C1AC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAudioDeviceName", "wire_order": "out_buf0; out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x710003C364", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5], "name": "SetAudioDeviceOutputVolume", "wire_order": "in_buf0; in_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x710003C50C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [5], "name": "GetAudioDeviceOutputVolume", "wire_order": "in_buf0; out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x710003C6BC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetActiveAudioDeviceName", "wire_order": "out_buf0"},
+      "4":  {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x710003C828", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "QueryAudioDeviceSystemEvent", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100024500", "lr": "0x710003BD4C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetActiveChannelCount", "wire_order": "out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x7100024510", "lr": "0x710003C98C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "ListAudioDeviceNameAuto", "wire_order": "out_buf0; out_data[0x4]"},
+      "7":  {"vt":  "0x58", "func": "0x7100024520", "lr": "0x710003CB44", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33], "name": "SetAudioDeviceOutputVolumeAuto", "wire_order": "in_buf0; in_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x7100024530", "lr": "0x710003CCEC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [33], "name": "GetAudioDeviceOutputVolumeAuto", "wire_order": "in_buf0; out_data[0x4]"},
+      "10": {"vt":  "0x68", "func": "0x7100024540", "lr": "0x710003CE9C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [34], "name": "GetActiveAudioDeviceNameAuto", "wire_order": "out_buf0"},
+      "11": {"vt":  "0x70", "func": "0x7100024550", "lr": "0x710003D008", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "QueryAudioDeviceInputEvent", "wire_order": "N/A"},
+      "12": {"vt":  "0x78", "func": "0x7100024560", "lr": "0x710003D168", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "QueryAudioDeviceOutputEvent", "wire_order": "N/A"},
+      "13": {"vt":  "0x80", "func": "0x7100024570", "lr": "0x710003D2CC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetActiveAudioOutputDeviceName", "wire_order": "out_buf0"},
+      "14": {"vt":  "0x88", "func": "0x7100024580", "lr": "0x710003D43C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAudioOutputDeviceName", "wire_order": "out_buf0; out_data[0x4]"},
+      "15": {"vt":  "0x90", "func": "0x7100024590", "lr": "0x710003D5EC", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "AcquireAudioInputDeviceNotification", "wire_order": "in_u64_0"},
+      "16": {"vt":  "0x98", "func": "0x71000245A0", "lr": "0x710003BE7C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ReleaseAudioInputDeviceNotification", "wire_order": "in_u64_0"},
+      "17": {"vt":  "0xA0", "func": "0x71000245B0", "lr": "0x710003D78C", "inbytes":   "0x8", "outbytes":   "0x0", "outhandles": [1], "name": "AcquireAudioOutputDeviceNotification", "wire_order": "in_u64_0"},
+      "18": {"vt":  "0xA8", "func": "0x71000245C0", "lr": "0x710003BF34", "inbytes":   "0x8", "outbytes":   "0x0", "name": "ReleaseAudioOutputDeviceNotification", "wire_order": "in_u64_0"},
+      "19": {"vt":  "0xB0", "func": "0x71000245D0", "lr": "0x710003BBE4", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetAudioDeviceOutputVolumeAutoTuneEnabled", "wire_order": "in_data[0x1]"},
+      "20": {"vt":  "0xB8", "func": "0x71000245E0", "lr": "0x710003BCF8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsAudioDeviceOutputVolumeAutoTuneEnabled", "wire_order": "out_data[0x1]"},
+      "21": {"vt":  "0xC0", "func": "0x71000245F0", "lr": "0x710003C000", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsActiveOutputDeviceEstimatedLowLatency", "wire_order": "out_data[0x1]"}
+    },
+    "nn::audio::detail::IAudioOutManager": {
+      "_srv": "SRV_710017A470",
+      "_hash": "fb5b550a70418983",
+      "_hash_alt": "7f05ca11c3352dd2",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x710003DABC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAudioOuts", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710003DC78", "inbytes":  "0x10", "outbytes":  "0x10", "buffers": [5, 6], "pid": true, "outinterfaces": ["nn::audio::detail::IAudioOut"], "_srv_outinterfaces": "SRV_710017A478", "inhandles": [1], "name": "OpenAudioOut", "wire_order": "in_data[0x10]; out_data[0x10]; buffers=[in, out]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x710003DF3C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "ListAudioOutsAuto", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x710003E0F8", "inbytes":  "0x10", "outbytes":  "0x10", "buffers": [33, 34], "pid": true, "outinterfaces": ["nn::audio::detail::IAudioOut"], "_srv_outinterfaces": "SRV_710017A478", "inhandles": [1], "name": "OpenAudioOutAuto", "wire_order": "in_data[0x10]; out_data[0x10]; buffers=[in, out]"}
+    },
+    "nn::audio::detail::IAudioOut": {
+      "_srv": "SRV_710017A478",
+      "_hash": "e29082e83dd18233",
+      "_hash_alt": "bc2821d8ff1c11e7",
+      "0":  {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x710003E4EC", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAudioOutState", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x710003E838", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Start", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x710003E7C8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Stop", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x710003EBF0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "AppendAudioOutBuffer", "wire_order": "in_buf0; in_u64_0"},
+      "4":  {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x710003ED98", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "RegisterBufferEvent", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100024500", "lr": "0x710003EEFC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetReleasedAudioOutBuffers", "wire_order": "out_buf0; out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x7100024510", "lr": "0x710003F0B0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "ContainsAudioOutBuffer", "wire_order": "in_u64_0; out_data[0x1]"},
+      "7":  {"vt":  "0x58", "func": "0x7100024520", "lr": "0x710003F220", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [33], "name": "AppendAudioOutBufferAuto", "wire_order": "in_buf0; in_u64_0"},
+      "8":  {"vt":  "0x60", "func": "0x7100024530", "lr": "0x710003F3CC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetReleasedAudioOutBuffersAuto", "wire_order": "out_buf0; out_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x7100024540", "lr": "0x710003E70C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAudioOutBufferCount", "wire_order": "out_data[0x4]"},
+      "10": {"vt":  "0x70", "func": "0x7100024550", "lr": "0x710003E9C0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetAudioOutPlayedSampleCount", "wire_order": "out_data[0x8]"},
+      "11": {"vt":  "0x78", "func": "0x7100024560", "lr": "0x710003E58C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "FlushAudioOutBuffers", "wire_order": "out_data[0x1]"},
+      "12": {"vt":  "0x80", "func": "0x7100024570", "lr": "0x710003E65C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetAudioOutVolume", "wire_order": "in_data[0x4]"},
+      "13": {"vt":  "0x88", "func": "0x7100024580", "lr": "0x710003E8EC", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAudioOutVolume", "wire_order": "out_data[0x4]"}
+    },
+    "nn::audio::detail::IAudioInManager": {
+      "_srv": "SRV_710017A480",
+      "_hash": "bc98009e9b9460b7",
+      "_hash_alt": "89e9618c1ee7ed66",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x710003F6EC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "ListAudioIns", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710003F8A8", "inbytes":  "0x10", "outbytes":  "0x10", "buffers": [5, 6], "pid": true, "outinterfaces": ["nn::audio::detail::IAudioIn"], "_srv_outinterfaces": "SRV_710017A488", "inhandles": [1], "name": "OpenAudioIn", "wire_order": "in_data[0x10]; out_data[0x10]; buffers=[in, out]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x710003FB6C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "ListAudioInsAuto", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x710003FD28", "inbytes":  "0x10", "outbytes":  "0x10", "buffers": [33, 34], "pid": true, "outinterfaces": ["nn::audio::detail::IAudioIn"], "_srv_outinterfaces": "SRV_710017A488", "inhandles": [1], "name": "OpenAudioInAuto", "wire_order": "in_data[0x10]; out_data[0x10]; buffers=[in, out]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x710003FFEC", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "ListAudioInsAutoFiltered", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "5": {"vt":  "0x48", "func": "0x7100030FD0", "lr": "0x71000401AC", "inbytes":  "0x18", "outbytes":  "0x10", "buffers": [5, 6], "pid": true, "outinterfaces": ["nn::audio::detail::IAudioIn"], "_srv_outinterfaces": "SRV_710017A488", "inhandles": [1], "name": "OpenAudioInProtocolSpecified", "wire_order": "in_data[0x18]; out_data[0x10]; buffers=[in, out]"}
+    },
+    "nn::audio::detail::IAudioIn": {
+      "_srv": "SRV_710017A488",
+      "_hash": "711dc19f3ecb8a28",
+      "_hash_alt": "cfa69fc1af1104aa",
+      "0":  {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x710004058C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAudioInState", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x71000407F0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Start", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x7100040774", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Stop", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x7100040A80", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "AppendAudioInBuffer", "wire_order": "in_buf0; in_u64_0"},
+      "4":  {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x7100040C28", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "RegisterBufferEvent", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100024500", "lr": "0x7100040D8C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetReleasedAudioInBuffers", "wire_order": "out_buf0; out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x7100024510", "lr": "0x7100040F40", "inbytes":   "0x8", "outbytes":   "0x1", "name": "ContainsAudioInBuffer", "wire_order": "in_u64_0; out_data[0x1]"},
+      "7":  {"vt":  "0x58", "func": "0x7100024520", "lr": "0x71000410B0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "inhandles": [1], "name": "AppendUacInBuffer", "wire_order": "in_buf0; in_u64_0"},
+      "8":  {"vt":  "0x60", "func": "0x7100024530", "lr": "0x7100041290", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [33], "name": "AppendAudioInBufferAuto", "wire_order": "in_buf0; in_u64_0"},
+      "9":  {"vt":  "0x68", "func": "0x7100024540", "lr": "0x710004143C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetReleasedAudioInBuffersAuto", "wire_order": "out_buf0; out_data[0x4]"},
+      "10": {"vt":  "0x70", "func": "0x7100024550", "lr": "0x71000415F0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [33], "inhandles": [1], "name": "AppendUacInBufferAuto", "wire_order": "in_buf0; in_data[0x8]"},
+      "11": {"vt":  "0x78", "func": "0x7100024560", "lr": "0x71000406A0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetAudioInBufferCount", "wire_order": "out_data[0x4]"},
+      "12": {"vt":  "0x80", "func": "0x7100024570", "lr": "0x7100040708", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDeviceGain", "wire_order": "in_data[0x4]"},
+      "13": {"vt":  "0x88", "func": "0x7100024580", "lr": "0x71000408B0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDeviceGain", "wire_order": "out_data[0x4]"},
+      "14": {"vt":  "0x90", "func": "0x7100024590", "lr": "0x71000405DC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "FlushAudioInBuffers", "wire_order": "out_data[0x1]"}
+    },
+    "nn::audio::detail::IFinalOutputRecorderManager": {
+      "_srv": "SRV_710017A490",
+      "_hash": "93d30d4ae3bfbf08",
+      "0": {"vt":  "0x20", "func": "0x7100035A30", "lr": "0x71000418F0", "inbytes":  "0x10", "outbytes":  "0x10", "outinterfaces": ["nn::audio::detail::IFinalOutputRecorder"], "_srv_outinterfaces": "SRV_710017A498", "inhandles": [1], "name": "OpenFinalOutputRecorder", "wire_order": "in_data[0x10]; out_data[0x10]"}
+    },
+    "nn::audio::detail::IFinalOutputRecorder": {
+      "_srv": "SRV_710017A498",
+      "_hash": "d787c2003f82bad2",
+      "_hash_alt": "ff05b2717e3f1033",
+      "0":  {"vt":  "0x20", "func": "0x71000244B0", "lr": "0x7100041C5C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetFinalOutputRecorderState", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x71000244C0", "lr": "0x7100041ED4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Start", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x71000244D0", "lr": "0x7100041E0C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Stop", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x71000244E0", "lr": "0x71000421E0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "AppendFinalOutputRecorderBuffer", "wire_order": "in_buf0; in_u64_0"},
+      "4":  {"vt":  "0x40", "func": "0x71000244F0", "lr": "0x7100042388", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "RegisterBufferEvent", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100024500", "lr": "0x71000424EC", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [6], "name": "GetReleasedFinalOutputRecorderBuffers", "wire_order": "out_buf0; out_data[0x10]"},
+      "6":  {"vt":  "0x50", "func": "0x7100024510", "lr": "0x71000426B0", "inbytes":   "0x8", "outbytes":   "0x1", "name": "ContainsFinalOutputRecorderBuffer", "wire_order": "in_u64_0; out_data[0x1]"},
+      "7":  {"vt":  "0x58", "func": "0x7100024520", "lr": "0x7100042820", "inbytes":   "0x8", "outbytes":   "0x8", "name": "GetFinalOutputRecorderBufferEndTime", "wire_order": "in_data[0x8]; out_data[0x8]"},
+      "8":  {"vt":  "0x60", "func": "0x7100024530", "lr": "0x71000429A0", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [33], "name": "AppendFinalOutputRecorderBufferAuto", "wire_order": "in_buf0; in_u64_0"},
+      "9":  {"vt":  "0x68", "func": "0x7100024540", "lr": "0x7100042B4C", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [34], "name": "GetReleasedFinalOutputRecorderBuffersAuto", "wire_order": "out_buf0; out_data[0x10]"},
+      "10": {"vt":  "0x70", "func": "0x7100024550", "lr": "0x7100041FB4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "FlushFinalOutputRecorderBuffers", "wire_order": "out_data[0x1]"},
+      "11": {"vt":  "0x78", "func": "0x7100024560", "lr": "0x7100041D1C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "AttachWorkBuffer", "wire_order": "in_data[0x18]"}
+    },
+    "nn::codec::detail::IHardwareOpusDecoderManager": {
+      "_srv": "SRV_710017CE58",
+      "_hash": "0e7e0f597b2bf6e7",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x710008F3A0", "inbytes":   "0xC", "outbytes":   "0x0", "outinterfaces": ["nn::codec::detail::IHardwareOpusDecoder"], "_srv_outinterfaces": "SRV_710017CE60", "inhandles": [1], "name": "OpenHardwareOpusDecoder", "wire_order": "in_data[0xC]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710008F5D0", "inbytes":   "0x8", "outbytes":   "0x4", "name": "GetWorkBufferSize", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x710008F754", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "outinterfaces": ["nn::codec::detail::IHardwareOpusDecoder"], "_srv_outinterfaces": "SRV_710017CE60", "inhandles": [1], "name": "OpenHardwareOpusDecoderForMultiStream", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x710008F9A0", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "GetWorkBufferSizeForMultiStream", "wire_order": "out_data[0x4]; buffers=[in]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x710008FB4C", "inbytes":  "0x14", "outbytes":   "0x0", "outinterfaces": ["nn::codec::detail::IHardwareOpusDecoder"], "_srv_outinterfaces": "SRV_710017CE60", "inhandles": [1], "name": "OpenHardwareOpusDecoderEx", "wire_order": "in_data[0x14]"},
+      "5": {"vt":  "0x48", "func": "0x7100030FD0", "lr": "0x710008FD80", "inbytes":  "0x10", "outbytes":   "0x4", "name": "GetWorkBufferSizeEx", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "6": {"vt":  "0x50", "func": "0x7100031110", "lr": "0x710008FF04", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "outinterfaces": ["nn::codec::detail::IHardwareOpusDecoder"], "_srv_outinterfaces": "SRV_710017CE60", "inhandles": [1], "name": "OpenHardwareOpusDecoderForMultiStreamEx", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "7": {"vt":  "0x58", "func": "0x7100031210", "lr": "0x7100090150", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "GetWorkBufferSizeForMultiStreamEx", "wire_order": "out_data[0x4]; buffers=[in]"},
+      "8": {"vt":  "0x60", "func": "0x71000312F0", "lr": "0x7100090300", "inbytes":  "0x10", "outbytes":   "0x4", "name": "GetWorkBufferSizeExEx", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "9": {"vt":  "0x68", "func": "0x71000313E0", "lr": "0x7100090480", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "GetWorkBufferSizeForMultiStreamExEx", "wire_order": "out_data[0x4]; buffers=[in]"}
+    },
+    "nn::codec::detail::IHardwareOpusDecoder": {
+      "_srv": "SRV_710017CE60",
+      "_hash": "0f8eee52089b7b28",
+      "0": {"vt":  "0x20", "func": "0x7100030970", "lr": "0x71000907A0", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6, 5], "name": "DecodeInterleavedOld", "wire_order": "out_data[0x8]; buffers=[out, in]"},
+      "1": {"vt":  "0x28", "func": "0x7100030C40", "lr": "0x710009096C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetContext", "wire_order": "buffers=[in]"},
+      "2": {"vt":  "0x30", "func": "0x7100030C60", "lr": "0x7100090AE0", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [6, 5], "name": "DecodeInterleavedForMultiStreamOld", "wire_order": "out_data[0x8]; buffers=[out, in]"},
+      "3": {"vt":  "0x38", "func": "0x7100030EC0", "lr": "0x7100090CAC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetContextForMultiStream", "wire_order": "buffers=[in]"},
+      "4": {"vt":  "0x40", "func": "0x710002F990", "lr": "0x7100090E20", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [70, 5], "name": "DecodeInterleavedWithPerfOld", "wire_order": "out_data[0x10]; buffers=[out, in]"},
+      "5": {"vt":  "0x48", "func": "0x7100030FD0", "lr": "0x7100090FF0", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [70, 5], "name": "DecodeInterleavedForMultiStreamWithPerfOld", "wire_order": "out_data[0x10]; buffers=[out, in]"},
+      "6": {"vt":  "0x50", "func": "0x7100031110", "lr": "0x71000911C8", "inbytes":   "0x1", "outbytes":  "0x10", "buffers": [70, 5], "name": "DecodeInterleavedWithPerfAndResetOld", "wire_order": "in_data[0x1]; out_data[0x10]; buffers=[out, in]"},
+      "7": {"vt":  "0x58", "func": "0x7100031210", "lr": "0x71000913C8", "inbytes":   "0x1", "outbytes":  "0x10", "buffers": [70, 5], "name": "DecodeInterleavedForMultiStreamWithPerfAndResetOld", "wire_order": "in_data[0x1]; out_data[0x10]; buffers=[out, in]"},
+      "8": {"vt":  "0x60", "func": "0x71000312F0", "lr": "0x71000915C8", "inbytes":   "0x1", "outbytes":  "0x10", "buffers": [70, 69], "name": "DecodeInterleaved", "wire_order": "in_data[0x1]; out_data[0x10]; buffers=[out, in]"},
+      "9": {"vt":  "0x68", "func": "0x71000313E0", "lr": "0x71000917C8", "inbytes":   "0x1", "outbytes":  "0x10", "buffers": [70, 69], "name": "DecodeInterleavedForMultiStream", "wire_order": "in_data[0x1]; out_data[0x10]; buffers=[out, in]"}
+    },
+    "_services": ["aud:a", "aud:d", "audctl", "auddev", "audin:u", "audout:u", "audrec:u", "audren:u", "btdrv", "clkrst", "erpt:c", "fatal:p", "fatal:u", "hid:sys", "hwopus", "i2c:pcv", "ins:s", "ovln:snd", "psc:m", "set:sys", "srepo:a", "srepo:u", "usb:hs"],
+    "_invokes": {
+      "btdrv": {
+        "interface": "nn::bluetooth::IBluetoothDriver",
+        "commands": {
+          "132": { "name": "OpenAudioOut", "vt_off": "0x378", "stub": "0x71000859a0", "cmd_proof_offset": "0x71000859a8", "cmd_proof_instruction": "mov w3,#0x84", "cmd_hex_and_dec": "0x84 / 132", "calls": ["0x710008447c"] },
+          "133": { "name": "CloseAudioOut", "vt_off": "0x380", "stub": "0x71000859b0", "cmd_proof_offset": "0x71000859b8", "cmd_proof_instruction": "mov w2,#0x85", "cmd_hex_and_dec": "0x85 / 133", "calls": ["0x710008450c"] },
+          "134": { "name": "AcquireAudioOutStateChangedEvent", "vt_off": "0x388", "stub": "0x71000859c0", "cmd_proof_offset": "0x71000859c8", "cmd_proof_instruction": "mov w3,#0x86", "cmd_hex_and_dec": "0x86 / 134", "calls": ["0x71000845d0"] },
+          "135": { "name": "StartAudioOut", "vt_off": "0x390", "stub": "0x71000859d0", "cmd_proof_offset": "0x71000859d8", "cmd_proof_instruction": "mov w6,#0x87", "cmd_hex_and_dec": "0x87 / 135", "calls": ["0x71000846dc"] },
+          "136": { "name": "StopAudioOut", "vt_off": "0x398", "stub": "0x71000859e0", "cmd_proof_offset": "0x71000859e8", "cmd_proof_instruction": "mov w2,#0x88", "cmd_hex_and_dec": "0x88 / 136", "calls": ["0x710008479c"] },
+          "137": { "name": "GetAudioOutState", "vt_off": "0x3a0", "stub": "0x71000859f0", "cmd_proof_offset": "0x71000859f8", "cmd_proof_instruction": "mov w3,#0x89", "cmd_hex_and_dec": "0x89 / 137", "calls": ["0x7100084838"] },
+          "140": { "name": "AcquireAudioOutBufferAvailableEvent", "vt_off": "0x3b8", "stub": "0x7100085a20", "cmd_proof_offset": "0x7100085a28", "cmd_proof_instruction": "mov w3,#0x8c", "cmd_hex_and_dec": "0x8c / 140", "calls": ["0x7100084900"] },
+          "141": { "name": "SendAudioData", "vt_off": "0x3c0", "stub": "0x7100085a30", "cmd_proof_offset": "0x7100085a3c", "cmd_proof_instruction": "mov w5,#0x8d", "cmd_hex_and_dec": "0x8d / 141", "calls": ["0x71000849f0"] },
+          "150": { "name": "AcquireAudioSinkVolumeLocallyChangedEvent", "vt_off": "0x3f8", "stub": "0x7100085af0", "cmd_proof_offset": "0x7100085af8", "cmd_proof_instruction": "mov w3,#0x96", "cmd_hex_and_dec": "0x96 / 150", "calls": ["0x7100084aa0"] },
+          "151": { "name": "AcquireAudioSinkVolumeUpdateRequestCompletedEvent", "vt_off": "0x400", "stub": "0x7100085b00", "cmd_proof_offset": "0x7100085b08", "cmd_proof_instruction": "mov w3,#0x97", "cmd_hex_and_dec": "0x97 / 151", "calls": ["0x7100084b90"] },
+          "152": { "name": "GetAudioSinkVolume", "vt_off": "0x408", "stub": "0x7100085b10", "cmd_proof_offset": "0x7100085b18", "cmd_proof_instruction": "mov w3,#0x98", "cmd_hex_and_dec": "0x98 / 152", "calls": ["0x7100084c74"] },
+          "153": { "name": "RequestUpdateAudioSinkVolume", "vt_off": "0x410", "stub": "0x7100085b20", "cmd_proof_offset": "0x7100085b2c", "cmd_proof_instruction": "mov w3,#0x99", "cmd_hex_and_dec": "0x99 / 153", "calls": ["0x7100084d14"] },
+          "154": { "name": "IsAudioSinkVolumeSupported", "vt_off": "0x418", "stub": "0x7100085b40", "cmd_proof_offset": "0x7100085b48", "cmd_proof_instruction": "mov w3,#0x9a", "cmd_hex_and_dec": "0x9a / 154", "calls": ["0x7100084db4"] }
+        }
+      },
+      "fatal:p": {
+        "interface": "nn::fatalsrv::IPrivateService",
+        "commands": {
+          "0": { "name": "GetFatalEvent", "vt_off": "0x20", "stub": "0x7100098ba0", "cmd_proof_offset": "0x7100098ba4", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100098160"] }
+        }
+      },
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100098470", "cmd_proof_offset": "0x7100098480", "cmd_proof_instruction": "mov w6,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100097f80"] }
+        }
+      },
+      "ins:s": {
+        "interface": "nn::ins::ISenderManager",
+        "commands": {
+          "0": { "name": "GetNotifyEvent", "vt_off": "0x20", "stub": "0x710009b850", "cmd_proof_offset": "0x710009b858", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710009b470"] }
+        }
+      },
+      "set:sys": {
+        "interface": "nn::settings::ISystemSettingsServer",
+        "commands": {
+          "8": { "name": "SetLockScreenFlag", "vt_off": "0x58", "stub": "0x71000a0740", "cmd_proof_offset": "0x71000a0748", "cmd_proof_instruction": "mov w2,#0x8", "cmd_hex_and_dec": "0x8 / 8", "calls": ["0x71000288d0"] }
+        }
+      }
+    }
+  }
+}
