@@ -1,0 +1,30 @@
+{
+  "ro_services": {
+    "program_identified": "RO_services",
+    "nn::ro::detail::IDebugMonitorInterface": {
+      "_srv": "SRV_71000281D0",
+      "_hash": "3a9ce044e6b6f008",
+      "0": {"vt":  "0x20", "func": "0x71000154A0", "lr": "0x7100001054", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [6], "name": "GetProcessModuleInfo", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[out]"}
+    },
+    "nn::ro::detail::IRoInterface": {
+      "_srv": "SRV_71000281D8",
+      "_hash": "020bf41c89187aeb",
+      "0":  {"vt":  "0x20", "func": "0x7100002060", "lr": "0x7100001390", "inbytes":  "0x28", "outbytes":   "0x8", "pid": true, "name": "MapManualLoadModuleMemory", "wire_order": "in_data[0x28]; out_data[0x8]"},
+      "1":  {"vt":  "0x28", "func": "0x71000020A0", "lr": "0x710000153C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "UnmapManualLoadModuleMemory", "wire_order": "in_data[0x10]"},
+      "2":  {"vt":  "0x30", "func": "0x71000020D0", "lr": "0x71000016CC", "inbytes":  "0x18", "outbytes":   "0x0", "pid": true, "name": "RegisterModuleInfo", "wire_order": "in_data[0x18]"},
+      "3":  {"vt":  "0x38", "func": "0x71000020E0", "lr": "0x710000185C", "inbytes":  "0x10", "outbytes":   "0x0", "pid": true, "name": "UnregisterModuleInfo", "wire_order": "in_data[0x10]"},
+      "4":  {"vt":  "0x40", "func": "0x7100002110", "lr": "0x71000019EC", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "inhandles": [1], "name": "RegisterProcessHandle", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x48", "func": "0x7100002120", "lr": "0x7100001B9C", "inbytes":  "0x18", "outbytes":   "0x0", "pid": true, "inhandles": [1], "name": "RegisterModuleInfoWithUserProcessHandle", "wire_order": "in_data[0x18]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100028870",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100013B40", "lr": "0x71000112E0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100013B90", "lr": "0x710001144C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100013BA0", "lr": "0x71000115E8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100013BC0", "lr": "0x7100011218", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100013BD0", "lr": "0x710001174C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fatal:u", "ldr:ro", "ro:dmnt", "set:sys"]
+  }
+}

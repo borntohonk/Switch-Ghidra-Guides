@@ -1,0 +1,16 @@
+{
+  "cmptldr": {
+    "_services": ["fatal:u", "ldr:cmpt"],
+    "_invokes": {
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x710002c670", "cmd_proof_offset": "0x710002c70c", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x710002c680", "cmd_proof_offset": "0x710002c814", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x710002c690", "cmd_proof_offset": "0x710002c924", "cmd_proof_instruction": "mov w11,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x710002c0f8"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x710002c6b0", "cmd_proof_offset": "0x710002ca48", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}

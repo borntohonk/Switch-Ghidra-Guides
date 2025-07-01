@@ -1,0 +1,33 @@
+{
+  "jpegdec_services": {
+    "program_identified": "Jpegdec_services",
+    "nn::capsrv::sf::IDecoderControlService": {
+      "_srv": "SRV_7100053840",
+      "_hash": "3aaf8dc0617ce63c",
+      "3001": {"vt":  "0x20", "func": "0x710003D000", "lr": "0x7100010B04", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [70, 5], "name": "DecodeJpeg", "wire_order": "in_data[0x28]; buffers=[out, in]"},
+      "4001": {"vt":  "0x28", "func": "0x710003D010", "lr": "0x7100010C4C", "inbytes":  "0x28", "outbytes":   "0x8", "buffers": [70, 5], "name": "ShrinkJpeg", "wire_order": "out_buf0; in_buf0; in_data[0x28]; out_data[0x8]"},
+      "4002": {"vt":  "0x30", "func": "0x710003D030", "lr": "0x7100010D0C", "inbytes":  "0x30", "outbytes":   "0x8", "buffers": [70, 5], "name": "ShrinkJpegEx", "wire_order": "in_buf0; out_buf0; in_data[0x30]; out_data[0x8]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100053A20",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100012F90", "lr": "0x71000148B8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000130B0", "lr": "0x710001471C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100013260", "lr": "0x7100014794", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100013270", "lr": "0x7100014800", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100013290", "lr": "0x7100014680", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["caps:dc", "fatal:u"],
+    "_invokes": {
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x710003cff0", "cmd_proof_offset": "0x710003d0ac", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x710003d000", "cmd_proof_offset": "0x710003d264", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x710003d010", "cmd_proof_offset": "0x710003d374", "cmd_proof_instruction": "mov w11,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x710003ca38"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x710003d030", "cmd_proof_offset": "0x710003d498", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}

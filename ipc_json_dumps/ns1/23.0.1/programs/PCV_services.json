@@ -1,0 +1,114 @@
+{
+  "pcv_services": {
+    "program_identified": "PCV_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100099948",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710000F410", "lr": "0x7100010F20", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710000F6E0", "lr": "0x710001108C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000F700", "lr": "0x7100011228", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710000F960", "lr": "0x7100010E58", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710000E4B0", "lr": "0x710001138C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::bpc::IBoardPowerControlManager": {
+      "_srv": "SRV_710009A5E8",
+      "_hash": "a3d7afda26f733cb",
+      "0":  {"vt":  "0x20", "func": "0x710000F410", "lr": "0x710002154C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ShutdownSystem", "wire_order": "N/A"},
+      "1":  {"vt":  "0x28", "func": "0x710000F6E0", "lr": "0x71000213E0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "RebootSystem", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x710000F700", "lr": "0x71000215E8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetWakeupReason", "wire_order": "out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x710000F960", "lr": "0x710002147C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetShutdownReason", "wire_order": "out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x710000E4B0", "lr": "0x71000216C8", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetAcOk", "wire_order": "out_data[0x1]"},
+      "5":  {"vt":  "0x48", "func": "0x710000FA70", "lr": "0x710002196C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "GetPowerEvent", "wire_order": "in_data[0x4]"},
+      "7":  {"vt":  "0x50", "func": "0x710000FBB0", "lr": "0x7100021B0C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "GetPowerButtonEvent", "wire_order": "in_data[0x4]"},
+      "14": {"vt":  "0x58", "func": "0x710000FC90", "lr": "0x7100021778", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetPowerButton", "wire_order": "out_data[0x1]"},
+      "15": {"vt":  "0x60", "func": "0x710000FD70", "lr": "0x710002139C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "SetUpRtcResetOnShutdown", "wire_order": "N/A"}
+    },
+    "nn::clkrst::IArbitrationManager": {
+      "_srv": "SRV_710009A808",
+      "_hash": "51c707b04050f17d",
+      "_likely_basis": "DB position 3/9 in PCV_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x710000B820", "lr": "0x7100024238", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ReleaseControl", "wire_order": "in_data[0x4]"}
+    },
+    "nn::clkrst::IClkrstManager": {
+      "_srv": "SRV_710009AC00",
+      "_hash": "f9e364313649aa03",
+      "_hash_alt": "18e90bee37a0106f",
+      "0": {"vt":  "0x20", "func": "0x7100000300", "lr": "0x7100025AAC", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::clkrst::IClkrstSession"], "_srv_outinterfaces": "SRV_710009AC08", "name": "OpenSession", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x48", "func": "0x71000101A0", "lr": "0x7100025C84", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [34], "name": "GetTemperatureThresholds", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000B750", "lr": "0x71000258F8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "NotifyTemperature", "wire_order": "in_data[0x4]"},
+      "3": {"vt":  "0x48", "func": "0x71000101A0", "lr": "0x7100025E64", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [34], "name": "GetClkrstStateTable", "wire_order": "out_buf0; in_data[0x4]; out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x71000100A0", "lr": "0x7100026038", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetClkrstStateTableUpdateEvent", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x71000101A0", "lr": "0x7100025700", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetClkrstStateTableCount", "wire_order": "out_data[0x4]"},
+      "6": {"vt":  "0x50", "func": "0x71000101B0", "lr": "0x7100025950", "inbytes":   "0x0", "outbytes":   "0x0", "name": "PrintClockTree", "wire_order": "N/A"},
+      "7": {"vt":  "0x58", "func": "0x71000101C0", "lr": "0x7100025800", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd7", "wire_order": "out_data[0x4]"}
+    },
+    "nn::clkrst::IClkrstSession": {
+      "_srv": "SRV_710009AC08",
+      "_hash": "fde3cae90d17371f",
+      "_hash_alt": "718729788c62545e",
+      "0":  {"vt":  "0x20", "func": "0x71000274D0", "lr": "0x71000262CC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableClock", "wire_order": "N/A"},
+      "1":  {"vt":  "0x28", "func": "0x71000274E0", "lr": "0x7100026544", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableClock", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x71000274F0", "lr": "0x7100026424", "inbytes":   "0x0", "outbytes":   "0x0", "name": "AssertReset", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x7100027500", "lr": "0x71000264A4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DeassertReset", "wire_order": "N/A"},
+      "4":  {"vt":  "0x40", "func": "0x7100027510", "lr": "0x7100026368", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnablePower", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x7100027520", "lr": "0x7100026584", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisablePower", "wire_order": "N/A"},
+      "6":  {"vt":  "0x50", "func": "0x7100027530", "lr": "0x71000266A4", "inbytes":   "0x0", "outbytes":   "0xC", "name": "GetModuleState", "wire_order": "out_data[0xC]"},
+      "7":  {"vt":  "0x58", "func": "0x7100027590", "lr": "0x71000264E8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetClockRate", "wire_order": "in_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x71000275A0", "lr": "0x7100026780", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetClockRate", "wire_order": "out_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x71000275F0", "lr": "0x71000263C8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetMinimumVoltageClockRate", "wire_order": "in_data[0x4]"},
+      "10": {"vt":  "0x20", "func": "0x71000274D0", "lr": "0x71000269E4", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [34], "name": "GetPossibleClockRates", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[out]"},
+      "11": {"vt":  "0x78", "func": "0x71000276D0", "lr": "0x7100026BD8", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [34, 34], "name": "GetDvfsTable", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out, out]"},
+      "12": {"vt":  "0x80", "func": "0x71000277D0", "lr": "0x7100026DB0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "IsParentClock", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "13": {"vt":  "0x88", "func": "0x7100027820", "lr": "0x71000265EC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetParentClock", "wire_order": "in_data[0x4]"},
+      "14": {"vt":  "0x90", "func": "0x7100027830", "lr": "0x710002630C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd14", "wire_order": "N/A"},
+      "15": {"vt":  "0x98", "func": "0x7100027840", "lr": "0x7100026464", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd15", "wire_order": "N/A"}
+    },
+    "nn::pcv::detail::IPcvService": {
+      "_srv": "SRV_710009B430",
+      "_hash": "abb962b7b9474b60",
+      "_hash_alt": "249117137b81f6cb",
+      "26": {"vt":  "0x20", "func": "0x7100029EB0", "lr": "0x710002C324", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [10], "name": "GetFuseInfo", "wire_order": "in_data[0x4]; out_buf0; out_data[0x4]"},
+      "27": {"vt":  "0x28", "func": "0x7100029030", "lr": "0x710002C18C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDramId", "wire_order": "out_data[0x4]"}
+    },
+    "nn::regulator::IRegulatorManager": {
+      "_srv": "SRV_710009B630",
+      "_hash": "00ca0257e4dd3d9c",
+      "_hash_alt": "12f3b941fda8879c",
+      "0": {"vt":  "0x20", "func": "0x7100027E50", "lr": "0x710002FC5C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::regulator::IRegulatorSession"], "_srv_outinterfaces": "SRV_710009B638", "name": "OpenSession", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x38", "func": "0x710000B820", "lr": "0x710002FE34", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [34], "name": "GetRegulatorStateTable", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x7100027E90", "lr": "0x7100030018", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetRegulatorStateTableUpdateEvent", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710000B820", "lr": "0x710002FAC4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetRegulatorStateTableCount", "wire_order": "out_data[0x4]"}
+    },
+    "nn::regulator::IRegulatorSession": {
+      "_srv": "SRV_710009B638",
+      "_hash": "2e4ec2dde32774aa",
+      "0": {"vt":  "0x20", "func": "0x710000F410", "lr": "0x71000302B0", "inbytes":   "0x1", "outbytes":   "0x0", "name": "RequestOutput", "wire_order": "in_data[0x1]"},
+      "1": {"vt":  "0x28", "func": "0x710000F6E0", "lr": "0x7100030628", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelOutputRequest", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x710000F700", "lr": "0x71000303FC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsOutputEnabled", "wire_order": "out_data[0x1]"},
+      "3": {"vt":  "0x38", "func": "0x710000F960", "lr": "0x71000304A8", "inbytes":   "0x0", "outbytes":   "0xC", "name": "GetVoltageRangeInMicroVolt", "wire_order": "out_data[0xC]"},
+      "4": {"vt":  "0x40", "func": "0x710000E4B0", "lr": "0x7100030324", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetVoltageInMicroVolt", "wire_order": "out_data[0x4]"},
+      "5": {"vt":  "0x48", "func": "0x710000FA70", "lr": "0x710003091C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestVoltageInMicroVolt", "wire_order": "in_data[0x8]"},
+      "6": {"vt":  "0x50", "func": "0x710000FBB0", "lr": "0x7100030670", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelVoltageRequest", "wire_order": "N/A"},
+      "7": {"vt":  "0x58", "func": "0x710000FC90", "lr": "0x7100030570", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetMinimumOffStateHoldTime", "wire_order": "out_data[0x8]"},
+      "8": {"vt":  "0x60", "func": "0x710000FD70", "lr": "0x7100030728", "inbytes":   "0x8", "outbytes":   "0x0", "name": "RequestMinimumOffStateHoldTime", "wire_order": "in_data[0x8]"},
+      "9": {"vt":  "0x68", "func": "0x710000FE60", "lr": "0x71000303D4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelMinimumOffStateHoldTimeRequest", "wire_order": "N/A"}
+    },
+    "nn::rtc::IRtcManager": {
+      "_srv": "SRV_710009B980",
+      "_hash": "ae976e18143c88f7",
+      "_hash_alt": "31436d8356618dd3",
+      "0":  {"vt":  "0x20", "func": "0x710000F410", "lr": "0x7100032430", "inbytes":   "0x4", "outbytes":   "0x8", "name": "GetTimeInSeconds", "wire_order": "in_data[0x4]; out_data[0x8]"},
+      "1":  {"vt":  "0x28", "func": "0x710000F6E0", "lr": "0x7100032198", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SetTimeInSeconds", "wire_order": "in_data[0x10]"},
+      "2":  {"vt":  "0x30", "func": "0x710000F700", "lr": "0x71000320C4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetResetOnShutdown", "wire_order": "in_data[0x8]"},
+      "3":  {"vt":  "0x38", "func": "0x710000F960", "lr": "0x71000325B0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "GetResetDetected", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "4":  {"vt":  "0x40", "func": "0x710000E4B0", "lr": "0x710003202C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "ClearResetDetected", "wire_order": "in_data[0x4]"},
+      "10": {"vt":  "0x48", "func": "0x710000FA70", "lr": "0x710003271C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "EnableAlarm", "wire_order": "in_data[0x10]"},
+      "11": {"vt":  "0x50", "func": "0x710000FBB0", "lr": "0x710003225C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DisableRtcAlarm", "wire_order": "in_data[0x8]"},
+      "12": {"vt":  "0x58", "func": "0x710000FC90", "lr": "0x710003288C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "Cmd12", "wire_order": "in_data[0x8]"},
+      "13": {"vt":  "0x60", "func": "0x710000FD70", "lr": "0x7100032A10", "inbytes":   "0x4", "outbytes":   "0x2", "name": "Cmd13", "wire_order": "in_data[0x4]; out_data[0x2]"},
+      "14": {"vt":  "0x68", "func": "0x710000FE60", "lr": "0x7100032B94", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [34], "name": "Cmd14", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[out]"},
+      "15": {"vt":  "0x70", "func": "0x7100000300", "lr": "0x7100031FC4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Cmd15", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["clkrst", "clkrst:a", "clkrst:i", "fatal:u", "hshl:set", "i2c:pcv", "psc:m", "rgltr", "set:sys"]
+  }
+}

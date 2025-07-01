@@ -1,0 +1,185 @@
+{
+  "capture2_services": {
+    "program_identified": "Capture2_services",
+    "nn::capsrv2::old::sf::IScreenShotService": {
+      "_srv": "SRV_710014F1E0",
+      "_hash": "b364444a2ff2c785",
+      "1":   {"vt":  "0x20", "func": "0x710001F910", "lr": "0x7100020A24", "inbytes":  "0x18", "outbytes":   "0x8", "buffers": [70], "name": "CaptureScreenShot", "wire_order": "in_data[0x18]; out_data[0x8]; buffers=[out]"},
+      "2":   {"vt":  "0x28", "func": "0x710001F950", "lr": "0x7100020738", "inbytes":   "0xA", "outbytes":   "0x8", "buffers": [70, 5], "name": "EncodeCapturedScreenShotJpeg", "wire_order": "in_data[0xA]; out_data[0x8]; buffers=[out, in]"},
+      "3":   {"vt":  "0x30", "func": "0x710001F990", "lr": "0x7100020AC0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DiscardCapturedScreenShot", "wire_order": "N/A"},
+      "4":   {"vt":  "0x38", "func": "0x710001FA40", "lr": "0x710002087C", "inbytes":  "0x16", "outbytes":   "0x8", "buffers": [70, 69, 5], "name": "EncodeRawImageToJpeg", "wire_order": "in_data[0x16]; out_data[0x8]; buffers=[out, in, in]"},
+      "5":   {"vt":  "0x40", "func": "0x710001FA90", "lr": "0x7100020BC0", "inbytes":  "0x18", "outbytes":   "0x8", "buffers": [70], "name": "CaptureScreenShotEx", "wire_order": "in_data[0x18]; out_data[0x8]; buffers=[out]"},
+      "101": {"vt":  "0x48", "func": "0x710001FAD0", "lr": "0x710002099C", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [70], "name": "CaptureRawScreenShot", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[out]"},
+      "201": {"vt":  "0x50", "func": "0x710001FB70", "lr": "0x7100020AF8", "inbytes":   "0x4", "outbytes":   "0x8", "name": "OpenRawScreenShotReadStream", "wire_order": "in_data[0x4]; out_data[0x8]"},
+      "202": {"vt":  "0x58", "func": "0x710001FC20", "lr": "0x7100020CB8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CloseRawScreenShotReadStream", "wire_order": "N/A"},
+      "203": {"vt":  "0x60", "func": "0x710001FC90", "lr": "0x7100020694", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [70], "name": "ReadRawScreenShotReadStream", "wire_order": "out_data[0x8]; buffers=[out]"}
+    },
+    "nn::capsrv2::old::sf::IRecordingService": {
+      "_srv": "SRV_710014F1E8",
+      "_hash": "bfc7813168dd7bdc",
+      "1":  {"vt":  "0x20", "func": "0x710001FD50", "lr": "0x7100020FD4", "inbytes":  "0x24", "outbytes":   "0x0", "name": "Cmd1", "wire_order": "in_data[0x24]"},
+      "2":  {"vt":  "0x28", "func": "0x710001FD90", "lr": "0x7100021310", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd2", "wire_order": "N/A"},
+      "3":  {"vt":  "0x30", "func": "0x710001FDA0", "lr": "0x7100021094", "inbytes":  "0x40", "outbytes":  "0x18", "buffers": [70, 5], "name": "Cmd3", "wire_order": "in_data[0x40]; out_data[0x18]; buffers=[out, in]"},
+      "4":  {"vt":  "0x38", "func": "0x710001FE00", "lr": "0x7100021488", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd4", "wire_order": "N/A"},
+      "5":  {"vt":  "0x40", "func": "0x710001FE30", "lr": "0x71000214C4", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [70], "name": "Cmd5", "wire_order": "out_data[0x10]; buffers=[out]"},
+      "11": {"vt":  "0x48", "func": "0x710001FEB0", "lr": "0x71000211A8", "inbytes":  "0x28", "outbytes":   "0x0", "name": "Cmd11", "wire_order": "in_data[0x28]"},
+      "12": {"vt":  "0x50", "func": "0x710001FEF0", "lr": "0x7100021348", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd12", "wire_order": "N/A"},
+      "13": {"vt":  "0x58", "func": "0x710001FF60", "lr": "0x7100021384", "inbytes":  "0x38", "outbytes":   "0x0", "buffers": [5], "name": "Cmd13", "wire_order": "in_data[0x38]; buffers=[in]"},
+      "14": {"vt":  "0x60", "func": "0x710001FFB0", "lr": "0x71000215F4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd14", "wire_order": "N/A"},
+      "15": {"vt":  "0x68", "func": "0x710001FFF0", "lr": "0x710002152C", "inbytes":   "0x0", "outbytes":  "0x10", "buffers": [70], "name": "Cmd15", "wire_order": "out_data[0x10]; buffers=[out]"},
+      "16": {"vt":  "0x70", "func": "0x7100020070", "lr": "0x7100021054", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd16", "wire_order": "N/A"},
+      "17": {"vt":  "0x78", "func": "0x7100020100", "lr": "0x7100021258", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "Cmd17", "wire_order": "buffers=[in]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710014F3E8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100023830", "lr": "0x7100025158", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100023950", "lr": "0x7100024FBC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100023B00", "lr": "0x7100025034", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100023B10", "lr": "0x71000250A0", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100023B30", "lr": "0x7100024F20", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["auddmg:u", "audsmx:u", "caps2:r", "caps2:s", "fatal:u", "gsv:s3", "gsv:s4", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x7100067920", "cmd_proof_offset": "0x71000679bc", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x7100067930", "cmd_proof_offset": "0x7100067ac4", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100067940", "cmd_proof_offset": "0x7100067c3c", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100067498"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x7100067960", "cmd_proof_offset": "0x7100067d58", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      },
+      "time:a": {
+        "interface": "nn::timesrv::detail::service::IStaticService",
+        "commands": {
+          "0": { "name": "GetStandardUserSystemClock", "vt_off": "0x20", "stub": "0x71000995f0", "cmd_proof_offset": "0x710009963c", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "GetStandardNetworkSystemClock", "vt_off": "0x28", "stub": "0x7100099690", "cmd_proof_offset": "0x71000996dc", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "GetStandardSteadyClock", "vt_off": "0x30", "stub": "0x7100099730", "cmd_proof_offset": "0x710009977c", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetTimeZoneService", "vt_off": "0x38", "stub": "0x71000997d0", "cmd_proof_offset": "0x710009981c", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000978fc"] },
+          "4": { "name": "GetStandardLocalSystemClock", "vt_off": "0x40", "stub": "0x7100099870", "cmd_proof_offset": "0x71000998bc", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetEphemeralNetworkSystemClock", "vt_off": "0x48", "stub": "0x7100099910", "cmd_proof_offset": "0x710009995c", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "20": { "name": "GetSharedMemoryNativeHandle", "vt_off": "0x50", "stub": "0x71000999b0", "cmd_proof_offset": "0x71000999b4", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "calls": ["0x71000985e8"] },
+          "50": { "name": "SetStandardSteadyClockInternalOffset", "vt_off": "0x58", "stub": "0x71000999c0", "cmd_proof_offset": "0x71000999c4", "cmd_proof_instruction": "mov w2,#0x32", "cmd_hex_and_dec": "0x32 / 50", "stub_only": true, "calls": [] },
+          "51": { "name": "GetStandardSteadyClockRtcValue", "vt_off": "0x60", "stub": "0x71000999d0", "cmd_proof_offset": "0x71000999d4", "cmd_proof_instruction": "mov w2,#0x33", "cmd_hex_and_dec": "0x33 / 51", "stub_only": true, "calls": [] },
+          "100": { "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x68", "stub": "0x71000999e0", "cmd_proof_offset": "0x71000999e4", "cmd_proof_instruction": "mov w2,#0x64", "cmd_hex_and_dec": "0x64 / 100", "stub_only": true, "calls": [] },
+          "101": { "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x70", "stub": "0x71000999f0", "cmd_proof_offset": "0x71000999f8", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "stub_only": true, "calls": [] },
+          "102": { "name": "GetStandardUserSystemClockInitialYear", "vt_off": "0x78", "stub": "0x7100099a00", "cmd_proof_offset": "0x7100099a04", "cmd_proof_instruction": "mov w2,#0x66", "cmd_hex_and_dec": "0x66 / 102", "stub_only": true, "calls": [] },
+          "200": { "name": "IsStandardNetworkSystemClockAccuracySufficient", "vt_off": "0x80", "stub": "0x7100099a10", "cmd_proof_offset": "0x7100099a14", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "stub_only": true, "calls": [] },
+          "201": { "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "vt_off": "0x88", "stub": "0x7100099a20", "cmd_proof_offset": "0x7100099a24", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "stub_only": true, "calls": [] },
+          "300": { "name": "CalculateMonotonicSystemClockBaseTimePoint", "vt_off": "0x90", "stub": "0x7100099a30", "cmd_proof_offset": "0x710009b4bc", "cmd_proof_instruction": "mov w10,#0x12c", "cmd_hex_and_dec": "0x12c / 300", "stub_only": true, "calls": [] },
+          "400": { "name": "GetClockSnapshot", "vt_off": "0x98", "stub": "0x7100099a40", "cmd_proof_offset": "0x710009b6c4", "cmd_proof_instruction": "mov w9,#0x190", "cmd_hex_and_dec": "0x190 / 400", "stub_only": true, "calls": [] },
+          "401": { "name": "GetClockSnapshotFromSystemClockContext", "vt_off": "0xa0", "stub": "0x7100099a50", "cmd_proof_offset": "0x710009b8a0", "cmd_proof_instruction": "mov w10,#0x191", "cmd_hex_and_dec": "0x191 / 401", "stub_only": true, "calls": [] },
+          "500": { "name": "CalculateStandardUserSystemClockDifferenceByUser", "vt_off": "0xa8", "stub": "0x7100099a70", "cmd_proof_offset": "0x7100099a80", "cmd_proof_instruction": "mov w6,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "stub_only": true, "calls": [] },
+          "501": { "name": "CalculateSpanBetween", "vt_off": "0xb0", "stub": "0x7100099a90", "cmd_proof_offset": "0x7100099aa0", "cmd_proof_instruction": "mov w6,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "stub_only": true, "calls": [] },
+          "600": { "name": "GetInitialLaunchEndTime", "vt_off": "0xb8", "stub": "0x7100099ab0", "cmd_proof_offset": "0x7100099ab4", "cmd_proof_instruction": "mov w2,#0x258", "cmd_hex_and_dec": "0x258 / 600", "stub_only": true, "calls": [] },
+          "601": { "name": "NotifyInitialLaunchSettingsDone", "vt_off": "0xc0", "stub": "0x7100099ac0", "cmd_proof_offset": "0x7100099ac4", "cmd_proof_instruction": "mov w1,#0x259", "cmd_hex_and_dec": "0x259 / 601", "stub_only": true, "calls": [] }
+        }
+      },
+      "time:r": {
+        "interface": "nn::timesrv::detail::service::IStaticService",
+        "commands": {
+          "0": { "name": "GetStandardUserSystemClock", "vt_off": "0x20", "stub": "0x71000995f0", "cmd_proof_offset": "0x710009963c", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "GetStandardNetworkSystemClock", "vt_off": "0x28", "stub": "0x7100099690", "cmd_proof_offset": "0x71000996dc", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "GetStandardSteadyClock", "vt_off": "0x30", "stub": "0x7100099730", "cmd_proof_offset": "0x710009977c", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetTimeZoneService", "vt_off": "0x38", "stub": "0x71000997d0", "cmd_proof_offset": "0x710009981c", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000978fc"] },
+          "4": { "name": "GetStandardLocalSystemClock", "vt_off": "0x40", "stub": "0x7100099870", "cmd_proof_offset": "0x71000998bc", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetEphemeralNetworkSystemClock", "vt_off": "0x48", "stub": "0x7100099910", "cmd_proof_offset": "0x710009995c", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "20": { "name": "GetSharedMemoryNativeHandle", "vt_off": "0x50", "stub": "0x71000999b0", "cmd_proof_offset": "0x71000999b4", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "calls": ["0x71000985e8"] },
+          "50": { "name": "SetStandardSteadyClockInternalOffset", "vt_off": "0x58", "stub": "0x71000999c0", "cmd_proof_offset": "0x71000999c4", "cmd_proof_instruction": "mov w2,#0x32", "cmd_hex_and_dec": "0x32 / 50", "stub_only": true, "calls": [] },
+          "51": { "name": "GetStandardSteadyClockRtcValue", "vt_off": "0x60", "stub": "0x71000999d0", "cmd_proof_offset": "0x71000999d4", "cmd_proof_instruction": "mov w2,#0x33", "cmd_hex_and_dec": "0x33 / 51", "stub_only": true, "calls": [] },
+          "100": { "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x68", "stub": "0x71000999e0", "cmd_proof_offset": "0x71000999e4", "cmd_proof_instruction": "mov w2,#0x64", "cmd_hex_and_dec": "0x64 / 100", "stub_only": true, "calls": [] },
+          "101": { "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x70", "stub": "0x71000999f0", "cmd_proof_offset": "0x71000999f8", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "stub_only": true, "calls": [] },
+          "102": { "name": "GetStandardUserSystemClockInitialYear", "vt_off": "0x78", "stub": "0x7100099a00", "cmd_proof_offset": "0x7100099a04", "cmd_proof_instruction": "mov w2,#0x66", "cmd_hex_and_dec": "0x66 / 102", "stub_only": true, "calls": [] },
+          "200": { "name": "IsStandardNetworkSystemClockAccuracySufficient", "vt_off": "0x80", "stub": "0x7100099a10", "cmd_proof_offset": "0x7100099a14", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "stub_only": true, "calls": [] },
+          "201": { "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "vt_off": "0x88", "stub": "0x7100099a20", "cmd_proof_offset": "0x7100099a24", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "stub_only": true, "calls": [] },
+          "300": { "name": "CalculateMonotonicSystemClockBaseTimePoint", "vt_off": "0x90", "stub": "0x7100099a30", "cmd_proof_offset": "0x710009b4bc", "cmd_proof_instruction": "mov w10,#0x12c", "cmd_hex_and_dec": "0x12c / 300", "stub_only": true, "calls": [] },
+          "400": { "name": "GetClockSnapshot", "vt_off": "0x98", "stub": "0x7100099a40", "cmd_proof_offset": "0x710009b6c4", "cmd_proof_instruction": "mov w9,#0x190", "cmd_hex_and_dec": "0x190 / 400", "stub_only": true, "calls": [] },
+          "401": { "name": "GetClockSnapshotFromSystemClockContext", "vt_off": "0xa0", "stub": "0x7100099a50", "cmd_proof_offset": "0x710009b8a0", "cmd_proof_instruction": "mov w10,#0x191", "cmd_hex_and_dec": "0x191 / 401", "stub_only": true, "calls": [] },
+          "500": { "name": "CalculateStandardUserSystemClockDifferenceByUser", "vt_off": "0xa8", "stub": "0x7100099a70", "cmd_proof_offset": "0x7100099a80", "cmd_proof_instruction": "mov w6,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "stub_only": true, "calls": [] },
+          "501": { "name": "CalculateSpanBetween", "vt_off": "0xb0", "stub": "0x7100099a90", "cmd_proof_offset": "0x7100099aa0", "cmd_proof_instruction": "mov w6,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "stub_only": true, "calls": [] },
+          "600": { "name": "GetInitialLaunchEndTime", "vt_off": "0xb8", "stub": "0x7100099ab0", "cmd_proof_offset": "0x7100099ab4", "cmd_proof_instruction": "mov w2,#0x258", "cmd_hex_and_dec": "0x258 / 600", "stub_only": true, "calls": [] },
+          "601": { "name": "NotifyInitialLaunchSettingsDone", "vt_off": "0xc0", "stub": "0x7100099ac0", "cmd_proof_offset": "0x7100099ac4", "cmd_proof_instruction": "mov w1,#0x259", "cmd_hex_and_dec": "0x259 / 601", "stub_only": true, "calls": [] }
+        }
+      },
+      "time:s": {
+        "interface": "nn::timesrv::detail::service::IStaticService",
+        "commands": {
+          "0": { "name": "GetStandardUserSystemClock", "vt_off": "0x20", "stub": "0x71000995f0", "cmd_proof_offset": "0x710009963c", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "GetStandardNetworkSystemClock", "vt_off": "0x28", "stub": "0x7100099690", "cmd_proof_offset": "0x71000996dc", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "GetStandardSteadyClock", "vt_off": "0x30", "stub": "0x7100099730", "cmd_proof_offset": "0x710009977c", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetTimeZoneService", "vt_off": "0x38", "stub": "0x71000997d0", "cmd_proof_offset": "0x710009981c", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000978fc"] },
+          "4": { "name": "GetStandardLocalSystemClock", "vt_off": "0x40", "stub": "0x7100099870", "cmd_proof_offset": "0x71000998bc", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetEphemeralNetworkSystemClock", "vt_off": "0x48", "stub": "0x7100099910", "cmd_proof_offset": "0x710009995c", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "20": { "name": "GetSharedMemoryNativeHandle", "vt_off": "0x50", "stub": "0x71000999b0", "cmd_proof_offset": "0x71000999b4", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "calls": ["0x71000985e8"] },
+          "50": { "name": "SetStandardSteadyClockInternalOffset", "vt_off": "0x58", "stub": "0x71000999c0", "cmd_proof_offset": "0x71000999c4", "cmd_proof_instruction": "mov w2,#0x32", "cmd_hex_and_dec": "0x32 / 50", "stub_only": true, "calls": [] },
+          "51": { "name": "GetStandardSteadyClockRtcValue", "vt_off": "0x60", "stub": "0x71000999d0", "cmd_proof_offset": "0x71000999d4", "cmd_proof_instruction": "mov w2,#0x33", "cmd_hex_and_dec": "0x33 / 51", "stub_only": true, "calls": [] },
+          "100": { "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x68", "stub": "0x71000999e0", "cmd_proof_offset": "0x71000999e4", "cmd_proof_instruction": "mov w2,#0x64", "cmd_hex_and_dec": "0x64 / 100", "stub_only": true, "calls": [] },
+          "101": { "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x70", "stub": "0x71000999f0", "cmd_proof_offset": "0x71000999f8", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "stub_only": true, "calls": [] },
+          "102": { "name": "GetStandardUserSystemClockInitialYear", "vt_off": "0x78", "stub": "0x7100099a00", "cmd_proof_offset": "0x7100099a04", "cmd_proof_instruction": "mov w2,#0x66", "cmd_hex_and_dec": "0x66 / 102", "stub_only": true, "calls": [] },
+          "200": { "name": "IsStandardNetworkSystemClockAccuracySufficient", "vt_off": "0x80", "stub": "0x7100099a10", "cmd_proof_offset": "0x7100099a14", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "stub_only": true, "calls": [] },
+          "201": { "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "vt_off": "0x88", "stub": "0x7100099a20", "cmd_proof_offset": "0x7100099a24", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "stub_only": true, "calls": [] },
+          "300": { "name": "CalculateMonotonicSystemClockBaseTimePoint", "vt_off": "0x90", "stub": "0x7100099a30", "cmd_proof_offset": "0x710009b4bc", "cmd_proof_instruction": "mov w10,#0x12c", "cmd_hex_and_dec": "0x12c / 300", "stub_only": true, "calls": [] },
+          "400": { "name": "GetClockSnapshot", "vt_off": "0x98", "stub": "0x7100099a40", "cmd_proof_offset": "0x710009b6c4", "cmd_proof_instruction": "mov w9,#0x190", "cmd_hex_and_dec": "0x190 / 400", "stub_only": true, "calls": [] },
+          "401": { "name": "GetClockSnapshotFromSystemClockContext", "vt_off": "0xa0", "stub": "0x7100099a50", "cmd_proof_offset": "0x710009b8a0", "cmd_proof_instruction": "mov w10,#0x191", "cmd_hex_and_dec": "0x191 / 401", "stub_only": true, "calls": [] },
+          "500": { "name": "CalculateStandardUserSystemClockDifferenceByUser", "vt_off": "0xa8", "stub": "0x7100099a70", "cmd_proof_offset": "0x7100099a80", "cmd_proof_instruction": "mov w6,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "stub_only": true, "calls": [] },
+          "501": { "name": "CalculateSpanBetween", "vt_off": "0xb0", "stub": "0x7100099a90", "cmd_proof_offset": "0x7100099aa0", "cmd_proof_instruction": "mov w6,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "stub_only": true, "calls": [] },
+          "600": { "name": "GetInitialLaunchEndTime", "vt_off": "0xb8", "stub": "0x7100099ab0", "cmd_proof_offset": "0x7100099ab4", "cmd_proof_instruction": "mov w2,#0x258", "cmd_hex_and_dec": "0x258 / 600", "stub_only": true, "calls": [] },
+          "601": { "name": "NotifyInitialLaunchSettingsDone", "vt_off": "0xc0", "stub": "0x7100099ac0", "cmd_proof_offset": "0x7100099ac4", "cmd_proof_instruction": "mov w1,#0x259", "cmd_hex_and_dec": "0x259 / 601", "stub_only": true, "calls": [] }
+        }
+      },
+      "time:su": {
+        "interface": "nn::timesrv::detail::service::IStaticService",
+        "commands": {
+          "0": { "name": "GetStandardUserSystemClock", "vt_off": "0x20", "stub": "0x71000995f0", "cmd_proof_offset": "0x710009963c", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "GetStandardNetworkSystemClock", "vt_off": "0x28", "stub": "0x7100099690", "cmd_proof_offset": "0x71000996dc", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "GetStandardSteadyClock", "vt_off": "0x30", "stub": "0x7100099730", "cmd_proof_offset": "0x710009977c", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetTimeZoneService", "vt_off": "0x38", "stub": "0x71000997d0", "cmd_proof_offset": "0x710009981c", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000978fc"] },
+          "4": { "name": "GetStandardLocalSystemClock", "vt_off": "0x40", "stub": "0x7100099870", "cmd_proof_offset": "0x71000998bc", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetEphemeralNetworkSystemClock", "vt_off": "0x48", "stub": "0x7100099910", "cmd_proof_offset": "0x710009995c", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "20": { "name": "GetSharedMemoryNativeHandle", "vt_off": "0x50", "stub": "0x71000999b0", "cmd_proof_offset": "0x71000999b4", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "calls": ["0x71000985e8"] },
+          "50": { "name": "SetStandardSteadyClockInternalOffset", "vt_off": "0x58", "stub": "0x71000999c0", "cmd_proof_offset": "0x71000999c4", "cmd_proof_instruction": "mov w2,#0x32", "cmd_hex_and_dec": "0x32 / 50", "stub_only": true, "calls": [] },
+          "51": { "name": "GetStandardSteadyClockRtcValue", "vt_off": "0x60", "stub": "0x71000999d0", "cmd_proof_offset": "0x71000999d4", "cmd_proof_instruction": "mov w2,#0x33", "cmd_hex_and_dec": "0x33 / 51", "stub_only": true, "calls": [] },
+          "100": { "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x68", "stub": "0x71000999e0", "cmd_proof_offset": "0x71000999e4", "cmd_proof_instruction": "mov w2,#0x64", "cmd_hex_and_dec": "0x64 / 100", "stub_only": true, "calls": [] },
+          "101": { "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x70", "stub": "0x71000999f0", "cmd_proof_offset": "0x71000999f8", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "stub_only": true, "calls": [] },
+          "102": { "name": "GetStandardUserSystemClockInitialYear", "vt_off": "0x78", "stub": "0x7100099a00", "cmd_proof_offset": "0x7100099a04", "cmd_proof_instruction": "mov w2,#0x66", "cmd_hex_and_dec": "0x66 / 102", "stub_only": true, "calls": [] },
+          "200": { "name": "IsStandardNetworkSystemClockAccuracySufficient", "vt_off": "0x80", "stub": "0x7100099a10", "cmd_proof_offset": "0x7100099a14", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "stub_only": true, "calls": [] },
+          "201": { "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "vt_off": "0x88", "stub": "0x7100099a20", "cmd_proof_offset": "0x7100099a24", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "stub_only": true, "calls": [] },
+          "300": { "name": "CalculateMonotonicSystemClockBaseTimePoint", "vt_off": "0x90", "stub": "0x7100099a30", "cmd_proof_offset": "0x710009b4bc", "cmd_proof_instruction": "mov w10,#0x12c", "cmd_hex_and_dec": "0x12c / 300", "stub_only": true, "calls": [] },
+          "400": { "name": "GetClockSnapshot", "vt_off": "0x98", "stub": "0x7100099a40", "cmd_proof_offset": "0x710009b6c4", "cmd_proof_instruction": "mov w9,#0x190", "cmd_hex_and_dec": "0x190 / 400", "stub_only": true, "calls": [] },
+          "401": { "name": "GetClockSnapshotFromSystemClockContext", "vt_off": "0xa0", "stub": "0x7100099a50", "cmd_proof_offset": "0x710009b8a0", "cmd_proof_instruction": "mov w10,#0x191", "cmd_hex_and_dec": "0x191 / 401", "stub_only": true, "calls": [] },
+          "500": { "name": "CalculateStandardUserSystemClockDifferenceByUser", "vt_off": "0xa8", "stub": "0x7100099a70", "cmd_proof_offset": "0x7100099a80", "cmd_proof_instruction": "mov w6,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "stub_only": true, "calls": [] },
+          "501": { "name": "CalculateSpanBetween", "vt_off": "0xb0", "stub": "0x7100099a90", "cmd_proof_offset": "0x7100099aa0", "cmd_proof_instruction": "mov w6,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "stub_only": true, "calls": [] },
+          "600": { "name": "GetInitialLaunchEndTime", "vt_off": "0xb8", "stub": "0x7100099ab0", "cmd_proof_offset": "0x7100099ab4", "cmd_proof_instruction": "mov w2,#0x258", "cmd_hex_and_dec": "0x258 / 600", "stub_only": true, "calls": [] },
+          "601": { "name": "NotifyInitialLaunchSettingsDone", "vt_off": "0xc0", "stub": "0x7100099ac0", "cmd_proof_offset": "0x7100099ac4", "cmd_proof_instruction": "mov w1,#0x259", "cmd_hex_and_dec": "0x259 / 601", "stub_only": true, "calls": [] }
+        }
+      },
+      "time:u": {
+        "interface": "nn::timesrv::detail::service::IStaticService",
+        "commands": {
+          "0": { "name": "GetStandardUserSystemClock", "vt_off": "0x20", "stub": "0x71000995f0", "cmd_proof_offset": "0x710009963c", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "GetStandardNetworkSystemClock", "vt_off": "0x28", "stub": "0x7100099690", "cmd_proof_offset": "0x71000996dc", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "GetStandardSteadyClock", "vt_off": "0x30", "stub": "0x7100099730", "cmd_proof_offset": "0x710009977c", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetTimeZoneService", "vt_off": "0x38", "stub": "0x71000997d0", "cmd_proof_offset": "0x710009981c", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000978fc"] },
+          "4": { "name": "GetStandardLocalSystemClock", "vt_off": "0x40", "stub": "0x7100099870", "cmd_proof_offset": "0x71000998bc", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetEphemeralNetworkSystemClock", "vt_off": "0x48", "stub": "0x7100099910", "cmd_proof_offset": "0x710009995c", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "20": { "name": "GetSharedMemoryNativeHandle", "vt_off": "0x50", "stub": "0x71000999b0", "cmd_proof_offset": "0x71000999b4", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "calls": ["0x71000985e8"] },
+          "50": { "name": "SetStandardSteadyClockInternalOffset", "vt_off": "0x58", "stub": "0x71000999c0", "cmd_proof_offset": "0x71000999c4", "cmd_proof_instruction": "mov w2,#0x32", "cmd_hex_and_dec": "0x32 / 50", "stub_only": true, "calls": [] },
+          "51": { "name": "GetStandardSteadyClockRtcValue", "vt_off": "0x60", "stub": "0x71000999d0", "cmd_proof_offset": "0x71000999d4", "cmd_proof_instruction": "mov w2,#0x33", "cmd_hex_and_dec": "0x33 / 51", "stub_only": true, "calls": [] },
+          "100": { "name": "IsStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x68", "stub": "0x71000999e0", "cmd_proof_offset": "0x71000999e4", "cmd_proof_instruction": "mov w2,#0x64", "cmd_hex_and_dec": "0x64 / 100", "stub_only": true, "calls": [] },
+          "101": { "name": "SetStandardUserSystemClockAutomaticCorrectionEnabled", "vt_off": "0x70", "stub": "0x71000999f0", "cmd_proof_offset": "0x71000999f8", "cmd_proof_instruction": "mov w2,#0x65", "cmd_hex_and_dec": "0x65 / 101", "stub_only": true, "calls": [] },
+          "102": { "name": "GetStandardUserSystemClockInitialYear", "vt_off": "0x78", "stub": "0x7100099a00", "cmd_proof_offset": "0x7100099a04", "cmd_proof_instruction": "mov w2,#0x66", "cmd_hex_and_dec": "0x66 / 102", "stub_only": true, "calls": [] },
+          "200": { "name": "IsStandardNetworkSystemClockAccuracySufficient", "vt_off": "0x80", "stub": "0x7100099a10", "cmd_proof_offset": "0x7100099a14", "cmd_proof_instruction": "mov w2,#0xc8", "cmd_hex_and_dec": "0xc8 / 200", "stub_only": true, "calls": [] },
+          "201": { "name": "GetStandardUserSystemClockAutomaticCorrectionUpdatedTime", "vt_off": "0x88", "stub": "0x7100099a20", "cmd_proof_offset": "0x7100099a24", "cmd_proof_instruction": "mov w2,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "stub_only": true, "calls": [] },
+          "300": { "name": "CalculateMonotonicSystemClockBaseTimePoint", "vt_off": "0x90", "stub": "0x7100099a30", "cmd_proof_offset": "0x710009b4bc", "cmd_proof_instruction": "mov w10,#0x12c", "cmd_hex_and_dec": "0x12c / 300", "stub_only": true, "calls": [] },
+          "400": { "name": "GetClockSnapshot", "vt_off": "0x98", "stub": "0x7100099a40", "cmd_proof_offset": "0x710009b6c4", "cmd_proof_instruction": "mov w9,#0x190", "cmd_hex_and_dec": "0x190 / 400", "stub_only": true, "calls": [] },
+          "401": { "name": "GetClockSnapshotFromSystemClockContext", "vt_off": "0xa0", "stub": "0x7100099a50", "cmd_proof_offset": "0x710009b8a0", "cmd_proof_instruction": "mov w10,#0x191", "cmd_hex_and_dec": "0x191 / 401", "stub_only": true, "calls": [] },
+          "500": { "name": "CalculateStandardUserSystemClockDifferenceByUser", "vt_off": "0xa8", "stub": "0x7100099a70", "cmd_proof_offset": "0x7100099a80", "cmd_proof_instruction": "mov w6,#0x1f4", "cmd_hex_and_dec": "0x1f4 / 500", "stub_only": true, "calls": [] },
+          "501": { "name": "CalculateSpanBetween", "vt_off": "0xb0", "stub": "0x7100099a90", "cmd_proof_offset": "0x7100099aa0", "cmd_proof_instruction": "mov w6,#0x1f5", "cmd_hex_and_dec": "0x1f5 / 501", "stub_only": true, "calls": [] },
+          "600": { "name": "GetInitialLaunchEndTime", "vt_off": "0xb8", "stub": "0x7100099ab0", "cmd_proof_offset": "0x7100099ab4", "cmd_proof_instruction": "mov w2,#0x258", "cmd_hex_and_dec": "0x258 / 600", "stub_only": true, "calls": [] },
+          "601": { "name": "NotifyInitialLaunchSettingsDone", "vt_off": "0xc0", "stub": "0x7100099ac0", "cmd_proof_offset": "0x7100099ac4", "cmd_proof_instruction": "mov w1,#0x259", "cmd_hex_and_dec": "0x259 / 601", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}

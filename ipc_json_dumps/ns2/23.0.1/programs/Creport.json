@@ -1,0 +1,54 @@
+{
+  "creport": {
+    "_services": ["caps2:r", "caps2:s", "csrng", "erpt:c", "fatal:u"],
+    "_invokes": {
+      "caps2:r": {
+        "interface": "nn::capsrv2::old::sf::IRecordingService",
+        "commands": {
+          "1": { "name": "Cmd1", "vt_off": "0x20", "stub": "0x7100012550", "cmd_proof_offset": "0x71000126a4", "cmd_proof_instruction": "mov w10,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "Cmd2", "vt_off": "0x28", "stub": "0x7100012560", "cmd_proof_offset": "0x7100012564", "cmd_proof_instruction": "mov w1,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x71000113ec"] },
+          "3": { "name": "Cmd3", "vt_off": "0x30", "stub": "0x7100012570", "cmd_proof_offset": "0x7100012854", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "4": { "name": "Cmd4", "vt_off": "0x38", "stub": "0x71000125c0", "cmd_proof_offset": "0x71000125c4", "cmd_proof_instruction": "mov w1,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "Cmd5", "vt_off": "0x40", "stub": "0x71000125d0", "cmd_proof_offset": "0x71000125d8", "cmd_proof_instruction": "mov w5,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "11": { "name": "Cmd11", "vt_off": "0x48", "stub": "0x71000125f0", "cmd_proof_offset": "0x7100012b58", "cmd_proof_instruction": "mov w11,#0xb", "cmd_hex_and_dec": "0xb / 11", "stub_only": true, "calls": [] },
+          "12": { "name": "Cmd12", "vt_off": "0x50", "stub": "0x7100012600", "cmd_proof_offset": "0x7100012604", "cmd_proof_instruction": "mov w1,#0xc", "cmd_hex_and_dec": "0xc / 12", "stub_only": true, "calls": [] },
+          "13": { "name": "Cmd13", "vt_off": "0x58", "stub": "0x7100012610", "cmd_proof_offset": "0x7100012d00", "cmd_proof_instruction": "mov w10,#0xd", "cmd_hex_and_dec": "0xd / 13", "stub_only": true, "calls": [] },
+          "14": { "name": "Cmd14", "vt_off": "0x60", "stub": "0x7100012620", "cmd_proof_offset": "0x7100012624", "cmd_proof_instruction": "mov w1,#0xe", "cmd_hex_and_dec": "0xe / 14", "stub_only": true, "calls": [] },
+          "15": { "name": "Cmd15", "vt_off": "0x68", "stub": "0x7100012630", "cmd_proof_offset": "0x7100012638", "cmd_proof_instruction": "mov w5,#0xf", "cmd_hex_and_dec": "0xf / 15", "stub_only": true, "calls": [] },
+          "16": { "name": "Cmd16", "vt_off": "0x70", "stub": "0x7100012650", "cmd_proof_offset": "0x7100012654", "cmd_proof_instruction": "mov w1,#0x10", "cmd_hex_and_dec": "0x10 / 16", "stub_only": true, "calls": [] },
+          "17": { "name": "Cmd17", "vt_off": "0x78", "stub": "0x7100012660", "cmd_proof_offset": "0x7100012668", "cmd_proof_instruction": "mov w3,#0x11", "cmd_hex_and_dec": "0x11 / 17", "stub_only": true, "calls": [] }
+        }
+      },
+      "erpt:c": {
+        "interface": "nn::erpt::ipc::IContext",
+        "commands": {
+          "0": { "name": "SubmitContext", "vt_off": "0x20", "stub": "0x7100027760", "cmd_proof_offset": "0x7100027b2c", "cmd_proof_instruction": "stp x9,xzr,[x8]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "CreateReportV0", "vt_off": "0x28", "stub": "0x7100027780", "cmd_proof_offset": "0x7100027c94", "cmd_proof_instruction": "mov w10,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "SetInitialLaunchSettingsCompletionTime", "vt_off": "0x30", "stub": "0x71000277b0", "cmd_proof_offset": "0x7100027da4", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "ClearInitialLaunchSettingsCompletionTime", "vt_off": "0x38", "stub": "0x7100011790", "cmd_proof_offset": "0x7100011794", "cmd_proof_instruction": "mov w1,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "5": { "name": "CreateReportWithAdditionalContext", "vt_off": "0x40", "stub": "0x71000277c0", "cmd_proof_offset": "0x7100027f5c", "cmd_proof_instruction": "mov w12,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "6": { "name": "SubmitMultipleContext", "vt_off": "0x48", "stub": "0x7100027840", "cmd_proof_offset": "0x71000280ec", "cmd_proof_instruction": "mov w10,#0x6", "cmd_hex_and_dec": "0x6 / 6", "stub_only": true, "calls": [] },
+          "7": { "name": "RegisterRunningApplicationInfo", "vt_off": "0x50", "stub": "0x7100027870", "cmd_proof_offset": "0x7100027874", "cmd_proof_instruction": "mov w3,#0x7", "cmd_hex_and_dec": "0x7 / 7", "stub_only": true, "calls": [] },
+          "8": { "name": "UnregisterRunningApplicationInfo", "vt_off": "0x58", "stub": "0x7100027880", "cmd_proof_offset": "0x7100027884", "cmd_proof_instruction": "mov w1,#0x8", "cmd_hex_and_dec": "0x8 / 8", "stub_only": true, "calls": [] },
+          "11": { "name": "CreateReportV1", "vt_off": "0x68", "stub": "0x71000278f0", "cmd_proof_offset": "0x7100028528", "cmd_proof_instruction": "mov w11,#0xb", "cmd_hex_and_dec": "0xb / 11", "stub_only": true, "calls": [] },
+          "14": { "name": "CreateReportWithSpecifiedReprotId", "vt_off": "0x78", "stub": "0x71000279a0", "cmd_proof_offset": "0x71000286b8", "cmd_proof_instruction": "mov w13,#0xe", "cmd_hex_and_dec": "0xe / 14", "stub_only": true, "calls": [] },
+          "15": { "name": "SubmitAttachment", "vt_off": "0x80", "stub": "0x7100027a10", "cmd_proof_offset": "0x710002886c", "cmd_proof_instruction": "mov w10,#0xf", "cmd_hex_and_dec": "0xf / 15", "calls": ["0x7100002e68", "0x7100027414"] },
+          "20": { "name": "RegisterRunningApplet", "vt_off": "0x88", "stub": "0x7100027a30", "cmd_proof_offset": "0x7100027a34", "cmd_proof_instruction": "mov w2,#0x14", "cmd_hex_and_dec": "0x14 / 20", "stub_only": true, "calls": [] },
+          "21": { "name": "UnregisterRunningApplet", "vt_off": "0x90", "stub": "0x7100027a40", "cmd_proof_offset": "0x7100027a44", "cmd_proof_instruction": "mov w2,#0x15", "cmd_hex_and_dec": "0x15 / 21", "stub_only": true, "calls": [] },
+          "22": { "name": "UpdateAppletSuspendedDuration", "vt_off": "0x98", "stub": "0x7100027a50", "cmd_proof_offset": "0x7100027a54", "cmd_proof_instruction": "mov w3,#0x16", "cmd_hex_and_dec": "0x16 / 22", "stub_only": true, "calls": [] },
+          "30": { "name": "InvalidateForcedShutdownDetection", "vt_off": "0xa0", "stub": "0x7100027a60", "cmd_proof_offset": "0x7100027a64", "cmd_proof_instruction": "mov w1,#0x1e", "cmd_hex_and_dec": "0x1e / 30", "stub_only": true, "calls": [] },
+          "40": { "name": "WaitForReportCreation", "vt_off": "0xa8", "stub": "0x7100027a70", "cmd_proof_offset": "0x7100027a74", "cmd_proof_instruction": "mov w1,#0x28", "cmd_hex_and_dec": "0x28 / 40", "calls": ["0x710000314c"] }
+        }
+      },
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x7100029260", "cmd_proof_offset": "0x71000292fc", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x7100029270", "cmd_proof_offset": "0x7100029404", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100029280", "cmd_proof_offset": "0x710002957c", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100028c38"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x71000292a0", "cmd_proof_offset": "0x7100029698", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x7100028dc8"] }
+        }
+      }
+    }
+  }
+}

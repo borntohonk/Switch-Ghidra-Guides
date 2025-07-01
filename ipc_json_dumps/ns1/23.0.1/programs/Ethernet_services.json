@@ -1,0 +1,64 @@
+{
+  "ethernet_services": {
+    "nn::anif::detail::ISfDriverServiceCreator": {
+      "_srv": "SRV_710004E248",
+      "_hash": "ae38467756a410ed",
+      "0": {"vt":  "0x20", "func": "0x7100029FD0", "lr": "0x7100003D38", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::anif::detail::ISfDriverService"], "_srv_outinterfaces": "SRV_710004E250", "name": "CreateDriverService", "wire_order": "N/A"}
+    },
+    "nn::anif::detail::ISfDriverService": {
+      "_srv": "SRV_710004E250",
+      "_hash": "9b876a5a0c7b7038",
+      "_hash_alt": "4ddbc9609108bc97",
+      "0":   {"vt":  "0x20", "func": "0x71000253B0", "lr": "0x710000437C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "outinterfaces": ["nn::anif::detail::ISfNetworkInterfaceService"], "_srv_outinterfaces": "SRV_710004E258", "name": "OpenNetworkInterface", "wire_order": "buffers=[in]"},
+      "128": {"vt":  "0x28", "func": "0x7100025680", "lr": "0x71000040A8", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetDriverInfo", "wire_order": "out_data[0x8]"},
+      "129": {"vt":  "0x30", "func": "0x71000256A0", "lr": "0x710000454C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [34], "name": "GetNetworkInterfaceList", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "130": {"vt":  "0x38", "func": "0x7100025900", "lr": "0x7100004718", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangedEvent", "wire_order": "N/A"},
+      "131": {"vt":  "0x40", "func": "0x71000243F0", "lr": "0x7100004878", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetNetworkInterfaceListUpdatedEvent", "wire_order": "N/A"},
+      "384": {"vt":  "0x48", "func": "0x7100025A10", "lr": "0x71000041EC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Ioctl", "wire_order": "in_data[0x4]"},
+      "385": {"vt":  "0x50", "func": "0x7100025B50", "lr": "0x71000049E0", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [34], "name": "IoctlRead", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "386": {"vt":  "0x58", "func": "0x7100025C30", "lr": "0x7100004B90", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33], "name": "IoctlWrite", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "387": {"vt":  "0x60", "func": "0x7100025D10", "lr": "0x7100004D44", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33, 34], "name": "IoctlReadWrite", "wire_order": "in_data[0x4]; buffers=[in, out]"},
+      "388": {"vt":  "0x68", "func": "0x7100025E00", "lr": "0x7100004EFC", "inbytes":   "0x4", "outbytes":   "0x0", "inhandles": [1], "name": "IoctlSetHandle", "wire_order": "in_data[0x4]"},
+      "389": {"vt":  "0x70", "func": "0x7100000100", "lr": "0x710000508C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "IoctlGetHandle", "wire_order": "in_data[0x4]"}
+    },
+    "nn::anif::detail::ISfNetworkInterfaceService": {
+      "_srv": "SRV_710004E258",
+      "_hash": "8583c7b6c8c8241e",
+      "_hash_alt": "75a7133cf558b437",
+      "0":   {"vt":  "0x20", "func": "0x7100018460", "lr": "0x7100005CAC", "inbytes":   "0x1", "outbytes":   "0x0", "outinterfaces": ["nn::anif::detail::ISfNetworkInterfaceService"], "_srv_outinterfaces": "SRV_710004E258", "name": "Duplicate", "wire_order": "in_data[0x1]"},
+      "1":   {"vt":  "0x28", "func": "0x7100018490", "lr": "0x7100005694", "inbytes":   "0x0", "outbytes":   "0x0", "name": "BringUp", "wire_order": "N/A"},
+      "2":   {"vt":  "0x30", "func": "0x71000184A0", "lr": "0x7100005370", "inbytes":   "0x0", "outbytes":   "0x0", "name": "BringDown", "wire_order": "N/A"},
+      "3":   {"vt":  "0x38", "func": "0x71000184B0", "lr": "0x7100005A6C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StartCommunication", "wire_order": "N/A"},
+      "4":   {"vt":  "0x40", "func": "0x71000184C0", "lr": "0x71000057F8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StopCommunication", "wire_order": "N/A"},
+      "5":   {"vt":  "0x48", "func": "0x71000184D0", "lr": "0x71000054CC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CreateSharedMemory", "wire_order": "N/A"},
+      "6":   {"vt":  "0x50", "func": "0x71000184E0", "lr": "0x7100005940", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DestroySharedMemory", "wire_order": "N/A"},
+      "128": {"vt":  "0x58", "func": "0x71000184F0", "lr": "0x7100005720", "inbytes":   "0x0", "outbytes":  "0xB0", "name": "GetNetworkInterfaceInfo", "wire_order": "out_data[0xB0]"},
+      "129": {"vt":  "0x60", "func": "0x7100017A50", "lr": "0x7100005E88", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangedEvent", "wire_order": "N/A"},
+      "130": {"vt":  "0x68", "func": "0x7100018500", "lr": "0x7100005FE8", "inbytes":   "0x0", "outbytes":   "0x4", "outhandles": [1, 1, 1], "name": "GetRxQueue", "wire_order": "out_data[0x4]"},
+      "131": {"vt":  "0x70", "func": "0x7100018510", "lr": "0x71000061D8", "inbytes":   "0x0", "outbytes":   "0x4", "outhandles": [1, 1, 1], "name": "GetTxQueue", "wire_order": "out_data[0x4]"},
+      "256": {"vt":  "0x78", "func": "0x7100018520", "lr": "0x71000055F8", "inbytes":   "0x6", "outbytes":   "0x0", "name": "SetMacAddress", "wire_order": "in_data[0x6]"},
+      "257": {"vt":  "0x80", "func": "0x7100018530", "lr": "0x71000058E0", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetMru", "wire_order": "in_data[0x2]"},
+      "258": {"vt":  "0x88", "func": "0x7100018540", "lr": "0x71000056CC", "inbytes":   "0x2", "outbytes":   "0x0", "name": "SetMtu", "wire_order": "in_data[0x2]"},
+      "259": {"vt":  "0x90", "func": "0x7100018550", "lr": "0x71000053E4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetFeatures", "wire_order": "in_data[0x8]"},
+      "260": {"vt":  "0x98", "func": "0x7100018560", "lr": "0x71000063CC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "SetMulticastFilter", "wire_order": "buffers=[in]"},
+      "261": {"vt":  "0xA0", "func": "0x7100018570", "lr": "0x7100005834", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetRxBufferSize", "wire_order": "in_data[0x4]"},
+      "262": {"vt":  "0xA8", "func": "0x7100018580", "lr": "0x7100005578", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetTxBufferSize", "wire_order": "in_data[0x4]"},
+      "384": {"vt":  "0xB0", "func": "0x7100018590", "lr": "0x710000598C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Ioctl", "wire_order": "in_data[0x4]"},
+      "385": {"vt":  "0xB8", "func": "0x71000185A0", "lr": "0x7100006550", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [34], "name": "IoctlRead", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "386": {"vt":  "0xC0", "func": "0x71000185B0", "lr": "0x7100006700", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33], "name": "IoctlWrite", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "387": {"vt":  "0xC8", "func": "0x71000185C0", "lr": "0x71000068B4", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33, 34], "name": "IoctlReadWrite", "wire_order": "in_data[0x4]; buffers=[in, out]"},
+      "388": {"vt":  "0xD0", "func": "0x71000185E0", "lr": "0x7100006A6C", "inbytes":   "0x4", "outbytes":   "0x0", "inhandles": [1], "name": "IoctlSetHandle", "wire_order": "in_data[0x4]"},
+      "389": {"vt":  "0xD8", "func": "0x7100018640", "lr": "0x7100006BFC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [1], "name": "IoctlGetHandle", "wire_order": "in_data[0x4]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710004FAA8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710002C070", "lr": "0x71000267B0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710002C080", "lr": "0x710002691C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710002C090", "lr": "0x7100026AB8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710002C0A0", "lr": "0x71000266E8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100029FD0", "lr": "0x7100026C1C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fatal:u", "psc:m", "set:sys", "srepo:a", "srepo:u", "usb:hs"]
+  }
+}
