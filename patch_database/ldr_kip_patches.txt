@@ -1,0 +1,7 @@
+('21.0.0', '[Loader:2750DA74BB5AB7E8]\n.nosigchk=0:0x005F8E:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.9.3-master-8b8e4438e'),
+('21.0.0', '[Loader:22C01B7199C1F3B6]\n.nosigchk=0:0x005F8E:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.9.4-master-d7936d3fa'),
+('21.0.0', '[Loader:3F9ECA59C1A8785A]\n.nosigchk=0:0x005F8E:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.9.5-master-de9b02007'),
+('21.0.0', '[Loader:D02BA50E8FEAA611]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.0-master-bfe98bc5b'),
+('21.0.0', '[Loader:C0CBC78DC3FAE61A]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.0-master-d9fc6e99e'),
+('21.1.0', '[Loader:C35504BA1B31B41E]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.1-master-21c0f75a2'),
+('21.2.0', '[LOADER:213B2B2A183241EC]\n.nosigchk=0:0x005F78:0x4:1F00016B,1F00006B\n\n', 'LOADER', 'Atmosphere-1.10.2-master-eb34f9789'),
