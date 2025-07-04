@@ -63,20 +63,6 @@ def decrypt_ctr(input, key, CTR):
     output = cipher.decrypt(input)
     return output
 
-def extract_package2(extracted_romfs):
-    extracted_romfs = extracted_romfs
-    result = re.search(b'\x70\x61\x63\x6B\x61\x67\x65\x32', extracted_romfs)
-    package2_size_location = result.start() - 0x10
-    package2_size_length = package2_size_location + 0x4
-    package2_size = int.from_bytes(extracted_romfs[package2_size_location:package2_size_length], "little", signed=False) + 0x200
-    package2_offset_location = result.start() - 0x18
-    package2_offset_length = package2_offset_location + 0x4
-    package2_offset = int.from_bytes(extracted_romfs[package2_offset_location:package2_offset_length], "little", signed=False) + 0x200
-    package2_length = package2_size + package2_offset
-    with open('package2', 'wb') as nca_romfs:
-        nca_romfs.write(extracted_romfs[package2_offset:package2_length])
-        nca_romfs.close()
-
 def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
     with open(package2, 'rb') as f:
         data = f.read()
@@ -105,19 +91,6 @@ def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
         with open('FS.kip1', 'rb') as compressed_fs_kip:
             nxo64.write_file(f'uFS.kip1', nxo64.decompress_kip(compressed_fs_kip))
             compressed_fs_kip.close()
-
-def extract_package1(extracted_romfs):
-    extracted_romfs = extracted_romfs
-    result = re.search(b'\x70\x61\x63\x6B\x61\x67\x65\x31\x34', extracted_romfs)
-    package1_size_location = result.start() - 0x10
-    package1_size_length = package1_size_location + 0x4
-    package1_size = int.from_bytes(extracted_romfs[package1_size_location:package1_size_length], "little", signed=False) + 0x200
-    package1_offset_location = result.start() - 0x18
-    package1_offset_length = package1_offset_location + 0x4
-    package1_offset = int.from_bytes(extracted_romfs[package1_offset_location:package1_offset_length], "little", signed=False) + 0x200
-    package1_length = package1_size + package1_offset
-    package1_enc = extracted_romfs[package1_offset:package1_length]
-    return package1_enc
 
 def decrypt_mariko_package1(encrypted_package1):
     package1 = encrypted_package1
@@ -165,13 +138,14 @@ def process_package12(nca_path):
         decrypted_section_00 = nca_file.decrypted_sections[0]
         titleId = nca_file.titleId
         if titleId == "0100000000000819" or "010000000000081B":
-            romfs = decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end]
-            encrypted_package1 = extract_package1(romfs)
-            extract_package2(romfs)
-            decrypted_package1 = decrypt_mariko_package1(encrypted_package1)
+            romfs = nca.Romfs(decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end], f"./sorted_firmware/by-type/Data/{titleId}/romfs/")
+            with open(f'sorted_firmware/by-type/Data/{titleId}/romfs/a/package1', 'rb') as file:
+                encrypted_package1 = file.read()
+                decrypted_package1 = decrypt_mariko_package1(encrypted_package1)
+                file.close()
             mariko_master_kek_source, mariko_master_kek_source_dev, revision = get_mariko_key_sources(decrypted_package1)
             master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source) # directly from provided FS nca, requires mariko_bek
-            decrypt_package2_and_extract_fs_from_ini1('package2', package2_key)
+            decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/{titleId}/romfs/nx/package2', package2_key)
             if titleId == "0100000000000819":
                 if mariko_master_kek_source in key_sources.mariko_master_kek_sources:
                     print(f'mariko_master_kek_source_{revision} = {mariko_master_kek_source.hex().upper()}')
@@ -227,7 +201,3 @@ def process_package12(nca_path):
                         print(f'bytes([{formatted_mariko_master_kek_source_dev}]),')
                         print(f'^ unused, but output for consistency ^') # "MarikoMasterKekSourceDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L29-L32
             return mariko_master_kek_source
-                #else:
-                    # implement proper romfs extraction to make this necessary
-                    #decrypted_section_0 = nca.decrypt_section_0(nca, header_key, key_area_key_application_13, decrypted_nca_header, ctr) # todo, key_area_key make dynamic
-                    #extracted_romfs = extract_romfs(decrypted_nca_header, decrypted_section_0)

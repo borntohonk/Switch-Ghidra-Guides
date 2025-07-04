@@ -30,12 +30,22 @@ except ModuleNotFoundError:
         sys.exit(1)
 
 import os
+import errno
 from hashlib import sha256
 import re
 from keys import RootKeys
 from key_sources import KeySources
 import aes_128
 import aes_sample
+
+def mkdirp(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 def decrypt_xts(input, key):
     crypto = aes_128.AESXTS(key)
@@ -55,6 +65,8 @@ def decrypt_ecb(input, key):
 def decrypt_header(header, key):
     decrypted_header = decrypt_xts(header, key)
     return decrypted_header
+
+ROMFS_ENTRY_EMPTY = b'\xff\xff\xff\xff'
 
 class SectionTableEntry:
     def __init__(self, d):
@@ -228,6 +240,131 @@ class Nca():
         self.decrypted_sections.append(decrypt_ctr(self.sections[1], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[1], self.CryptoCounterOffsets[1]))
         self.decrypted_sections.append(decrypt_ctr(self.sections[2], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[2], self.CryptoCounterOffsets[2]))
         self.decrypted_sections.append(decrypt_ctr(self.sections[3], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[3], self.CryptoCounterOffsets[3]))
+
+class Romfs():
+    def __init__(self, romfs, romfs_path):
+        self.romfs = romfs
+        self.romfs_path = romfs_path
+        self.romfs_header = RomfsHeader(romfs[0x0:0x50])
+        self.data_offset = self.romfs_header.data_offset
+        self.file_meta_table_size = self.romfs_header.file_meta_table_size
+        self.dir_meta_table_size = self.romfs_header.dir_meta_table_size
+        self.dir_entry_table = self.romfs[self.romfs_header.dir_meta_table_offset:self.romfs_header.dir_meta_table_length] # entire directory table
+        self.file_entry_table = self.romfs[self.romfs_header.file_meta_table_offset:self.romfs_header.file_meta_table_length] # entire file table
+        self.root_dir_entry_offset_start = 0x0
+        self.root_dir_entry = RomfsDirEntry(self.dir_entry_table[self.root_dir_entry_offset_start:self.romfs_header.dir_meta_table_size]) # "root romfsdir entry"
+        self.root_file_entry_offset_start = 0x0
+        self.root_file_entry = RomfsFileEntry(self.file_entry_table[self.root_file_entry_offset_start:self.romfs_header.file_meta_table_size])
+        self.start_path = romfs_path # make this more specific later
+        self.process_romfs = self.romfs_visit_dir(self.dir_entry_table, self.file_entry_table, self.data_offset, self.romfs, self.root_dir_entry_offset_start, self.dir_meta_table_size, self.file_meta_table_size, self.start_path)
+
+    def romfs_visit_file(self, file_entry_table, data_offset, romfs, file_offset_raw, file_meta_table_size, dir_path):
+        self.file_entry_table = file_entry_table
+        self.romfs = romfs
+        self.data_offset = data_offset
+        self.file_offset_raw = file_offset_raw
+        self.file_meta_table_size = file_meta_table_size
+        self.dir_path = dir_path
+        while self.file_offset_raw != ROMFS_ENTRY_EMPTY:
+            self.file_offset = int.from_bytes(self.file_offset_raw, byteorder='little', signed=False)
+            self.file_offset_size = self.file_offset + self.file_meta_table_size
+            self.file_entry = RomfsFileEntry(self.file_entry_table[self.file_offset:self.file_offset_size])
+            self.current_path = self.dir_path
+            if self.file_entry.file_name_size != 0:
+                self.file_name = self.file_entry.file_name.decode("UTF-8")
+                if self.file_name not in self.current_path:
+                    str_path = ''.join(self.current_path)
+                    self.current_path = str_path + self.file_name
+
+            self.file_start = self.data_offset + self.file_entry.file_offset
+            self.file_end = self.file_start + self.file_entry.file_size
+
+            with open(self.current_path, 'wb') as file:
+                file.write(self.romfs[self.file_start:self.file_end])
+                file.close()
+
+            self.file_offset = self.file_entry.file_sibling_offset
+            self.file_offset_raw = self.file_entry.file_sibling_offset_raw
+
+    def romfs_visit_dir(self, dir_entry_table, file_entry_table, data_offset, romfs, dir_offset, dir_meta_table_size, file_meta_table_size, parent_path):
+        self.dir_entry_table = dir_entry_table
+        self.file_entry_table = file_entry_table
+        self.data_offset = data_offset
+        self.romfs = romfs
+        self.dir_offset = dir_offset
+        self.dir_meta_table_size = dir_meta_table_size
+        self.file_meta_table_size = file_meta_table_size
+        self.parent_path = parent_path
+        self.dir_offset_size = self.dir_offset + self.dir_meta_table_size
+        self.dir_entry = RomfsDirEntry(self.dir_entry_table[self.dir_offset:self.dir_offset_size])
+
+        self.current_path = self.parent_path
+        if self.dir_entry.dir_name_size != 0:
+            self.dir_name = self.dir_entry.dir_name.decode("UTF-8") + "/"
+            str_path = ''.join(self.current_path)
+            self.current_path = str_path + self.dir_name
+
+        mkdirp(self.current_path)
+        if self.dir_entry.dir_file_offset_raw != ROMFS_ENTRY_EMPTY:
+            self.romfs_visit_file(self.file_entry_table, self.data_offset, self.romfs, self.dir_entry.dir_file_offset_raw, self.file_meta_table_size, self.current_path)
+
+        if self.dir_entry.dir_child_offset_raw != ROMFS_ENTRY_EMPTY:
+            self.romfs_visit_dir(self.dir_entry_table, self.file_entry_table, self.data_offset, self.romfs, self.dir_entry.dir_child_offset, self.dir_meta_table_size, self.file_meta_table_size, self.current_path)
+        
+        if self.dir_entry.dir_sibling_offset_raw != ROMFS_ENTRY_EMPTY:
+            self.romfs_visit_dir(self.dir_entry_table, self.file_entry_table, self.data_offset, self.romfs, self.dir_entry.dir_sibling_offset, self.dir_meta_table_size, self.file_meta_table_size, self.parent_path)
+
+class RomfsHeader():
+    def __init__(self, romfs):
+        self.romfs = romfs
+        self.header_size = int.from_bytes(self.romfs[0x0:0x8], byteorder='little', signed=False) # header_size
+        self.dir_hash_table_offset = int.from_bytes(self.romfs[0x8:0x10], byteorder='little', signed=False) #dir_hash_bucket - offset
+        self.dir_hash_table_size = int.from_bytes(self.romfs[0x10:0x18], byteorder='little', signed=False) #dir_hash_bucket - size
+        self.dir_hash_table_length = self.dir_hash_table_offset + self.dir_hash_table_size
+        self.dir_meta_table_offset = int.from_bytes(self.romfs[0x18:0x20], byteorder='little', signed=False) #dir_entry - offset
+        self.dir_meta_table_size = int.from_bytes(self.romfs[0x20:0x28], byteorder='little', signed=False) # dir_entry - size
+        self.dir_meta_table_length = self.dir_meta_table_offset + self.dir_meta_table_size
+        self.file_hash_table_offset = int.from_bytes(self.romfs[0x28:0x30], byteorder='little', signed=False) # file_hash_bucket - offset
+        self.file_hash_table_size = int.from_bytes(self.romfs[0x30:0x38], byteorder='little', signed=False) # file_hash_bucket - size
+        self.file_hash_table_length = self.file_hash_table_offset + self.file_hash_table_size
+        self.file_meta_table_offset = int.from_bytes(self.romfs[0x38:0x40], byteorder='little', signed=False) #file_entry - offset
+        self.file_meta_table_size = int.from_bytes(self.romfs[0x40:0x48], byteorder='little', signed=False) #file_entry - size
+        self.file_meta_table_length = self.file_meta_table_offset + self.file_meta_table_size
+        self.data_offset = int.from_bytes(self.romfs[0x48:0x50], byteorder='little', signed=False) # data_offset # mDataOffset
+
+class RomfsDirEntry():
+    def __init__(self, romfs_direntry):
+        self.direntry = romfs_direntry
+        self.dir_parent_offset_raw = self.direntry[0x0:0x4]
+        self.dir_parent_offset = int.from_bytes(self.dir_parent_offset_raw, byteorder='little', signed=False)
+        self.dir_sibling_offset_raw = self.direntry[0x4:0x8]
+        self.dir_sibling_offset = int.from_bytes(self.dir_sibling_offset_raw, byteorder='little', signed=False)
+        self.dir_child_offset_raw = self.direntry[0x8:0xC]
+        self.dir_child_offset = int.from_bytes(self.dir_child_offset_raw, byteorder='little', signed=False)
+        self.dir_file_offset_raw = self.direntry[0xC:0x10]
+        self.dir_file_offset = int.from_bytes(self.dir_file_offset_raw, byteorder='little', signed=False)
+        self.dir_hash = self.direntry[0x10:0x14:]
+        self.dir_name_size_raw = self.direntry[0x14:0x18]
+        self.dir_name_size = int.from_bytes(self.dir_name_size_raw, byteorder='little', signed=False)
+        self.dir_name_length = 0x18 + self.dir_name_size
+        self.dir_name = self.direntry[0x18:self.dir_name_length]
+
+class RomfsFileEntry():
+    def __init__(self, romfs_fileentry):
+        self.fileentry = romfs_fileentry
+        self.file_parent_offset_raw = self.fileentry[0x0:0x4]
+        self.file_parent_offset = int.from_bytes(self.file_parent_offset_raw, byteorder='little', signed=False)
+        self.file_sibling_offset_raw = self.fileentry[0x4:0x8]
+        self.file_sibling_offset = int.from_bytes(self.file_sibling_offset_raw, byteorder='little', signed=False)
+        self.file_offset_raw = self.fileentry[0x8:0x10]
+        self.file_offset = int.from_bytes(self.file_offset_raw, byteorder='little', signed=False)
+        self.file_size_raw = self.fileentry[0x10:0x18]
+        self.file_size = int.from_bytes(self.file_size_raw, byteorder='little', signed=False)
+        self.file_hash = self.fileentry[0x18:0x1C]
+        self.file_name_size_raw = self.fileentry[0x1C:0x20]
+        self.file_name_size = int.from_bytes(self.file_name_size_raw, byteorder='little', signed=False)
+        self.file_name_length = 0x20 + self.file_name_size
+        self.file_name = self.fileentry[0x20:self.file_name_length]
 
 #class Pfs0():
 #    def __init__(self, pfs0):

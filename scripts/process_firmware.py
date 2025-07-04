@@ -70,20 +70,14 @@ def get_system_version(nca_path, mariko_master_kek_source_key):
     nca_file = nca.Nca(nca_path, key_area_key_application)
     decrypted_nca_header = nca_file.decrypted_nca_header
     decrypted_section_00 = nca_file.decrypted_sections[0]
-    romfs = decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end]
-    result = re.search(b'\x66\x69\x6C\x65', romfs)
-    system_version_file_size_location = result.start() - 0x10
-    system_version_file_size_length = system_version_file_size_location + 0x4
-    system_version_file_size = int.from_bytes(romfs[system_version_file_size_location:system_version_file_size_length], "little", signed=False) + 0x200
-    system_version_file_offset_location = result.start() - 0x18
-    system_version_file_offset_length = system_version_file_offset_location + 0x4
-    system_version_file_offset = int.from_bytes(romfs[system_version_file_offset_location:system_version_file_offset_length], "little", signed=False) + 0x200
-    system_version_file_length = system_version_file_size + system_version_file_offset
-    extracted_system_version_file = romfs[system_version_file_offset:system_version_file_length]
-    firmware_version = extracted_system_version_file[0x68:0x6E].decode('utf-8')
-    return firmware_version
+    romfs = nca.Romfs(decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end], "./sorted_firmware/by-type/Data/0100000000000809/romfs/")
+    with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
+        data_read = file.read()
+        firmware_version = data_read[0x68:0x6E].decode('utf-8')
+        return firmware_version
+        file.close()
 
-if __name__ == "__main__":
+def sort_and_process():
     key_sources = KeySources()
     sort_nca("firmware")
     fat32_path = Path('sorted_firmware/by-type/Data/0100000000000819/data.nca')
@@ -104,3 +98,6 @@ if __name__ == "__main__":
     print(f'{system_version} nifm_buildID: {extract_exefs.prepare_exefs(nifm_path, "nifm.nso0")}')
     print(f'{system_version} nim_buildID: {extract_exefs.prepare_exefs(nim_path, "nim.nso0")}')
     print(f'{system_version} ssl_buildID: {extract_exefs.prepare_exefs(ssl_path, "ssl.nso0")}')
+
+if __name__ == "__main__":
+    sort_and_process()
