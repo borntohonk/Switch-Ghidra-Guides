@@ -42,16 +42,16 @@ All material exist purely for research reference.
 
 
 
-TODO: 
-* extract every section of input nca (completed, but currently static assigned to section 0 of desired input ncas)
-* extract all items of romfs (COMPLETED)
-* extract all items of pfs0 (not needed with current solution)
+* TODO: 
+  - extract every section of input nca (completed, but currently static assigned to section 0 of desired input ncas)
+  - extract all items of romfs (COMPLETED)
+  - extract all items of pfs0 (Completed - partially - ignores .npdm, but dynamically extracts the main exefs file now)
 
 
 * Credits: 
-* [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.
-* [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py)
-* [@reswitched](https://github.com/reswitched) - [(scripts/nxo64.py)](scripts/nxo64.py)
-* [@blawar](https://github.com/blawar) - for references to various things in [nut](https://github.com/blawar/nut)
-* everything else:
-* [@borntohonk](https://github.com/borntohonk)
+  - [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.
+  - [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py)
+  - [@reswitched](https://github.com/reswitched) - [(scripts/nxo64.py)](scripts/nxo64.py)
+  - [@blawar](https://github.com/blawar) - for references to various things in [nut](https://github.com/blawar/nut)
+  - everything else:
+  - [@borntohonk](https://github.com/borntohonk)

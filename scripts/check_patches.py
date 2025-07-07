@@ -45,9 +45,13 @@ if os.path.exists(compressed_exfat_path):
 root_keys = RootKeys()
 key_sources = KeySources()
 mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
-system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
-system_version = process_firmware.get_system_version(system_version_path, mariko_master_kek_source)
-version = system_version
+
+with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
+    data_read = file.read()
+    firmware_version = data_read[0x68:0x6E].decode('utf-8')
+    file.close()
+
+version = firmware_version
 
 with open(f'{es_path}', 'rb') as decompressed_es_nso:
     read_data = decompressed_es_nso.read()
