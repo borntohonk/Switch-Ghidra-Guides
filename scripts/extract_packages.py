@@ -131,10 +131,9 @@ def process_package12(nca_path):
         print("mariko_kek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
         sys.exit(1)
     else:
-        master_key_00 = aes_sample.master_keys(root_keys.mariko_kek)[0]
-        key_area_key_application_00 = aes_sample.generateKek(key_sources.key_area_key_application_source, master_key_00, key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
-        nca_file = nca.Nca(nca_path, key_area_key_application_00)
-        decrypted_nca_header = nca_file.decrypted_nca_header
+        mariko_master_kek_source_for_keygen = key_sources.mariko_master_kek_sources[0]
+        keys = aes_sample.single_keygen(mariko_master_kek_source_for_keygen)
+        nca_file = nca.Nca(nca_path, keys)
         decrypted_section_00 = nca_file.decrypted_sections[0]
         titleId = nca_file.titleId
         if titleId == "0100000000000819" or "010000000000081B":

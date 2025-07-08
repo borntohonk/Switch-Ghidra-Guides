@@ -64,14 +64,9 @@ def sort_nca(location):
             except:
                 pass
 
-def get_key_area_keys(mariko_master_kek_source_key):
-    mariko_master_kek_source = mariko_master_kek_source_key
-    master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source)
-    return key_area_key_system, key_area_key_ocean, key_area_key_application
-
-def get_system_version(nca_path, key_area_key_application):
-    key_area_key_application = key_area_key_application
-    nca_file = nca.Nca(nca_path, key_area_key_application)
+def get_system_version(nca_path, keys):
+    keys = keys
+    nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     romfs = nca.Romfs(decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end], "./sorted_firmware/by-type/Data/0100000000000809/romfs/")
     with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
@@ -81,9 +76,9 @@ def get_system_version(nca_path, key_area_key_application):
         file.close()
         return key_area_application
 
-def extract_exefs(nca_path, key_area_key_application):
-    key_area_key_application = key_area_key_application
-    nca_file = nca.Nca(nca_path, key_area_key_application)
+def extract_exefs(nca_path, keys):
+    keys = keys
+    nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
     exefs = nca.Pfs0(decrypted_section_00[nca_file.fsheader_00.pfs0_start:nca_file.fsheader_00.pfs0_end], f"./sorted_firmware/by-type/Program/{titleId}/exefs/")
@@ -93,7 +88,6 @@ def extract_exefs(nca_path, key_area_key_application):
 def decompress_exefs(main_path, nso_name):
     main_path = main_path
     nso_name = nso_name
-
     with open(main_path, 'rb') as compressed_exefs_file:
         decompressed_nso = nxo64.decompress_nso(compressed_exefs_file)
         with open(nso_name, 'wb') as decompressed_exefs_file:
@@ -110,8 +104,8 @@ def sort_and_process():
     if mariko_master_kek_source not in key_sources.mariko_master_kek_sources:
         print("A new mariko_master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
         sys.exit(1)
-    key_area_key_system, key_area_key_ocean, key_area_key_application = get_key_area_keys(mariko_master_kek_source)
-    system_version = get_system_version(system_version_path, key_area_key_application)
+    keys = aes_sample.single_keygen(mariko_master_kek_source)
+    system_version = get_system_version(system_version_path, keys)
     print(f'\nfirmware version of files provided is: {system_version}\n')
     fat32hash = sha256(open('FS.kip1', 'rb').read()).hexdigest().upper()
     print(f'{system_version} fat32 sha256 = {fat32hash}')
@@ -119,10 +113,10 @@ def sort_and_process():
     nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
     ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
-    print(f'{system_version} es_buildID: {extract_exefs(es_path, key_area_key_application)}')
-    print(f'{system_version} nifm_buildID: {extract_exefs(nifm_path, key_area_key_application)}')
-    print(f'{system_version} nim_buildID: {extract_exefs(nim_path, key_area_key_application)}')
-    print(f'{system_version} ssl_buildID: {extract_exefs(ssl_path, key_area_key_application)}')
+    print(f'{system_version} es_buildID: {extract_exefs(es_path, keys)}')
+    print(f'{system_version} nifm_buildID: {extract_exefs(nifm_path, keys)}')
+    print(f'{system_version} nim_buildID: {extract_exefs(nim_path, keys)}')
+    print(f'{system_version} ssl_buildID: {extract_exefs(ssl_path, keys)}')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', 'es.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', 'nifm.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', 'nim.nso0')

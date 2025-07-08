@@ -183,9 +183,9 @@ class NcaHeader():
             self.contentType = "PublicData"
 
 class Nca():
-    def __init__(self, nca, key_area_key):
+    def __init__(self, nca, keyset_for_firmware):
         self.nca = nca
-        self.key_area_key = key_area_key
+        self.master_kek, self.master_key, self.package2_key, self.titlekek, self.key_area_key_system, self.key_area_key_ocean, self.key_area_key_application = keyset_for_firmware
         self.sections = []
         with open(self.nca, 'rb') as f:
             nca_data = f.read()
@@ -209,6 +209,12 @@ class Nca():
                 self.sections.append(section_02)
                 self.sections.append(section_03)
                 f.close()
+        if self.header.keyIndex == 0:
+            self.key_area_key = self.key_area_key_application
+        elif self.header.keyIndex == 1:
+            self.key_area_key = self.key_area_key_ocean
+        elif self.header.keyIndex == 2:
+            self.key_area_key = self.key_area_key_system
         self.titleId = self.header.titleId
         self.sectionFilesystems = []
         self.fsheader_00 = FsHeader(self.decrypted_nca_header[0x400:0x600])
