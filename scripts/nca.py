@@ -80,6 +80,51 @@ class SectionTableEntry:
         self.unknown2 = int.from_bytes(d[0xc:0x10], byteorder='little', signed=False)
         self.sha1 = None
 
+class Pfs0HashData():
+    def __init__(self, hashdata):
+        self.hashdata = hashdata
+        self.master_hash = self.hashdata[0x0:0x20]
+        self.block_size_raw = self.hashdata[0x20:0x24]
+        self.block_size = int.from_bytes(self.block_size_raw, byteorder='little', signed=False)
+        self.layer_count_raw = self.hashdata[0x24:0x28]
+        self.layer_count = int.from_bytes(self.layer_count_raw, byteorder='little', signed=False)
+        self.layer_regions = self.hashdata[0x28:0x78]
+        self.reserved = self.hashdata[0x78:0x80]
+        self.region_0_offset_raw = self.layer_regions[0x0:0x8]
+        self.region_0_offset = int.from_bytes(self.region_0_offset_raw, byteorder='little', signed=False)
+        self.region_0_size_raw = self.layer_regions[0x8:0x10]
+        self.region_0_size = int.from_bytes(self.region_0_size_raw, byteorder='little', signed=False)
+        self.region_1_offset_raw = self.layer_regions[0x10:0x18]
+        self.region_1_offset = int.from_bytes(self.region_1_offset_raw, byteorder='little', signed=False)
+        self.region_1_size_raw = self.layer_regions[0x18:0x20]
+        self.region_1_size = int.from_bytes(self.region_1_size_raw, byteorder='little', signed=False)
+
+class IvfcLevel:
+    def __init__(self, ivfclevel):
+        self.ivfclevel = ivfclevel
+        self.offset = int.from_bytes(self.ivfclevel[0x0:0x8], byteorder='little', signed=False)
+        self.size = int.from_bytes(self.ivfclevel[0x8:0x10], byteorder='little', signed=False)
+        self.blocksize = int.from_bytes(self.ivfclevel[0x10:0x14], byteorder='little', signed=False)
+        self.reserved = self.ivfclevel[0x14:0x18]
+
+class Ivfc():
+    def __init__(self, hashdata):
+        self.hashdata = hashdata
+        self.magic = hashdata[0x0:0x4]
+        self.version = hashdata[0x4:0x8]
+        self.master_hash_size = hashdata[0x8:0xC]
+        self.info_level_hash = hashdata[0xC:0xC0]
+        self.master_hash = hashdata[0xC0:0xE0]
+        self.reserved = hashdata[0xE0:0xF8]
+        self.max_layers_raw = self.info_level_hash[0x0:0x4]
+        self.max_layers = int.from_bytes(self.max_layers_raw, byteorder='little', signed=False)
+        self.infolevels = self.info_level_hash[0x4:0x94]
+        self.levels = []
+        for i in range(self.max_layers):
+            x = i * 0x18
+            y = x - 0x18
+            self.levels.append(IvfcLevel(self.infolevels[y:x]))
+
 class FsHeader():
     def __init__(self, fsheader):
         self.fsheader = fsheader
@@ -88,25 +133,38 @@ class FsHeader():
         self.hashType = int.from_bytes(self.fsheader[0x3:0x4], byteorder='little', signed=False)
         self.encryptionType = int.from_bytes(self.fsheader[0x4:0x5], byteorder='little', signed=False)
         self.padding = self.fsheader[0x5:0x8]
-        self.hashOffset = 0x8
         self.hashInfo = self.fsheader[0x8:0x100]
+
+        if self.fsType == 0:
+            self.hashdata = Ivfc(self.hashInfo)
+            if self.hashdata.magic == b'IVFC':
+                self.section_has_content = True
+                self.max_layer = self.hashdata.max_layers - 1
+                self.fsType = "ROMFS"
+                self.romfs_start = self.hashdata.levels[self.max_layer].offset
+                self.romfs_size = self.hashdata.levels[self.max_layer].size
+                self.romfs_end = self.romfs_start + self.romfs_size
+            else:
+                self.section_has_content = False
+
+        elif self.fsType == 1:
+            self.hashData = Pfs0HashData(self.hashInfo)
+            if self.hashType == 2:
+                if self.hashData.master_hash == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00':
+                    self.section_has_content = False
+                else:
+                    self.section_has_content = True
+                    self.fsType = "PFS0"
+                    self.pfs0_start = self.hashData.region_1_offset
+                    self.pfs0_size = self.hashData.region_1_size
+                    self.pfs0_end = self.pfs0_start + self.pfs0_size
+
         self.patchInfo = self.fsheader[0x100:0x140]
         self.generation = self.fsheader[0x140:0x144]
         self.secureValue = self.fsheader[0x144:0x148]
         self.sparseInfo = self.fsheader[0x148:0x1A0]
         self.reserved = self.fsheader[0x1A0:0x200]
         self.CryptoCounterCtr = bytearray((b"\x00"*8) + self.generation + self.secureValue)[::-1]
-        fs_content_type = self.fsType
-        if fs_content_type == 0:
-            self.fsType = "ROMFS"
-            self.romfs_start = int.from_bytes(self.fsheader[0x90:0x93], "little", signed=False)
-            self.romfs_size = int.from_bytes(self.fsheader[0x98:0x9B], "little", signed=False)
-            self.romfs_end = self.romfs_start + self.romfs_size
-        elif fs_content_type == 1:
-            self.fsType = "PFS0"
-            self.pfs0_start = int.from_bytes(self.fsheader[0x40:0x44], "little", signed=False)
-            self.pfs0_size = int.from_bytes(self.fsheader[0x48:0x4C], "little", signed=False)
-            self.pfs0_end = self.pfs0_start + self.pfs0_size
 
 class NsoHeader():
     def __init__(self, nsoheader):
