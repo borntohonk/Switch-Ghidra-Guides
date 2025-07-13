@@ -438,32 +438,39 @@ class Pfs0():
         self.magic = self.pfs0[0x0:0x4]
         self.EntryCount_raw = self.pfs0[0x4:0x8]
         self.EntryCount = int.from_bytes(self.EntryCount_raw, byteorder='little', signed=False)
-        self.StringTableSize_raw = self.pfs0[0x8:0xC]
+        self.StringTableSize_raw = self.pfs0[0x8:0xC] # "32"
         self.StringTableSize = int.from_bytes(self.StringTableSize_raw, byteorder='little', signed=False)
         self.reserved_0xC = self.pfs0[0xC:0x10]
         self.PartitionEntryTable = self.pfs0[0x10:0x28]
         self.partition_entry = Pfs0FileEntry(self.PartitionEntryTable)
         self.number_of_files = self.EntryCount
         self.header_size = 0x10 + self.number_of_files * 0x18 + self.StringTableSize
+        self.string_table_start = 0x10 + self.number_of_files * 0x18
+        self.string_table_end = self.string_table_start + self.StringTableSize
         self.pfs0_header = pfs0[0x0:self.header_size]
+        self.string_table = self.pfs0_header[self.string_table_start:self.string_table_end]
         self.pfs0_data = pfs0[self.header_size:]
         mkdirp(self.pfs0_path)
 
         current_offset = 0x10
         for i in range(self.number_of_files):
-            current_offset = current_offset
             current_offset_end = current_offset + 0x18
             pfs0_file_entry = Pfs0FileEntry(self.pfs0_header[current_offset:current_offset_end])
+            current_offset = current_offset + 0x18
             current_file_offset = pfs0_file_entry.PartitionEntryOffset
             current_file_size = pfs0_file_entry.PartitionEntrySize
-            if current_file_offset == 0:
-                self.pfs0_main = self.pfs0_data[current_file_offset:current_file_size]
-                main_path = pfs0_path + "main"
-                with open(main_path, 'wb') as f:
-                    f.write(self.pfs0_main)
-                    f.close()
-                self.buildid = self.pfs0_main[0x40:0x54].hex().upper()
-            current_offset = current_offset + 0x18
+            current_file_size_end = current_file_offset + current_file_size
+            name = self.string_table[pfs0_file_entry.PartitionEntryStringOffset:self.StringTableSize]
+            name_byte = name.find(b'\x00')
+            filename = name[:name_byte].decode('utf-8')
+            self.pfs0_file_data = self.pfs0_data[current_file_offset:current_file_size_end]
+            pfs0_file_path = pfs0_path + filename
+            with open(pfs0_file_path, 'wb') as f:
+                f.write(self.pfs0_file_data)
+                f.close()
+            buildid = self.pfs0_file_data[0x40:0x54]
+            if buildid != b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00':
+                self.buildid = buildid.hex().upper()
 
 class Pfs0FileEntry():
     def __init__(self, pfs0_partitionentry):

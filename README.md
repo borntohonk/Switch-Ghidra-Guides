@@ -43,9 +43,7 @@ All material exist purely for research reference.
 
 
 * TODO: 
-  - extract every section of input nca (completed, but currently static assigned to section 0 of desired input ncas)
-  - extract all items of romfs (COMPLETED)
-  - extract all items of pfs0 (Completed - partially - ignores .npdm, but dynamically extracts the main exefs file now)
+  - extract every section of input nca (completed, but currently static assigned to section 0 of desired input ncas - not needed for firmware files of interest)
 
 
 * Credits: 
