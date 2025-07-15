@@ -162,21 +162,21 @@ def decompress_nso(fileobj):
 
     header = f.read_from(0xC, 0x0)
     header += bytes.fromhex("38000000")
-    header += f.read_from(0x4, 0x1C) # correct
-    header += f.read_from(0x8, 0x14) # correct
-    header += f.read_from(0x4, 0x1C) # correct
-    header += f.read_from(0x2, 0x1C) # correct
-    header += f.read_from(0x2, 0x26) # correct ("C00")
-    header += f.read_from(0x8,0x24) # yes
-    header += bytes.fromhex("00000000") # yes
-    header += f.read_from(0x4, 0x34)
-    header += f.read_from(0xC,0x34) # correct
-    header += f.read_from(0x20, 0x40) # # correct
-    header += f.read_from(0x4, 0x18) # correct
-    header += f.read_from(0x4, 0x28) # correct
-    header += f.read_from(0x4, 0x38) # correct
+    header += f.read_from(0x4, 0x1C)
+    header += f.read_from(0x8, 0x14)
+    header += f.read_from(0x4, 0x1C)
+    header += f.read_from(0x2, 0x1C)
+    header += f.read_from(0x2, 0x26)
+    header += f.read_from(0x8,0x24)
     header += bytes.fromhex("00000000")
-    header += f.read_from(0x90, 0x70) # correct
+    header += f.read_from(0x4, 0x34)
+    header += f.read_from(0xC,0x34)
+    header += f.read_from(0x20, 0x40)
+    header += f.read_from(0x4, 0x18)
+    header += f.read_from(0x4, 0x28)
+    header += f.read_from(0x4, 0x38)
+    header += bytes.fromhex("00000000")
+    header += f.read_from(0x90, 0x70)
 
     full = header
     full += text

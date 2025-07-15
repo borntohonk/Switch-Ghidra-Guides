@@ -137,13 +137,13 @@ def process_package12(nca_path):
         decrypted_section_00 = nca_file.decrypted_sections[0]
         titleId = nca_file.titleId
         if titleId == "0100000000000819" or "010000000000081B":
-            romfs = nca.Romfs(decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end], f"./sorted_firmware/by-type/Data/{titleId}/romfs/")
+            romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/{titleId}/romfs/")
             with open(f'sorted_firmware/by-type/Data/{titleId}/romfs/a/package1', 'rb') as file:
                 encrypted_package1 = file.read()
                 decrypted_package1 = decrypt_mariko_package1(encrypted_package1)
                 file.close()
             mariko_master_kek_source, mariko_master_kek_source_dev, revision = get_mariko_key_sources(decrypted_package1)
-            master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source) # directly from provided FS nca, requires mariko_bek
+            master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(mariko_master_kek_source)
             decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/{titleId}/romfs/nx/package2', package2_key)
             if titleId == "0100000000000819":
                 if mariko_master_kek_source in key_sources.mariko_master_kek_sources:

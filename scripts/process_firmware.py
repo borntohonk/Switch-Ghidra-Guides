@@ -68,7 +68,7 @@ def get_system_version(nca_path, keys):
     keys = keys
     nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
-    romfs = nca.Romfs(decrypted_section_00[nca_file.fsheader_00.romfs_start:nca_file.fsheader_00.romfs_end], "./sorted_firmware/by-type/Data/0100000000000809/romfs/")
+    romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], "./sorted_firmware/by-type/Data/0100000000000809/romfs/")
     with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
         data_read = file.read()
         firmware_version = data_read[0x68:0x6E].decode('utf-8')
@@ -81,7 +81,7 @@ def extract_exefs(nca_path, keys):
     nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
-    exefs = nca.Pfs0(decrypted_section_00[nca_file.fsheader_00.pfs0_start:nca_file.fsheader_00.pfs0_end], f"./sorted_firmware/by-type/Program/{titleId}/exefs/")
+    exefs = nca.Pfs0(decrypted_section_00[nca_file.fsheaders[0].pfs0_start:nca_file.fsheaders[0].pfs0_end], f"./sorted_firmware/by-type/Program/{titleId}/exefs/")
     buildid = exefs.buildid
     return buildid
 

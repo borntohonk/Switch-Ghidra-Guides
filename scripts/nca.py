@@ -150,7 +150,7 @@ class FsHeader():
         elif self.fsType == 1:
             self.hashData = Pfs0HashData(self.hashInfo)
             if self.hashType == 2:
-                if self.hashData.master_hash == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00':
+                if self.hashData.master_hash == bytearray(b"\x00"*16):
                     self.section_has_content = False
                 else:
                     self.section_has_content = True
@@ -216,29 +216,10 @@ class NcaHeader():
         self.sdkVersion = int.from_bytes(self.ncaheader[0x220:0x221], byteorder='little', signed=False)
         self.cryptoType2 = int.from_bytes(self.ncaheader[0x220:0x221], byteorder='little', signed=False)
         self.rightsId = self.ncaheader[0x210:0x218].hex().upper()
-        self.sectionTables = []
-        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x240:0x250]))
-        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x250:0x260]))
-        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x260:0x270]))
-        self.sectionTables.append(SectionTableEntry(self.ncaheader[0x270:0x280]))
-        self.EncryptedKeyArea = []
-        self.EncryptedKeyArea.append(self.ncaheader[0x300:0x310])
-        self.EncryptedKeyArea.append(self.ncaheader[0x310:0x320])
-        self.EncryptedKeyArea.append(self.ncaheader[0x320:0x330])
-        self.EncryptedKeyArea.append(self.ncaheader[0x330:0x340])
-        nca_content_type = self.contentType
-        if nca_content_type == 0:
-            self.contentType = "Program"
-        elif nca_content_type == 1:
-            self.contentType = "Meta"
-        elif nca_content_type == 2:
-            self.contentType = "Control"
-        elif nca_content_type == 3:
-            self.contentType = "Manual"
-        elif nca_content_type == 4:
-            self.contentType = "Data"
-        elif nca_content_type == 5:
-            self.contentType = "PublicData"
+        self.contentTypes = [ "Program", "Meta", "Control", "Manual", "Data", "PublicData"]
+        self.contentType = self.contentTypes[self.contentType]
+        self.sectionTables = [ SectionTableEntry(self.ncaheader[0x240:0x250]), SectionTableEntry(self.ncaheader[0x250:0x260]), SectionTableEntry(self.ncaheader[0x260:0x270]), SectionTableEntry(self.ncaheader[0x270:0x280]) ]
+        self.EncryptedKeyArea = [ self.ncaheader[0x300:0x310], self.ncaheader[0x310:0x320], self.ncaheader[0x320:0x330], self.ncaheader[0x330:0x340] ]
 
 class Nca():
     def __init__(self, nca, keyset_for_firmware):
@@ -258,52 +239,19 @@ class Nca():
                 self.header_key = aes_sample.Keygen(self.root_keys.mariko_kek).header_key
                 self.decrypted_nca_header = decrypt_header(self.encrypted_header, self.header_key)
                 self.header = NcaHeader(self.decrypted_nca_header)
-                section_00 = nca_data[self.header.sectionTables[0].offset:self.header.sectionTables[0].endOffset]
-                section_01 = nca_data[self.header.sectionTables[1].offset:self.header.sectionTables[1].endOffset]
-                section_02 = nca_data[self.header.sectionTables[2].offset:self.header.sectionTables[2].endOffset]
-                section_03 = nca_data[self.header.sectionTables[3].offset:self.header.sectionTables[3].endOffset]
-                self.sections.append(section_00)
-                self.sections.append(section_01)
-                self.sections.append(section_02)
-                self.sections.append(section_03)
+                for i in range(4):
+                    self.sections.append(nca_data[self.header.sectionTables[i].offset:self.header.sectionTables[i].endOffset])
                 f.close()
-        if self.header.keyIndex == 0:
-            self.key_area_key = self.key_area_key_application
-        elif self.header.keyIndex == 1:
-            self.key_area_key = self.key_area_key_ocean
-        elif self.header.keyIndex == 2:
-            self.key_area_key = self.key_area_key_system
+        self.key_area_key_types = [ self.key_area_key_application, self.key_area_key_ocean, self.key_area_key_system]
+        self.key_area_key = self.key_area_key_types[self.header.keyIndex]
         self.titleId = self.header.titleId
-        self.sectionFilesystems = []
-        self.fsheader_00 = FsHeader(self.decrypted_nca_header[0x400:0x600])
-        self.fsheader_01 = FsHeader(self.decrypted_nca_header[0x600:0x800])
-        self.fsheader_02 = FsHeader(self.decrypted_nca_header[0x800:0xA00])
-        self.fsheader_03 = FsHeader(self.decrypted_nca_header[0xA00:0xC00])
-        self.sectionFilesystems.append(self.fsheader_00.fsType)
-        self.sectionFilesystems.append(self.fsheader_01.fsType)
-        self.sectionFilesystems.append(self.fsheader_02.fsType)
-        self.sectionFilesystems.append(self.fsheader_03.fsType)
-        self.CryptoCounterCtrs = []
-        self.CryptoCounterCtrs.append(self.fsheader_00.CryptoCounterCtr)
-        self.CryptoCounterCtrs.append(self.fsheader_01.CryptoCounterCtr)
-        self.CryptoCounterCtrs.append(self.fsheader_02.CryptoCounterCtr)
-        self.CryptoCounterCtrs.append(self.fsheader_03.CryptoCounterCtr)
-        self.CryptoCounterOffsets = []
-        self.CryptoCounterOffsets.append(self.header.sectionTables[0].offset)
-        self.CryptoCounterOffsets.append(self.header.sectionTables[1].offset)
-        self.CryptoCounterOffsets.append(self.header.sectionTables[2].offset)
-        self.CryptoCounterOffsets.append(self.header.sectionTables[3].offset)
+        self.fsheaders = [ FsHeader(self.decrypted_nca_header[0x400:0x600]), FsHeader(self.decrypted_nca_header[0x600:0x800]), FsHeader(self.decrypted_nca_header[0x800:0xA00]), FsHeader(self.decrypted_nca_header[0xA00:0xC00]) ]
         self.DecryptedKeyArea = []
-        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[0], self.key_area_key))
-        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[1], self.key_area_key))
-        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[2], self.key_area_key))
-        self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[3], self.key_area_key))
-        self.DecryptedKeyAreaKey2 = self.DecryptedKeyArea[2]
+        for i in range(4):
+            self.DecryptedKeyArea.append(decrypt_ecb(self.header.EncryptedKeyArea[i], self.key_area_key))
         self.decrypted_sections = []
-        self.decrypted_sections.append(decrypt_ctr(self.sections[0], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[0], self.CryptoCounterOffsets[0]))
-        self.decrypted_sections.append(decrypt_ctr(self.sections[1], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[1], self.CryptoCounterOffsets[1]))
-        self.decrypted_sections.append(decrypt_ctr(self.sections[2], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[2], self.CryptoCounterOffsets[2]))
-        self.decrypted_sections.append(decrypt_ctr(self.sections[3], self.DecryptedKeyAreaKey2, self.CryptoCounterCtrs[3], self.CryptoCounterOffsets[3]))
+        for i in range(4):
+            self.decrypted_sections.append(decrypt_ctr(self.sections[i], self.DecryptedKeyArea[2], self.fsheaders[i].CryptoCounterCtr, self.header.sectionTables[i].offset))
 
 class Romfs():
     def __init__(self, romfs, romfs_path):
@@ -329,6 +277,7 @@ class Romfs():
         self.file_offset_raw = file_offset_raw
         self.file_meta_table_size = file_meta_table_size
         self.dir_path = dir_path
+
         while self.file_offset_raw != ROMFS_ENTRY_EMPTY:
             self.file_offset = int.from_bytes(self.file_offset_raw, byteorder='little', signed=False)
             self.file_offset_size = self.file_offset + self.file_meta_table_size
@@ -438,7 +387,7 @@ class Pfs0():
         self.magic = self.pfs0[0x0:0x4]
         self.EntryCount_raw = self.pfs0[0x4:0x8]
         self.EntryCount = int.from_bytes(self.EntryCount_raw, byteorder='little', signed=False)
-        self.StringTableSize_raw = self.pfs0[0x8:0xC] # "32"
+        self.StringTableSize_raw = self.pfs0[0x8:0xC]
         self.StringTableSize = int.from_bytes(self.StringTableSize_raw, byteorder='little', signed=False)
         self.reserved_0xC = self.pfs0[0xC:0x10]
         self.PartitionEntryTable = self.pfs0[0x10:0x28]
@@ -469,7 +418,7 @@ class Pfs0():
                 f.write(self.pfs0_file_data)
                 f.close()
             buildid = self.pfs0_file_data[0x40:0x54]
-            if buildid != b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00':
+            if buildid != bytearray(b"\x00"*20):
                 self.buildid = buildid.hex().upper()
 
 class Pfs0FileEntry():
