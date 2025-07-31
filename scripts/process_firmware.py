@@ -113,14 +113,17 @@ def sort_and_process():
     nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
     ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
+    usb_path = Path('sorted_firmware/by-type/Program/0100000000000006/data.nca')
     print(f'{system_version} es_buildID: {extract_exefs(es_path, keys)}')
     print(f'{system_version} nifm_buildID: {extract_exefs(nifm_path, keys)}')
     print(f'{system_version} nim_buildID: {extract_exefs(nim_path, keys)}')
     print(f'{system_version} ssl_buildID: {extract_exefs(ssl_path, keys)}')
+    print(f'{system_version} usb_buildID: {extract_exefs(usb_path, keys)}')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', 'es.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', 'nifm.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', 'nim.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000024/exefs/main', 'ssl.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/0100000000000006/exefs/main', 'usb.nso0')
 
 if __name__ == "__main__":
     sort_and_process()

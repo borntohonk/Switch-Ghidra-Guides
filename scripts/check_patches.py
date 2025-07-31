@@ -41,7 +41,6 @@ fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest()
 if os.path.exists(compressed_exfat_path):
     exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
 
-
 root_keys = RootKeys()
 key_sources = KeySources()
 mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
@@ -52,6 +51,11 @@ with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as f
     file.close()
 
 version = firmware_version
+
+def get_build_id(nso0):
+    with open(nso0, 'rb') as f:
+        f.seek(0x40)
+        return f.read(0x14).hex().upper()
 
 with open(f'{es_path}', 'rb') as decompressed_es_nso:
     read_data = decompressed_es_nso.read()
@@ -71,6 +75,7 @@ with open(f'{es_path}', 'rb') as decompressed_es_nso:
                 print(f'Sys-patch ES pattern found at: {offset}\n')
                 print(f'The ghidra-equivalent pattern used was: .. .. 00 .. .. .. 00 94 a0 .. .. d1 .. .. ff 97 .. .. .. .. .. .. .. a9\n')
                 print(f'An arm "MOV" condition is what is supposed to be patched at this offset\n')
+                print(f'{version} ES buildid: {get_build_id(es_path)}\n')
             else:
                 print('a "MOV" arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
         else:
@@ -95,6 +100,7 @@ with open(f'{nifm_path}', 'rb') as decompressed_nifm_nso:
                 print(f'Sys-patch NIFM pattern found at: {offset}\n')
                 print(f'The ghidra-equivalent pattern used was: 14 .. .. .. .. .. .. .. .. .. .. .. 91 .. .. .. .. .. .. .. .. .. .. .. 97 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. 14\n')
                 print(f'An arm "STP" condition is what is supposed to be patched at the offset right after the branch arm condition tested ("B")\n')
+                print(f'{version} NIFM buildid: {get_build_id(nifm_path)}\n')
             else:
                 print('an STP arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken. - If this happens, add (new) and change the ctest2 cond check to a stp_cond ("0xA9") check ("41, 0, stp_cond, ctest_patch, ctest_applied"") (\n\n')
         else:
@@ -118,6 +124,7 @@ with open(f'{nim_path}', 'rb') as decompressed_nim_nso:
                 print(f'Sys-patch NIM pattern found at: {offset}\n')
                 print(f'The ghidra-equivalent pattern used was: .. 0F 00 35 1F 20 03 D5 .. .. .. ..\n')
                 print(f'An arm "ADR" condition is what is supposed to be patched at the offset right after the "CBNZ and "NOP" conditions the pattern finds\n')
+                print(f'{version} NIM buildid: {get_build_id(nim_path)}\n')
             else:
                 print('an "ADR" arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
         else:
