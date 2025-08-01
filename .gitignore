@@ -2,6 +2,8 @@ firmware/**
 *.zip
 *.kip1
 *.nso0
+*.nro
+*.ips
 prod.keys
 Atmosphere_Loader_Patch/
 Atmosphere_Loader_Patch/**

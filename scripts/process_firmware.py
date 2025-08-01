@@ -33,6 +33,8 @@ import nxo64
 import aes_sample
 from hashlib import sha256
 
+import lz4
+
 def mkdirp(path):
     try:
         os.makedirs(path)
@@ -74,7 +76,13 @@ def get_system_version(nca_path, keys):
         firmware_version = data_read[0x68:0x6E].decode('utf-8')
         return firmware_version
         file.close()
-        return key_area_application
+        #return key_area_application
+
+def extract_browser_dll_romfs(nca_path, keys):
+    keys = keys
+    nca_file = nca.Nca(nca_path, keys)
+    decrypted_section_00 = nca_file.decrypted_sections[0]
+    romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], "./sorted_firmware/by-type/Data/0100000000000803/romfs/")
 
 def extract_exefs(nca_path, keys):
     keys = keys
@@ -95,17 +103,35 @@ def decompress_exefs(main_path, nso_name):
             decompressed_exefs_file.close()
             compressed_exefs_file.close()
 
+def decompress_foss_nro(nro_path, nro_name):
+    nro_path = nro_path
+    nro_name = nro_name
+    with open(nro_path, 'rb') as file:
+        input_data = file.read()
+        decompressed = lz4.block.decompress(input_data)
+        decompressed_browser_file = open(nro_name, 'wb')
+        decompressed_browser_file.write(decompressed)
+        decompressed_browser_file.close()
+
+def get_nro_build_id(input):
+    with open(input, 'rb') as f:
+        f.seek(0x40)
+        return(f.read(0x10).hex().upper())
+
 def sort_and_process():
     key_sources = KeySources()
     sort_nca("firmware")
     fat32_path = Path('sorted_firmware/by-type/Data/0100000000000819/data.nca')
     system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
+    browserdll_path = Path('sorted_firmware/by-type/Data/0100000000000803/data.nca')
     mariko_master_kek_source = extract_packages.process_package12(Path(fat32_path))
     if mariko_master_kek_source not in key_sources.mariko_master_kek_sources:
         print("A new mariko_master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
         sys.exit(1)
     keys = aes_sample.single_keygen(mariko_master_kek_source)
     system_version = get_system_version(system_version_path, keys)
+    extract_browser_dll_romfs(browserdll_path, keys)
+    decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4', 'foss_browser_ssl.nro')
     print(f'\nfirmware version of files provided is: {system_version}\n')
     fat32hash = sha256(open('FS.kip1', 'rb').read()).hexdigest().upper()
     print(f'{system_version} fat32 sha256 = {fat32hash}')
@@ -119,6 +145,7 @@ def sort_and_process():
     print(f'{system_version} nim_buildID: {extract_exefs(nim_path, keys)}')
     print(f'{system_version} ssl_buildID: {extract_exefs(ssl_path, keys)}')
     print(f'{system_version} usb_buildID: {extract_exefs(usb_path, keys)}')
+    print(f'{system_version} foss_ssl_browser_buildID: {get_nro_build_id('foss_browser_ssl.nro')}')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', 'es.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', 'nifm.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', 'nim.nso0')

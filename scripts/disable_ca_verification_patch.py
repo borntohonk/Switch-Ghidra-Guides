@@ -21,11 +21,11 @@
 import re
 
 def get_build_id():
-    with open('uncompressed_ssl.nso0', 'rb') as f:
+    with open('ssl.nso0', 'rb') as f:
         f.seek(0x40)
         return(f.read(0x14).hex().upper())
 
-with open('uncompressed_ssl.nso0', 'rb') as fi:
+with open('ssl.nso0', 'rb') as fi:
     read_data = fi.read()
     result1 = re.search(rb'\x6a\x00\x80\xd2', read_data)
     result23 = re.search(rb'\x24\x09\x43\x7a\xa0\x00\x00\x54', read_data)

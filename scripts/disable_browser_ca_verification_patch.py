@@ -22,20 +22,23 @@ import re
 import lz4.block
 
 #20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
-with open('webkit_wkc.nro.lz4', 'rb') as file:
-    input_data = file.read()
-    decompressed = lz4.block.decompress(input_data)
-    decompressed_browser_file = open('uncompressed_browser_ssl.nro', 'wb')
-    decompressed_browser_file.write(decompressed)
-    decompressed_browser_file.close()
+
+
+# this should be redundant if one runs scripts/process_firwmare.py
+#with open('webkit_wkc.nro.lz4', 'rb') as file:
+#    input_data = file.read()
+#    decompressed = lz4.block.decompress(input_data)
+#    decompressed_browser_file = open('foss_browser_ssl.nro', 'wb')
+#    decompressed_browser_file.write(decompressed)
+#    decompressed_browser_file.close()
 
     
 def get_build_id():
-    with open('uncompressed_browser_ssl.nro', 'rb') as f:
+    with open('foss_browser_ssl.nro', 'rb') as f:
         f.seek(0x40)
         return(f.read(0x10).hex().upper())
 
-with open('uncompressed_browser_ssl.nro', 'rb') as fi:
+with open('foss_browser_ssl.nro', 'rb') as fi:
     read_data = fi.read()
     result = re.search(rb'\x72\x48\x00\x80\x52\xe2\x13\x88\x1a', read_data)
     patch1 = '%08X%s%s' % (result.start() + 0x1, '0004', 'E8031F2A')
