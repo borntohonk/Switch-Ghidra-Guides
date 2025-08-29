@@ -5,6 +5,7 @@ firmware/**
 *.nro
 *.ips
 prod.keys
+decrypted_tsec_keygen.bin
 Atmosphere_Loader_Patch/
 Atmosphere_Loader_Patch/**
 scripts/__pycache__/

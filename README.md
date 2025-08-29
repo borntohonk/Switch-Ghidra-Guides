@@ -35,6 +35,12 @@ All material exist purely for research reference.
     * [check_patches.py](scripts/check_patches.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
 
+  - Python script to decrypt atmosphere's [tsec_keygen.bin](https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/tsec_keygen/tsec_keygen.bin)
+    * Usage: run [decrypt_atmosphere_tsec_keygen.py](scripts/decrypt_atmosphere_tsec_keygen.py)
+    * example: "python scripts/decrypt_atmosphere_tsec_keygen.py"
+    * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+    * the entire decrypted tsec_keygen.bin payload is output as decrypted_tsec_keygen.bin and can be viewed with tools such as the [envydis](https://github.com/envytools/envytools) or viewed in ghidra with [ghidra_falcon](https://github.com/marysaka/ghidra_falcon)
+
   - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest. (this patch also exists in sys-patch as of version 1.5.5 and higher, though requirin to manually enable)
 
   - Python script to generate the "[disable_browser_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-browser-ca-verification)", [(link)](scripts/disable_browser_ca_verification_patch.py) - no longer maintained as of firmware version 19.0.0, due to lack of interest.
@@ -48,7 +54,7 @@ All material exist purely for research reference.
 
 * Credits: 
   - [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.
-  - [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py)
+  - [@sciresm](https://github.com/SciresM) - hactool, for references on formats -  [(scripts/aes_128.py)](scripts/aes_128.py) - [tsec_keygen.bin](https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/tsec_keygen/tsec_keygen.bin)
   - [@reswitched](https://github.com/reswitched) - [(scripts/nxo64.py)](scripts/nxo64.py)
   - [@blawar](https://github.com/blawar) - for references to various things in [nut](https://github.com/blawar/nut)
   - everything else:
