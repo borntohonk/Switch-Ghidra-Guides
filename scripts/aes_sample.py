@@ -171,9 +171,11 @@ def do_keygen():
             manual_crypto.write(f'tsec_root_kek_00 = ' + f'{tsec_keygen.tsec_root_kek_00.hex().upper()}\n')
             manual_crypto.write(f'tsec_root_kek_01 = ' + f'{tsec_keygen.tsec_root_kek_01.hex().upper()}\n')
             manual_crypto.write(f'tsec_root_kek_02 = ' + f'{tsec_keygen.tsec_root_kek_02.hex().upper()}\n\n')
+
             manual_crypto.write(f'package1_mac_kek_00 = ' + f'{tsec_keygen.package1_mac_kek_00.hex().upper()}\n')
             manual_crypto.write(f'package1_mac_kek_01 = ' + f'{tsec_keygen.package1_mac_kek_01.hex().upper()}\n')
             manual_crypto.write(f'package1_mac_kek_02 = ' + f'{tsec_keygen.package1_mac_kek_02.hex().upper()}\n\n')
+
             manual_crypto.write(f'package1_kek_00 = ' + f'{tsec_keygen.package1_kek_00.hex().upper()}\n')
             manual_crypto.write(f'package1_kek_01 = ' + f'{tsec_keygen.package1_kek_01.hex().upper()}\n')
             manual_crypto.write(f'package1_kek_02 = ' + f'{tsec_keygen.package1_kek_02.hex().upper()}\n\n')
@@ -181,6 +183,10 @@ def do_keygen():
             manual_crypto.write(f'tsec_auth_signature_00 = ' + f'{tsec_keygen.tsec_auth_signature_00.hex().upper()}\n')
             manual_crypto.write(f'tsec_auth_signature_01 = ' + f'{tsec_keygen.tsec_auth_signature_01.hex().upper()}\n')
             manual_crypto.write(f'tsec_auth_signature_02 = ' + f'{tsec_keygen.tsec_auth_signature_02.hex().upper()}\n\n')
+
+            manual_crypto.write(f'tsec_root_key_00 = ' + f'{tsec_keygen.tsec_root_key_00.hex().upper()}\n')
+            manual_crypto.write(f'tsec_root_key_01 = ' + f'{tsec_keygen.tsec_root_key_01.hex().upper()}\n')
+            manual_crypto.write(f'tsec_root_key_02 = ' + f'{tsec_keygen.tsec_root_key_02.hex().upper()}\n\n')
 
         elif HAVE_SECRET_26 == False:
             if sha256(root_keys.tsec_root_key_00).hexdigest().upper() == "032ADF0A6BE7DD7C11A4FA5CD64A1575E469B9DA5D8BD56A12D0FBC0EB84E8E7":
@@ -239,12 +245,12 @@ def do_keygen():
             manual_crypto.write(f'{keys}\n')
 
         if HAVE_SECRET_26 == True:
-            manual_crypto.write(f'package1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
+            manual_crypto.write(f'\npackage1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
             manual_crypto.write(f'package1_key_07 = ' + f'{tsec_keygen.package1_key_07.hex().upper()}\n')
             manual_crypto.write(f'package1_key_08 = ' + f'{tsec_keygen.package1_key_08.hex().upper()}\n\n')
             manual_crypto.write(f'package1_mac_key_06 = ' + f'{tsec_keygen.package1_mac_key_06.hex().upper()}\n')
             manual_crypto.write(f'package1_mac_key_07 = ' + f'{tsec_keygen.package1_mac_key_07.hex().upper()}\n')
-            manual_crypto.write(f'package1_mac_key_08 = ' + f'{tsec_keygen.package1_mac_key_08.hex().upper()}\n\n')
+            manual_crypto.write(f'package1_mac_key_08 = ' + f'{tsec_keygen.package1_mac_key_08.hex().upper()}\n')
 
         manual_crypto.write(f'\n')
         manual_crypto.write(f'package2_key_source = ' + f'{key_sources.package2_key_source.hex().upper()}\n\n')
