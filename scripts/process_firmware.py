@@ -47,16 +47,13 @@ def sort_nca(location):
     for nca_file in os.listdir(firmware_location):
         ncaFull = f'{firmware_location}/{nca_file}'
         with open(ncaFull, 'rb') as f:
-            root_keys = RootKeys()
-            if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
-                print("mariko_kek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
-                sys.exit(1)
-            else:
-                header_key = aes_sample.Keygen(root_keys.mariko_kek).header_key
-                nca_data = nca.decrypt_header(f.read(0xC00), header_key)
-                nca_header = nca.NcaHeader(nca_data)
-                titleId = nca_header.titleId
-                content_type = nca_header.contentType
+            key_sources = KeySources()
+            tsec_keys = aes_sample.TsecKeygen(key_sources.tsec_secret_26)
+            header_key = aes_sample.Keygen(tsec_keys.tsec_root_key_02).header_key
+            nca_data = nca.decrypt_header(f.read(0xC00), header_key)
+            nca_header = nca.NcaHeader(nca_data)
+            titleId = nca_header.titleId
+            content_type = nca_header.contentType
             try:
                 mkdirp("sorted_firmware" + "/by-type/" + content_type + "/" + titleId)
                 shutil.copy(ncaFull, "sorted_firmware/" + "/by-type/" + content_type + "/" + titleId + "/" + "data.nca")
@@ -122,11 +119,11 @@ def sort_and_process():
     fat32_path = Path('sorted_firmware/by-type/Data/0100000000000819/data.nca')
     system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
     browserdll_path = Path('sorted_firmware/by-type/Data/0100000000000803/data.nca')
-    mariko_master_kek_source = extract_packages.process_package12(Path(fat32_path))
-    if mariko_master_kek_source not in key_sources.mariko_master_kek_sources:
-        print("A new mariko_master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
+    master_kek_source = extract_packages.process_package12(Path(fat32_path))
+    if master_kek_source not in key_sources.master_kek_sources:
+        print("A new master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
         sys.exit(1)
-    keys = aes_sample.single_keygen(mariko_master_kek_source)
+    keys = aes_sample.single_keygen(master_kek_source)
     system_version = get_system_version(system_version_path, keys)
     extract_browser_dll_romfs(browserdll_path, keys)
     decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4', 'foss_browser_ssl.nro')

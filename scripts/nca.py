@@ -280,17 +280,13 @@ class Nca():
             self.encrypted_header = nca_data[0x0:0xC00]
             self.root_keys = RootKeys()
             self.key_sources = KeySources()
-            if sha256(self.root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
-                print("mariko_kek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
-                f.close()
-                sys.exit(1)
-            else:
-                self.header_key = aes_sample.Keygen(self.root_keys.mariko_kek).header_key
-                self.decrypted_nca_header = decrypt_header(self.encrypted_header, self.header_key)
-                self.header = NcaHeader(self.decrypted_nca_header)
-                for i in range(4):
-                    self.sections.append(nca_data[self.header.sectionTables[i].offset:self.header.sectionTables[i].endOffset])
-                f.close()
+            self.tsec_keys = aes_sample.TsecKeygen(self.key_sources.tsec_secret_26)
+            self.header_key = aes_sample.Keygen(self.tsec_keys.tsec_root_key_02).header_key
+            self.decrypted_nca_header = decrypt_header(self.encrypted_header, self.header_key)
+            self.header = NcaHeader(self.decrypted_nca_header)
+            for i in range(4):
+                self.sections.append(nca_data[self.header.sectionTables[i].offset:self.header.sectionTables[i].endOffset])
+            f.close()
         self.key_area_key_types = [ self.key_area_key_application, self.key_area_key_ocean, self.key_area_key_system]
         self.key_area_key = self.key_area_key_types[self.header.keyIndex]
         self.titleId = self.header.titleId

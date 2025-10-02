@@ -23,7 +23,6 @@
 import re
 import hashlib
 import os
-from key_sources import KeySources
 
 es_path = "es.nso0"
 nim_path = "nim.nso0"
@@ -36,9 +35,6 @@ decompressed_exfat_path = "NONE"
 fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest().upper()
 if os.path.exists(compressed_exfat_path):
     exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
-
-key_sources = KeySources()
-mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
 
 with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
     data_read = file.read()

@@ -16,10 +16,8 @@ All material exist purely for research reference.
 * Here's a list of scripts following the example Part 2 of the guide above teaches you how to do, and that this repository contains.
 
   - Python script to process firmware files, decrypting, extracting, decompressing and outputting files of interest, and cryptographic keys derived.
-    * All cryptographic functions rely on root keys to be filled into the [keys.py](scripts/keys.py) file, root keys such as: mariko_bek, mariko_kek, tsec_root_key_02, tsec_root_key_02_dev
-    * Zero cryptographic functions can be performed without the root keys.
-    * bare minimum requirement is mariko bek and mariko kek, which must be obtained and filled in, using tools such as lockpick_rcm, or sourcing them elsewhere, such as from the scene release .nfo from "Marvels.SpiderMan.Miles.Morales.PS5-BigBlueBox"
-    * requires the following keys: mariko_bek (to open mariko package1), mariko_kek (to be able to derive the latest key revision in provided firmware files)
+    * optionally one can fill in the mariko_kek and mariko_bek keys into [keys.py](scripts/keys.py) file, to derive mariko_master_kek_source, if desired.
+    * mariko bek and mariko kek, which can be obtained and filled in, using tools such as lockpick_rcm, or sourcing them elsewhere, such as from the scene release .nfo from "Marvels.SpiderMan.Miles.Morales.PS5-BigBlueBox"
     * put firmware nca files in folder named firmware
     * example usage: "python scripts/process_firmware.py [process_firmware.py](scripts/process_firmware.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)

@@ -53,30 +53,26 @@ def generateKek(src, masterKey, kek_seed, key_seed):
     else:
         return src_kek
 
-def single_keygen(mariko_master_kek_source):
-    root_keys = RootKeys()
+def single_keygen(master_kek_source):
     key_sources = KeySources()
-    if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
-        print("mariko_kek is incorrectly filled in, the key filled into the RootKeys class is incorrect, terminating script.")
-        sys.exit(1)
-    else:
-        master_kek = decrypt(mariko_master_kek_source, root_keys.mariko_kek)
-        master_key = decrypt(key_sources.master_key_source, master_kek)
-        package2_key = decrypt(key_sources.package2_key_source, master_key)
-        titlekek = decrypt(key_sources.titlekek_source, master_key)
-        key_area_key_system = generateKek(key_sources.key_area_key_system_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
-        key_area_key_ocean = generateKek(key_sources.key_area_key_ocean_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
-        key_area_key_application = generateKek(key_sources.key_area_key_application_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
-        return master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application
+    tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
+    master_kek = decrypt(master_kek_source, tsec_keys.tsec_root_key_02)
+    master_key = decrypt(key_sources.master_key_source, master_kek)
+    package2_key = decrypt(key_sources.package2_key_source, master_key)
+    titlekek = decrypt(key_sources.titlekek_source, master_key)
+    key_area_key_system = generateKek(key_sources.key_area_key_system_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_ocean = generateKek(key_sources.key_area_key_ocean_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_application = generateKek(key_sources.key_area_key_application_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    return master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application
 
 class Keygen():
-    def __init__(self, mariko_kek):
+    def __init__(self, tsec_root_key_02):
         self.key_sources = KeySources()
-        self.mariko_kek = mariko_kek
+        self.tsec_root_key_02 = tsec_root_key_02
         self.mariko_master_kek_sources = self.key_sources.mariko_master_kek_sources
         self.master_kek_sources = self.key_sources.master_kek_sources
         self.master_key_vectors = self.key_sources.master_key_vectors
-        self.master_kek = [decrypt(i, self.mariko_kek) for i in self.mariko_master_kek_sources]
+        self.master_kek = [decrypt(i, self.tsec_root_key_02) for i in self.master_kek_sources]
         self.master_key = [decrypt(self.key_sources.master_key_source, i) for i in self.master_kek]
         self.current_master_key = self.master_key[-1]
         self.header_kek = generateKek(self.key_sources.header_kek_source, self.master_key[0], self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source)
@@ -166,10 +162,10 @@ class TsecKeygen():
                 self.package1_mac_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02_dev)
 
 
-def master_keys(mariko_kek):
+def master_keys(tsec_root_key_02):
     key_sources = KeySources()
-    mariko_master_kek_sources = key_sources.mariko_master_kek_sources
-    master_keks = [decrypt(i, mariko_kek) for i in mariko_master_kek_sources]
+    master_kek_sources = key_sources.master_kek_sources
+    master_keks = [decrypt(i, tsec_root_key_02) for i in master_kek_sources]
     master_keys = [decrypt(key_sources.master_key_source, i) for i in master_keks]
     return master_keys
 
@@ -177,11 +173,8 @@ def do_keygen():
     keys = "prod.keys"
     root_keys = RootKeys()
     key_sources = KeySources()
-    if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
-        print("mariko_kek is incorrectly filled in, the key filled into RootKeys class is incorrect, terminating script.")
-        sys.exit(1)
-    keygen = Keygen(root_keys.mariko_kek)
     hovi_kek = key_sources.tsec_secret_26
+    keygen = Keygen(hovi_kek)
 
     with open(keys, 'w') as manual_crypto:
         tsec_keygen = TsecKeygen(hovi_kek)
@@ -223,8 +216,10 @@ def do_keygen():
             manual_crypto.write(f'{keys}\n')
 
         manual_crypto.write(f'\n')
-        manual_crypto.write(f'mariko_bek = ' + f'{root_keys.mariko_bek.hex().upper()}\n')
-        manual_crypto.write(f'mariko_kek = ' + f'{root_keys.mariko_kek.hex().upper()}\n\n')
+        if sha256(root_keys.mariko_kek).hexdigest().upper() != "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+            manual_crypto.write(f'mariko_bek = ' + f'{root_keys.mariko_bek.hex().upper()}\n')
+        if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
+            manual_crypto.write(f'mariko_kek = ' + f'{root_keys.mariko_kek.hex().upper()}\n\n')
 
         # Write mariko_master_kek_sources
         count = -0x1
