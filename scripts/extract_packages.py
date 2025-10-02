@@ -19,11 +19,9 @@
 # SOFTWARE.
 
 
-import os
 import re
 import sys
 import nca
-from pathlib import Path
 from hashlib import sha256
 
 try:
@@ -65,7 +63,6 @@ def decrypt_ctr(input, key, CTR):
 
 def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
     with open(package2, 'rb') as f:
-        data = f.read()
         package2_key = pkg2_key
         package2_header_offset = 0x100
         f.seek(package2_header_offset)
@@ -100,10 +97,8 @@ def decrypt_mariko_package1(encrypted_package1):
     enc_size = bl_size
     if enc_size > 0:
         aes_iv = package1[0x170:0x180]
-        encrypted_package1_offset = 0x180
         encrypted_package1 = package1[0x180:enc_size]
         root_keys = RootKeys()
-        key_sources = KeySources()
         if sha256(root_keys.mariko_bek).hexdigest().upper() != "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
             print("mariko_bek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
             sys.exit(1)
@@ -127,6 +122,7 @@ def get_mariko_key_sources(decrypted_package1):
 def process_package12(nca_path):
     root_keys = RootKeys()
     key_sources = KeySources()
+    tsec_keys = aes_sample.TsecKeygen(key_sources.tsec_secret_26)
     if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
         print("mariko_kek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
         sys.exit(1)
@@ -138,6 +134,7 @@ def process_package12(nca_path):
         titleId = nca_file.titleId
         if titleId == "0100000000000819" or "010000000000081B":
             romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/{titleId}/romfs/")
+            romfs
             with open(f'sorted_firmware/by-type/Data/{titleId}/romfs/a/package1', 'rb') as file:
                 encrypted_package1 = file.read()
                 decrypted_package1 = decrypt_mariko_package1(encrypted_package1)
@@ -151,6 +148,7 @@ def process_package12(nca_path):
                     print(f'master_kek_{revision} = {master_kek.hex().upper()}')
                     print(f'master_key_{revision} = {master_key.hex().upper()}')
                     print(f'package2_key_{revision} = {package2_key.hex().upper()}')
+                    print(f'titlekek_{revision} = {titlekek.hex().upper()}')
                     print(f'key_area_key_system_{revision} = {key_area_key_system.hex().upper()}')
                     print(f'key_area_key_ocean_{revision} = {key_area_key_ocean.hex().upper()}')
                     print(f'key_area_key_application_{revision} = {key_area_key_application.hex().upper()}')
@@ -172,31 +170,25 @@ def process_package12(nca_path):
                     print(f'bytes([{formatted_mariko_master_kek_source}]),') # "MarikoMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L24-L27
                     print(f'^ add this string to mariko_master_kek_sources array ^')
                     print()
-                    if sha256(root_keys.tsec_root_key_02).hexdigest().upper() != "7363C28104715099398BD5165632B4C2F74B8FD819A03CBF71DB1F362CA30FD3":
-                        print("tsec_root_key_02 is incorrectly filled in, the key filled into keys.py is incorrect, skipping erista source generation.")
-                    else:
-                        new_master_kek_source = encrypt_ecb(new_master_kek, root_keys.tsec_root_key_02)
-                        previous_master_kek_source = encrypt_ecb(previous_master_kek, root_keys.tsec_root_key_02)
-                        print(f'master_kek_source_{revision} = {new_master_kek_source.hex().upper()}')
-                        formatted_master_kek_source = '0x' + ', 0x'.join(new_master_kek_source.hex().upper()[i:i+2] for i in range(0, len(new_master_kek_source.hex().upper()), 2))
-                        print(f'bytes([{formatted_master_kek_source}]),') # "EristaMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L34-L37
-                        print(f'^ add this string to master_kek_sources array ^')
-                    if sha256(root_keys.tsec_root_key_02_dev).hexdigest().upper() != "2A5D9F482B5CB66EBC0308B4668C08F8A5437B146BEBC68D608E657CD200CFB3":
-                        print("tsec_root_key_02_dev is incorrectly filled in, the key filled into keys.py is incorrect, skipping dev key generation.")
-                    else:
-                        new_master_kek_dev =  decrypt_ecb(new_master_kek_source, root_keys.tsec_root_key_02_dev)
-                        new_master_key_dev =  decrypt_ecb(key_sources.master_key_source, new_master_kek_dev)
-                        previous_master_kek_dev =  decrypt_ecb(previous_master_kek_source, root_keys.tsec_root_key_02_dev)
-                        previous_master_key_dev =  decrypt_ecb(key_sources.master_key_source, previous_master_kek_dev)
-                        new_master_key_source_vector_dev = encrypt_ecb(previous_master_key_dev, new_master_key_dev).hex().upper()
-                        formatted_mariko_master_kek_source_dev = '0x' + ', 0x'.join(mariko_master_kek_source_dev.hex().upper()[i:i+2] for i in range(0, len(mariko_master_kek_source_dev.hex().upper()), 2))
-                        formatted_vector_dev = '0x' + ', 0x'.join(new_master_key_source_vector_dev[i:i+2] for i in range(0, len(new_master_key_source_vector_dev), 2))
-                        print(f'mariko_master_kek_source_dev_{revision} = {mariko_master_kek_source_dev.hex().upper()}')
-                        print(f'master_kek_dev_{revision} = ' + new_master_kek_dev.hex().upper())
-                        print(f'master_key_dev_{revision} = '  +   new_master_key_dev.hex().upper())
-                        print()
-                        print(f'bytes([{formatted_vector_dev}]),')
-                        print(f'^ add this string to master_key_vectors_dev array ^') # "MasterKeySourcesDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L138-L158
-                        print(f'bytes([{formatted_mariko_master_kek_source_dev}]),')
-                        print(f'^ unused, but output for consistency ^') # "MarikoMasterKekSourceDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L29-L32
+                    new_master_kek_source = encrypt_ecb(new_master_kek, tsec_keys.tsec_root_key_02)
+                    previous_master_kek_source = encrypt_ecb(previous_master_kek, tsec_keys.tsec_root_key_02)
+                    print(f'master_kek_source_{revision} = {new_master_kek_source.hex().upper()}')
+                    formatted_master_kek_source = '0x' + ', 0x'.join(new_master_kek_source.hex().upper()[i:i+2] for i in range(0, len(new_master_kek_source.hex().upper()), 2))
+                    print(f'bytes([{formatted_master_kek_source}]),') # "EristaMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L34-L37
+                    print(f'^ add this string to master_kek_sources array ^')
+                    new_master_kek_dev =  decrypt_ecb(new_master_kek_source, tsec_keys.tsec_root_key_02_dev)
+                    new_master_key_dev =  decrypt_ecb(key_sources.master_key_source, new_master_kek_dev)
+                    previous_master_kek_dev =  decrypt_ecb(previous_master_kek_source, tsec_keys.tsec_root_key_02_dev)
+                    previous_master_key_dev =  decrypt_ecb(key_sources.master_key_source, previous_master_kek_dev)
+                    new_master_key_source_vector_dev = encrypt_ecb(previous_master_key_dev, new_master_key_dev).hex().upper()
+                    formatted_mariko_master_kek_source_dev = '0x' + ', 0x'.join(mariko_master_kek_source_dev.hex().upper()[i:i+2] for i in range(0, len(mariko_master_kek_source_dev.hex().upper()), 2))
+                    formatted_vector_dev = '0x' + ', 0x'.join(new_master_key_source_vector_dev[i:i+2] for i in range(0, len(new_master_key_source_vector_dev), 2))
+                    print(f'mariko_master_kek_source_dev_{revision} = {mariko_master_kek_source_dev.hex().upper()}')
+                    print(f'master_kek_dev_{revision} = ' + new_master_kek_dev.hex().upper())
+                    print(f'master_key_dev_{revision} = '  +   new_master_key_dev.hex().upper())
+                    print()
+                    print(f'bytes([{formatted_vector_dev}]),')
+                    print(f'^ add this string to master_key_vectors_dev array ^') # "MasterKeySourcesDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L138-L158
+                    print(f'bytes([{formatted_mariko_master_kek_source_dev}]),')
+                    print(f'^ unused, but output for consistency ^') # "MarikoMasterKekSourceDev" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L29-L32
             return mariko_master_kek_source

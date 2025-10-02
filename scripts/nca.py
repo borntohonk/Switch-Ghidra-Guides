@@ -18,21 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-try:
-    from Cryptodome.Cipher import AES
-    from Cryptodome.Util import Counter
-except ModuleNotFoundError:
-    try:
-        from Crypto.Cipher import AES
-        from Crypto.Util import Counter
-    except ModuleNotFoundError:
-        print('Please install pycryptodome(ex) first!')
-        sys.exit(1)
+import sys
 
 import os
 import errno
 from hashlib import sha256
-import re
 from keys import RootKeys
 from key_sources import KeySources
 import aes_128

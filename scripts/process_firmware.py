@@ -18,8 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import re
-from io import BytesIO
 import os
 import sys
 import shutil
@@ -50,7 +48,6 @@ def sort_nca(location):
         ncaFull = f'{firmware_location}/{nca_file}'
         with open(ncaFull, 'rb') as f:
             root_keys = RootKeys()
-            key_sources = KeySources()
             if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
                 print("mariko_kek is incorrectly filled in, the key filled into keys.py is incorrect, terminating script.")
                 sys.exit(1)
@@ -71,18 +68,19 @@ def get_system_version(nca_path, keys):
     nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], "./sorted_firmware/by-type/Data/0100000000000809/romfs/")
+    romfs
     with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
         data_read = file.read()
         firmware_version = data_read[0x68:0x6E].decode('utf-8')
         return firmware_version
-        file.close()
-        #return key_area_application
+    file.close()
 
 def extract_browser_dll_romfs(nca_path, keys):
     keys = keys
     nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], "./sorted_firmware/by-type/Data/0100000000000803/romfs/")
+    romfs
 
 def extract_exefs(nca_path, keys):
     keys = keys

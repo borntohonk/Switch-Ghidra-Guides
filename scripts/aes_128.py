@@ -1,7 +1,9 @@
 # Pure python AES128 implementation
 # SciresM, 2017-2025
+import sys
 from struct import unpack as up, pack as pk
 from binascii import hexlify as hx, unhexlify as uhx
+
 try:
     from Cryptodome.Cipher import AES
     from Cryptodome.Util import Counter

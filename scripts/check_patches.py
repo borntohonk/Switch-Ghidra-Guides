@@ -21,13 +21,9 @@
 # SOFTWARE.
 
 import re
-import sys
 import hashlib
 import os
-import process_firmware
-from keys import RootKeys
 from key_sources import KeySources
-from pathlib import Path
 
 es_path = "es.nso0"
 nim_path = "nim.nso0"
@@ -41,7 +37,6 @@ fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest()
 if os.path.exists(compressed_exfat_path):
     exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
 
-root_keys = RootKeys()
 key_sources = KeySources()
 mariko_master_kek_source = key_sources.mariko_master_kek_sources[-1]
 

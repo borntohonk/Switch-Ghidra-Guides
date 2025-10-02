@@ -19,7 +19,6 @@
 # SOFTWARE.
 
 import re
-import lz4.block
 
 #20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
 

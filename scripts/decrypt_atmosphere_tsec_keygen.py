@@ -1,15 +1,11 @@
 import sys
-from hashlib import sha256
-from keys import RootKeys
 from key_sources import KeySources
 
 try:
     from Cryptodome.Cipher import AES
-    from Cryptodome.Hash import SHA256
 except ModuleNotFoundError:
     try:
         from Crypto.Cipher import AES
-        from Crypto.Hash import SHA256
     except ModuleNotFoundError:
         print('Please install pycryptodome(ex) first!')
         sys.exit(1)
