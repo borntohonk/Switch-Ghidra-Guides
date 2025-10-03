@@ -83,6 +83,24 @@ class Keygen():
         self.key_area_key_ocean = [generateKek(self.key_sources.key_area_key_ocean_source, i, self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source) for i in self.master_key]
         self.key_area_key_system = [generateKek(self.key_sources.key_area_key_system_source, i, self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source) for i in self.master_key]
 
+class KeygenDev():
+    def __init__(self, tsec_root_key_02):
+        self.key_sources = KeySources()
+        self.tsec_root_key_02 = tsec_root_key_02
+        self.mariko_master_kek_sources = self.key_sources.mariko_master_kek_sources
+        self.master_kek_sources = self.key_sources.master_kek_sources
+        self.master_key_vectors = self.key_sources.master_key_vectors
+        self.master_kek = [decrypt(i, self.tsec_root_key_02) for i in self.master_kek_sources]
+        self.master_key = master_keys_dev()
+        self.current_master_key = self.master_key[-1]
+        self.header_kek = generateKek(self.key_sources.header_kek_source, self.master_key[0], self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source)
+        self.header_key = decrypt(self.key_sources.header_key_source, self.header_kek)
+        self.package2_key = [decrypt(self.key_sources.package2_key_source, i) for i in self.master_key]
+        self.titlekek = [decrypt(self.key_sources.titlekek_source, i) for i in self.master_key]
+        self.key_area_key_application = [generateKek(self.key_sources.key_area_key_application_source, i, self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source) for i in self.master_key]
+        self.key_area_key_ocean = [generateKek(self.key_sources.key_area_key_ocean_source, i, self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source) for i in self.master_key]
+        self.key_area_key_system = [generateKek(self.key_sources.key_area_key_system_source, i, self.key_sources.aes_kek_generation_source, self.key_sources.aes_key_generation_source) for i in self.master_key]
+
 class TsecKeygen():
     def __init__(self, hovi_kek):
             if sha256(hovi_kek).hexdigest().upper() == "CEFE01C9E3EEEF1A73B8C10D742AE386279B7DFF30A2FBC0AABD058C1F135833":
@@ -161,23 +179,72 @@ class TsecKeygen():
                 self.package1_mac_key_07_dev = encrypt(self.tsec_auth_signature_01, self.package1_mac_kek_01_dev)
                 self.package1_mac_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02_dev)
 
-
-def master_keys(tsec_root_key_02):
+def get_latest_master_key():
     key_sources = KeySources()
-    master_kek_sources = key_sources.master_kek_sources
-    master_keks = [decrypt(i, tsec_root_key_02) for i in master_kek_sources]
-    master_keys = [decrypt(key_sources.master_key_source, i) for i in master_keks]
-    return master_keys
+    hovi_kek = key_sources.tsec_secret_26
+    tsec_keygen = TsecKeygen(hovi_kek)
+    tsec_root_key_02 = tsec_keygen.tsec_root_key_02
+    tsec_root_key_02_dev = tsec_keygen.tsec_root_key_02_dev
+    latest_master_kek_source = key_sources.master_kek_sources[-1]
+    master_kek = decrypt(latest_master_kek_source, tsec_root_key_02)
+    master_kek_dev = decrypt(latest_master_kek_source, tsec_root_key_02_dev)
+    master_key = decrypt(key_sources.master_key_source, master_kek)
+    master_key_dev = decrypt(key_sources.master_key_source, master_kek_dev)
+    return master_key, master_key_dev
+
+def master_keys():
+    latest_master_key = get_latest_master_key()[0]
+    key_sources = KeySources()
+    master_key_vectors = key_sources.master_key_vectors
+    current_master_key = latest_master_key
+    master_key = []
+    first = True
+    for i in reversed(master_key_vectors):
+        if first:
+            first = False
+            previous_key = i
+            next_master_key = decrypt(previous_key, current_master_key)
+            master_key.append(current_master_key)
+            master_key.append(next_master_key)
+        else:
+            key = previous_key
+            previous_key = i
+            next_master_key = decrypt(previous_key, next_master_key)
+            master_key.append(next_master_key)
+    master_key.reverse()
+    return master_key
+
+def master_keys_dev():
+    latest_master_key = get_latest_master_key()[1]
+    key_sources = KeySources()
+    master_key_vectors = key_sources.master_key_vectors_dev
+    current_master_key = latest_master_key
+    master_key = []
+    first = True
+    for i in reversed(master_key_vectors):
+        if first:
+            first = False
+            previous_key = i
+            next_master_key = decrypt(previous_key, current_master_key)
+            master_key.append(current_master_key)
+            master_key.append(next_master_key)
+        else:
+            key = previous_key
+            previous_key = i
+            next_master_key = decrypt(previous_key, next_master_key)
+            master_key.append(next_master_key)
+    master_key.reverse()
+    return master_key
 
 def do_keygen():
     keys = "prod.keys"
     root_keys = RootKeys()
     key_sources = KeySources()
     hovi_kek = key_sources.tsec_secret_26
-    keygen = Keygen(hovi_kek)
+    tsec_keygen = TsecKeygen(hovi_kek)
+    keygen = Keygen(tsec_keygen.tsec_root_key_02)
 
     with open(keys, 'w') as manual_crypto:
-        tsec_keygen = TsecKeygen(hovi_kek)
         manual_crypto.write(f'tsec_secret_26 = ' + f'{hovi_kek.hex().upper()}\n\n')
         manual_crypto.write(f'tsec_root_kek_00 = ' + f'{tsec_keygen.tsec_root_kek_00.hex().upper()}\n')
         manual_crypto.write(f'tsec_root_kek_01 = ' + f'{tsec_keygen.tsec_root_kek_01.hex().upper()}\n')
@@ -216,9 +283,9 @@ def do_keygen():
             manual_crypto.write(f'{keys}\n')
 
         manual_crypto.write(f'\n')
-        if sha256(root_keys.mariko_kek).hexdigest().upper() != "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+        if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
             manual_crypto.write(f'mariko_bek = ' + f'{root_keys.mariko_bek.hex().upper()}\n')
-        if sha256(root_keys.mariko_kek).hexdigest().upper() != "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
+        if sha256(root_keys.mariko_kek).hexdigest().upper() == "ACEA0798A729E8E0B3EF6D83CF7F345537E41ACCCCCAD8686D35E3F5454D5132":
             manual_crypto.write(f'mariko_kek = ' + f'{root_keys.mariko_kek.hex().upper()}\n\n')
 
         # Write mariko_master_kek_sources
@@ -229,7 +296,7 @@ def do_keygen():
             manual_crypto.write(f'{keys}\n')
 
         manual_crypto.write(f'\n')
-        # generate master_kek_%% from all provided mariko_master_kek_sources
+        # generate master_kek_%% from all provided master_kek_sources
         master_keks = keygen.master_kek
         count = -0x1
         for i in master_keks:
@@ -249,12 +316,12 @@ def do_keygen():
             keys = f'master_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
             manual_crypto.write(f'{keys}\n')
 
-            manual_crypto.write(f'\npackage1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
-            manual_crypto.write(f'package1_key_07 = ' + f'{tsec_keygen.package1_key_07.hex().upper()}\n')
-            manual_crypto.write(f'package1_key_08 = ' + f'{tsec_keygen.package1_key_08.hex().upper()}\n\n')
-            manual_crypto.write(f'package1_mac_key_06 = ' + f'{tsec_keygen.package1_mac_key_06.hex().upper()}\n')
-            manual_crypto.write(f'package1_mac_key_07 = ' + f'{tsec_keygen.package1_mac_key_07.hex().upper()}\n')
-            manual_crypto.write(f'package1_mac_key_08 = ' + f'{tsec_keygen.package1_mac_key_08.hex().upper()}\n')
+        manual_crypto.write(f'\npackage1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_07 = ' + f'{tsec_keygen.package1_key_07.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_08 = ' + f'{tsec_keygen.package1_key_08.hex().upper()}\n\n')
+        manual_crypto.write(f'package1_mac_key_06 = ' + f'{tsec_keygen.package1_mac_key_06.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_07 = ' + f'{tsec_keygen.package1_mac_key_07.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_08 = ' + f'{tsec_keygen.package1_mac_key_08.hex().upper()}\n')
 
         manual_crypto.write(f'\n')
         manual_crypto.write(f'package2_key_source = ' + f'{key_sources.package2_key_source.hex().upper()}\n\n')
@@ -340,5 +407,163 @@ def do_keygen():
             keys = f'key_area_key_system_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
             manual_crypto.write(f'{keys}\n')
 
+
+def do_dev_keygen():
+    keys = "dev.keys"
+    key_sources = KeySources()
+    hovi_kek = key_sources.tsec_secret_26
+    tsec_keygen = TsecKeygen(hovi_kek)
+    keygen = KeygenDev(tsec_keygen.tsec_root_key_02_dev)
+
+    with open(keys, 'w') as manual_crypto:
+        manual_crypto.write(f'tsec_secret_26 = ' + f'{hovi_kek.hex().upper()}\n\n')
+        manual_crypto.write(f'tsec_root_kek_00 = ' + f'{tsec_keygen.tsec_root_kek_00_dev.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_kek_01 = ' + f'{tsec_keygen.tsec_root_kek_01_dev.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_kek_02 = ' + f'{tsec_keygen.tsec_root_kek_02_dev.hex().upper()}\n\n')
+
+        manual_crypto.write(f'package1_mac_kek_00 = ' + f'{tsec_keygen.package1_mac_kek_00_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_kek_01 = ' + f'{tsec_keygen.package1_mac_kek_01_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_kek_02 = ' + f'{tsec_keygen.package1_mac_kek_02_dev.hex().upper()}\n\n')
+
+        manual_crypto.write(f'package1_kek_00 = ' + f'{tsec_keygen.package1_kek_00_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_kek_01 = ' + f'{tsec_keygen.package1_kek_01_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_kek_02 = ' + f'{tsec_keygen.package1_kek_02_dev.hex().upper()}\n\n')
+
+        manual_crypto.write(f'tsec_auth_signature_00 = ' + f'{tsec_keygen.tsec_auth_signature_00.hex().upper()}\n')
+        manual_crypto.write(f'tsec_auth_signature_01 = ' + f'{tsec_keygen.tsec_auth_signature_01.hex().upper()}\n')
+        manual_crypto.write(f'tsec_auth_signature_02 = ' + f'{tsec_keygen.tsec_auth_signature_02.hex().upper()}\n\n')
+
+        manual_crypto.write(f'tsec_root_key_00 = ' + f'{tsec_keygen.tsec_root_key_00_dev.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_key_01 = ' + f'{tsec_keygen.tsec_root_key_01_dev.hex().upper()}\n')
+        manual_crypto.write(f'tsec_root_key_02 = ' + f'{tsec_keygen.tsec_root_key_02_dev.hex().upper()}\n\n')
+
+        manual_crypto.write(f'keyblob_mac_key_source = ' + f'{key_sources.keyblob_mac_key_source.hex().upper()}\n')
+        # Write keyblob_key_source_%%
+        count = -0x1
+        for i in key_sources.keyblob_key_sources:
+            count = count + 0x1
+            keys = f'keyblob_key_source_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+        # Write master_kek_sources
+        count = -0x1
+        for i in key_sources.master_kek_sources:
+            count = count + 0x1
+            keys = f'master_kek_source_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+        # generate master_kek_%% from all provided mariko_master_kek_sources
+        master_keks = keygen.master_kek
+        count = -0x1
+        for i in master_keks:
+            count = count + 0x1
+            keys = f'master_kek_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+        
+        manual_crypto.write(f'\n')
+        manual_crypto.write(f'master_key_source = ' + f'{key_sources.master_key_source.hex().upper()}\n\n')
+
+        # generate master_key_%% from all provided master_kek_%% using Master_Key_Source
+        master_keys = master_keys_dev()
+        # Write master_key_%%
+        count = -0x1
+        for i in master_keys:
+            count = count + 0x1
+            keys = f'master_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\npackage1_key_06 = ' + f'{tsec_keygen.package1_key_06_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_07 = ' + f'{tsec_keygen.package1_key_07_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_08 = ' + f'{tsec_keygen.package1_key_08_dev.hex().upper()}\n\n')
+        manual_crypto.write(f'package1_mac_key_06 = ' + f'{tsec_keygen.package1_mac_key_06_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_07 = ' + f'{tsec_keygen.package1_mac_key_07_dev.hex().upper()}\n')
+        manual_crypto.write(f'package1_mac_key_08 = ' + f'{tsec_keygen.package1_mac_key_08_dev.hex().upper()}\n')
+
+        manual_crypto.write(f'\n')
+        manual_crypto.write(f'package2_key_source = ' + f'{key_sources.package2_key_source.hex().upper()}\n\n')
+
+        # generate package2_key_%% from all provided master_key_%% using package2_key_source
+        package2_key = keygen.package2_key
+        count = -0x1
+        for i in package2_key:
+            count = count + 0x1
+            keys = f'package2_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+        manual_crypto.write(f'bis_kek_source = ' + f'{key_sources.bis_kek_source.hex().upper()}\n')
+
+        # Write bis_key_source_%%
+        count = -1
+        for i in key_sources.bis_key_sources:
+            count = count + 0x1
+            keys = f'bis_key_source_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+        manual_crypto.write(f'per_console_key_source = ' + f'{key_sources.per_console_key_source.hex().upper()}\n')
+        manual_crypto.write(f'retail_specific_aes_key_source = ' + f'{key_sources.retail_specific_aes_key_source.hex().upper()}\n')
+        manual_crypto.write(f'aes_kek_generation_source = ' + f'{key_sources.aes_kek_generation_source.hex().upper()}\n')
+        manual_crypto.write(f'aes_key_generation_source = ' + f'{key_sources.aes_key_generation_source.hex().upper()}\n')
+        manual_crypto.write(f'titlekek_source = ' + f'{key_sources.titlekek_source.hex().upper()}\n\n')
+
+        # generate title_kek_%% from all provided master_key_%% using titlekek_source
+        titlekek = keygen.titlekek
+        count = -0x1
+        for i in titlekek:
+            count = count + 0x1
+            keys = f'titlekek_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+
+        manual_crypto.write(f'header_kek_source = ' + f'{key_sources.header_kek_source.hex().upper()}\n')
+        manual_crypto.write(f'header_key_source = ' + f'{key_sources.header_key_source.hex().upper()}\n')
+        manual_crypto.write(f'header_kek = ' + f'{keygen.header_kek.hex().upper()}\n')
+        manual_crypto.write(f'header_key = ' + f'{keygen.header_key.hex().upper()}\n\n')
+
+        manual_crypto.write(f'key_area_key_system_source = ' + f'{key_sources.key_area_key_system_source.hex().upper()}\n')
+        manual_crypto.write(f'key_area_key_application_source = ' + f'{key_sources.key_area_key_application_source.hex().upper()}\n')
+        manual_crypto.write(f'key_area_key_ocean_source = ' + f'{key_sources.key_area_key_ocean_source.hex().upper()}\n\n')
+
+        manual_crypto.write(f'save_mac_kek_source = ' + f'{key_sources.save_mac_kek_source.hex().upper()}\n')
+        manual_crypto.write(f'save_mac_key_source_00 = ' + f'{key_sources.save_mac_key_source_00.hex().upper()}\n')
+        manual_crypto.write(f'save_mac_key_source_01 = ' + f'{key_sources.save_mac_key_source_01.hex().upper()}\n')
+        manual_crypto.write(f'save_mac_sd_card_kek_source = ' + f'{key_sources.save_mac_sd_card_kek_source.hex().upper()}\n')
+        manual_crypto.write(f'save_mac_sd_card_key_source = ' + f'{key_sources.save_mac_sd_card_key_source.hex().upper()}\n')
+        manual_crypto.write(f'sd_card_kek_source = ' + f'{key_sources.sd_card_kek_source.hex().upper()}\n\n')
+
+        manual_crypto.write(f'xci_header_key = ' + f'{key_sources.xci_header_key.hex().upper()}\n\n')
+
+        # generate key_area_key_application_%% from all provided master_key_%% using key_area_key_application_source
+        key_area_key_application = keygen.key_area_key_application
+        count = -0x1
+        for i in key_area_key_application:
+            count = count +0x1
+            keys = f'key_area_key_application_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+
+        # generate key_area_key_ocean_%% from all provided master_key_%% using key_area_key_ocean_source
+        key_area_key_ocean = keygen.key_area_key_ocean
+        count = -0x1
+        for i in key_area_key_ocean:
+            count = count +0x1
+            keys = f'key_area_key_ocean_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
+
+        manual_crypto.write(f'\n')
+
+        # generate key_area_key_system_%% from all provided master_key_%% using key_area_key_system_source
+        key_area_key_system = keygen.key_area_key_system
+        count = -0x1
+        for i in key_area_key_system:
+            count = count +0x1
+            keys = f'key_area_key_system_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
 if __name__ == "__main__":
     do_keygen()
+    do_dev_keygen()
