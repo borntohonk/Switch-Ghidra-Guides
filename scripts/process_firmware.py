@@ -117,19 +117,26 @@ def sort_and_process():
     key_sources = KeySources()
     sort_nca("firmware")
     fat32_path = Path('sorted_firmware/by-type/Data/0100000000000819/data.nca')
+    exfat_path = Path('sorted_firmware/by-type/Data/010000000000081B/data.nca')
     system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
     browserdll_path = Path('sorted_firmware/by-type/Data/0100000000000803/data.nca')
     master_kek_source = extract_packages.process_package12(Path(fat32_path))
+    if os.path.exists(exfat_path):
+        process_exfat = extract_packages.process_package12(Path(exfat_path))
+        process_exfat
     if master_kek_source not in key_sources.master_kek_sources:
         print("A new master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
         sys.exit(1)
     keys = aes_sample.single_keygen(master_kek_source)
     system_version = get_system_version(system_version_path, keys)
     extract_browser_dll_romfs(browserdll_path, keys)
-    decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4', 'foss_browser_ssl.nro')
+    decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4', 'foss_browser_ssl.nro') # path last updated 21.0.0
     print(f'\nfirmware version of files provided is: {system_version}\n')
-    fat32hash = sha256(open('FS.kip1', 'rb').read()).hexdigest().upper()
+    fat32hash = sha256(open('fat32FS.kip1', 'rb').read()).hexdigest().upper()
     print(f'{system_version} fat32 sha256 = {fat32hash}')
+    if os.path.exists(exfat_path):
+        exfathash = sha256(open('exfatFS.kip1', 'rb').read()).hexdigest().upper()
+        print(f'{system_version} exfat sha256 = {exfathash}')
     es_path = Path('sorted_firmware/by-type/Program/0100000000000033/data.nca')
     nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')

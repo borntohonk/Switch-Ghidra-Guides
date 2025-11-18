@@ -61,7 +61,7 @@ def decrypt_ctr(input, key, CTR):
     output = cipher.decrypt(input)
     return output
 
-def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
+def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key, filesystem_type):
     with open(package2, 'rb') as f:
         package2_key = pkg2_key
         package2_header_offset = 0x100
@@ -79,14 +79,17 @@ def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key):
         decrypted_package2_section_0 = decrypt_ctr(package2_section_0, package2_key, package2_section_0_ctr)
         fs_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x46, 0x53]), decrypted_package2_section_0)
         fs_kip1_start = fs_result.start()
-        loader_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2_section_0)
-        loader_kip1_start = loader_result.start()
-        fs_kip1 = decrypted_package2_section_0[fs_kip1_start:loader_kip1_start]
-        with open('FS.kip1', 'wb') as fs_kip1_file:
+        if filesystem_type == "fat32":
+            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2_section_0) #kip1loader
+        elif filesystem_type == "exfat":
+            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x62, 0x6F, 0x6F, 0x74]), decrypted_package2_section_0) #kip1boot
+        fs_kip1_end = fs_end_result.start()
+        fs_kip1 = decrypted_package2_section_0[fs_kip1_start:fs_kip1_end]
+        with open(f'{filesystem_type}FS.kip1', 'wb') as fs_kip1_file:
             fs_kip1_file.write(fs_kip1)
             fs_kip1_file.close()
-        with open('FS.kip1', 'rb') as compressed_fs_kip:
-            nxo64.write_file(f'uFS.kip1', nxo64.decompress_kip(compressed_fs_kip))
+        with open(f'{filesystem_type}FS.kip1', 'rb') as compressed_fs_kip:
+            nxo64.write_file(f'{filesystem_type}uFS.kip1', nxo64.decompress_kip(compressed_fs_kip))
             compressed_fs_kip.close()
 
 def decrypt_package1(encrypted_package1):
@@ -120,16 +123,16 @@ def process_package12(nca_path):
     nca_file = nca.Nca(nca_path, keys)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
-    if titleId == "0100000000000819" or "010000000000081B":
-        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/{titleId}/romfs/")
+    if titleId == "0100000000000819":
+        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/0100000000000819/romfs/")
         romfs
-        with open(f'sorted_firmware/by-type/Data/{titleId}/romfs/nx/package1', 'rb') as file:
+        with open(f'sorted_firmware/by-type/Data/0100000000000819/romfs/nx/package1', 'rb') as file:
             encrypted_package1 = file.read()
             decrypted_package1 = decrypt_package1(encrypted_package1)
             file.close()
         master_kek_source = get_key_sources(decrypted_package1)
         master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
-        decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/{titleId}/romfs/nx/package2', package2_key)
+        decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/0100000000000819/romfs/nx/package2', package2_key, 'fat32')
         incremented_revision = f'{(len(key_sources.master_kek_sources)):x}'
         current_revision = f'{(len(key_sources.master_kek_sources) - 1):x}'
         if titleId == "0100000000000819":
@@ -184,4 +187,13 @@ def process_package12(nca_path):
                     formatted_mariko_master_kek_source = '0x' + ', 0x'.join(new_mariko_master_kek_source.hex().upper()[i:i+2] for i in range(0, len(new_mariko_master_kek_source.hex().upper()), 2))
                     print(f'bytes([{formatted_mariko_master_kek_source}]),') # "MarikoMasterKekSource" https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/source/fusee_key_derivation.cpp#L24-L27
                     print(f'^ add this string to mariko_master_kek_sources array ^')
-        return master_kek_source
+            return master_kek_source
+
+        else:
+            print("exfat")
+    elif titleId == "010000000000081B":
+        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/010000000000081B/romfs/")
+        romfs
+        master_kek_source = key_sources.master_kek_sources[-1]
+        master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
+        decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx/package2', package2_key, 'exfat')

@@ -103,81 +103,81 @@ class KeygenDev():
 
 class TsecKeygen():
     def __init__(self, hovi_kek):
-            if sha256(hovi_kek).hexdigest().upper() == "CEFE01C9E3EEEF1A73B8C10D742AE386279B7DFF30A2FBC0AABD058C1F135833":
-                self.hovi_kek = hovi_kek
-                # nvidia falcon crypto:
+        if sha256(hovi_kek).hexdigest().upper() == "CEFE01C9E3EEEF1A73B8C10D742AE386279B7DFF30A2FBC0AABD058C1F135833":
+            self.hovi_kek = hovi_kek
+            # nvidia falcon crypto:
 
-                # (encrypted if _00 and _01 / decrypted if _02 by tsec_secret_26, then the result is then used as key to encrypt tsec_auth_signatures_%%, essentially this falcon instruction chain:)
-                # buffer = address to stored seed combination hovi + _sig/_kek/_enc + _key + _prd/_dev/_iv1
-                # csecret $c1, 0x26 (loads csecret 0x26 into $c1)
-                # ckeyreg $c1 (uses $c1 as key for encryption/decryption)
-                # cenc/cdec $c0, buffer (result is tsec_root_kek_%% // package1_kek_%% // package1_mac_kek_%%)
-                # csigenc $c0, $c0 (resulting key is Package1_Key_06/_07/_08 // Package1_Mac_Key_06/_07/_08 // Tsec_Root_Key_00/_01/_02 // hovi_iv_00/_01/_02)
-                # output by secureboot tsec firmware stage within package1
+            # (encrypted if _00 and _01 / decrypted if _02 by tsec_secret_26, then the result is then used as key to encrypt tsec_auth_signatures_%%, essentially this falcon instruction chain:)
+            # buffer = address to stored seed combination hovi + _sig/_kek/_enc + _key + _prd/_dev/_iv1
+            # csecret $c1, 0x26 (loads csecret 0x26 into $c1)
+            # ckeyreg $c1 (uses $c1 as key for encryption/decryption)
+            # cenc/cdec $c0, buffer (result is tsec_root_kek_%% // package1_kek_%% // package1_mac_kek_%%)
+            # csigenc $c0, $c0 (resulting key is Package1_Key_06/_07/_08 // Package1_Mac_Key_06/_07/_08 // Tsec_Root_Key_00/_01/_02 // hovi_iv_00/_01/_02)
+            # output by secureboot tsec firmware stage within package1
 
-                # The following sources are made out of seed parts of the hex representations of the words:
-                # [0]"HOVI", [1]"_SIG"/"_ENC"/"_KEK", [2]"_KEY", [3]"_IV1"/"_PRD"/"_DEV"
+            # The following sources are made out of seed parts of the hex representations of the words:
+            # [0]"HOVI", [1]"_SIG"/"_ENC"/"_KEK", [2]"_KEY", [3]"_IV1"/"_PRD"/"_DEV"
 
-                self.package1_mac_kek_source                = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x53, 0x49, 0x47, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_SIG_KEY_PRD
-                self.package1_kek_source                    = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_ENC_KEY_PRD 
-                self.tsec_root_kek_source                   = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x4B, 0x45, 0x4B, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_KEK_KEY_PRD
-                self.tsec_hovi_iv_key                       = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x49, 0x56, 0x31]) # HOVI_ENC_KEY_IV1
-                self.package1_mac_kek_source_dev            = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x53, 0x49, 0x47, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_SIG_KEY_DEV
-                self.package1_kek_source_dev                = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_ENC_KEY_DEV
-                self.tsec_root_kek_source_dev               = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x4B, 0x45, 0x4B, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_KEK_KEY_DEV
+            self.package1_mac_kek_source                = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x53, 0x49, 0x47, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_SIG_KEY_PRD
+            self.package1_kek_source                    = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_ENC_KEY_PRD 
+            self.tsec_root_kek_source                   = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x4B, 0x45, 0x4B, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x50, 0x52, 0x44]) # HOVI_KEK_KEY_PRD
+            self.tsec_hovi_iv_key                       = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x49, 0x56, 0x31]) # HOVI_ENC_KEY_IV1
+            self.package1_mac_kek_source_dev            = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x53, 0x49, 0x47, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_SIG_KEY_DEV
+            self.package1_kek_source_dev                = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_ENC_KEY_DEV
+            self.tsec_root_kek_source_dev               = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x4B, 0x45, 0x4B, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_KEK_KEY_DEV
 
-                # tsec auth hash/signature can be found by searching for "1D E3 64 58 FA 9E C2 98 D5 B4 57 74 B5 82 E7 11", selecting the last result +0x1, or +0x30 from start of result found (zeroes encrypted by tsec_secret_06)
-                self.tsec_auth_signature_00                 = bytes([0xA7, 0x7B, 0x86, 0x58, 0x6A, 0xE1, 0xB0, 0x3D, 0x4F, 0xFB, 0xA3, 0xAD, 0xA8, 0xF8, 0xDE, 0x32]) # source 0x3300 encrypted package1 6.2.0 
-                self.tsec_auth_signature_01                 = bytes([0xA3, 0xFF, 0xB0, 0xF6, 0xBC, 0x49, 0xA0, 0x6D, 0xF2, 0xFC, 0x79, 0x16, 0x97, 0xD8, 0x1D, 0x32]) # source 0x3B00 encrypted package1 7.0.0
-                self.tsec_auth_signature_02                 = bytes([0x0B, 0x55, 0xCC, 0x08, 0x20, 0xE6, 0x30, 0x7F, 0xD0, 0x87, 0x47, 0x9E, 0xAA, 0x2E, 0x7F, 0x98]) # source 0x3D00 encrypted package1 8.1.0+
+            # tsec auth hash/signature can be found by searching for "1D E3 64 58 FA 9E C2 98 D5 B4 57 74 B5 82 E7 11", selecting the last result +0x1, or +0x30 from start of result found (zeroes encrypted by tsec_secret_06)
+            self.tsec_auth_signature_00                 = bytes([0xA7, 0x7B, 0x86, 0x58, 0x6A, 0xE1, 0xB0, 0x3D, 0x4F, 0xFB, 0xA3, 0xAD, 0xA8, 0xF8, 0xDE, 0x32]) # source 0x3300 encrypted package1 6.2.0 
+            self.tsec_auth_signature_01                 = bytes([0xA3, 0xFF, 0xB0, 0xF6, 0xBC, 0x49, 0xA0, 0x6D, 0xF2, 0xFC, 0x79, 0x16, 0x97, 0xD8, 0x1D, 0x32]) # source 0x3B00 encrypted package1 7.0.0
+            self.tsec_auth_signature_02                 = bytes([0x0B, 0x55, 0xCC, 0x08, 0x20, 0xE6, 0x30, 0x7F, 0xD0, 0x87, 0x47, 0x9E, 0xAA, 0x2E, 0x7F, 0x98]) # source 0x3D00 encrypted package1 8.1.0+
 
-                self.tsec_root_kek_00 = encrypt(self.tsec_root_kek_source, self.hovi_kek)
-                self.tsec_root_kek_01 = self.tsec_root_kek_00 
-                self.tsec_root_kek_02 = decrypt(self.tsec_root_kek_source, self.hovi_kek)
+            self.tsec_root_kek_00 = encrypt(self.tsec_root_kek_source, self.hovi_kek)
+            self.tsec_root_kek_01 = self.tsec_root_kek_00 
+            self.tsec_root_kek_02 = decrypt(self.tsec_root_kek_source, self.hovi_kek)
 
-                self.package1_kek_00 = encrypt(self.package1_kek_source, self.hovi_kek)
-                self.package1_kek_01 = self.package1_kek_00
-                self.package1_kek_02 = decrypt(self.package1_kek_source, self.hovi_kek)
+            self.package1_kek_00 = encrypt(self.package1_kek_source, self.hovi_kek)
+            self.package1_kek_01 = self.package1_kek_00
+            self.package1_kek_02 = decrypt(self.package1_kek_source, self.hovi_kek)
 
-                self.package1_mac_kek_00 = encrypt(self.package1_mac_kek_source, self.hovi_kek)
-                self.package1_mac_kek_01 = self.package1_mac_kek_00
-                self.package1_mac_kek_02 = decrypt(self.package1_mac_kek_source, self.hovi_kek)
+            self.package1_mac_kek_00 = encrypt(self.package1_mac_kek_source, self.hovi_kek)
+            self.package1_mac_kek_01 = self.package1_mac_kek_00
+            self.package1_mac_kek_02 = decrypt(self.package1_mac_kek_source, self.hovi_kek)
 
-                self.tsec_root_key_00 = encrypt(self.tsec_auth_signature_00, self.tsec_root_kek_00)
-                self.tsec_root_key_01 = encrypt(self.tsec_auth_signature_01, self.tsec_root_kek_01)
-                self.tsec_root_key_02 = encrypt(self.tsec_auth_signature_02, self.tsec_root_kek_02)
+            self.tsec_root_key_00 = encrypt(self.tsec_auth_signature_00, self.tsec_root_kek_00)
+            self.tsec_root_key_01 = encrypt(self.tsec_auth_signature_01, self.tsec_root_kek_01)
+            self.tsec_root_key_02 = encrypt(self.tsec_auth_signature_02, self.tsec_root_kek_02)
 
-                self.package1_key_06 = encrypt(self.tsec_auth_signature_00, self.package1_kek_00)
-                self.package1_key_07 = encrypt(self.tsec_auth_signature_01, self.package1_kek_01)
-                self.package1_key_08 = encrypt(self.tsec_auth_signature_02, self.package1_kek_02)
+            self.package1_key_06 = encrypt(self.tsec_auth_signature_00, self.package1_kek_00)
+            self.package1_key_07 = encrypt(self.tsec_auth_signature_01, self.package1_kek_01)
+            self.package1_key_08 = encrypt(self.tsec_auth_signature_02, self.package1_kek_02)
 
-                self.package1_mac_key_06 = encrypt(self.tsec_auth_signature_00, self.package1_mac_kek_00)
-                self.package1_mac_key_07 = encrypt(self.tsec_auth_signature_01, self.package1_mac_kek_01)
-                self.package1_mac_key_08 = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02)
+            self.package1_mac_key_06 = encrypt(self.tsec_auth_signature_00, self.package1_mac_kek_00)
+            self.package1_mac_key_07 = encrypt(self.tsec_auth_signature_01, self.package1_mac_kek_01)
+            self.package1_mac_key_08 = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02)
 
-                self.tsec_root_kek_00_dev = encrypt(self.tsec_root_kek_source_dev, self.hovi_kek)
-                self.tsec_root_kek_01_dev = self.tsec_root_kek_00_dev 
-                self.tsec_root_kek_02_dev = decrypt(self.tsec_root_kek_source_dev, self.hovi_kek)
+            self.tsec_root_kek_00_dev = encrypt(self.tsec_root_kek_source_dev, self.hovi_kek)
+            self.tsec_root_kek_01_dev = self.tsec_root_kek_00_dev 
+            self.tsec_root_kek_02_dev = decrypt(self.tsec_root_kek_source_dev, self.hovi_kek)
 
-                self.package1_kek_00_dev = encrypt(self.package1_kek_source_dev, self.hovi_kek)
-                self.package1_kek_01_dev = self.package1_kek_00_dev
-                self.package1_kek_02_dev = decrypt(self.package1_kek_source_dev, self.hovi_kek)
+            self.package1_kek_00_dev = encrypt(self.package1_kek_source_dev, self.hovi_kek)
+            self.package1_kek_01_dev = self.package1_kek_00_dev
+            self.package1_kek_02_dev = decrypt(self.package1_kek_source_dev, self.hovi_kek)
 
-                self.package1_mac_kek_00_dev = encrypt(self.package1_mac_kek_source_dev, self.hovi_kek)
-                self.package1_mac_kek_01_dev = self.package1_mac_kek_00_dev
-                self.package1_mac_kek_02_dev = decrypt(self.package1_mac_kek_source_dev, self.hovi_kek)
+            self.package1_mac_kek_00_dev = encrypt(self.package1_mac_kek_source_dev, self.hovi_kek)
+            self.package1_mac_kek_01_dev = self.package1_mac_kek_00_dev
+            self.package1_mac_kek_02_dev = decrypt(self.package1_mac_kek_source_dev, self.hovi_kek)
 
-                self.tsec_root_key_00_dev = encrypt(self.tsec_auth_signature_00, self.tsec_root_kek_00_dev)
-                self.tsec_root_key_01_dev = encrypt(self.tsec_auth_signature_01, self.tsec_root_kek_01_dev)
-                self.tsec_root_key_02_dev = encrypt(self.tsec_auth_signature_02, self.tsec_root_kek_02_dev)
+            self.tsec_root_key_00_dev = encrypt(self.tsec_auth_signature_00, self.tsec_root_kek_00_dev)
+            self.tsec_root_key_01_dev = encrypt(self.tsec_auth_signature_01, self.tsec_root_kek_01_dev)
+            self.tsec_root_key_02_dev = encrypt(self.tsec_auth_signature_02, self.tsec_root_kek_02_dev)
 
-                self.package1_key_06_dev = encrypt(self.tsec_auth_signature_00, self.package1_kek_00_dev)
-                self.package1_key_07_dev = encrypt(self.tsec_auth_signature_01, self.package1_kek_01_dev)
-                self.package1_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_kek_02_dev)
+            self.package1_key_06_dev = encrypt(self.tsec_auth_signature_00, self.package1_kek_00_dev)
+            self.package1_key_07_dev = encrypt(self.tsec_auth_signature_01, self.package1_kek_01_dev)
+            self.package1_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_kek_02_dev)
 
-                self.package1_mac_key_06_dev = encrypt(self.tsec_auth_signature_00, self.package1_mac_kek_00_dev)
-                self.package1_mac_key_07_dev = encrypt(self.tsec_auth_signature_01, self.package1_mac_kek_01_dev)
-                self.package1_mac_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02_dev)
+            self.package1_mac_key_06_dev = encrypt(self.tsec_auth_signature_00, self.package1_mac_kek_00_dev)
+            self.package1_mac_key_07_dev = encrypt(self.tsec_auth_signature_01, self.package1_mac_kek_01_dev)
+            self.package1_mac_key_08_dev = encrypt(self.tsec_auth_signature_02, self.package1_mac_kek_02_dev)
 
 def get_latest_master_key():
     key_sources = KeySources()

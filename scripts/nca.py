@@ -232,8 +232,8 @@ class NsoHeader():
         self.ModuleNameSize = int.from_bytes(self.nsoheader[0x2C:0x30], byteorder='little', signed=False)
         self.DataFileOffset = int.from_bytes(self.nsoheader[0x30:0x34], byteorder='little', signed=False)
         self.DataMemoryOffset = int.from_bytes(self.nsoheader[0x34:0x38], byteorder='little', signed=False)
-        self.DataSize = int.from_bytes(self.nsoheader[0x38:0x1C], byteorder='little', signed=False)
-        self.BssSize = int.from_bytes(self.nsoheader[0x38:0x3C], byteorder='little', signed=False)
+        self.DataSize = int.from_bytes(self.nsoheader[0x38:0x3C], byteorder='little', signed=False)
+        self.BssSize = int.from_bytes(self.nsoheader[0x3C:0x40], byteorder='little', signed=False)
         self.ModuleId = self.nsoheader[0x40:0x50].hex().upper()
         self.TextFileSize = int.from_bytes(self.nsoheader[0x60:0x64], byteorder='little', signed=False)
         self.RoFileSize = int.from_bytes(self.nsoheader[0x64:0x68], byteorder='little', signed=False)
@@ -247,7 +247,7 @@ class NsoHeader():
         self.DynSymSize = int.from_bytes(self.nsoheader[0x9C:0xA0], byteorder='little', signed=False)
         self.TextHash = self.nsoheader[0xA0:0xC0]
         self.RoHash = self.nsoheader[0xC0:0xE0]
-        self.DatatHash = self.nsoheader[0xE0:0x100]
+        self.DataHash = self.nsoheader[0xE0:0x100]
 
 class NcaHeader():
     def __init__(self, ncaheader):

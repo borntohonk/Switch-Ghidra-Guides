@@ -21,6 +21,7 @@
 import re
 
 #20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
+#21.0.0 romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4
 
 
 # this should be redundant if one runs scripts/process_firwmare.py
