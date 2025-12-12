@@ -22,6 +22,8 @@
 import re
 import sys
 import nca
+import os
+from pathlib import Path
 from hashlib import sha256
 
 try:
@@ -115,7 +117,9 @@ def get_key_sources(decrypted_package1):
     master_kek_source_prod = decrypted_package1[master_kek_source_prod_start:master_kek_source_prod_end]
     return master_kek_source_prod
 
-def process_package12(nca_path):
+def process_package12(nca_path, master_kek_source_for_exfat=None):
+    if not master_kek_source_for_exfat == None:
+        master_kek_source = master_kek_source_for_exfat
     root_keys = RootKeys()
     key_sources = KeySources()
     tsec_keys = aes_sample.TsecKeygen(key_sources.tsec_secret_26)
@@ -125,7 +129,7 @@ def process_package12(nca_path):
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
     if titleId == "0100000000000819":
-        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/0100000000000819/romfs/")
+        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/0100000000000819/romfs/")
         romfs
         with open(f'sorted_firmware/by-type/Data/0100000000000819/romfs/nx/package1', 'rb') as file:
             encrypted_package1 = file.read()
@@ -190,11 +194,12 @@ def process_package12(nca_path):
                     print(f'^ add this string to mariko_master_kek_sources array ^')
             return master_kek_source
 
+    if titleId == "010000000000081B":
+        exfat_path = Path('sorted_firmware/by-type/Data/010000000000081B/data.nca')
+        if os.path.exists(exfat_path):
+            romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/010000000000081B/romfs/")
+            romfs
+            master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
+            decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx/package2', package2_key, 'exfat', f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx')
         else:
-            print("exfat")
-    elif titleId == "010000000000081B":
-        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"./sorted_firmware/by-type/Data/010000000000081B/romfs/")
-        romfs
-        master_kek_source = key_sources.master_kek_sources[-1]
-        master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
-        decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx/package2', package2_key, 'exfat', f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx')
+            print("exFAT package2 NCA not found, skipping exFAT filesystem extraction")
