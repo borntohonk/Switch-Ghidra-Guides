@@ -129,30 +129,71 @@ def sort_and_process():
         sys.exit(1)
     keys = aes_sample.single_keygen(master_kek_source)
     system_version = get_system_version(system_version_path, keys)
+    mkdirp(f'output/{system_version}')
     extract_browser_dll_romfs(browserdll_path, keys)
-    decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4', 'foss_browser_ssl.nro') # path last updated 21.0.0
-    print(f'\nfirmware version of files provided is: {system_version}\n')
-    fat32hash = sha256(open('fat32FS.kip1', 'rb').read()).hexdigest().upper()
-    print(f'{system_version} fat32 sha256 = {fat32hash}')
-    if os.path.exists(exfat_path):
-        exfathash = sha256(open('exfatFS.kip1', 'rb').read()).hexdigest().upper()
-        print(f'{system_version} exfat sha256 = {exfathash}')
+    decompress_foss_nro('sorted_firmware/by-type/Data/0100000000000803/romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4', f'output/{system_version}/{system_version}_foss_browser_ssl.nro') # path last updated 21.0.0
     es_path = Path('sorted_firmware/by-type/Program/0100000000000033/data.nca')
     nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
     ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
     usb_path = Path('sorted_firmware/by-type/Program/0100000000000006/data.nca')
-    print(f'{system_version} es_buildID: {extract_exefs(es_path, keys)}')
-    print(f'{system_version} nifm_buildID: {extract_exefs(nifm_path, keys)}')
-    print(f'{system_version} nim_buildID: {extract_exefs(nim_path, keys)}')
-    print(f'{system_version} ssl_buildID: {extract_exefs(ssl_path, keys)}')
-    print(f'{system_version} usb_buildID: {extract_exefs(usb_path, keys)}')
-    print(f'{system_version} foss_ssl_browser_buildID: {get_nro_build_id('foss_browser_ssl.nro')}')
-    decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', 'es.nso0')
-    decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', 'nifm.nso0')
-    decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', 'nim.nso0')
-    decompress_exefs('sorted_firmware/by-type/Program/0100000000000024/exefs/main', 'ssl.nso0')
-    decompress_exefs('sorted_firmware/by-type/Program/0100000000000006/exefs/main', 'usb.nso0')
+    es_buildid = extract_exefs(es_path, keys)
+    nifm_buildid = extract_exefs(nifm_path, keys)
+    nim_buildid = extract_exefs(nim_path, keys)
+    ssl_buildid = extract_exefs(ssl_path, keys)
+    usb_buildid = extract_exefs(usb_path, keys)
+    fat32hash = sha256(open('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', 'rb').read()).hexdigest().upper()
+    fat32_string = f'{system_version} fat32 sha256 = {fat32hash}'
+    if os.path.exists(exfat_path):
+        exfathash = sha256(open('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', 'rb').read()).hexdigest().upper()
+        exfat_string = f'{system_version} exfat sha256 = {exfathash}'
+    foss_browser_buildid = get_nro_build_id(f'output/{system_version}/{system_version}_foss_browser_ssl.nro')
+    es_string = f'{system_version} es_buildID: {es_buildid}'
+    nifm_string = f'{system_version} nifm_buildID: {nifm_buildid}'
+    nim_string = f'{system_version} nim_buildID: {nim_buildid}'
+    ssl_string = f'{system_version} ssl_buildID: {ssl_buildid}'
+    usb_string = f'{system_version} usb_buildID: {usb_buildid}'
+    foss_browser_string = f'{system_version} foss_ssl_browser_buildID: {foss_browser_buildid}'
+    print(f'\nfirmware version of files provided is: {system_version}\n')
+    print(fat32_string)
+    if os.path.exists(exfat_path):
+        print(exfat_string)
+    else:
+        print(f'{system_version} No exFAT present in this firmware version in the provided firmware files.\n')
+    print(es_string)
+    print(nifm_string)
+    print(nim_string)
+    print(ssl_string)
+    print(usb_string)
+    print(foss_browser_string)
+    with open(f'output/{system_version}/{system_version}_hashes.txt', 'w') as hash_file:
+        hash_file.write(fat32_string + '\n')
+        if os.path.exists(exfat_path):
+            hash_file.write(exfat_string + '\n')
+        else:
+            hash_file.write(f'{system_version} No exFAT present in this firmware version in the provided firmware files.\n')
+        hash_file.write(es_string + '\n')
+        hash_file.write(nifm_string + '\n')
+        hash_file.write(nim_string + '\n')
+        hash_file.write(ssl_string + '\n')
+        hash_file.write(usb_string + '\n')
+        hash_file.write(foss_browser_string + '\n')
+    hash_file.close()
+    shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', f'output/{system_version}/{system_version}_fat32_FS.kip1')
+    shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_uFS.kip1', f'output/{system_version}/{system_version}_fat32_uFS.kip1')
+    if os.path.exists(exfat_path):
+        shutil.copy('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', f'output/{system_version}/{system_version}_exfat_FS.kip1')
+        shutil.copy('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_uFS.kip1', f'output/{system_version}/{system_version}_exfat_uFS.kip1')
+    shutil.copy('sorted_firmware/by-type/Program/0100000000000033/exefs/main', f'output/{system_version}/{system_version}_compressed_es.nso0')
+    shutil.copy('sorted_firmware/by-type/Program/010000000000000F/exefs/main', f'output/{system_version}/{system_version}_compressed_nifm.nso0')
+    shutil.copy('sorted_firmware/by-type/Program/0100000000000025/exefs/main', f'output/{system_version}/{system_version}_compressed_nim.nso0')
+    shutil.copy('sorted_firmware/by-type/Program/0100000000000024/exefs/main', f'output/{system_version}/{system_version}_compressed_ssl.nso0')
+    shutil.copy('sorted_firmware/by-type/Program/0100000000000006/exefs/main', f'output/{system_version}/{system_version}_compressed_usb.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', f'output/{system_version}/{system_version}_uncompressed_es.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', f'output/{system_version}/{system_version}_uncompressed_nifm.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', f'output/{system_version}/{system_version}_uncompressed_nim.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/0100000000000024/exefs/main', f'output/{system_version}/{system_version}_uncompressed_ssl.nso0')
+    decompress_exefs('sorted_firmware/by-type/Program/0100000000000006/exefs/main', f'output/{system_version}/{system_version}_uncompressed_usb.nso0')
 
 if __name__ == "__main__":
     sort_and_process()

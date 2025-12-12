@@ -33,9 +33,9 @@ with open('ssl.nso0', 'rb') as fi:
     result23 = re.search(rb'\x24\x09\x43\x7a\xa0\x00\x00\x54', read_data)
     result4 = re.search(rb'\x88\x16\x00\x12', read_data)
     patch1 = '%08X%s%s' % (result1.start() + 16 , '0001', '08') # 0x119A60 in 21.0.0+ - register x8, register x10 before
-    patch2 = '%08X%s%s' % (result23.end() - 4, '0002', '1300') # 1300 in 21.0.0+
-    patch3 = '%08X%s%s' % (result23.end() - 1, '0001', '14')
-    patch4 = '%08X%s%s' % (result4.end() + 4, '0004', '08008052') # +4 in 21.0.0+
+    patch2 = '%08X%s%s' % (result23.start() + 4, '0002', '1300') # 1300 in 21.0.0+
+    patch3 = '%08X%s%s' % (result23.start() + 7, '0001', '14')
+    patch4 = '%08X%s%s' % (result4.start() + 8, '0004', '08008052') # +4 in 21.0.0+
     text_file = open(get_build_id() + '.ips', 'wb')
     print('ssl build-id: ' + get_build_id())
     print('disable_ca_verification offsets and patches at: ' + patch1 + patch2 + patch3 + patch4)

@@ -25,23 +25,28 @@ import hashlib
 import os
 import binascii
 
-es_path = "es.nso0"
-nim_path = "nim.nso0"
-nifm_path = "nifm.nso0"
-compressed_fat32_path = "fat32FS.kip1"
-decompressed_fat32_path = "fat32uFS.kip1"
-compressed_exfat_path = "exfatFS.kip1"
-decompressed_exfat_path = "exfatuFS.kip1"
+def get_latest_firmware_version_from_provided_files():
+    with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
+        data_read = file.read()
+        firmware_version = data_read[0x68:0x6E].decode('utf-8', errors='replace')
+        file.close()
+        return firmware_version
+
+latest_version = get_latest_firmware_version_from_provided_files()
+version = latest_version
+
+es_path = f'output/{version}/{version}_uncompressed_es.nso0'
+nim_path = f'output/{version}/{version}_uncompressed_nim.nso0'
+nifm_path = f'output/{version}/{version}_uncompressed_nifm.nso0'
+ssl_path = f'output/{version}/{version}_uncompressed_ssl.nso0'
+compressed_fat32_path = f'output/{version}/{version}_fat32_FS.kip1'
+decompressed_fat32_path = f'output/{version}/{version}_fat32_uFS.kip1'
+compressed_exfat_path = f'output/{version}/{version}_exfat_FS.kip1'
+decompressed_exfat_path = f'output/{version}/{version}_exfat_uFS.kip1'
 
 fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest().upper()
 if os.path.exists(compressed_exfat_path):
     exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
-with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
-    data_read = file.read()
-    firmware_version = data_read[0x68:0x6E].decode('utf-8', errors='replace')
-    file.close()
-
-version = firmware_version
 
 # sys-patch logic explanation:
 # "(49, 0,) +49" (nifm/ctest) from start from the start the string found in it's entirity, as sys-patch tests things stupid, then it reads from 0x0 of the end in decimals where the "head" was placed (49),
@@ -67,12 +72,25 @@ nim_pattern = rb'.\x07\x00\x35\x1F\x20\x03\xD5....'
 # { "nim_17.0.0-20.5.0", "0x.0F00351F2003D5", 8, 0, adr_cond, mov2_patch, mov2_applied, true, MAKEHOSVERSION(17,0,0), MAKEHOSVERSION(20,5,0) },
 # { "nim_21.0.0+", "0x.0700351F2003D5", 8, 0, adr_cond, mov2_patch, mov2_applied, true, MAKEHOSVERSION(21,0,0), FW_VER_ANY },
 nim_offset= 8
+ssl_pattern1 = rb'\x08\x00\x80\x12\x69\x12\x05\x91\x7f\x1e\x00\xf9\x68\x42\x00\xb9'
+ssl_pattern2 = rb'\x24\x09\x43\x7a\xa0\x00\x00\x54'
+ssl_pattern3 = rb'\x88\x16\x00\x12'
+ssl_offset1 = 16 # # ssl_pattern1
+ssl_offset2 = 4 # ssl_pattern2
+ssl_offset3 = 7 # ssl_pattern2
+ssl_offset4 = 8 # ssl_pattern3
 patch_magic = "5041544348" # "PATCH"
+ips32_magic = "4950533332" # "IPS32"
 eof_magic = "454F46" # "EOF"
+eeof_magic = "45454F46" # "EEOF"
 patchvalue1 = "1F2003D5" # FS (nop)
 patchvalue2 = "E0031F2A" # FS (mov w0, wzr)
 patchvalue3 = "E0031FAA" # ES, NIM (mov x0, xzr)
 patchvalue4 = "00309AD2001EA1F2610100D4E0031FAAC0035FD6" # NIFM (mov x0, #0xd180 - movk x0, #0x8f0, lsl #16 - svc #0xb - mov x0, xzr - ret)
+patchvalue5 = "08" # SSL
+patchvalue6 = "1300" # SSL
+patchvalue7 = "14" # SSL
+patchvalue8 = "08008052" # SSL
 
 def get_build_id(nso0):
     with open(nso0, 'rb') as f:
@@ -257,3 +275,52 @@ if os.path.exists(decompressed_exfat_path):
 
 else:
     print(f'(FS-EXFAT) FS-exFAT was skipped for: {version}, due to missing NCA file for exfat in the provided firmware files.\n\n')
+
+with open(f'{ssl_path}', 'rb') as decompressed_ssl_nso:
+    read_data = decompressed_ssl_nso.read()
+    result1 = re.search(ssl_pattern1, read_data)
+    result2 = re.search(ssl_pattern2, read_data)
+    result3 = re.search(ssl_pattern3, read_data)
+    if not result:
+        print(f'(SSL) {version} SSL pattern 1 no match found')
+        print(f'(SSL) SSL pattern 1 is invalid for: {version}\n')
+    if not result2:
+        print(f'(SSL) {version} SSL pattern 2 no match found')
+        print(f'(SSL) SSL pattern 2 is invalid for: {version}\n')
+    if not result3:
+        print(f'(SSL) {version} SSL pattern 3 no match found')
+        print(f'(SSL) SSL pattern 3 is invalid for: {version}\n')
+    if (result1 and result2 and result3):
+        offset1 = '%06X' % (result1.start() + ssl_offset1)
+        offset2 = '%06X' % (result2.start() + ssl_offset2)
+        offset3 = '%06X' % (result2.start() + ssl_offset3)
+        offset4 = '%06X' % (result3.start() + ssl_offset4)
+        decompressed_ssl_nso.seek(result1.start() + ssl_offset1)
+        ssl_patch1_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+        decompressed_ssl_nso.seek(result2.start() + ssl_offset2)
+        ssl_patch2_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+        decompressed_ssl_nso.seek(result3.start() + ssl_offset4)
+        ssl_patch3_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+        patch1 = '%08X%s%s' % (result1.start() + ssl_offset1, '0001', f'{patchvalue5}')
+        patch2 = '%08X%s%s' % (result2.start() + ssl_offset2, '0002', f'{patchvalue6}')
+        patch3 = '%08X%s%s' % (result2.start() + ssl_offset3, '0001', f'{patchvalue7}')
+        patch4 = '%08X%s%s' % (result3.start() + ssl_offset4, '0004', f'{patchvalue8}')
+        print(f'\n(SSL) patterns found results for: {version}')
+        print(f'(SSL) pattern 1 found at: {offset1} ## 21.0.0+ 0x119B60') 
+        print(f'(SSL) The ghidra-equivalent pattern used was: 08 00 80 12 69 12 05 91 7f 1e 00 f9 68 42 00 b9')
+        print(f'(SSL) The existing bytes at the offset are: {ssl_patch1_bytes}') # 21.0.0+ // 680080D2 // mov x8, #3
+        print(f'(SSL) this is patched out to become {patchvalue5}0080D2 (mov x8, #0), to make make register x8 (x10 20.5.0 and below) zero, so that the movk turns the value used into 0x100000000 instead of 0x100000003 - seen in the ghidra decompiled view')
+        print(f'(SSL) pattern 2 found at: {offset2} ## 21.0.0+ 0x11A914') 
+        print(f'(SSL) pattern 3 found at: {offset3} ## 21.0.0+ 0x11A917') 
+        print(f'(SSL) The ghidra-equivalent pattern used was: 24 09 43 7a a0 00 00 54')
+        print(f'(SSL) The existing bytes at the two offsets combined are: {ssl_patch2_bytes}') # 21.0.0+ // A0000054 // b.eq #0x14
+        print(f'(SSL) this is patched out to become  {patchvalue6}00{patchvalue7} (b #0x4c) to target the second branch instead of comparing values (b.eq #0x14) and going to the first one')
+        print(f'(SSL) pattern 4 found at: {offset4} ## 21.0.0+ 0x11A968') 
+        print(f'(SSL) The ghidra-equivalent pattern used was: 88 16 00 12')
+        print(f'(SSL) The existing bytes at the offset are: {ssl_patch3_bytes}') # 21.0.0+ // 684601B9 // str w8, [x19, #0x144]
+        print(f'(SSL) this is patched out to become {patchvalue8} (mov w8, #0), to prepare register w8 with a zero, for the purpose of making the function return 0 (success) later on.')
+        print(f'(SSL) {version} ES buildid (and what .ips filename should be): {get_build_id(ssl_path)}\n')
+        print(f'(SSL) IPS patch bytes would be:')
+        print(f'(SSL) {ips32_magic}{patch1}{patch2}{patch3}{patch4}{eeof_magic}\n')
+    else:
+        print(f'(SSL) one or more SSL patterns were not found\n')

@@ -4,6 +4,7 @@ firmware/**
 *.nso0
 *.nro
 *.ips
+*.nca
 prod.keys
 decrypted_tsec_keygen.bin
 Atmosphere_Loader_Patch/
@@ -21,3 +22,5 @@ package1
 package2
 sorted_firmware/
 sorted_firmware/**
+output/
+output/**
