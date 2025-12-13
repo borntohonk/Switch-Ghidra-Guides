@@ -134,10 +134,7 @@ def get_key_sources(decrypted_package1):
     return master_kek_source_prod
 
 def process_package2(nca_path, master_kek_source):
-    key_sources = KeySources()
-    master_kek_source_for_keygen = key_sources.master_kek_sources[0]
-    keys = aes_sample.single_keygen(master_kek_source_for_keygen)
-    nca_file = nca.Nca(nca_path, keys)
+    nca_file = nca.Nca(nca_path)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
     master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
@@ -158,9 +155,7 @@ def process_package12(nca_path, master_kek_source_for_exfat=None):
     root_keys = RootKeys()
     key_sources = KeySources()
     tsec_keys = aes_sample.TsecKeygen(key_sources.tsec_secret_26)
-    master_kek_source_for_keygen = key_sources.master_kek_sources[0]
-    keys = aes_sample.single_keygen(master_kek_source_for_keygen)
-    nca_file = nca.Nca(nca_path, keys)
+    nca_file = nca.Nca(nca_path)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
     if titleId == "0100000000000819":

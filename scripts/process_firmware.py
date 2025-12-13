@@ -24,7 +24,6 @@ import shutil
 import errno
 from pathlib import Path
 import nca
-from keys import RootKeys
 from key_sources import KeySources
 import extract_packages
 import nxo64
@@ -85,9 +84,8 @@ def check_master_key_revision(nca_path):
             return master_key_rev
 
 
-def get_system_version(nca_path, keys):
-    keys = keys
-    nca_file = nca.Nca(nca_path, keys)
+def get_system_version(nca_path):
+    nca_file = nca.Nca(nca_path)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/0100000000000809/romfs/")
     romfs
@@ -97,16 +95,14 @@ def get_system_version(nca_path, keys):
         return firmware_version
     file.close()
 
-def extract_browser_dll_romfs(nca_path, keys):
-    keys = keys
-    nca_file = nca.Nca(nca_path, keys)
+def extract_browser_dll_romfs(nca_path):
+    nca_file = nca.Nca(nca_path)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/0100000000000803/romfs/")
     romfs
 
-def extract_exefs(nca_path, keys):
-    keys = keys
-    nca_file = nca.Nca(nca_path, keys)
+def extract_exefs(nca_path):
+    nca_file = nca.Nca(nca_path)
     decrypted_section_00 = nca_file.decrypted_sections[0]
     titleId = nca_file.titleId
     exefs = nca.Pfs0(decrypted_section_00[nca_file.fsheaders[0].pfs0_start:nca_file.fsheaders[0].pfs0_end], f"sorted_firmware/by-type/Program/{titleId}/exefs/")
@@ -139,6 +135,7 @@ def get_nro_build_id(input):
         return(f.read(0x10).hex().upper())
 
 potential_foss_browser_paths = [
+    'sorted_firmware/by-type/Data/0100000000000803/romfs/dll/webkit_wkc.nro',
     'sorted_firmware/by-type/Data/0100000000000803/romfs/dll/webkit_wkc.nro.lz4',
     'sorted_firmware/by-type/Data/0100000000000803/romfs/dll_0/webkit_wkc.nro.lz4',
     'sorted_firmware/by-type/Data/0100000000000803/romfs/dll_1/webkit_wkc.nro.lz4',
@@ -165,7 +162,8 @@ def sort_and_process():
     master_key_revision_index = master_key_revision -1
     master_key_revision_list = patterns.FirmwareRevisions().keygen_revisions
     if str(master_key_revision) not in master_key_revision_list or str(master_key_revision) == master_key_revision_list[-1]:
-        master_kek_source = extract_packages.process_package12(Path(fat32_path))
+        if os.path.exists(fat32_path):
+            master_kek_source = extract_packages.process_package12(Path(fat32_path))
         if os.path.exists(exfat_path):
             process_exfat = extract_packages.process_package12(Path(exfat_path), master_kek_source)
             process_exfat
@@ -173,17 +171,19 @@ def sort_and_process():
             print("A new master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
             sys.exit(1)
     elif str(master_key_revision) in master_key_revision_list:
+        if master_key_revision_index == -1:
+            master_key_revision_index = 0
         master_kek_source = key_sources.master_kek_sources[master_key_revision_index]
-        process_fat32 = extract_packages.process_package2(Path(fat32_path), master_kek_source)
-        process_fat32
+        if os.path.exists(fat32_path):
+            process_fat32 = extract_packages.process_package2(Path(fat32_path), master_kek_source)
+            process_fat32
         if os.path.exists(exfat_path):
             process_exfat = extract_packages.process_package2(Path(exfat_path), master_kek_source)
             process_exfat
 
-    keys = aes_sample.single_keygen(master_kek_source)
-    system_version = get_system_version(system_version_path, keys)
+    system_version = get_system_version(system_version_path)
     mkdirp(f'output/{system_version}')
-    extract_browser_dll_romfs(browserdll_path, keys)
+    extract_browser_dll_romfs(browserdll_path)
     current_browser_ssl_path = try_foss_browser_paths()
     decompress_foss_nro(f'{current_browser_ssl_path}', f'output/{system_version}/{system_version}_foss_browser_ssl.nro') # path last updated 21.0.0
     es_path = Path('sorted_firmware/by-type/Program/0100000000000033/data.nca')
@@ -191,18 +191,22 @@ def sort_and_process():
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
     ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
     usb_path = Path('sorted_firmware/by-type/Program/0100000000000006/data.nca')
-    es_buildid = extract_exefs(es_path, keys)
-    nifm_buildid = extract_exefs(nifm_path, keys)
-    nim_buildid = extract_exefs(nim_path, keys)
-    ssl_buildid = extract_exefs(ssl_path, keys)
-    usb_buildid = extract_exefs(usb_path, keys)
-    fat32hash = sha256(open('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', 'rb').read()).hexdigest().upper()
+    es_buildid = extract_exefs(es_path)
+    nifm_buildid = extract_exefs(nifm_path)
+    nim_buildid = extract_exefs(nim_path)
+    ssl_buildid = extract_exefs(ssl_path)
+    usb_buildid = extract_exefs(usb_path)
+    if os.path.exists(fat32_path):
+        fat32hash = sha256(open('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', 'rb').read()).hexdigest().upper()
     if os.path.exists(exfat_path):
         exfathash = sha256(open('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', 'rb').read()).hexdigest().upper()
     foss_browser_buildid = get_nro_build_id(f'output/{system_version}/{system_version}_foss_browser_ssl.nro')
     print(f'\nfirmware version of files provided is: {system_version}\n')
     with open(f'output/{system_version}/{system_version}_hashes.txt', 'w') as hash_file:
-        hash_file.write(f'{system_version} fat32 sha256 = {fat32hash}\n')
+        if os.path.exists(fat32_path):
+            hash_file.write(f'{system_version} fat32 sha256 = {fat32hash}\n')
+        else:
+            hash_file.write(f'{system_version} No fat32 present in this firmware version in the provided firmware files.\n')
         if os.path.exists(exfat_path):
             hash_file.write(f'{system_version} exfat sha256 = {exfathash}\n')
         else:
@@ -214,8 +218,9 @@ def sort_and_process():
         hash_file.write(f'{system_version} usb_buildID: {usb_buildid}\n')
         hash_file.write(f'{system_version} foss_ssl_browser_buildID: {foss_browser_buildid}\n')
     hash_file.close()
-    shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', f'output/{system_version}/{system_version}_fat32_FS.kip1')
-    shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_uFS.kip1', f'output/{system_version}/{system_version}_fat32_uFS.kip1')
+    if os.path.exists(fat32_path):
+        shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', f'output/{system_version}/{system_version}_fat32_FS.kip1')
+        shutil.copy('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_uFS.kip1', f'output/{system_version}/{system_version}_fat32_uFS.kip1')
     if os.path.exists(exfat_path):
         shutil.copy('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', f'output/{system_version}/{system_version}_exfat_FS.kip1')
         shutil.copy('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_uFS.kip1', f'output/{system_version}/{system_version}_exfat_uFS.kip1')

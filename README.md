@@ -48,7 +48,6 @@ All material exist purely for research reference.
 
 * TODO: 
   - extract every section of input nca (completed, but currently static assigned to section 0 of desired input ncas - not needed for firmware files of interest)
-  - make handling of older firmwares work as well (currently some firmwares, such as 8.1.0 wont process its exefs)
 
 * Credits: 
   - [switchbrew](https://switchbrew.org) for all the information on formats, and cryptography.

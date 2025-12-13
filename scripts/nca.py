@@ -22,7 +22,6 @@ import sys
 
 import os
 import errno
-from hashlib import sha256
 from keys import RootKeys
 from key_sources import KeySources
 import aes_128
@@ -271,9 +270,8 @@ class NcaHeader():
         self.EncryptedKeyArea = [ self.ncaheader[0x300:0x310], self.ncaheader[0x310:0x320], self.ncaheader[0x320:0x330], self.ncaheader[0x330:0x340] ]
 
 class Nca():
-    def __init__(self, nca, keyset_for_firmware):
-        self.nca = nca
-        self.master_kek, self.master_key, self.package2_key, self.titlekek, self.key_area_key_system, self.key_area_key_ocean, self.key_area_key_application = keyset_for_firmware
+    def __init__(self, nca):
+        self.nca = nca  
         self.sections = []
         with open(self.nca, 'rb') as f:
             nca_data = f.read()
@@ -284,6 +282,13 @@ class Nca():
             self.header_key = aes_sample.Keygen(self.tsec_keys.tsec_root_key_02).header_key
             self.decrypted_nca_header = decrypt_header(self.encrypted_header, self.header_key)
             self.header = NcaHeader(self.decrypted_nca_header)
+            self.master_key_revision = self.header.sdkVersion
+            self.titleId = self.header.titleId
+            self.master_key_revision_index = self.master_key_revision -1
+            if self.master_key_revision_index == -1:
+                self.master_key_revision_index = 0
+            self.keys = aes_sample.single_keygen(self.key_sources.master_kek_sources[self.master_key_revision_index])
+            self.master_kek, self.master_key, self.package2_key, self.titlekek, self.key_area_key_system, self.key_area_key_ocean, self.key_area_key_application = self.keys
             for i in range(4):
                 self.sections.append(nca_data[self.header.sectionTables[i].offset:self.header.sectionTables[i].endOffset])
             f.close()
@@ -369,6 +374,10 @@ class Pfs0():
         self.pfs0 = pfs0
         self.pfs0_path = pfs0_path
         self.magic = self.pfs0[0x0:0x4]
+        if self.magic != b'PFS0':
+            print("input pfs0 does not have pfs0 magic, exiting")
+            print(f"the failing input path was: {pfs0_path}")
+            sys.exit()
         self.EntryCount_raw = self.pfs0[0x4:0x8]
         self.EntryCount = int.from_bytes(self.EntryCount_raw, byteorder='little', signed=False)
         self.StringTableSize_raw = self.pfs0[0x8:0xC]
@@ -384,7 +393,6 @@ class Pfs0():
         self.string_table = self.pfs0_header[self.string_table_start:self.string_table_end]
         self.pfs0_data = pfs0[self.header_size:]
         mkdirp(self.pfs0_path)
-
         current_offset = 0x10
         for i in range(self.number_of_files):
             current_offset_end = current_offset + 0x18
