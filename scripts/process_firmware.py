@@ -29,6 +29,7 @@ from key_sources import KeySources
 import extract_packages
 import nxo64
 import aes_sample
+import patterns
 from hashlib import sha256
 
 import lz4
@@ -70,6 +71,20 @@ def sort_nca(location):
             except:
                 pass
 
+def check_master_key_revision(nca_path):
+    ncaFull = nca_path
+    with open(ncaFull, 'rb') as f:
+        key_sources = KeySources()
+        tsec_keys = aes_sample.TsecKeygen(key_sources.tsec_secret_26)
+        header_key = aes_sample.Keygen(tsec_keys.tsec_root_key_02).header_key
+        nca_data = nca.decrypt_header(f.read(0xC00), header_key)
+        nca_header = nca.NcaHeader(nca_data)
+        titleId = nca_header.titleId
+        if titleId == '0100000000000809':
+            master_key_rev = nca_header.sdkVersion
+            return master_key_rev
+
+
 def get_system_version(nca_path, keys):
     keys = keys
     nca_file = nca.Nca(nca_path, keys)
@@ -78,7 +93,7 @@ def get_system_version(nca_path, keys):
     romfs
     with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
         data_read = file.read()
-        firmware_version = data_read[0x68:0x6E].decode('utf-8')
+        firmware_version = data_read[0x68:0x6E].decode('utf-8').replace(chr(0), "")
         return firmware_version
     file.close()
 
@@ -146,15 +161,27 @@ def sort_and_process():
     exfat_path = Path('sorted_firmware/by-type/Data/010000000000081B/data.nca')
     system_version_path = Path('sorted_firmware/by-type/Data/0100000000000809/data.nca')
     browserdll_path = Path('sorted_firmware/by-type/Data/0100000000000803/data.nca')
-    master_kek_source = extract_packages.process_package12(Path(fat32_path))
-    if os.path.exists(exfat_path):
-        process_exfat = extract_packages.process_package12(Path(exfat_path), master_kek_source)
-        process_exfat
-    if master_kek_source not in key_sources.master_kek_sources:
-        print("A new master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
-        sys.exit(1)
+    master_key_revision = check_master_key_revision(system_version_path)
+    master_key_revision_index = master_key_revision -1
+    master_key_revision_list = patterns.FirmwareRevisions().keygen_revisions
+    if str(master_key_revision) not in master_key_revision_list or str(master_key_revision) == master_key_revision_list[-1]:
+        master_kek_source = extract_packages.process_package12(Path(fat32_path))
+        if os.path.exists(exfat_path):
+            process_exfat = extract_packages.process_package12(Path(exfat_path), master_kek_source)
+            process_exfat
+        if master_kek_source not in key_sources.master_kek_sources:
+            print("A new master_kek_source was detected, add it to key_sources.py to properly process the rest of the firmware files. Terminating script")
+            sys.exit(1)
+    elif str(master_key_revision) in master_key_revision_list:
+        master_kek_source = key_sources.master_kek_sources[master_key_revision_index]
+        process_fat32 = extract_packages.process_package2(Path(fat32_path), master_kek_source)
+        process_fat32
+        if os.path.exists(exfat_path):
+            process_exfat = extract_packages.process_package2(Path(exfat_path), master_kek_source)
+            process_exfat
+
     keys = aes_sample.single_keygen(master_kek_source)
-    system_version = get_system_version(system_version_path, keys).replace(chr(0), "")
+    system_version = get_system_version(system_version_path, keys)
     mkdirp(f'output/{system_version}')
     extract_browser_dll_romfs(browserdll_path, keys)
     current_browser_ssl_path = try_foss_browser_paths()

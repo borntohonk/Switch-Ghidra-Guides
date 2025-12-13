@@ -77,17 +77,33 @@ def decrypt_package2_and_extract_fs_from_ini1(package2, pkg2_key, filesystem_typ
         package2_header_ctr = decrypted_package2_header[0x0:0x10]
         package2_section_0_ctr = decrypted_package2_header[0x10:0x20]
         package2_section_0_size = int.from_bytes(decrypted_package2_header[0x60:0x64], "little", signed=False)
+        package2_section_1_ctr = decrypted_package2_header[0x20:0x30]
+        package2_section_1_size = int.from_bytes(decrypted_package2_header[0x64:0x68], "little", signed=False)
+        package2_section_2_ctr = decrypted_package2_header[0x30:0x40]
+        package2_section_2_size = int.from_bytes(decrypted_package2_header[0x68:0x6C], "little", signed=False)
+        package2_section_3_ctr = decrypted_package2_header[0x40:0x50]
+        package2_section_3_size = int.from_bytes(decrypted_package2_header[0x6C:0x70], "little", signed=False)
         f.seek(0x200)
         package2_section_0 = f.read(package2_section_0_size)
+        f.seek(0x200 + package2_section_0_size)
+        package_section_1 = f.read(package2_section_1_size)
+        f.seek(0x200 + package2_section_0_size + package2_section_1_size)
+        package_section_2 = f.read(package2_section_2_size)
+        f.seek(0x200 + package2_section_0_size + package2_section_1_size + package2_section_2_size)
+        package_section_3 = f.read(package2_section_3_size)
         decrypted_package2_section_0 = decrypt_ctr(package2_section_0, package2_key, package2_section_0_ctr)
-        fs_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x46, 0x53]), decrypted_package2_section_0)
+        decrypted_package2_section_1 = decrypt_ctr(package_section_1, package2_key, package2_section_1_ctr)
+        decrypted_package2_section_2 = decrypt_ctr(package_section_2, package2_key, package2_section_2_ctr)
+        decrypted_package2_section_3 = decrypt_ctr(package_section_3, package2_key, package2_section_3_ctr)
+        decrypted_package2 = decrypted_package2_section_0 + decrypted_package2_section_1 + decrypted_package2_section_2 + decrypted_package2_section_3
+        fs_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x46, 0x53]), decrypted_package2)
         fs_kip1_start = fs_result.start()
         if filesystem_type == "fat32":
-            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2_section_0) #kip1loader
+            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x4C, 0x6F, 0x61, 0x64, 0x65, 0x72]), decrypted_package2) #kip1loader
         elif filesystem_type == "exfat":
-            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x62, 0x6F, 0x6F, 0x74]), decrypted_package2_section_0) #kip1boot
+            fs_end_result = re.search(bytes([0x4B, 0x49, 0x50, 0x31, 0x62, 0x6F, 0x6F, 0x74]), decrypted_package2) #kip1boot
         fs_kip1_end = fs_end_result.start()
-        fs_kip1 = decrypted_package2_section_0[fs_kip1_start:fs_kip1_end]
+        fs_kip1 = decrypted_package2[fs_kip1_start:fs_kip1_end]
         with open(f'{kip_path}/{filesystem_type}_FS.kip1', 'wb') as fs_kip1_file:
             fs_kip1_file.write(fs_kip1)
             fs_kip1_file.close()
@@ -116,6 +132,25 @@ def get_key_sources(decrypted_package1):
     master_kek_source_prod_end = master_kek_source_prod_start + 0x10
     master_kek_source_prod = decrypted_package1[master_kek_source_prod_start:master_kek_source_prod_end]
     return master_kek_source_prod
+
+def process_package2(nca_path, master_kek_source):
+    key_sources = KeySources()
+    master_kek_source_for_keygen = key_sources.master_kek_sources[0]
+    keys = aes_sample.single_keygen(master_kek_source_for_keygen)
+    nca_file = nca.Nca(nca_path, keys)
+    decrypted_section_00 = nca_file.decrypted_sections[0]
+    titleId = nca_file.titleId
+    master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = aes_sample.single_keygen(master_kek_source)
+    if titleId == "0100000000000819":
+        romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/0100000000000819/romfs/")
+        romfs
+        decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/0100000000000819/romfs/nx/package2', package2_key, 'fat32', f'sorted_firmware/by-type/Data/0100000000000819/romfs/nx')
+    if titleId == "010000000000081B":
+        exfat_path = Path('sorted_firmware/by-type/Data/010000000000081B/data.nca')
+        if os.path.exists(exfat_path):
+            romfs = nca.Romfs(decrypted_section_00[nca_file.fsheaders[0].romfs_start:nca_file.fsheaders[0].romfs_end], f"sorted_firmware/by-type/Data/010000000000081B/romfs/")
+            romfs
+            decrypt_package2_and_extract_fs_from_ini1(f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx/package2', package2_key, 'exfat', f'sorted_firmware/by-type/Data/010000000000081B/romfs/nx')
 
 def process_package12(nca_path, master_kek_source_for_exfat=None):
     if not master_kek_source_for_exfat == None:

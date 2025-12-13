@@ -53,10 +53,16 @@ def generateKek(src, masterKey, kek_seed, key_seed):
     else:
         return src_kek
 
-def single_keygen(master_kek_source):
+def single_keygen(master_kek_source, tsec_root_revision=2):
     key_sources = KeySources()
     tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
-    master_kek = decrypt(master_kek_source, tsec_keys.tsec_root_key_02)
+    if tsec_root_revision == 0:
+        tsec_root_key = tsec_keys.tsec_root_key_00
+    if tsec_root_revision == 1:
+        tsec_root_key = tsec_keys.tsec_root_key_01
+    if tsec_root_revision == 2:
+        tsec_root_key = tsec_keys.tsec_root_key_02
+    master_kek = decrypt(master_kek_source, tsec_root_key)
     master_key = decrypt(key_sources.master_key_source, master_kek)
     package2_key = decrypt(key_sources.package2_key_source, master_key)
     titlekek = decrypt(key_sources.titlekek_source, master_key)

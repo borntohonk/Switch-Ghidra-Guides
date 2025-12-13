@@ -28,7 +28,7 @@ import binascii
 def get_latest_firmware_version_from_provided_files():
     with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
         data_read = file.read()
-        firmware_version = data_read[0x68:0x6E].decode('utf-8', errors='replace')
+        firmware_version = data_read[0x68:0x6E].decode('utf-8', errors='replace').replace(chr(0), "")
         file.close()
         return firmware_version
     
@@ -166,7 +166,7 @@ with open(f'output/{version}/{version}_patch_summary.txt', 'w') as check_patches
         result = re.search(nim_pattern, read_data)
         if not result:
             check_patches.write(f'(NIM) {version} NIM offset not found\n')
-            check_patches.write(f'(NIM) Sys-patch for NIM string is invalid for: {version}\\nn')
+            check_patches.write(f'(NIM) Sys-patch for NIM string is invalid for: {version}\n\n')
         else:
             if result.group(0)[11:12] == bytes([0x10]): # adr_cond check
                 offset = '%06X' % (result.start() + nim_offset)
