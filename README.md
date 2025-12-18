@@ -23,15 +23,27 @@ All material exist purely for research reference.
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
     * updating scripts/key_sources.py will benefit key generation for [aes_sample.py](scripts/aes_sample.py)
 
+  - Python script to batch process firmware files, decrypting, extracting, decompressing and outputting files of interest, and cryptographic keys derived.
+    * optionally one can fill in the mariko_kek and mariko_bek keys into [keys.py](scripts/keys.py) file, to derive mariko_master_kek_source, if desired.
+    * mariko bek and mariko kek, which can be obtained and filled in, using tools such as lockpick_rcm, or sourcing them elsewhere, such as from the scene release .nfo from "Marvels.SpiderMan.Miles.Morales.PS5-BigBlueBox"
+    * put firmware nca files in in subfolders inside of the folder "firmwares"
+    * example usage: "python scripts/batch_process_firmware.py [batch_process_firmware.py](scripts/batch_process_firmware.py)
+    * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+    * updating scripts/key_sources.py will benefit key generation for [aes_sample.py](scripts/aes_sample.py)
+
   - Python script to derive entire keyset. [aes_sample.py](scripts/aes_sample.py)
     * The cryptographic logic described can be sampled with this python script, the default output keyfile is "prod.keys". [aes_sample.py](scripts/aes_sample.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
 
-  - Python script to check known patterns for sys-patch.
-    * Usage: run [process_firmware.py](scripts/process_firmware.py) first, then the files for check_patches should be populated.
-    * example usage: "python scripts/check_patches.py"
-    * [check_patches.py](scripts/check_patches.py)
+  - Python script to check known patterns for sys-patch, and collect string diffs for making regex strings.
+    * Usage: run [process_firmware.py](scripts/process_firmware.py) first, then the files for [find_patterns.py](scripts/find_patterns.py) should be populated.
+    * or batch process firmwares with [batch_process_firmwares.py] (scripts/bulk_process_firmware.py)
+    * example usage: "python scripts/find_patterns.py"
+    * having multiple firmwares processed and their binaries output/, will greatly improve the amount of string diffs populated.
+    * [find_patterns.py](scripts/find_patterns.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+    * running [generate_pattern_diffs.py] (scripts/generate_pattern_diffs.py) afterwards will fill make an attempt at combining the outputs aligned for easier visual creation of patterns.
+    * the output from [generate_pattern_diffs.py] (scripts/generate_pattern_diffs.py) should populate [known_patterns.py] (scripts/known_patterns.py)
 
   - Python script to decrypt atmosphere's [tsec_keygen.bin](https://github.com/Atmosphere-NX/Atmosphere/blob/master/fusee/program/tsec_keygen/tsec_keygen.bin)
     * Usage: run [decrypt_atmosphere_tsec_keygen.py](scripts/decrypt_atmosphere_tsec_keygen.py)
