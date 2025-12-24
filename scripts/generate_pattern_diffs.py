@@ -23,7 +23,7 @@
 import re
 from typing import Dict, List, Tuple
 from pattern_diffs import (
-    es_pattern_diffs, blockfirmwareupdates_pattern_diffs, blankcal0crashfix_pattern_diffs, nifm_pattern_diffs,
+    es_pattern_diffs, blockfirmwareupdates_pattern_diffs, blankcal0crashfix_pattern_diffs, nifm_pattern_diffs, olsc_pattern_diffs,
     fat32_noncasigchk_pattern_diffs, exfat_noncasigchk_pattern_diffs,
     fat32_nocntchk_pattern_diffs, exfat_nocntchk_pattern_diffs
 )
@@ -63,7 +63,7 @@ def generate_versions_in_range(start: str, end: str) -> List[str]:
 
 
 def build_version_to_known_pattern_map(known_patterns: List[Dict]) -> Dict[str, Dict]:
-    """Build a map from version to known pattern info"""
+    """Build a map from version to known pattern info, using first match for each version"""
     version_map = {}
     
     for pattern_info in known_patterns:
@@ -71,11 +71,13 @@ def build_version_to_known_pattern_map(known_patterns: List[Dict]) -> Dict[str, 
         if start_ver and end_ver:
             versions = generate_versions_in_range(start_ver, end_ver)
             for version in versions:
-                version_map[version] = {
-                    'regex': pattern_info['regex'],
-                    'offset': pattern_info['offset'],
-                    'version_range': pattern_info['version_range']  # <-- ADD THIS LINE
-                }
+                # Only assign the first matching pattern for each version
+                if version not in version_map:
+                    version_map[version] = {
+                        'regex': pattern_info['regex'],
+                        'offset': pattern_info['offset'],
+                        'version_range': pattern_info['version_range']
+                    }
     
     return version_map
 
@@ -112,6 +114,24 @@ known_nifm_patterns = [
         'regex': '03.AA...AA.........0314AA..14AA',
         'offset': '-17',
         'version_range': '20.0.0 to 99.99.99'
+    },
+]
+
+known_olsc_patterns = [
+    {
+        'regex': '00.73..F968024039..00...00',
+        'offset': '46',
+        'version_range': '6.0.0 to 14.1.2'
+    },
+    {
+        'regex': '00.73..F968024039..00...00',
+        'offset': '42',
+        'version_range': '15.0.0 to 18.1.0'
+    },
+    {
+        'regex': '00.73..F968024039..00...00',
+        'offset': '46',
+        'version_range': '6.0.0 to 99.99.99'
     },
 ]
 
@@ -342,6 +362,7 @@ def generate_all_regex_patterns():
         'nim_blankcal0crashfix_pattern_diffs': blankcal0crashfix_pattern_diffs,
         'nim_blockfirmwareupdates_pattern_diffs': blockfirmwareupdates_pattern_diffs,
         'nifm_pattern_diffs': nifm_pattern_diffs,
+        'olsc_pattern_diffs': olsc_pattern_diffs,
         'fat32_noncasigchk_pattern_diffs': fat32_noncasigchk_pattern_diffs,
         'exfat_noncasigchk_pattern_diffs': exfat_noncasigchk_pattern_diffs,
         'fat32_nocntchk_pattern_diffs': fat32_nocntchk_pattern_diffs,
@@ -354,6 +375,7 @@ def generate_all_regex_patterns():
         'nim_blankcal0crashfix_pattern_diffs': known_blankcal0crashfix_patterns,
         'nim_blockfirmwareupdates_pattern_diffs': known_blockfirmwareupdates_patterns,
         'nifm_pattern_diffs': known_nifm_patterns,
+        'olsc_pattern_diffs': known_olsc_patterns,
         'fat32_noncasigchk_pattern_diffs': known_fat32_and_exfat_noncasigchk_patterns,
         'exfat_noncasigchk_pattern_diffs': known_fat32_and_exfat_noncasigchk_patterns,
         'fat32_nocntchk_pattern_diffs': known_fat32_and_exfat_nocntchk_patterns,
@@ -467,10 +489,11 @@ def write_results_to_known_patterns_py(results: Dict):
                 for hex_pattern, versions in sorted_partial:
                     marked_pattern = add_markers_to_hex_pattern(hex_pattern, marker_position)
                     
-                    # Group these versions by their original known source
+                    # Group these versions by their original known source (including offset for separate sections)
                     versions_by_source = {}
                     for v in versions:  # v is a string like '10.0.0'
                         known_info = version_to_known.get(v, {})
+                        # Use offset as part of the unique source key to keep different offsets separate
                         source_key = (
                             known_info.get('regex', 'unknown'),
                             known_info.get('offset', 'unknown'),
@@ -489,8 +512,12 @@ def write_results_to_known_patterns_py(results: Dict):
                                 'offset': source_key[1],
                                 'original_range': source_key[2],
                                 'hex_patterns': [],
-                                'all_versions': []
+                                'all_versions': [],
+                                'first_version': None
                             }
+                            # Set first version for sorting
+                            sorted_source_versions = sorted(source_versions, key=lambda x: tuple(map(int, x.split('.'))))
+                            patterns_by_source[source_key]['first_version'] = sorted_source_versions[0]
                         
                         # Add versions (deduped)
                         for v in source_versions:
@@ -508,10 +535,10 @@ def write_results_to_known_patterns_py(results: Dict):
                                 'versions': versions_with_info
                             })
                 
-                # Sort groups by earliest version
+                # Sort groups by earliest version, then by offset
                 sorted_sources = sorted(
                     patterns_by_source.items(),
-                    key=lambda x: tuple(map(int, min(x[1]['all_versions'], key=lambda v: tuple(map(int, v.split('.')))).split('.')))
+                    key=lambda x: (tuple(map(int, x[1]['first_version'].split('.'))) if x[1]['first_version'] else (999, 999, 999), x[1]['offset'])
                 )
                 
                 for source_key, group in sorted_sources:
@@ -519,11 +546,23 @@ def write_results_to_known_patterns_py(results: Dict):
                     min_v = all_versions_sorted[0]
                     max_v = all_versions_sorted[-1]
                     
+                    # Extract the upper bound from the original range (e.g., "6.0.0 to 99.99.99" -> "99.99.99")
+                    original_range = group['original_range']
+                    upper_bound = None
+                    if original_range != 'unknown' and ' to ' in original_range:
+                        upper_bound = original_range.split(' to ')[1]
+                    
+                    # Adjust original range to reflect actual versions assigned due to priority matching
+                    if upper_bound:
+                        adjusted_original_range = f"{min_v} to {upper_bound}"
+                    else:
+                        adjusted_original_range = original_range
+                    
                     f.write(f"    # Known pattern: {group['known_pattern']}\n")
                     f.write(f"    # Offset: {group['offset']}\n")
                     f.write(f"    # Valid from version: {min_v} to {max_v}\n")
-                    if group['original_range'] != 'unknown':
-                        f.write(f"    # Original known range: {group['original_range']}\n")
+                    if adjusted_original_range != 'unknown':
+                        f.write(f"    # Original known range: {adjusted_original_range}\n")
                     
                     # Sort hex patterns by first version
                     def extract_first_version(entry):
@@ -557,5 +596,4 @@ if __name__ == "__main__":
             print(f"  Partial matches: {len(mappings['partial'])} pattern groups")
         print()
     
-    write_results_to_patterns_py(results)
     write_results_to_known_patterns_py(results)

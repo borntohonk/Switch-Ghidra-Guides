@@ -32,6 +32,10 @@ from hashlib import sha256
 
 import lz4
 
+def version_to_tuple(version_string):
+    parts = version_string.split('-')[0].split('.')
+    return tuple(int(p) for p in parts)
+
 def print_hash_summary(hash_summary_file_path):
     try:
         with open(hash_summary_file_path, 'r') as file:
@@ -211,11 +215,14 @@ def sort_and_process():
     decompress_foss_nro(f'{current_browser_ssl_path}', f'output/{system_version}/{system_version}_foss_browser_ssl.nro') # path last updated 21.0.0
     es_path = Path('sorted_firmware/by-type/Program/0100000000000033/data.nca')
     nifm_path = Path('sorted_firmware/by-type/Program/010000000000000F/data.nca')
+    olsc_path =  Path('sorted_firmware/by-type/Program/010000000000003E/data.nca')
     nim_path = Path('sorted_firmware/by-type/Program/0100000000000025/data.nca')
     ssl_path = Path('sorted_firmware/by-type/Program/0100000000000024/data.nca')
     usb_path = Path('sorted_firmware/by-type/Program/0100000000000006/data.nca')
     es_buildid = extract_exefs(es_path)
     nifm_buildid = extract_exefs(nifm_path)
+    if version_to_tuple(system_version) >= version_to_tuple("6.0.0"):
+        olsc_buildid = extract_exefs(olsc_path)
     nim_buildid = extract_exefs(nim_path)
     ssl_buildid = extract_exefs(ssl_path)
     usb_buildid = extract_exefs(usb_path)
@@ -236,6 +243,8 @@ def sort_and_process():
             hash_file.write(f'{system_version} No exFAT present in this firmware version in the provided firmware files.\n')
         hash_file.write(f'{system_version} es_buildID: {es_buildid}\n')
         hash_file.write(f'{system_version} nifm_buildID: {nifm_buildid}\n')
+        if version_to_tuple(system_version) >= version_to_tuple("6.0.0"):
+            hash_file.write(f'{system_version} olsc_buildID: {olsc_buildid}\n')
         hash_file.write(f'{system_version} nim_buildID: {nim_buildid}\n')
         hash_file.write(f'{system_version} ssl_buildID: {ssl_buildid}\n')
         hash_file.write(f'{system_version} usb_buildID: {usb_buildid}\n')
@@ -249,11 +258,15 @@ def sort_and_process():
         shutil.copy('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_uFS.kip1', f'output/{system_version}/{system_version}_exfat_uFS.kip1')
     shutil.copy('sorted_firmware/by-type/Program/0100000000000033/exefs/main', f'output/{system_version}/{system_version}_compressed_es.nso0')
     shutil.copy('sorted_firmware/by-type/Program/010000000000000F/exefs/main', f'output/{system_version}/{system_version}_compressed_nifm.nso0')
+    if version_to_tuple(system_version) >= version_to_tuple("6.0.0"):
+        shutil.copy('sorted_firmware/by-type/Program/010000000000003E/exefs/main', f'output/{system_version}/{system_version}_compressed_olsc.nso0')
     shutil.copy('sorted_firmware/by-type/Program/0100000000000025/exefs/main', f'output/{system_version}/{system_version}_compressed_nim.nso0')
     shutil.copy('sorted_firmware/by-type/Program/0100000000000024/exefs/main', f'output/{system_version}/{system_version}_compressed_ssl.nso0')
     shutil.copy('sorted_firmware/by-type/Program/0100000000000006/exefs/main', f'output/{system_version}/{system_version}_compressed_usb.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000033/exefs/main', f'output/{system_version}/{system_version}_uncompressed_es.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/010000000000000F/exefs/main', f'output/{system_version}/{system_version}_uncompressed_nifm.nso0')
+    if version_to_tuple(system_version) >= version_to_tuple("6.0.0"):
+        decompress_exefs('sorted_firmware/by-type/Program/010000000000003E/exefs/main', f'output/{system_version}/{system_version}_uncompressed_olsc.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000025/exefs/main', f'output/{system_version}/{system_version}_uncompressed_nim.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000024/exefs/main', f'output/{system_version}/{system_version}_uncompressed_ssl.nso0')
     decompress_exefs('sorted_firmware/by-type/Program/0100000000000006/exefs/main', f'output/{system_version}/{system_version}_uncompressed_usb.nso0')
