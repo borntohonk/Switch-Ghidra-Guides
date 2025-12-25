@@ -120,17 +120,17 @@ known_nifm_patterns = [
 known_olsc_patterns = [
     {
         'regex': '00.73..F968024039..00...00',
-        'offset': '46',
+        'offset': '42',
         'version_range': '6.0.0 to 14.1.2'
     },
     {
         'regex': '00.73..F968024039..00...00',
-        'offset': '42',
+        'offset': '38',
         'version_range': '15.0.0 to 18.1.0'
     },
     {
         'regex': '00.73..F968024039..00...00',
-        'offset': '46',
+        'offset': '42',
         'version_range': '6.0.0 to 99.99.99'
     },
 ]

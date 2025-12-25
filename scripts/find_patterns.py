@@ -119,6 +119,7 @@ nop_patch = "1F2003D5" # FS (nop)
 ret0_patch = "E0031F2A" # FS (mov w0, wzr)
 mov0_patch = "E0031FAA" # ES
 mov2_patch = "E2031FAA" # NIM
+mov1_patch = "200080D2" # OLSC
 mov0_ret_patch = "E0031F2AC0035FD6" # NIM
 ctest_patch = "00309AD2001EA1F2610100D4E0031FAAC0035FD6" # NIFM (mov x0, #0xd180 - movk x0, #0x8f0, lsl #16 - svc #0xb - mov x0, xzr - ret)
 cmp4_patch = "1F1000F1" # OLSC (cmp x0, #4) - from cmp x0, #1 followed by b.ne == not equal 1 -> take code path, where zero is off.  and 1 is the default value. setting it to #4 means its not equal to both 0 and 1
@@ -132,7 +133,7 @@ block_fw_updates_cond = ('A8', 'A9', 'F8', 'F9', 'D6')
 ctest_cond = ('F8', 'F9', 'A9')
 cmp1_cond = ('F1')
 adr_cond = ('10')
-bl_cond = ('25', '94')
+bl_cond = ('25', '94', '97')
 tbz_cond = ('36')
 
 
@@ -414,19 +415,19 @@ for version in valid_versions:
     if (MAKEHOSVERSION(f'6.0.0', '14.1.2', current_firmware_version)) == True:
         olsc_sys_patch_pattern = '00.73..F968024039..00...00'
         olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 46
+        olsc_offset = 42
         olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
 
     if (MAKEHOSVERSION(f'15.0.0', '18.1.0', current_firmware_version)) == True:
         olsc_sys_patch_pattern = '00.73..F968024039..00...00'
         olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 42
+        olsc_offset = 38
         olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
 
     if (MAKEHOSVERSION(f'19.0.0', FW_VER_ANY, current_firmware_version)) == True:
         olsc_sys_patch_pattern = '00.73..F968024039..00...00'
         olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 46
+        olsc_offset = 42
         olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
 
     blankcal0crashfix_pattern = None
@@ -513,7 +514,7 @@ for version in valid_versions:
         patch_check_nso(nifm_path, nifm_pattern, nifm_offset, nifm_ghidra_pattern, ctest_patch, patch_size_20, ctest_cond, 'NIFM', find_patterns, nifm_pattern_diffs, nifm_pattern_offsets)
 
         if version_to_tuple(version) >= version_to_tuple("6.0.0"):
-            patch_check_nso(olsc_path, olsc_pattern, olsc_offset, olsc_ghidra_pattern, cmp4_patch, patch_size_4, cmp1_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets)
+            patch_check_nso(olsc_path, olsc_pattern, olsc_offset, olsc_ghidra_pattern, mov1_patch, patch_size_4, bl_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets)
 
         if version_to_tuple(version) >= version_to_tuple("17.0.0"):
             patch_check_nso(nim_path, blankcal0crashfix_pattern, blankcal0crashfix_offset, blankcal0crashfix_ghidra_pattern, mov2_patch, patch_size_4, adr_cond, 'NIM', find_patterns, blankcal0crashfix_pattern_diffs, blankcal0crashfix_pattern_offsets)
