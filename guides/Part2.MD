@@ -10,10 +10,30 @@ Part 2 Will only describe how to operate ghidra, with the intent to inspect alre
    
 ![alt text](https://github.com/borntohonk/Switch-Ghidra-Guides/blob/master/img/ghidra-nso.png?raw=true)
 
-2. For this specific example the intent is to make a function that otherwise usually looks for X-Organization: Nintendo to be true, if it does not find it to be true your wifi/lan adapter is disabled. We're going to make it do the opposite.
-   - To find this offset of the function, press S to open memory search mode, and search for this HEX string ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. f0 03 00 aa .. .. .. .. f3 03 14 aa e0 03 14 aa 9f 02 01 39 7f 8e 04 f8", the the start offset of the result is the offset to grab for the patch.
+2. 
+Method 1: For this specific example the intent is to make a function that otherwise usually looks for X-Organization: Nintendo to be true, if it does not find it to be true your wifi/lan adapter is disabled. We're going to make it do the opposite.
+   - To find this offset of the function, press S to open memory search mode, and search for this HEX string:
+   - ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. 03 .. AA E0 03 .. AA .. .. .. 39 .. .. 04 F8 .. .. .. .. E0", if between firmware versions 1.0.0 and 19.0.1
+   - ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. 03 .. AA .. .. .. AA .. .. .. .. .. .. .. .. .. 03 14 AA .. .. 14 AA" if firmware version greater than 20.0.0
+   - the the start offset of the result is the offset to grab for the patch.
 
 ![alt text](https://github.com/borntohonk/Switch-Ghidra-Guides/blob/master/img/ghidra-nifm-offset.png?raw=true)
+
+Method 2:
+you can also from the top menu go to:
+   - window -> Defined Strings
+   - and search for "Nintendo"
+   - then double-click the result highlighted in this picture: (top is 1.0.0 and bottom is 21.0.0).
+   - (you are looking cor either conntest or ctest, and clicking it will take you to the next offset.)
+![alt text](https://github.com/borntohonk/Switch-Ghidra-Guides/blob/master/img/ctest-1.png?raw=true)
+
+followed by:
+ - double-clicking the places where the arrows have been pointed:
+ - (this should be the BL (Branch Loader) instruction right after the ctest/conntest reference you should see)
+![alt text](https://github.com/borntohonk/Switch-Ghidra-Guides/blob/master/img/ctest-2.png?raw=true)
+
+ This will take you to the same function that the long hex strings would take you.
+
 
 3. The patch we want to make is to change out the instruction at that offset, with 'MOV X0, #0xD180 + MOVK X0, #0x8F0, LSL #16 + SVC #0XB + MOV X0, XZR + RET' (00 30 9A D2 00 1E A1 F2 61 01 00 D4 E0 03 1F AA C0 03 5F D6) - This will make the function at offset 04 42 0C to end instead of doing the function it previously did, essentially cutting it short. *updated string to include patch with a sleep added as apparently the previous pattern would cause issues to some users. (These are ARM instructions)
 
