@@ -1,14 +1,14 @@
 cd $HOME/ && \
-wget https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz && \
+wget https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.9%2B10/OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz && \
 mkdir ojdk21 && \
-tar xvzf OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz -C ojdk21 && \
-rm OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz && \
-export JAVA_HOME=$HOME/ojdk21/jdk-21.0.8+9 && \
-export PATH="$HOME/ojdk21/jdk-21.0.8+9/bin:$PATH" && \
-echo "export JAVA_HOME=$HOME/ojdk21/jdk-21.0.8+9" | sudo tee -a $HOME/.bashrc && \
-echo "export PATH=$HOME/ojdk21/jdk-21.0.8+9/bin:$PATH" | sudo tee -a $HOME/.bashrc && \
+tar xvzf OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz -C ojdk21 && \
+rm OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz && \
+export JAVA_HOME=$HOME/ojdk21/jdk-21.0.9+10 && \
+export PATH="$HOME/ojdk21/jdk-21.0.9+10/bin:$PATH" && \
+echo "export JAVA_HOME=$HOME/ojdk21/jdk-21.0.9+10" | sudo tee -a $HOME/.bashrc && \
+echo "export PATH=$HOME/ojdk21/jdk-21.0.9+10/bin:$PATH" | sudo tee -a $HOME/.bashrc && \
 source $HOME/.bashrc && \
-wget $(curl -s https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest | grep "browser_download_url" | cut -d '"' -f 4) -O ghidra.zip && \
+wget $(curl -s https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_11.4.3_build | grep "browser_download_url" | cut -d '"' -f 4) -O ghidra.zip && \
 unzip ghidra.zip -d ghidra && \
 rm ghidra.zip && \
 GHIDRA=$(ls $HOME/ghidra) && \
