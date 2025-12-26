@@ -25,11 +25,31 @@ import hashlib
 import os
 import binascii
 import sys
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
+from dataclasses import dataclass
+
+# Pattern dataclass for struct-like organization
+@dataclass
+class Pattern:
+    name: str
+    pattern_string: str
+    offset: int
+    module_name: str
+    conditions: Tuple[str, ...]
+    patch_bytes: str
+    min_version: str
+    max_version: str
+    patch_type: Optional[str] = None
+    patch_size: Optional[str] = None
 
 # vibecoded ai-slop function courtesy of grok4.1
-def pattern_to_regex_bytestring(pattern: str) -> Tuple[bytes, re.Pattern, str]:
+def pattern_to_regex_bytestring(pattern: str) -> re.Pattern:
     pattern = pattern.strip()
+    
+    # Remove 0x prefix if present
+    if pattern.startswith(('0x', '0X')):
+        pattern = pattern[2:]
+    
     regex_parts = []
 
     pattern = pattern.upper()
@@ -55,6 +75,12 @@ def pattern_to_regex_bytestring(pattern: str) -> Tuple[bytes, re.Pattern, str]:
 
 # vibecoded ai-slop function courtesy of grok4.1
 def format_sys_patch_string_to_ghidra_string(s: str) -> str:
+    s = s.strip()
+    
+    # Remove 0x prefix if present
+    if s.startswith(('0x', '0X')):
+        s = s[2:]
+    
     result = []
     i = 0
     n = len(s)
@@ -119,7 +145,7 @@ nop_patch = "1F2003D5" # FS (nop)
 ret0_patch = "E0031F2A" # FS (mov w0, wzr)
 mov0_patch = "E0031FAA" # ES
 mov2_patch = "E2031FAA" # NIM
-mov1_patch = "200080D2" # OLSC
+ret1_patch = "200080D2" # OLSC
 mov0_ret_patch = "E0031F2AC0035FD6" # NIM
 ctest_patch = "00309AD2001EA1F2610100D4E0031FAAC0035FD6" # NIFM (mov x0, #0xd180 - movk x0, #0x8f0, lsl #16 - svc #0xb - mov x0, xzr - ret)
 cmp4_patch = "1F1000F1" # OLSC (cmp x0, #4) - from cmp x0, #1 followed by b.ne == not equal 1 -> take code path, where zero is off.  and 1 is the default value. setting it to #4 means its not equal to both 0 and 1
@@ -131,10 +157,49 @@ patch_size_20 = '0014'
 es_cond = ('D1', 'A9', 'AA', '2A', '92')
 block_fw_updates_cond = ('A8', 'A9', 'F8', 'F9', 'D6')
 ctest_cond = ('F8', 'F9', 'A9')
-cmp1_cond = ('F1')
-adr_cond = ('10')
+cmp1_cond = ('F1',)
+adr_cond = ('10',)
 bl_cond = ('25', '94', '97')
-tbz_cond = ('36')
+tbz_cond = ('36',)
+
+
+# FW_VER_ANY constant for version ranges
+FW_VER_ANY = '99.99.99'
+
+# Define pattern arrays for each module type
+ES_PATTERNS = [
+    Pattern('es_1.0.0-8.1.1', '0xE8.00...FF97.0300AA..00.....E0.0091..0094.7E4092.......A9', 32, 'ES', es_cond, mov0_patch, '1.0.0', '8.1.1'),
+    Pattern('es_9.0.0-11.0.1', '0x00...............00.....A0..D1...97.......A9', 30, 'ES', es_cond, mov0_patch, '9.0.0', '11.0.1'),
+    Pattern('es_12.0.0-18.1.0', '0x02.00...........00...00.....A0..D1...97.......A9', 32, 'ES', es_cond, mov0_patch, '12.0.0', '18.1.0'),
+    Pattern('es_19.0.0+', '0xA1.00...........00...00.....A0..D1...97.......A9', 32, 'ES', es_cond, mov0_patch, '19.0.0', FW_VER_ANY),
+]
+
+NIFM_PATTERNS = [
+    Pattern('nifm_1.0.0-19.0.1', '0x03.AAE003.AA...39..04F8....E0', -29, 'NIFM', ctest_cond, ctest_patch, '1.0.0', '19.0.1'),
+    Pattern('nifm_20.0.0+', '0x03.AA...AA.........0314AA..14AA', -17, 'NIFM', ctest_cond, ctest_patch, '20.0.0', FW_VER_ANY),
+]
+
+OLSC_PATTERNS = [
+    Pattern('olsc_6.0.0-14.1.2', '0x00.73..F968024039..00...00', 42, 'OLSC', bl_cond, ret1_patch, '6.0.0', '14.1.2'),
+    Pattern('olsc_15.0.0-18.1.0', '0x00.73..F968024039..00...00', 38, 'OLSC', bl_cond, ret1_patch, '15.0.0', '18.1.0'),
+    Pattern('olsc_19.0.0+', '0x00.73..F968024039..00...00', 42, 'OLSC', bl_cond, ret1_patch, '19.0.0', FW_VER_ANY),
+]
+
+NIM_PATTERNS = [
+    Pattern('nim_blankcal0_17.0.0+', '0x00351F2003D5...............97..0094..00.....61', 6, 'NIM', adr_cond, mov2_patch, '17.0.0', FW_VER_ANY),
+    Pattern('nim_blockfw_1.0.0-5.1.0', '0x1139F30301AA81.40F9E0.1191', -30, 'NIM', block_fw_updates_cond, mov0_ret_patch, '1.0.0', '5.1.0'),
+    Pattern('nim_blockfw_6.0.0-6.2.0', '0xF30301AA.4E40F9E0..91', -40, 'NIM', block_fw_updates_cond, mov0_ret_patch, '6.0.0', '6.2.0'),
+    Pattern('nim_blockfw_7.0.0-11.0.1', '0xF30301AA014C40F9F40300AAE0..91', -36, 'NIM', block_fw_updates_cond, mov0_ret_patch, '7.0.0', '11.0.1'),
+    Pattern('nim_blockfw_12.0.0+', '0x280841F9084C00F9E0031F.C0035FD6', 16, 'NIM', block_fw_updates_cond, mov0_ret_patch, '12.0.0', FW_VER_ANY),
+]
+
+FS_PATTERNS = [
+    Pattern('fs_noncasigchk_10.0.0-16.1.0', '0x1E48391F.0071..0054', -17, 'FS', tbz_cond, nop_patch, '10.0.0', '16.1.0'),
+    Pattern('fs_noncasigchk_17.0.0+', '0x0694..00.42.0091', -18, 'FS', tbz_cond, nop_patch, '17.0.0', FW_VER_ANY),
+    Pattern('fs_nocntchk_10.0.0-18.1.0', '0x00..0240F9....08.....00...00...0037', 6, 'FS', bl_cond, ret0_patch, '10.0.0', '18.1.0'),
+    Pattern('fs_nocntchk_19.0.0-20.5.0', '0x00..0240F9....08.....00...00...0054', 6, 'FS', bl_cond, ret0_patch, '19.0.0', '20.5.0'),
+    Pattern('fs_nocntchk_21.0.0+', '0x00..0240F9....E8.....00...00...0054', 6, 'FS', bl_cond, ret0_patch, '21.0.0', FW_VER_ANY),
+]
 
 
 def get_build_id(nso0):
@@ -325,8 +390,6 @@ def patch_check_kip(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigc
                 print(f'DEBUG - (FS-{module_name}) {version} - PBS: {patch_1_bytes} - PB: {patch_1_byte} - OFS: {offset_1}')
     decompressed_module.close()
 
-FW_VER_ANY = '99.99.99'
-
 es_pattern_diffs = {}
 blockfirmwareupdates_pattern_diffs = {}
 blankcal0crashfix_pattern_diffs = {}
@@ -346,6 +409,13 @@ fat32_noncasigchk_pattern_offsets = {}
 exfat_noncasigchk_pattern_offsets = {}
 fat32_nocntchk_pattern_offsets = {}
 exfat_nocntchk_pattern_offsets = {}
+
+def get_pattern_for_version(patterns: List[Pattern], version: str) -> Optional[Pattern]:
+    """Get the matching pattern for a given firmware version"""
+    for pattern in patterns:
+        if MAKEHOSVERSION(pattern.min_version, pattern.max_version, version):
+            return pattern
+    return None
 
 valid_versions = get_valid_version_folders('output')
 print(f"Found {len(valid_versions)} valid version folders: {', '.join(valid_versions)}\n")
@@ -368,145 +438,49 @@ for version in valid_versions:
     if os.path.exists(compressed_exfat_path):
         exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
 
-    es_pattern = None
-    es_offset = None
-    es_ghidra_pattern = None
+    # Get patterns for this version
+    es_pattern_obj = get_pattern_for_version(ES_PATTERNS, current_firmware_version)
+    nifm_pattern_obj = get_pattern_for_version(NIFM_PATTERNS, current_firmware_version)
+    olsc_pattern_obj = get_pattern_for_version(OLSC_PATTERNS, current_firmware_version)
     
-    if (MAKEHOSVERSION(f'1.0.0', '8.1.1', current_firmware_version)) == True:
-        es_sys_patch_pattern = ('E8.00...FF97.0300AA..00.....E0.0091..0094.7E4092.......A9')
-        es_pattern = pattern_to_regex_bytestring(es_sys_patch_pattern)
-        es_offset = 32
-        es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'9.0.0', '11.0.1', current_firmware_version)) == True:
-        es_sys_patch_pattern = ('00...............00.....A0..D1...97.......A9')
-        es_pattern = pattern_to_regex_bytestring(es_sys_patch_pattern)
-        es_offset = 30
-        es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'12.0.0', '18.1.0', current_firmware_version)) == True:
-        es_sys_patch_pattern = ('02.00...........00...00.....A0..D1...97.......A9')
-        es_pattern = pattern_to_regex_bytestring(es_sys_patch_pattern)
-        es_offset = 32
-        es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'19.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        es_sys_patch_pattern = ('A1.00...........00...00.....A0..D1...97.......A9')
-        es_pattern = pattern_to_regex_bytestring(es_sys_patch_pattern)
-        es_offset = 32
-        es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_sys_patch_pattern)
-
-    nifm_pattern = None
-    nifm_offset = None
-    nifm_ghidra_pattern = None
-
-    if (MAKEHOSVERSION(f'1.0.0', '19.0.1', current_firmware_version)) == True:
-        nifm_sys_patch_pattern = '03.AAE003.AA...39..04F8....E0'
-        nifm_pattern = pattern_to_regex_bytestring(nifm_sys_patch_pattern)
-        nifm_offset = -29
-        nifm_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nifm_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'20.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        nifm_sys_patch_pattern = '03.AA...AA.........0314AA..14AA'
-        nifm_pattern = pattern_to_regex_bytestring(nifm_sys_patch_pattern)
-        nifm_offset = -17
-        nifm_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nifm_sys_patch_pattern)
-
-    olsc_pattern = None
-    olsc_offset = None
-    olsc_ghidra_pattern = None
-
-    if (MAKEHOSVERSION(f'6.0.0', '14.1.2', current_firmware_version)) == True:
-        olsc_sys_patch_pattern = '00.73..F968024039..00...00'
-        olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 42
-        olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
-
-    if (MAKEHOSVERSION(f'15.0.0', '18.1.0', current_firmware_version)) == True:
-        olsc_sys_patch_pattern = '00.73..F968024039..00...00'
-        olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 38
-        olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
-
-    if (MAKEHOSVERSION(f'19.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        olsc_sys_patch_pattern = '00.73..F968024039..00...00'
-        olsc_pattern = pattern_to_regex_bytestring(olsc_sys_patch_pattern)
-        olsc_offset = 42
-        olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_sys_patch_pattern)
-
-    blankcal0crashfix_pattern = None
-    blankcal0crashfix_offset = None
-    blankcal0crashfix_ghidra_pattern = None
+    # For NIM patterns, we need to handle both blankcal0 and blockfw separately
+    nim_blankcal0_obj = next((p for p in NIM_PATTERNS if 'blankcal0' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+    nim_blockfw_obj = next((p for p in NIM_PATTERNS if 'blockfw' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
     
-    if (MAKEHOSVERSION(f'17.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        blankcal0crashfix_sys_patch_pattern = '00351F2003D5...............97..0094..00.....61'
-        blankcal0crashfix_pattern = pattern_to_regex_bytestring(blankcal0crashfix_sys_patch_pattern)
-        blankcal0crashfix_offset = 6
-        blankcal0crashfix_ghidra_pattern = format_sys_patch_string_to_ghidra_string(blankcal0crashfix_sys_patch_pattern)
-
-
-    blockfirmwareupdates_pattern = None
-    blockfirmwareupdates_offset = None
-    blockfirmwareupdates_ghidra_pattern = None
-
+    # For FS patterns
+    fs_noncasigchk_obj = next((p for p in FS_PATTERNS if 'noncasigchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+    fs_nocntchk_obj = next((p for p in FS_PATTERNS if 'nocntchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
     
-    if (MAKEHOSVERSION(f'1.0.0', '5.1.0', current_firmware_version)) == True:
-        blockfirmwareupdates_sys_patch_pattern = '1139F30301AA81.40F9E0.1191'
-        blockfirmwareupdates_pattern = pattern_to_regex_bytestring(blockfirmwareupdates_sys_patch_pattern)
-        blockfirmwareupdates_offset = -30
-        blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(blockfirmwareupdates_sys_patch_pattern)
-
-    if (MAKEHOSVERSION(f'6.0.0', '6.2.0', current_firmware_version)) == True:
-        blockfirmwareupdates_sys_patch_pattern = 'F30301AA.4E40F9E0..91'
-        blockfirmwareupdates_pattern = pattern_to_regex_bytestring(blockfirmwareupdates_sys_patch_pattern)
-        blockfirmwareupdates_offset = -40
-        blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(blockfirmwareupdates_sys_patch_pattern)
-
-    if (MAKEHOSVERSION(f'7.0.0', '11.0.1', current_firmware_version)) == True:
-        blockfirmwareupdates_sys_patch_pattern = 'F30301AA014C40F9F40300AAE0..91'
-        blockfirmwareupdates_pattern = pattern_to_regex_bytestring(blockfirmwareupdates_sys_patch_pattern)
-        blockfirmwareupdates_offset = -36
-        blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(blockfirmwareupdates_sys_patch_pattern)
-
-    if (MAKEHOSVERSION(f'12.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        blockfirmwareupdates_sys_patch_pattern = '280841F9084C00F9E0031F.C0035FD6'
-        blockfirmwareupdates_pattern = pattern_to_regex_bytestring(blockfirmwareupdates_sys_patch_pattern)
-        blockfirmwareupdates_offset = 16
-        blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(blockfirmwareupdates_sys_patch_pattern)
-
-
-    fs_noncasigchk_pattern = None
-    fs_noncasigchk_offset = None
-    fs_noncasigchk_ghidra_pattern = None
+    # Compile patterns
+    es_pattern = pattern_to_regex_bytestring(es_pattern_obj.pattern_string) if es_pattern_obj else None
+    nifm_pattern = pattern_to_regex_bytestring(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
+    olsc_pattern = pattern_to_regex_bytestring(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
+    blankcal0crashfix_pattern = pattern_to_regex_bytestring(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
+    blockfirmwareupdates_pattern = pattern_to_regex_bytestring(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+    fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
+    fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
     
-    if (MAKEHOSVERSION(f'10.0.0', '16.1.0', current_firmware_version)) == True:
-        #fs_noncasigchk_sys_patch_pattern = '71..0054.1E48391F.0071..0054'
-        fs_noncasigchk_sys_patch_pattern = '1E48391F.0071..0054'
-        fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_sys_patch_pattern)
-        fs_noncasigchk_offset = -17
-        fs_noncasigchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noncasigchk_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'17.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        #fs_noncasigchk_sys_patch_pattern = '0094........................42.0091'
-        fs_noncasigchk_sys_patch_pattern = '0694..00.42.0091'
-        fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_sys_patch_pattern)
-        fs_noncasigchk_offset = -18
-        fs_noncasigchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noncasigchk_sys_patch_pattern)
-
-    fs_nocntchk_pattern = None
-    fs_nocntchk_offset = None
-    fs_nocntchk_ghidra_pattern = None
+    # Get offsets and other metadata
+    es_offset = es_pattern_obj.offset if es_pattern_obj else None
+    es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_pattern_obj.pattern_string) if es_pattern_obj else None
     
-    if (MAKEHOSVERSION(f'10.0.0', '18.1.0', current_firmware_version)) == True:
-        fs_nocntchk_sys_patch_pattern = '00..0240F9....08.....00...00...0037'
-        fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_sys_patch_pattern)
-        fs_nocntchk_offset = 6
-        fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'19.0.0', '20.5.0', current_firmware_version)) == True:
-        fs_nocntchk_sys_patch_pattern = '00..0240F9....08.....00...00...0054'
-        fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_sys_patch_pattern)
-        fs_nocntchk_offset = 6
-        fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_sys_patch_pattern)
-    if (MAKEHOSVERSION(f'21.0.0', FW_VER_ANY, current_firmware_version)) == True:
-        fs_nocntchk_sys_patch_pattern = '00..0240F9....E8.....00...00...0054'
-        fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_sys_patch_pattern)
-        fs_nocntchk_offset = 6
-        fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_sys_patch_pattern)
+    nifm_offset = nifm_pattern_obj.offset if nifm_pattern_obj else None
+    nifm_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
+    
+    olsc_offset = olsc_pattern_obj.offset if olsc_pattern_obj else None
+    olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
+    
+    blankcal0crashfix_offset = nim_blankcal0_obj.offset if nim_blankcal0_obj else None
+    blankcal0crashfix_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
+    
+    blockfirmwareupdates_offset = nim_blockfw_obj.offset if nim_blockfw_obj else None
+    blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+    
+    fs_noncasigchk_offset = fs_noncasigchk_obj.offset if fs_noncasigchk_obj else None
+    fs_noncasigchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
+    
+    fs_nocntchk_offset = fs_nocntchk_obj.offset if fs_nocntchk_obj else None
+    fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
 
     with open(f'output/{version}/{version}_patch_summary_with_diff_strings.txt', 'w') as find_patterns:
         patch_check_nso(es_path, es_pattern, es_offset, es_ghidra_pattern, mov0_patch, patch_size_4, es_cond, 'ES', find_patterns, es_pattern_diffs, es_pattern_offsets)
@@ -514,7 +488,7 @@ for version in valid_versions:
         patch_check_nso(nifm_path, nifm_pattern, nifm_offset, nifm_ghidra_pattern, ctest_patch, patch_size_20, ctest_cond, 'NIFM', find_patterns, nifm_pattern_diffs, nifm_pattern_offsets)
 
         if version_to_tuple(version) >= version_to_tuple("6.0.0"):
-            patch_check_nso(olsc_path, olsc_pattern, olsc_offset, olsc_ghidra_pattern, mov1_patch, patch_size_4, bl_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets)
+            patch_check_nso(olsc_path, olsc_pattern, olsc_offset, olsc_ghidra_pattern, ret1_patch, patch_size_4, bl_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets)
 
         if version_to_tuple(version) >= version_to_tuple("17.0.0"):
             patch_check_nso(nim_path, blankcal0crashfix_pattern, blankcal0crashfix_offset, blankcal0crashfix_ghidra_pattern, mov2_patch, patch_size_4, adr_cond, 'NIM', find_patterns, blankcal0crashfix_pattern_diffs, blankcal0crashfix_pattern_offsets)
