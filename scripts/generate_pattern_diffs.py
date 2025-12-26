@@ -25,7 +25,8 @@ from typing import Dict, List, Tuple
 from pattern_diffs import (
     es_pattern_diffs, blockfirmwareupdates_pattern_diffs, blankcal0crashfix_pattern_diffs, nifm_pattern_diffs, olsc_pattern_diffs,
     fat32_noncasigchk_pattern_diffs, exfat_noncasigchk_pattern_diffs,
-    fat32_nocntchk_pattern_diffs, exfat_nocntchk_pattern_diffs
+    fat32_nocntchk_pattern_diffs, exfat_nocntchk_pattern_diffs,
+    loader_pattern_diffs, erpt_pattern_diffs
 )
 
 def parse_version_range(version_str: str) -> Tuple[str, str]:
@@ -195,6 +196,23 @@ known_fat32_and_exfat_nocntchk_patterns = [
         'offset': '6',
         'version_range': '21.0.0 to 99.99.99'
     },
+]
+
+known_loader_patterns = [
+    {
+        'regex': '009401C0BE121F00',
+        'offset': '6,2',
+        'version_range': '10.0.0 to 99.99.99'
+    },    
+]
+
+
+known_erpt_patterns = [
+    {
+        'regex': '...D1FD7B02A9FD830091F76305A9',
+        'offset': '0',
+        'version_range': '10.0.0 to 99.99.99'
+    },    
 ]
 
 def find_common_prefix_suffix(patterns: List[bytes]) -> Tuple[bytes, bytes]:
@@ -367,6 +385,8 @@ def generate_all_regex_patterns():
         'exfat_noncasigchk_pattern_diffs': exfat_noncasigchk_pattern_diffs,
         'fat32_nocntchk_pattern_diffs': fat32_nocntchk_pattern_diffs,
         'exfat_nocntchk_pattern_diffs': exfat_nocntchk_pattern_diffs,
+        'loader_pattern_diffs': loader_pattern_diffs,
+        'erpt_pattern_diffs': erpt_pattern_diffs,
     }
     
     # Map pattern names to their known patterns
@@ -380,6 +400,8 @@ def generate_all_regex_patterns():
         'exfat_noncasigchk_pattern_diffs': known_fat32_and_exfat_noncasigchk_patterns,
         'fat32_nocntchk_pattern_diffs': known_fat32_and_exfat_nocntchk_patterns,
         'exfat_nocntchk_pattern_diffs': known_fat32_and_exfat_nocntchk_patterns,
+        'loader_pattern_diffs': known_loader_patterns,
+        'erpt_pattern_diffs': known_erpt_patterns,
     }
     
     all_results = {}
@@ -427,7 +449,8 @@ def write_results_to_patterns_py(results: Dict):
                 for v in mappings['all']:
                     if v in version_to_known:
                         known_info = version_to_known[v]
-                        version_entry = f"{{'version': '{v}', 'known_pattern': '{known_info['regex']}', 'offset': '{known_info['offset']}'}}"
+                        version_entry = f"{{'version': '{v}'}}"
+                        #version_entry = f"{{'version': '{v}', 'known_pattern': '{known_info['regex']}', 'offset': '{known_info['offset']}'}}"
                     else:
                         version_entry = f"{{'version': '{v}'}}"
                     versions_with_info.append(version_entry)
@@ -472,6 +495,43 @@ def write_results_to_known_patterns_py(results: Dict):
         for pattern_name, data in results.items():
             mappings = data['mappings']
             version_to_known = data.get('version_to_known', {})
+            
+            # Handle universal patterns (all versions match one pattern)
+            if mappings['all'] and not mappings['partial']:
+                f.write(f"# {pattern_name}\n")
+                f.write(pattern_name + "_universal_regex = {\n")
+                
+                regex = data['regex']
+                all_versions_sorted = sorted(mappings['all'], key=lambda v: tuple(map(int, v.split('.'))))
+                
+                # Apply marker notation for consistency
+                marked_pattern = add_markers_to_hex_pattern(regex, 32)
+                
+                # Get known pattern info from the first version (all versions should have the same known pattern)
+                first_version_known = version_to_known.get(all_versions_sorted[0], {})
+                
+                # Write comments
+                if first_version_known:
+                    f.write(f"    # Known pattern: {first_version_known['regex']}\n")
+                    f.write(f"    # Offset: {first_version_known['offset']}\n")
+                    f.write(f"    # Valid from version: {all_versions_sorted[0]} to {all_versions_sorted[-1]}\n")
+                    f.write(f"    # Original known range: {first_version_known['version_range']}\n")
+                
+                # Build versions list with known pattern info
+                versions_with_info = []
+                for v in all_versions_sorted:
+                    known_info = version_to_known.get(v, {})
+                    if known_info:
+                        #version_entry = f"{{'version': '{v}', 'known_pattern': '{known_info['regex']}', 'offset': '{known_info['offset']}'}}"
+                        version_entry = f"{{'version': '{v}'}}"
+                    else:
+                        version_entry = f"{{'version': '{v}'}}"
+                    versions_with_info.append(version_entry)
+                
+                # Format as pattern key with versions value (same as partial patterns)
+                versions_str = ', '.join(versions_with_info)
+                f.write(f"    \"{marked_pattern}\": [{versions_str}],\n")
+                f.write(f"}}\n\n")
             
             if mappings['partial']:
                 f.write(f"# {pattern_name}\n")

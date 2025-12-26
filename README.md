@@ -38,7 +38,7 @@ All material exist purely for research reference.
   - Python script to check known patterns for sys-patch, and collect string diffs for making regex strings.
     * Usage: run [process_firmware.py](scripts/process_firmware.py) first, then the files for [find_patterns.py](scripts/find_patterns.py) should be populated.
     * or batch process firmwares with [batch_process_firmwares.py] (scripts/bulk_process_firmware.py)
-    * example usage: "python scripts/find_patterns.py"
+    * example usage: "python scripts/find_patterns.py --ams", where --ams is an optional condition to also check the atmosphere loader patch
     * having multiple firmwares processed and their binaries output/, will greatly improve the amount of string diffs populated.
     * [find_patterns.py](scripts/find_patterns.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)

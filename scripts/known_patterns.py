@@ -347,3 +347,21 @@ exfat_nocntchk_pattern_diffs_partial_regexes = {
 
 }
 
+# loader_pattern_diffs
+loader_pattern_diffs_universal_regex = {
+    # Known pattern: 009401C0BE121F00
+    # Offset: 6,2
+    # Valid from version: 21.1.0 to 21.1.0
+    # Original known range: 10.0.0 to 99.99.99
+    "F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FB 73 45 A9 FD 7B C8 A8 C0 03 5F D6 2C 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 C0 22 40 39 00 01 00 35 C0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 03 15 AA 3C 2A 00 94 00 F0 FF 35": [{'version': '21.1.0'}],
+}
+
+# erpt_pattern_diffs
+erpt_pattern_diffs_universal_regex = {
+    # Known pattern: ...D1FD7B02A9FD830091F76305A9
+    # Offset: 0
+    # Valid from version: 21.1.0 to 21.1.0
+    # Original known range: 10.0.0 to 99.99.99
+    "5E FF FF 17 42 04 00 11 E0 23 41 F9 E2 4F 02 B9 BC FF FF 17 00 00 00 00 00 00 00 00 00 00 00 00 -> FF 43 05 D1 <- FD 7B 02 A9 FD 83 00 91 F7 63 05 A9 17 04 00 F0 F8 03 00 AA C0 1C 00 12 F3 53 03 A9 F4 3A 41 F9 F5 5B 04 A9 F5 03 01 2A F6 03 02 AA F9 6B 06 A9 F9 03 03 2A FA 03 05 AA FB 73 07 A9": [{'version': '21.1.0'}],
+}
+

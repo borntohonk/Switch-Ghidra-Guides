@@ -5,6 +5,8 @@ firmware/**
 *.nro
 *.ips
 *.nca
+*.romfs
+*.exefs
 prod.keys
 decrypted_tsec_keygen.bin
 Atmosphere_Loader_Patch/
@@ -22,5 +24,9 @@ package1
 package2
 sorted_firmware/
 sorted_firmware/**
+package3_and_stratosphere_extracted/
+package3_and_stratosphere_extracted/**
+package3
+stratosphere.romfs
 output/
 output/**

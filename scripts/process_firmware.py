@@ -132,7 +132,7 @@ def decompress_foss_nro(nro_path, nro_name):
         decompressed_browser_file.write(decompressed)
         decompressed_browser_file.close()
 
-def get_nro_build_id(input):
+def get_nro_module_id(input):
     with open(input, 'rb') as f:
         f.seek(0x40)
         return(f.read(0x10).hex().upper())
@@ -230,7 +230,7 @@ def sort_and_process():
         fat32hash = sha256(open('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', 'rb').read()).hexdigest().upper()
     if os.path.exists(exfat_path):
         exfathash = sha256(open('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', 'rb').read()).hexdigest().upper()
-    foss_browser_buildid = get_nro_build_id(f'output/{system_version}/{system_version}_foss_browser_ssl.nro')
+    foss_browser_buildid = get_nro_module_id(f'output/{system_version}/{system_version}_foss_browser_ssl.nro')
     print(f'\nfirmware version of files provided is: {system_version}\n')
     with open(f'output/{system_version}/{system_version}_hashes.txt', 'w') as hash_file:
         if os.path.exists(fat32_path):
