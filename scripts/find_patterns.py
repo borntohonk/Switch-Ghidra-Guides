@@ -27,6 +27,8 @@ import ast
 import binascii
 import sys
 import shutil
+import errno
+from urllib.request import Request, urlopen
 import argparse
 from typing import Tuple, List, Dict, Optional
 from dataclasses import dataclass
@@ -114,6 +116,16 @@ def format_sys_patch_string_to_ghidra_string(s: str) -> str:
             i += 2
 
     return " ".join(result)
+
+
+def mkdirp(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 
 def remove_duplicates_by_index(list_of_tuples, index_to_check):
@@ -218,15 +230,6 @@ def MAKEHOSVERSION(lowest_firmware, highest_firmware, current_firmware):
         return True
     else:
         return False
-
-
-def get_latest_firmware_version_from_provided_files():
-    with open('sorted_firmware/by-type/Data/0100000000000809/romfs/file', 'rb') as file:
-        data_read = file.read()
-        firmware_version = data_read[0x68:0x6E].decode('utf-8', errors='replace').replace(chr(0), "")
-        file.close()
-        return firmware_version
-
 
 def print_patch_summary(patch_summary_file_path):
     try:
@@ -373,7 +376,6 @@ def get_valid_version_folders(output_dir: str = 'output') -> List[str]:
 
     if not valid_versions:
         print(f"Error: No folders matching version format (X.Y.Z) found in '{output_dir}'.")
-        sys.exit(1)
 
     valid_versions.sort(key=version_to_tuple)
     return valid_versions
@@ -386,7 +388,7 @@ def hex_string_to_python_bytes(hex_str: str) -> str:
     return "b'" + "".join(byte_list) + "'"
 
 
-def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidra_pattern, patch_type, patch_size, conds, module_name, changelog, diffs, patch_offsets, hash, fw_patch, patch_db, loader_ams_string):
+def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidra_pattern, patch_type, patch_size, conds, module_name, changelog, diffs, patch_offsets, fw_patch, patch_db):
     with open(path, 'rb') as decompressed_module:
         find_patterns = changelog
         read_data = decompressed_module.read()
@@ -423,6 +425,73 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
                 patch = fw_patch + patch_blank
             else:
                 patch = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
+            patch_offset_string = (module_name, patch_bytes, offset, module_id)
+            patch_offsets[version] = patch_offset_string
+            if patch_byte in conds:
+                find_patterns.write(f'({module_name}) an arm instruction with ending of 0x{patch_byte} was found at the designated offset.\n')
+                find_patterns.write(f'({module_name}) Sys-patch for {module_name} string still valid for: {version}\n')
+                find_patterns.write(f'({module_name}) Sys-patch {module_name} pattern found at: {offset}\n')
+                find_patterns.write(f'({module_name}) The ghidra-equivalent pattern used was: {ghidra_pattern}\n')
+                find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes}\n')
+                if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
+                    find_patterns.write(f'({module_name}) See NIM for the correct .ips file combining both patches for NIM:\n\n')
+                else:
+                    find_patterns.write(f'({module_name}) {version} {module_name} moduleid (and what .ips filename should be): {module_id}\n\n')
+                    find_patterns.write(f'({module_name}) IPS patch bytes would be:\n')
+                    find_patterns.write(f'({module_name}) {patch_magic}{patch}{eof_magic}\n\n')
+                    find_patterns.write(f'({module_name}) pattern string for diff: \n \n{pattern_diff_string}\n\n')
+                    if module_name == "NIM-FW":
+                        module_name = "NIM_CTEST"
+                    if module_name == "NIM":
+                        module_name = "NIM_CTEST"
+                    if module_name == "NIFM":
+                        module_name = "NFIM_CTEST"
+                    if module_name == "ES":
+                        module_name = "ES_PATCHES"
+                    if module_name == "OLSC":
+                        module_name = "OLSC_PATCHES"
+                    if module_name == "ERPT":
+                        module_name = "ERPT_PATCHES"
+                    patch_path = "patches/atmosphere/exefs_patches/" + module_name.lower() + "/"
+                    patch_string_with_magic = (patch_magic + patch + eof_magic)
+                    patch_db_string = (version, module_id, patch_path, patch_string_with_magic)
+                    patch_db.append(patch_db_string)
+            else:
+                find_patterns.write(f'({module_name}) the arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
+                print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
+        if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
+            return patch_fw
+
+def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidra_pattern, conds, module_name, changelog, diffs, patch_offsets, hash, patch_db, loader_ams_string):
+    with open(path, 'rb') as decompressed_module:
+        find_patterns = changelog
+        read_data = decompressed_module.read()
+        result = re.search(pattern, read_data)
+        module_id = get_module_id(path)
+        all_matches = [*re.finditer(pattern, read_data)]
+        match_count = len(all_matches)
+        if match_count > 1:
+            print(f'DEBUG - ({module_name}) - {version} - ELIMINATE DUPLICATES BY DIFFING AGAINST THE PATTERN')
+            for match in all_matches:
+                offset = '%06X' % (match.start() + pattern_offset)
+                print(f'DEBUG - ({module_name}) - {version} - found - {match.group().hex().upper()}')
+                print(f'DEBUG - ({module_name}) - {version} - offset found at {offset}')
+        elif match_count == 0:
+            print(f'DEBUG - ({module_name}) - NO RESULTS FOUND AT ALL - {version}')
+        if not result:
+            find_patterns.write(f'({module_name}) {version} {module_name} offset not found\n')
+            find_patterns.write(f'({module_name}) Sys-patch for {module_name} string is invalid for: {version}\n\n')
+        else:
+            module_offset = result.start() + pattern_offset
+            offset = '%06X' % (module_offset)
+            patch_bytes_start = module_offset
+            patch_bytes_end = patch_bytes_start + 0x4
+            patch_bytes = read_data[patch_bytes_start:patch_bytes_end].hex().upper()
+            patch_byte = patch_bytes[-2:]
+            pattern_diff_string_start = module_offset - 0x20
+            pattern_diff_string_end = pattern_diff_string_start + 0x60
+            pattern_diff_string = read_data[pattern_diff_string_start:pattern_diff_string_end].hex().upper()
+            diffs[version] = pattern_diff_string
             head_offset = '%06X' % (module_offset + pattern_head_offset - 0x100)
             patch_offset_string = (module_name, patch_bytes, offset, module_id)
             patch_offsets[version] = patch_offset_string
@@ -432,41 +501,14 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
                 find_patterns.write(f'({module_name}) Sys-patch {module_name} pattern found at: {offset}\n')
                 find_patterns.write(f'({module_name}) The ghidra-equivalent pattern used was: {ghidra_pattern}\n')
                 find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes}\n')
-                if module_name != 'LOADER':
-                    if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
-                        find_patterns.write(f'({module_name}) See NIM for the correct .ips file combining both patches for NIM:\n\n')
-                    else:
-                        find_patterns.write(f'({module_name}) {version} {module_name} moduleid (and what .ips filename should be): {module_id}\n\n')
-                        find_patterns.write(f'({module_name}) IPS patch bytes would be:\n')
-                        find_patterns.write(f'({module_name}) {patch_magic}{patch}{eof_magic}\n\n')
-                        find_patterns.write(f'({module_name}) pattern string for diff: \n \n{pattern_diff_string}\n\n')
-                        if module_name == "NIM-FW":
-                            module_name = "NIM_CTEST"
-                        if module_name == "NIM":
-                            module_name = "NIM_CTEST"
-                        if module_name == "NIFM":
-                            module_name = "NFIM_CTEST"
-                        if module_name == "ES":
-                            module_name = "ES_PATCHES"
-                        if module_name == "OLSC":
-                            module_name = "OLSC_PATCHES"
-                        if module_name == "ERPT":
-                            module_name = "ERPT_PATCHES"
-                        patch_path = "patches/atmosphere/exefs_patches/" + module_name.lower() + "/"
-                        patch_string_with_magic = (patch_magic + patch + eof_magic)
-                        patch_db_string = (version, module_id, patch_path, patch_string_with_magic)
-                        patch_db.append(patch_db_string)
-                if module_name == 'LOADER':
-                    find_patterns.write(f'LOADER FULL HASH: {hash}\n\n')
-                    find_patterns.write(f'[Loader:{hash[:16]}]\n')
-                    find_patterns.write(f'.nosigchk=0:0x{head_offset}:0x1:01,00\n')
-                    patch_db_string = (version, f'[Loader:{hash[:16]}]\n.nosigchk=0:0x{head_offset}:0x1:01,00\n\n', "LOADER", loader_ams_string)
-                    patch_db.append(patch_db_string)
+                find_patterns.write(f'LOADER FULL HASH: {hash}\n\n')
+                find_patterns.write(f'[Loader:{hash[:16]}]\n')
+                find_patterns.write(f'.nosigchk=0:0x{head_offset}:0x1:01,00\n')
+                patch_db_string = (version, f'[Loader:{hash[:16]}]\n.nosigchk=0:0x{head_offset}:0x1:01,00\n\n', "LOADER", loader_ams_string)
+                patch_db.append(patch_db_string)
             else:
                 find_patterns.write(f'({module_name}) the arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
                 print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
-        if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
-            return patch_fw
 
 
 def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigchk_offset, nocntchk_offset, noncasigchk_ghidra_pattern, nocntchk_ghidra_pattern, noncasigchk_patch, nocntchk_patch, noncasigchk_cond, nocntchk_cond, module_name, changelog, noncasigchk_diffs, nocntchk_diffs, nonsigchk_offsets, nocntchk_offsets, patch_db):
@@ -604,172 +646,185 @@ def get_pattern_for_version(patterns: List[Pattern], version: str) -> Optional[P
     return None
 
 
+mkdirp("output")
+
 valid_versions = get_valid_version_folders('output')
-print(f"Found {len(valid_versions)} valid version folders: {', '.join(valid_versions)}\n")
+
+if not valid_versions:
+    print("No valid version folders found in 'output/'.")
+    print("Skipping all per-version processing (pattern searching, summaries, debug logs, diffs).\n")
+else:
+    print(f"Found {len(valid_versions)} valid version folders: {', '.join(valid_versions)}\n")
+
+    for version in valid_versions:
+        current_firmware_version = version
+
+        es_path = f'output/{version}/{version}_uncompressed_es.nso0'
+        nim_path = f'output/{version}/{version}_uncompressed_nim.nso0'
+        nifm_path = f'output/{version}/{version}_uncompressed_nifm.nso0'
+        olsc_path = f'output/{version}/{version}_uncompressed_olsc.nso0'
+        ssl_path = f'output/{version}/{version}_uncompressed_ssl.nso0'
+        compressed_fat32_path = f'output/{version}/{version}_fat32_FS.kip1'
+        decompressed_fat32_path = f'output/{version}/{version}_fat32_uFS.kip1'
+        compressed_exfat_path = f'output/{version}/{version}_exfat_FS.kip1'
+        decompressed_exfat_path = f'output/{version}/{version}_exfat_uFS.kip1'
+
+        if os.path.exists(compressed_fat32_path):
+            fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest().upper()
+        if os.path.exists(compressed_exfat_path):
+            exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
+
+        # Get patterns for this version
+        es_pattern_obj = get_pattern_for_version(ES_PATTERNS, current_firmware_version)
+        nifm_pattern_obj = get_pattern_for_version(NIFM_PATTERNS, current_firmware_version)
+        olsc_pattern_obj = get_pattern_for_version(OLSC_PATTERNS, current_firmware_version)
+
+        # For NIM patterns, we need to handle both blankcal0 and blockfw separately
+        nim_blankcal0_obj = next((p for p in NIM_PATTERNS if 'blankcal0' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+        nim_blockfw_obj = next((p for p in NIM_PATTERNS if 'blockfw' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+    
+        # For FS patterns
+        fs_noncasigchk_obj = next((p for p in FS_PATTERNS if 'noncasigchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+        fs_nocntchk_obj = next((p for p in FS_PATTERNS if 'nocntchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+
+        # Compile patterns
+        es_pattern = pattern_to_regex_bytestring(es_pattern_obj.pattern_string) if es_pattern_obj else None
+        nifm_pattern = pattern_to_regex_bytestring(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
+        olsc_pattern = pattern_to_regex_bytestring(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
+        blankcal0crashfix_pattern = pattern_to_regex_bytestring(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
+        blockfirmwareupdates_pattern = pattern_to_regex_bytestring(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+        fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
+        fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
+
+        # Get offsets and other metadata
+        es_offset = es_pattern_obj.offset if es_pattern_obj else None
+        es_headoffset = es_pattern_obj.headoffset if es_pattern_obj else None
+        es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_pattern_obj.pattern_string) if es_pattern_obj else None
+
+        nifm_offset = nifm_pattern_obj.offset if nifm_pattern_obj else None
+        nifm_headoffset = nifm_pattern_obj.headoffset if nifm_pattern_obj else None
+        nifm_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
+
+        olsc_offset = olsc_pattern_obj.offset if olsc_pattern_obj else None
+        olsc_headoffset = olsc_pattern_obj.headoffset if olsc_pattern_obj else None
+        olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
+
+        blankcal0crashfix_offset = nim_blankcal0_obj.offset if nim_blankcal0_obj else None
+        blankcal0crashfix_headoffset = nim_blankcal0_obj.headoffset if nim_blankcal0_obj else None
+        blankcal0crashfix_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
+
+        blockfirmwareupdates_offset = nim_blockfw_obj.offset if nim_blockfw_obj else None
+        blockfirmwareupdates_headoffset = nim_blockfw_obj.headoffset if nim_blockfw_obj else None
+        blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+
+        fs_noncasigchk_offset = fs_noncasigchk_obj.offset if fs_noncasigchk_obj else None
+        fs_noncasigchk_headoffset = fs_noncasigchk_obj.headoffset if fs_noncasigchk_obj else None
+        fs_noncasigchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
+
+        fs_nocntchk_offset = fs_nocntchk_obj.offset if fs_nocntchk_obj else None
+        fs_nocntchk_headoffset = fs_nocntchk_obj.headoffset if fs_nocntchk_obj else None
+        fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
+
+        with open(f'output/{version}/{version}_patch_summary_with_diff_strings.txt', 'w') as find_patterns:
+
+            patch_check_module(es_path, es_pattern, es_offset, es_headoffset, es_ghidra_pattern, mov0_patch, patch_size_4, es_cond, 'ES', find_patterns, es_pattern_diffs, es_pattern_offsets, None, nso_patch_database)
+
+            patch_check_module(nifm_path, nifm_pattern, nifm_offset, nifm_headoffset, nifm_ghidra_pattern, ctest_patch, patch_size_20, ctest_cond, 'NIFM', find_patterns, nifm_pattern_diffs, nifm_pattern_offsets, None, nso_patch_database)
+
+            if version_to_tuple(version) >= version_to_tuple("6.0.0"):
+                patch_check_module(olsc_path, olsc_pattern, olsc_offset, olsc_headoffset, olsc_ghidra_pattern, ret1_patch, patch_size_4, bl_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets, None, nso_patch_database)
+
+            if version_to_tuple(version) >= version_to_tuple("17.0.0"):
+                block_fw_patch = patch_check_module(nim_path, blockfirmwareupdates_pattern, blockfirmwareupdates_offset, blockfirmwareupdates_headoffset, blockfirmwareupdates_ghidra_pattern, mov0_ret_patch, patch_size_8, block_fw_updates_cond, 'NIM-FW', find_patterns, blockfirmwareupdates_pattern_diffs, blockfirmwareupdates_pattern_offsets, None, nso_patch_database)
+            else:
+                patch_check_module(nim_path, blockfirmwareupdates_pattern, blockfirmwareupdates_offset, blockfirmwareupdates_headoffset, blockfirmwareupdates_ghidra_pattern, mov0_ret_patch, patch_size_8, block_fw_updates_cond, 'NIM-FW', find_patterns, blockfirmwareupdates_pattern_diffs, blockfirmwareupdates_pattern_offsets, None, nso_patch_database)
+
+            if version_to_tuple(version) >= version_to_tuple("17.0.0"):
+                patch_check_module(nim_path, blankcal0crashfix_pattern, blankcal0crashfix_offset, blankcal0crashfix_headoffset, blankcal0crashfix_ghidra_pattern, mov2_patch, patch_size_4, adr_cond, 'NIM', find_patterns, blankcal0crashfix_pattern_diffs, blankcal0crashfix_pattern_offsets, block_fw_patch, nso_patch_database)
+
+            if version_to_tuple(version) >= version_to_tuple("10.0.0"):
+                patch_check_fs(decompressed_fat32_path, fat32hash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'FAT32', find_patterns, fat32_noncasigchk_pattern_diffs, fat32_nocntchk_pattern_diffs, fat32_noncasigchk_pattern_offsets, fat32_nocntchk_pattern_offsets, fs_kip_patch_database)
+                if os.path.exists(decompressed_exfat_path):
+                    patch_check_fs(decompressed_exfat_path, exfathash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'EXFAT', find_patterns, exfat_noncasigchk_pattern_diffs, exfat_nocntchk_pattern_diffs, exfat_noncasigchk_pattern_offsets, exfat_nocntchk_pattern_offsets, fs_kip_patch_database)
+
+            ## ssl more quirky and .nso0, leave as old format since it's not used by sys-patch anymore, and only for automatically forwarding the ssl patches
+
+            patchvalue5 = "08" # SSL
+            patchvalue6 = "1300" # SSL
+            patchvalue7 = "14" # SSL
+            patchvalue8 = "08008052" # SSL
+
+            ssl_pattern1 = rb'\x08\x00\x80\x12\x69\x12\x05\x91\x7f\x1e\x00\xf9\x68\x42\x00\xb9'
+            ssl_pattern2 = rb'\x24\x09\x43\x7a\xa0\x00\x00\x54'
+            ssl_pattern3 = rb'\x88\x16\x00\x12'
+            ssl_offset1 = 16 # # ssl_pattern1
+            ssl_offset2 = 4 # ssl_pattern2
+            ssl_offset3 = 7 # ssl_pattern2
+            ssl_offset4 = 8 # ssl_pattern3
 
 
-for version in valid_versions:
-    current_firmware_version = version
+            if version_to_tuple(version) >= version_to_tuple("21.0.0"):
+                with open(f'{ssl_path}', 'rb') as decompressed_ssl_nso:
+                    read_data = decompressed_ssl_nso.read()
+                    result1 = re.search(ssl_pattern1, read_data)
+                    result2 = re.search(ssl_pattern2, read_data)
+                    result3 = re.search(ssl_pattern3, read_data)
+                    if not result1:
+                        find_patterns.write(f'(SSL) {version} SSL pattern 1 no match found\n')
+                        find_patterns.write(f'(SSL) SSL pattern 1 is invalid for: {version}\n\n')
+                    if not result2:
+                        find_patterns.write(f'(SSL) {version} SSL pattern 2 no match found\n')
+                        find_patterns.write(f'(SSL) SSL pattern 2 is invalid for: {version}\n\n')
+                    if not result3:
+                        find_patterns.write(f'(SSL) {version} SSL pattern 3 no match found\n')
+                        find_patterns.write(f'(SSL) SSL pattern 3 is invalid for: {version}\n\n')
+                    if (result1 and result2 and result3):
+                        offset1 = '%06X' % (result1.start() + ssl_offset1)
+                        offset2 = '%06X' % (result2.start() + ssl_offset2)
+                        offset3 = '%06X' % (result2.start() + ssl_offset3)
+                        offset4 = '%06X' % (result3.start() + ssl_offset4)
+                        decompressed_ssl_nso.seek(result1.start() + ssl_offset1)
+                        ssl_patch1_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+                        decompressed_ssl_nso.seek(result2.start() + ssl_offset2)
+                        ssl_patch2_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+                        decompressed_ssl_nso.seek(result3.start() + ssl_offset4)
+                        ssl_patch3_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
+                        patch1 = '%08X%s%s' % (result1.start() + ssl_offset1, '0001', f'{patchvalue5}')
+                        patch2 = '%08X%s%s' % (result2.start() + ssl_offset2, '0002', f'{patchvalue6}')
+                        patch3 = '%08X%s%s' % (result2.start() + ssl_offset3, '0001', f'{patchvalue7}')
+                        patch4 = '%08X%s%s' % (result3.start() + ssl_offset4, '0004', f'{patchvalue8}')
+                        find_patterns.write(f'(SSL) patterns found results for: {version}\n')
+                        find_patterns.write(f'(SSL) pattern 1 found at: {offset1} ## 21.0.0+ 0x119B60\n') 
+                        find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 08 00 80 12 69 12 05 91 7f 1e 00 f9 68 42 00 b9\n')
+                        find_patterns.write(f'(SSL) The existing bytes at the offset are: {ssl_patch1_bytes}\n') # 21.0.0+ // 680080D2 // mov x8, #3
+                        find_patterns.write(f'(SSL) this is patched out to become {patchvalue5}0080D2 (mov x8, #0), to make make register x8 (x10 20.5.0 and below) zero, so that the movk turns the value used into 0x100000000 instead of 0x100000003 - seen in the ghidra decompiled view\n')
+                        find_patterns.write(f'(SSL) pattern 2 found at: {offset2} ## 21.0.0+ 0x11A914\n') 
+                        find_patterns.write(f'(SSL) pattern 3 found at: {offset3} ## 21.0.0+ 0x11A917\n') 
+                        find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 24 09 43 7a a0 00 00 54\n')
+                        find_patterns.write(f'(SSL) The existing bytes at the two offsets combined are: {ssl_patch2_bytes}\n') # 21.0.0+ // A0000054 // b.eq #0x14
+                        find_patterns.write(f'(SSL) this is patched out to become  {patchvalue6}00{patchvalue7} (b #0x4c) to target the second branch instead of comparing values (b.eq #0x14) and going to the first one\n')
+                        find_patterns.write(f'(SSL) pattern 4 found at: {offset4} ## 21.0.0+ 0x11A968\n') 
+                        find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 88 16 00 12\n')
+                        find_patterns.write(f'(SSL) The existing bytes at the offset are: {ssl_patch3_bytes}\n') # 21.0.0+ // 684601B9 // str w8, [x19, #0x144]
+                        find_patterns.write(f'(SSL) this is patched out to become {patchvalue8} (mov w8, #0), to prepare register w8 with a zero, for the purpose of making the function return 0 (success) later on.\n')
+                        find_patterns.write(f'(SSL) {version} SSL moduleid (and what .ips filename should be): {get_module_id(ssl_path)}\n\n')
+                        find_patterns.write(f'(SSL) IPS patch bytes would be:\n')
+                        find_patterns.write(f'(SSL) {ips32_magic}{patch1}{patch2}{patch3}{patch4}{eeof_magic}\n\n')
+                    else:
+                        find_patterns.write(f'(SSL) one or more SSL patterns were not found\n\n')
+            else:
+                find_patterns.write(f'\n(SSL) only the very latest pattern is supported (21.0.0+), current version is: {version}\n\n')
+        patch_summary_file = f'output/{version}/{version}_patch_summary_with_diff_strings.txt'  
+        find_patterns.close()
 
-    es_path = f'output/{version}/{version}_uncompressed_es.nso0'
-    nim_path = f'output/{version}/{version}_uncompressed_nim.nso0'
-    nifm_path = f'output/{version}/{version}_uncompressed_nifm.nso0'
-    olsc_path = f'output/{version}/{version}_uncompressed_olsc.nso0'
-    ssl_path = f'output/{version}/{version}_uncompressed_ssl.nso0'
-    compressed_fat32_path = f'output/{version}/{version}_fat32_FS.kip1'
-    decompressed_fat32_path = f'output/{version}/{version}_fat32_uFS.kip1'
-    compressed_exfat_path = f'output/{version}/{version}_exfat_FS.kip1'
-    decompressed_exfat_path = f'output/{version}/{version}_exfat_uFS.kip1'
+    print("\n" + "="*80)
+    print("Updating scripts/pattern_diffs.py and patch databases incrementally...")
+    print("="*80 + "\n")
 
-    if os.path.exists(compressed_fat32_path):
-        fat32hash = hashlib.sha256(open(compressed_fat32_path, 'rb').read()).hexdigest().upper()
-    if os.path.exists(compressed_exfat_path):
-        exfathash = hashlib.sha256(open(compressed_exfat_path, 'rb').read()).hexdigest().upper()
-
-    # Get patterns for this version
-    es_pattern_obj = get_pattern_for_version(ES_PATTERNS, current_firmware_version)
-    nifm_pattern_obj = get_pattern_for_version(NIFM_PATTERNS, current_firmware_version)
-    olsc_pattern_obj = get_pattern_for_version(OLSC_PATTERNS, current_firmware_version)
-
-    # For NIM patterns, we need to handle both blankcal0 and blockfw separately
-    nim_blankcal0_obj = next((p for p in NIM_PATTERNS if 'blankcal0' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
-    nim_blockfw_obj = next((p for p in NIM_PATTERNS if 'blockfw' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
- 
-    # For FS patterns
-    fs_noncasigchk_obj = next((p for p in FS_PATTERNS if 'noncasigchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
-    fs_nocntchk_obj = next((p for p in FS_PATTERNS if 'nocntchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
-
-    # Compile patterns
-    es_pattern = pattern_to_regex_bytestring(es_pattern_obj.pattern_string) if es_pattern_obj else None
-    nifm_pattern = pattern_to_regex_bytestring(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
-    olsc_pattern = pattern_to_regex_bytestring(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
-    blankcal0crashfix_pattern = pattern_to_regex_bytestring(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
-    blockfirmwareupdates_pattern = pattern_to_regex_bytestring(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
-    fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
-    fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
-
-    # Get offsets and other metadata
-    es_offset = es_pattern_obj.offset if es_pattern_obj else None
-    es_headoffset = es_pattern_obj.headoffset if es_pattern_obj else None
-    es_ghidra_pattern = format_sys_patch_string_to_ghidra_string(es_pattern_obj.pattern_string) if es_pattern_obj else None
-
-    nifm_offset = nifm_pattern_obj.offset if nifm_pattern_obj else None
-    nifm_headoffset = nifm_pattern_obj.headoffset if nifm_pattern_obj else None
-    nifm_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nifm_pattern_obj.pattern_string) if nifm_pattern_obj else None
-
-    olsc_offset = olsc_pattern_obj.offset if olsc_pattern_obj else None
-    olsc_headoffset = olsc_pattern_obj.headoffset if olsc_pattern_obj else None
-    olsc_ghidra_pattern = format_sys_patch_string_to_ghidra_string(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
-
-    blankcal0crashfix_offset = nim_blankcal0_obj.offset if nim_blankcal0_obj else None
-    blankcal0crashfix_headoffset = nim_blankcal0_obj.headoffset if nim_blankcal0_obj else None
-    blankcal0crashfix_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
-
-    blockfirmwareupdates_offset = nim_blockfw_obj.offset if nim_blockfw_obj else None
-    blockfirmwareupdates_headoffset = nim_blockfw_obj.headoffset if nim_blockfw_obj else None
-    blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
-
-    fs_noncasigchk_offset = fs_noncasigchk_obj.offset if fs_noncasigchk_obj else None
-    fs_noncasigchk_headoffset = fs_noncasigchk_obj.headoffset if fs_noncasigchk_obj else None
-    fs_noncasigchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
-
-    fs_nocntchk_offset = fs_nocntchk_obj.offset if fs_nocntchk_obj else None
-    fs_nocntchk_headoffset = fs_nocntchk_obj.headoffset if fs_nocntchk_obj else None
-    fs_nocntchk_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
-
-    with open(f'output/{version}/{version}_patch_summary_with_diff_strings.txt', 'w') as find_patterns:
-        patch_check_module(es_path, es_pattern, es_offset, es_headoffset, es_ghidra_pattern, mov0_patch, patch_size_4, es_cond, 'ES', find_patterns, es_pattern_diffs, es_pattern_offsets, None, None, nso_patch_database, None)
-
-        patch_check_module(nifm_path, nifm_pattern, nifm_offset, nifm_headoffset, nifm_ghidra_pattern, ctest_patch, patch_size_20, ctest_cond, 'NIFM', find_patterns, nifm_pattern_diffs, nifm_pattern_offsets, None, None, nso_patch_database, None)
-
-        if version_to_tuple(version) >= version_to_tuple("6.0.0"):
-            patch_check_module(olsc_path, olsc_pattern, olsc_offset, olsc_headoffset, olsc_ghidra_pattern, ret1_patch, patch_size_4, bl_cond, 'OLSC', find_patterns, olsc_pattern_diffs, olsc_pattern_offsets, None, None, nso_patch_database, None)
-
-        if version_to_tuple(version) >= version_to_tuple("17.0.0"):
-            block_fw_patch = patch_check_module(nim_path, blockfirmwareupdates_pattern, blockfirmwareupdates_offset, blockfirmwareupdates_headoffset, blockfirmwareupdates_ghidra_pattern, mov0_ret_patch, patch_size_8, block_fw_updates_cond, 'NIM-FW', find_patterns, blockfirmwareupdates_pattern_diffs, blockfirmwareupdates_pattern_offsets, None, None, nso_patch_database, None)
-        else:
-            patch_check_module(nim_path, blockfirmwareupdates_pattern, blockfirmwareupdates_offset, blockfirmwareupdates_headoffset, blockfirmwareupdates_ghidra_pattern, mov0_ret_patch, patch_size_8, block_fw_updates_cond, 'NIM-FW', find_patterns, blockfirmwareupdates_pattern_diffs, blockfirmwareupdates_pattern_offsets, None, None, nso_patch_database, None)
-
-        if version_to_tuple(version) >= version_to_tuple("17.0.0"):
-            patch_check_module(nim_path, blankcal0crashfix_pattern, blankcal0crashfix_offset, blankcal0crashfix_headoffset, blankcal0crashfix_ghidra_pattern, mov2_patch, patch_size_4, adr_cond, 'NIM', find_patterns, blankcal0crashfix_pattern_diffs, blankcal0crashfix_pattern_offsets, None, block_fw_patch, nso_patch_database, None)
-
-        if version_to_tuple(version) >= version_to_tuple("10.0.0"):
-            patch_check_fs(decompressed_fat32_path, fat32hash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'FAT32', find_patterns, fat32_noncasigchk_pattern_diffs, fat32_nocntchk_pattern_diffs, fat32_noncasigchk_pattern_offsets, fat32_nocntchk_pattern_offsets, fs_kip_patch_database)
-            if os.path.exists(decompressed_exfat_path):
-                patch_check_fs(decompressed_exfat_path, exfathash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'EXFAT', find_patterns, exfat_noncasigchk_pattern_diffs, exfat_nocntchk_pattern_diffs, exfat_noncasigchk_pattern_offsets, exfat_nocntchk_pattern_offsets, fs_kip_patch_database)
-
-        ## ssl more quirky and .nso0, leave as old format since it's not used by sys-patch anymore, and only for automatically forwarding the ssl patches
-
-        patchvalue5 = "08" # SSL
-        patchvalue6 = "1300" # SSL
-        patchvalue7 = "14" # SSL
-        patchvalue8 = "08008052" # SSL
-
-        ssl_pattern1 = rb'\x08\x00\x80\x12\x69\x12\x05\x91\x7f\x1e\x00\xf9\x68\x42\x00\xb9'
-        ssl_pattern2 = rb'\x24\x09\x43\x7a\xa0\x00\x00\x54'
-        ssl_pattern3 = rb'\x88\x16\x00\x12'
-        ssl_offset1 = 16 # # ssl_pattern1
-        ssl_offset2 = 4 # ssl_pattern2
-        ssl_offset3 = 7 # ssl_pattern2
-        ssl_offset4 = 8 # ssl_pattern3
-
-
-        if version_to_tuple(version) >= version_to_tuple("21.0.0"):
-            with open(f'{ssl_path}', 'rb') as decompressed_ssl_nso:
-                read_data = decompressed_ssl_nso.read()
-                result1 = re.search(ssl_pattern1, read_data)
-                result2 = re.search(ssl_pattern2, read_data)
-                result3 = re.search(ssl_pattern3, read_data)
-                if not result1:
-                    find_patterns.write(f'(SSL) {version} SSL pattern 1 no match found\n')
-                    find_patterns.write(f'(SSL) SSL pattern 1 is invalid for: {version}\n\n')
-                if not result2:
-                    find_patterns.write(f'(SSL) {version} SSL pattern 2 no match found\n')
-                    find_patterns.write(f'(SSL) SSL pattern 2 is invalid for: {version}\n\n')
-                if not result3:
-                    find_patterns.write(f'(SSL) {version} SSL pattern 3 no match found\n')
-                    find_patterns.write(f'(SSL) SSL pattern 3 is invalid for: {version}\n\n')
-                if (result1 and result2 and result3):
-                    offset1 = '%06X' % (result1.start() + ssl_offset1)
-                    offset2 = '%06X' % (result2.start() + ssl_offset2)
-                    offset3 = '%06X' % (result2.start() + ssl_offset3)
-                    offset4 = '%06X' % (result3.start() + ssl_offset4)
-                    decompressed_ssl_nso.seek(result1.start() + ssl_offset1)
-                    ssl_patch1_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
-                    decompressed_ssl_nso.seek(result2.start() + ssl_offset2)
-                    ssl_patch2_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
-                    decompressed_ssl_nso.seek(result3.start() + ssl_offset4)
-                    ssl_patch3_bytes = decompressed_ssl_nso.read(0x4).hex().upper()
-                    patch1 = '%08X%s%s' % (result1.start() + ssl_offset1, '0001', f'{patchvalue5}')
-                    patch2 = '%08X%s%s' % (result2.start() + ssl_offset2, '0002', f'{patchvalue6}')
-                    patch3 = '%08X%s%s' % (result2.start() + ssl_offset3, '0001', f'{patchvalue7}')
-                    patch4 = '%08X%s%s' % (result3.start() + ssl_offset4, '0004', f'{patchvalue8}')
-                    find_patterns.write(f'(SSL) patterns found results for: {version}\n')
-                    find_patterns.write(f'(SSL) pattern 1 found at: {offset1} ## 21.0.0+ 0x119B60\n') 
-                    find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 08 00 80 12 69 12 05 91 7f 1e 00 f9 68 42 00 b9\n')
-                    find_patterns.write(f'(SSL) The existing bytes at the offset are: {ssl_patch1_bytes}\n') # 21.0.0+ // 680080D2 // mov x8, #3
-                    find_patterns.write(f'(SSL) this is patched out to become {patchvalue5}0080D2 (mov x8, #0), to make make register x8 (x10 20.5.0 and below) zero, so that the movk turns the value used into 0x100000000 instead of 0x100000003 - seen in the ghidra decompiled view\n')
-                    find_patterns.write(f'(SSL) pattern 2 found at: {offset2} ## 21.0.0+ 0x11A914\n') 
-                    find_patterns.write(f'(SSL) pattern 3 found at: {offset3} ## 21.0.0+ 0x11A917\n') 
-                    find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 24 09 43 7a a0 00 00 54\n')
-                    find_patterns.write(f'(SSL) The existing bytes at the two offsets combined are: {ssl_patch2_bytes}\n') # 21.0.0+ // A0000054 // b.eq #0x14
-                    find_patterns.write(f'(SSL) this is patched out to become  {patchvalue6}00{patchvalue7} (b #0x4c) to target the second branch instead of comparing values (b.eq #0x14) and going to the first one\n')
-                    find_patterns.write(f'(SSL) pattern 4 found at: {offset4} ## 21.0.0+ 0x11A968\n') 
-                    find_patterns.write(f'(SSL) The ghidra-equivalent pattern used was: 88 16 00 12\n')
-                    find_patterns.write(f'(SSL) The existing bytes at the offset are: {ssl_patch3_bytes}\n') # 21.0.0+ // 684601B9 // str w8, [x19, #0x144]
-                    find_patterns.write(f'(SSL) this is patched out to become {patchvalue8} (mov w8, #0), to prepare register w8 with a zero, for the purpose of making the function return 0 (success) later on.\n')
-                    find_patterns.write(f'(SSL) {version} SSL moduleid (and what .ips filename should be): {get_module_id(ssl_path)}\n\n')
-                    find_patterns.write(f'(SSL) IPS patch bytes would be:\n')
-                    find_patterns.write(f'(SSL) {ips32_magic}{patch1}{patch2}{patch3}{patch4}{eeof_magic}\n\n')
-                else:
-                    find_patterns.write(f'(SSL) one or more SSL patterns were not found\n\n')
-        else:
-            find_patterns.write(f'\n(SSL) only the very latest pattern is supported (21.0.0+), current version is: {version}\n\n')
-    patch_summary_file = f'output/{version}/{version}_patch_summary_with_diff_strings.txt'  
-    find_patterns.close()
-        
 
 if args.ams:
+    if os.path.exists('package3_and_stratosphere_extracted'):
+        shutil.rmtree('package3_and_stratosphere_extracted')
     ams_string = package3_and_stratosphere.download_and_extract_package3_and_stratosphere_romfs()
 
     loader_path = f'package3_and_stratosphere_extracted/u_loader.kip1'
@@ -784,8 +839,35 @@ if args.ams:
         loader_pattern_diffs = {}
         loader_pattern_offsets = {}
         loaderhash =  hashlib.sha256(open(compressed_loader_path, 'rb').read()).hexdigest().upper()
+
+        try:
+            if not version:
+                pass
+
+        except NameError:
+            version = "latest"
+            try:
+                url = "https://raw.githubusercontent.com/Atmosphere-NX/Atmosphere/master/libraries/libvapours/include/vapours/ams/ams_api_version.h"
+                req = Request(url)
+                req.add_header('User-Agent', 'Mozilla/5.0 (compatible; find_patterns.py)')  # GitHub recommends a User-Agent
+
+                with urlopen(req) as response:
+                    content = response.read().decode('utf-8')
+
+                major_match = re.search(r'#define ATMOSPHERE_SUPPORTED_HOS_VERSION_MAJOR\s+(\d+)', content)
+                minor_match = re.search(r'#define ATMOSPHERE_SUPPORTED_HOS_VERSION_MINOR\s+(\d+)', content)
+                micro_match = re.search(r'#define ATMOSPHERE_SUPPORTED_HOS_VERSION_MICRO\s+(\d+)', content)
+
+                if major_match and minor_match and micro_match:
+                    version = f"{major_match.group(1)}.{minor_match.group(1)}.{micro_match.group(1)}"
+                    print(f"Fetched latest supported HOS version from Atmosphere: {version}")
+                else:
+                    print("Warning: Could not parse version macros — using 'latest'.")
+            except Exception as e:
+                print(f"Warning: Failed to fetch latest HOS version: {e}. Using 'latest'.")
+
         with open(f'output/loader_patch_summary.txt', 'w') as find_patterns:
-            patch_check_module(loader_path, loader_pattern, loader_offset, loader_headoffset, loader_ghidra_pattern, cmp_patch, patch_size_1, cmp_cond, 'LOADER', find_patterns, loader_pattern_diffs, loader_pattern_offsets, loaderhash, None, ldr_kip_patch_database, ams_string)
+            patch_check_loader(loader_path, loader_pattern, loader_offset, loader_headoffset, loader_ghidra_pattern, cmp_cond, 'LOADER', find_patterns, loader_pattern_diffs, loader_pattern_offsets, loaderhash, ldr_kip_patch_database, ams_string)
         find_patterns.close()
 
     uncompressed_erpt_path = f'package3_and_stratosphere_extracted/uncompressed_erpt.nso0'
@@ -799,14 +881,12 @@ if args.ams:
         erpt_ghidra_pattern = format_sys_patch_string_to_ghidra_string(erpt_pattern_obj.pattern_string) if erpt_pattern_obj else None
 
         with open(f'output/erpt_patch_summary.txt', 'w') as find_patterns:
-            patch_check_module(uncompressed_erpt_path, erpt_pattern, erpt_offset, erpt_headoffset, erpt_ghidra_pattern, mov0_ret_patch, patch_size_8, sub_cond, 'ERPT', find_patterns, erpt_pattern_diffs, erpt_pattern_offsets, None, None, nso_patch_database, None)
+            patch_check_module(uncompressed_erpt_path, erpt_pattern, erpt_offset, erpt_headoffset, erpt_ghidra_pattern, mov0_ret_patch, patch_size_8, sub_cond, 'ERPT', find_patterns, erpt_pattern_diffs, erpt_pattern_offsets, None, nso_patch_database)
         find_patterns.close()
 
 print("\n" + "="*80)
 print("Updating scripts/pattern_diffs.py and patch databases incrementally...")
 print("="*80 + "\n")
-
-
 
 try:
     with open('output/es_debug_logs.txt', 'w', encoding='utf-8') as logs:
@@ -861,9 +941,7 @@ try:
         logs.close()
 
 except Exception as e:
-    print(f"Error writing pattern_diffs.py: {e}")
-    sys.exit(1)
-
+        print(f"Error writing debug logs: {e}")
 
 pattern_diffs_path = 'scripts/pattern_diffs.py'
 existing_diffs = load_existing_pattern_diffs(pattern_diffs_path)
