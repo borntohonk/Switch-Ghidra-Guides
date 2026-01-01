@@ -35,9 +35,11 @@ REQUIRED_DIRS = [
     "patches/atmosphere/exefs_patches/nim_ctest/",
     "patches/atmosphere/exefs_patches/olsc_patches/",
     "patches/atmosphere/exefs_patches/erpt_patches/",
+    "patches/atmosphere/kip_patches/fs_patches/",
+    "patches/atmosphere/kip_patches/loader_patches/",
 ]
 
-NSO_PATCHES_FILE = "patch_database/nso_patches.txt"
+IPS_PATCHES_FILE = "patch_database/ips_patches.txt"
 
 # --- Hekate patches.ini ---
 BOOTLOADER_DIR = "patches/bootloader"
@@ -82,14 +84,14 @@ def create_directories():
     print(f"   [NEW] Created {BOOTLOADER_DIR}/")
 
 def process_atmosphere_ips():
-    """Original logic: generate .ips files from nso_patches.txt."""
-    if not os.path.exists(NSO_PATCHES_FILE):
-        print(f"Warning: '{NSO_PATCHES_FILE}' not found — skipping Atmosphere IPS generation.")
+    """Original logic: generate .ips files from ips_patches.txt."""
+    if not os.path.exists(IPS_PATCHES_FILE):
+        print(f"Warning: '{IPS_PATCHES_FILE}' not found — skipping Atmosphere IPS generation.")
         return 0
 
-    print(f"\nGenerating Atmosphere .ips patches from {NSO_PATCHES_FILE}...")
+    print(f"\nGenerating Atmosphere .ips patches from {IPS_PATCHES_FILE}...")
 
-    with open(NSO_PATCHES_FILE, 'r', encoding='utf-8') as f:
+    with open(IPS_PATCHES_FILE, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     created_count = 0
