@@ -150,6 +150,10 @@ def load_existing_pattern_diffs(filepath: str) -> Dict[str, Dict[str, str]]:
         'olsc_pattern_diffs': {},
         'fat32_noncasigchk_pattern_diffs': {},
         'exfat_noncasigchk_pattern_diffs': {},
+        'fat32_noacidsigchk1_pattern_diffs': {},
+        'exfat_noacidsigchk1_pattern_diffs': {},
+        'fat32_noacidsigchk2_pattern_diffs': {},
+        'exfat_noacidsigchk2_pattern_diffs': {},
         'fat32_nocntchk_pattern_diffs': {},
         'exfat_nocntchk_pattern_diffs': {},
         'loader_pattern_diffs': {},
@@ -315,11 +319,12 @@ NIM_PATTERNS = [
 
 
 FS_PATTERNS = [
-    #Pattern('fs_noacidsigchk_1.0.0-9.2.0', '0xC8FE4739', -24, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
-    #Pattern('fs_noacidsigchk_1.0.0-9.2.0', '0x1E48391F.0071..0054', -5, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
-    Pattern('fs_noncasigchk_10.0.0-16.1.0', '0x1E48391F.0071..0054', -17, 0, 'FS', tbz_cond, nop_patch, '10.0.0', '16.1.0'),
+    Pattern('fs_noacidsigchk1_1.0.0-9.2.0', '0xC8FE4739', -24, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
+    Pattern('fs_noacidsigchk2_1.0.0-9.2.0', '0x0210911F000072', -5, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
+    Pattern('fs_noncasigchk_1.0.0-3.0.2', '0x1E4839..00...0054', -21, 0, 'FS', tbz_cond, nop_patch, '1.0.0', '3.0.2'),
+    Pattern('fs_noncasigchk_4.0.0-16.1.0', '0x1E4839..00...0054', -17, 0, 'FS', tbz_cond, nop_patch, '4.0.0', '16.1.0'),
     Pattern('fs_noncasigchk_17.0.0+', '0x0694..00.42.0091', -18, 0, 'FS', tbz_cond, nop_patch, '17.0.0', FW_VER_ANY),
-    Pattern('fs_nocntchk_10.0.0-18.1.0', '0x00..0240F9....08.....00...00...0037', 6, 0, 'FS', bl_cond, ret0_patch, '10.0.0', '18.1.0'),
+    Pattern('fs_nocntchk_1.0.0-18.1.0', '0x00..0240F9....08.....00...00...0037', 6, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '18.1.0'),
     Pattern('fs_nocntchk_19.0.0-20.5.0', '0x00..0240F9....08.....00...00...0054', 6, 0, 'FS', bl_cond, ret0_patch, '19.0.0', '20.5.0'),
     Pattern('fs_nocntchk_21.0.0+', '0x00..0240F9....E8.....00...00...0054', 6, 0, 'FS', bl_cond, ret0_patch, '21.0.0', FW_VER_ANY),
 ]
@@ -513,7 +518,7 @@ def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidr
                 print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
 
 
-def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigchk_offset, nocntchk_offset, noncasigchk_ghidra_pattern, nocntchk_ghidra_pattern, noncasigchk_patch, nocntchk_patch, noncasigchk_cond, nocntchk_cond, module_name, changelog, noncasigchk_diffs, nocntchk_diffs, nonsigchk_offsets, nocntchk_offsets, patch_db, ips_db):
+def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigchk1_pattern, noacidsigchk2_pattern, noncasigchk_offset, nocntchk_offset, noacidsigchk1_offset, noacidsigchk2_offset,  noncasigchk_ghidra_pattern, nocntchk_ghidra_pattern, noacidsigchk1_ghidra_pattern, noacidsigchk2_ghidra_pattern, noncasigchk_patch, nocntchk_patch, noacidsigchk1_patch, noacidsigchk2_patch, noncasigchk_cond, nocntchk_cond, noacidsigchk1_cond, noacidsigchk2_cond, noncasigchk_diffs, nocntchk_diffs, noacidsigchk1_diffs, noacidsigchk2_diffs, nonsigchk_offsets, nocntchk_offsets, noacidsigchk1_offsets, noacidsigchk2_offsets, kip_patch_db, ips_db, module_name, changelog):
     with open(path, 'rb') as decompressed_module:
         find_patterns = changelog
         read_data = decompressed_module.read()
@@ -530,8 +535,9 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigch
                 print(f'DEBUG - (FS-{module_name}) - NONCASIGCHK - {version} - found - {match.group().hex().upper()}')
                 print(f'DEBUG - (FS-{module_name}) - NONCASIGCHK - {version} - offset found at {offset_1}')
         elif match_count_1 == 0:
-            if version != '11.0.0' and version != '11.0.1':
-                # this pattern is valid for 11.0.0/11.0.1, but for reasons unknown it says there isn't a match
+            if version != '2.0.0' and version != '2.1.0' and version != '2.2.0' and version != '2.3.0' and version != '11.0.0' and version != '11.0.1':
+                # this pattern is valid, but for reasons unknown it says there isn't a match, figure out why python isn't finding it for those versions, despite the bytes are there
+                # TODO: figure out why these versions of the .kip files are treated differently (zero compression, bytes and pattern are findable with ghidra and hex editor of decompressed .kip1
                 print(f'DEBUG - (FS-{module_name}) - NO RESULTS FOUND AT ALL - NONCASIGCHK - {version}')
 
         if match_count_2 > 1:
@@ -579,6 +585,41 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigch
             nocntchk_offset_string = [module_name, patch_2_bytes, offset_2, hash]
             nonsigchk_offsets[version] = nonsigchk_offset_string
             nocntchk_offsets[version] = nocntchk_offset_string
+
+            if version_to_tuple(version) <= version_to_tuple("9.99.9"):
+                result_3 = re.search(noacidsigchk1_pattern, read_data) # these don't need validation
+                result_4 = re.search(noacidsigchk2_pattern, read_data) # these don't need validation
+                module_offset_3 = result_3.start() + noacidsigchk1_offset
+                module_offset_4 = result_4.start() + noacidsigchk2_offset
+                hekate_offset_3 = module_offset_3 - 0x100
+                hekate_offset_4 = module_offset_4 - 0x100
+                offset_3 = '%06X' % (module_offset_3)
+                offset_4 = '%06X' % (module_offset_4)
+                hekate_adjusted_offset_3 = '%06X' % (hekate_offset_3)
+                hekate_adjusted_offset_4 = '%06X' % (hekate_offset_4)
+                patch_bytes_start_3 = module_offset_3
+                patch_bytes_start_4 = module_offset_4
+                patch_bytes_end_3 = patch_bytes_start_3 + 0x4
+                patch_bytes_end_4 = patch_bytes_start_4 + 0x4
+                patch_3_bytes = read_data[patch_bytes_start_3:patch_bytes_end_3]
+                patch_4_bytes = read_data[patch_bytes_start_4:patch_bytes_end_4]
+                patch_3_bytes = patch_3_bytes.hex().upper()
+                patch_4_bytes = patch_4_bytes.hex().upper()
+
+                pattern_diff_string_start_3 = module_offset_3 - 0x20
+                pattern_diff_string_end_3 = pattern_diff_string_start_3 + 0x60
+                pattern_diff_string_3 = read_data[pattern_diff_string_start_3:pattern_diff_string_end_3].hex().upper()
+                pattern_diff_string_start_4 = module_offset_4 - 0x20
+                pattern_diff_string_end_4 = pattern_diff_string_start_4 + 0x60
+                pattern_diff_string_4 = read_data[pattern_diff_string_start_4:pattern_diff_string_end_4].hex().upper()
+
+                noacidsigchk1_diffs[version] = pattern_diff_string_3
+                noacidsigchk2_diffs[version] = pattern_diff_string_4
+                noacidsigchk1_offset_string = [module_name, patch_3_bytes, offset_3, hash]
+                noacidsigchk2_offset_string = [module_name, patch_4_bytes, offset_4, hash]
+                noacidsigchk1_offsets[version] = noacidsigchk1_offset_string
+                noacidsigchk2_offsets[version] = noacidsigchk2_offset_string
+
             if patch_1_byte in noncasigchk_cond:
                 find_patterns.write(f'(FS-{module_name}) a "TBZ" arm instruction with ending of 0x{patch_1_byte} was found\n')
                 if patch_2_byte in nocntchk_cond:
@@ -596,19 +637,37 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noncasigch
                     find_patterns.write(f'(FS-{module_name}) a hekate string for this would be:\n\n')
                     find_patterns.write(f'#FS {version}-{module_name}\n')
                     find_patterns.write(f'[FS:{hash[:16]}]\n')
+                    if version_to_tuple(version) <= version_to_tuple("9.99.9"): # TODO RE-ORDER THESE LATER
+                        find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_4}:0x4:{patch_4_bytes},{noacidsigchk2_patch}\n')
+                        find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_3}:0x4:{patch_3_bytes},{noacidsigchk1_patch}\n')
                     find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n')
                     find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n\n')
 
-                    patch_db_string = (version,
-                                       f'[FS:{hash[:16]}]\n',
-                                       f'.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n\n',
-                                       module_name)
-                    patch_db.append(patch_db_string)
+
+                    if version_to_tuple(version) <= version_to_tuple("9.99.9"): # TODO RE-ORDER THESE LATER
+                        patch_db_string = (version,
+                                          f'[FS:{hash[:16]}]\n',
+                                          f'.nosigchk=0:0x{hekate_adjusted_offset_4}:0x4:{patch_4_bytes},{noacidsigchk2_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_3}:0x4:{patch_3_bytes},{noacidsigchk1_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n\n',
+                        module_name)
+                        kip_patch_db.append(patch_db_string)
+
+                    else:
+                        patch_db_string = (version,
+                                        f'[FS:{hash[:16]}]\n',
+                                        f'.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n\n',
+                                        module_name)
+                        kip_patch_db.append(patch_db_string)
 
                     patch_path = "patches/atmosphere/kip_patches/fs_patches/"
+
                     patch_1 = '%06X%s%s' % ((module_offset_1), patch_size_4, noncasigchk_patch)
                     patch_2 = '%06X%s%s' % ((module_offset_2), patch_size_4, nocntchk_patch)
-                    patch_string_with_magic = (patch_magic + patch_1 + patch_2 + eof_magic)
+                    if version_to_tuple(version) <= version_to_tuple("9.99.9"): # TODO RE-ORDER THESE LATER
+                        patch_3 = '%06X%s%s' % ((module_offset_3), patch_size_4, noacidsigchk1_patch)
+                        patch_4 = '%06X%s%s' % ((module_offset_4), patch_size_4, noacidsigchk2_patch)
+                        patch_string_with_magic = (patch_magic + patch_1 + patch_2 + patch_3 + patch_4 + eof_magic)
+                    else:
+                        patch_string_with_magic = (patch_magic + patch_1 + patch_2 + eof_magic)
                     ips_db_string = (version, hash, patch_path, patch_string_with_magic)
                     ips_db.append(ips_db_string)
 
@@ -632,10 +691,16 @@ blockfirmwareupdates_pattern_diffs = {}
 blankcal0crashfix_pattern_diffs = {}
 nifm_pattern_diffs = {}
 olsc_pattern_diffs = {}
-fat32_noncasigchk_pattern_diffs = {}
-exfat_noncasigchk_pattern_diffs = {}
+
 fat32_nocntchk_pattern_diffs = {}
 exfat_nocntchk_pattern_diffs = {}
+fat32_noncasigchk_pattern_diffs = {}
+exfat_noncasigchk_pattern_diffs = {}
+
+fat32_noacidsigchk1_pattern_diffs = {}
+exfat_noacidsigchk1_pattern_diffs = {}
+fat32_noacidsigchk2_pattern_diffs = {}
+exfat_noacidsigchk2_pattern_diffs = {}
 
 es_pattern_offsets = {}
 blockfirmwareupdates_pattern_offsets = {}
@@ -646,6 +711,17 @@ fat32_noncasigchk_pattern_offsets = {}
 exfat_noncasigchk_pattern_offsets = {}
 fat32_nocntchk_pattern_offsets = {}
 exfat_nocntchk_pattern_offsets = {}
+
+fat32_nosigchk1_pattern_offsets = {}
+fat32_nosigchk2_pattern_offsets = {}
+
+exfat_nosigchk1_pattern_offsets = {}
+exfat_nosigchk2_pattern_offsets = {}
+
+fat32_noacidsigchk1_pattern_offsets = {}
+exfat_noacidsigchk1_pattern_offsets = {}
+fat32_noacidsigchk2_pattern_offsets = {}
+exfat_noacidsigchk2_pattern_offsets = {}
 
 def get_pattern_for_version(patterns: List[Pattern], version: str) -> Optional[Pattern]:
     """Get the matching pattern for a given firmware version"""
@@ -693,6 +769,9 @@ else:
         nim_blockfw_obj = next((p for p in NIM_PATTERNS if 'blockfw' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
     
         # For FS patterns
+        fs_noacidsigchk1_obj = next((p for p in FS_PATTERNS if 'fs_noacidsigchk1' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+        fs_noacidsigchk2_obj = next((p for p in FS_PATTERNS if 'fs_noacidsigchk2' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
+
         fs_noncasigchk_obj = next((p for p in FS_PATTERNS if 'noncasigchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
         fs_nocntchk_obj = next((p for p in FS_PATTERNS if 'nocntchk' in p.name and MAKEHOSVERSION(p.min_version, p.max_version, current_firmware_version)), None)
 
@@ -702,6 +781,9 @@ else:
         olsc_pattern = pattern_to_regex_bytestring(olsc_pattern_obj.pattern_string) if olsc_pattern_obj else None
         blankcal0crashfix_pattern = pattern_to_regex_bytestring(nim_blankcal0_obj.pattern_string) if nim_blankcal0_obj else None
         blockfirmwareupdates_pattern = pattern_to_regex_bytestring(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+        fs_noacidsigchk1_pattern = pattern_to_regex_bytestring(fs_noacidsigchk1_obj.pattern_string) if fs_noacidsigchk1_obj else None
+        fs_noacidsigchk2_pattern = pattern_to_regex_bytestring(fs_noacidsigchk2_obj.pattern_string) if fs_noacidsigchk2_obj else None
+
         fs_noncasigchk_pattern = pattern_to_regex_bytestring(fs_noncasigchk_obj.pattern_string) if fs_noncasigchk_obj else None
         fs_nocntchk_pattern = pattern_to_regex_bytestring(fs_nocntchk_obj.pattern_string) if fs_nocntchk_obj else None
 
@@ -725,6 +807,14 @@ else:
         blockfirmwareupdates_offset = nim_blockfw_obj.offset if nim_blockfw_obj else None
         blockfirmwareupdates_headoffset = nim_blockfw_obj.headoffset if nim_blockfw_obj else None
         blockfirmwareupdates_ghidra_pattern = format_sys_patch_string_to_ghidra_string(nim_blockfw_obj.pattern_string) if nim_blockfw_obj else None
+
+        fs_noacidsigchk1_offset = fs_noacidsigchk1_obj.offset if fs_noacidsigchk1_obj else None
+        fs_noacidsigchk1_headoffset = fs_noacidsigchk1_obj.headoffset if fs_noacidsigchk1_obj else None
+        fs_noacidsigchk1_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noacidsigchk1_obj.pattern_string) if fs_noacidsigchk1_obj else None
+
+        fs_noacidsigchk2_offset = fs_noacidsigchk2_obj.offset if fs_noacidsigchk2_obj else None
+        fs_noacidsigchk2_headoffset = fs_noacidsigchk2_obj.headoffset if fs_noacidsigchk2_obj else None
+        fs_noacidsigchk2_ghidra_pattern = format_sys_patch_string_to_ghidra_string(fs_noacidsigchk2_obj.pattern_string) if fs_noacidsigchk2_obj else None
 
         fs_noncasigchk_offset = fs_noncasigchk_obj.offset if fs_noncasigchk_obj else None
         fs_noncasigchk_headoffset = fs_noncasigchk_obj.headoffset if fs_noncasigchk_obj else None
@@ -751,10 +841,9 @@ else:
             if version_to_tuple(version) >= version_to_tuple("17.0.0"):
                 patch_check_module(nim_path, blankcal0crashfix_pattern, blankcal0crashfix_offset, blankcal0crashfix_headoffset, blankcal0crashfix_ghidra_pattern, mov2_patch, patch_size_4, adr_cond, 'NIM', find_patterns, blankcal0crashfix_pattern_diffs, blankcal0crashfix_pattern_offsets, block_fw_patch, ips_patch_database)
 
-            if version_to_tuple(version) >= version_to_tuple("10.0.0"):
-                patch_check_fs(decompressed_fat32_path, fat32hash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'FAT32', find_patterns, fat32_noncasigchk_pattern_diffs, fat32_nocntchk_pattern_diffs, fat32_noncasigchk_pattern_offsets, fat32_nocntchk_pattern_offsets, fs_kip_patch_database, ips_patch_database)
-                if os.path.exists(decompressed_exfat_path):
-                    patch_check_fs(decompressed_exfat_path, exfathash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, nop_patch, ret0_patch, tbz_cond, bl_cond, 'EXFAT', find_patterns, exfat_noncasigchk_pattern_diffs, exfat_nocntchk_pattern_diffs, exfat_noncasigchk_pattern_offsets, exfat_nocntchk_pattern_offsets, fs_kip_patch_database, ips_patch_database)
+            patch_check_fs(decompressed_fat32_path, fat32hash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noacidsigchk1_pattern, fs_noacidsigchk2_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noacidsigchk1_offset, fs_noacidsigchk2_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, fs_noacidsigchk1_ghidra_pattern, fs_noacidsigchk2_ghidra_pattern, nop_patch, ret0_patch, ret0_patch, ret0_patch, tbz_cond, bl_cond, bl_cond, bl_cond, fat32_noncasigchk_pattern_diffs, fat32_nocntchk_pattern_diffs, fat32_noacidsigchk1_pattern_diffs, fat32_noacidsigchk2_pattern_diffs, fat32_noncasigchk_pattern_offsets, fat32_nocntchk_pattern_offsets, fat32_noacidsigchk1_pattern_offsets, fat32_noacidsigchk2_pattern_offsets, fs_kip_patch_database, ips_patch_database, 'FAT32', find_patterns)
+            if os.path.exists(decompressed_exfat_path):
+                patch_check_fs(decompressed_exfat_path, exfathash, fs_noncasigchk_pattern, fs_nocntchk_pattern, fs_noacidsigchk1_pattern, fs_noacidsigchk2_pattern, fs_noncasigchk_offset, fs_nocntchk_offset, fs_noacidsigchk1_offset, fs_noacidsigchk2_offset, fs_noncasigchk_ghidra_pattern, fs_nocntchk_ghidra_pattern, fs_noacidsigchk1_ghidra_pattern, fs_noacidsigchk2_ghidra_pattern, nop_patch, ret0_patch, ret0_patch, ret0_patch, tbz_cond, bl_cond, bl_cond, bl_cond, exfat_noncasigchk_pattern_diffs, exfat_nocntchk_pattern_diffs, exfat_noacidsigchk1_pattern_diffs, exfat_noacidsigchk2_pattern_diffs, exfat_noncasigchk_pattern_offsets, exfat_nocntchk_pattern_offsets, exfat_noacidsigchk1_pattern_offsets, exfat_noacidsigchk2_pattern_offsets, fs_kip_patch_database, ips_patch_database, 'EXFAT', find_patterns)
 
             ## ssl more quirky and .nso0, leave as old format since it's not used by sys-patch anymore, and only for automatically forwarding the ssl patches
 
@@ -825,11 +914,6 @@ else:
                 find_patterns.write(f'\n(SSL) only the very latest pattern is supported (21.0.0+), current version is: {version}\n\n')
         patch_summary_file = f'output/{version}/{version}_patch_summary_with_diff_strings.txt'  
         find_patterns.close()
-
-    print("\n" + "="*80)
-    print("Updating scripts/pattern_diffs.py and patch databases incrementally...")
-    print("="*80 + "\n")
-
 
 if args.ams:
     if os.path.exists('package3_and_stratosphere_extracted'):
@@ -943,6 +1027,26 @@ try:
             logs.write(f"    '{version}': {debug_logs},\n")
     logs.close()
 
+    with open('output/fat32_noacidsigchk1_debug_logs.txt', 'w', encoding='utf-8') as logs:
+        for version, debug_logs in sorted(fat32_noacidsigchk1_pattern_offsets.items(), key=lambda x: version_to_tuple(x[0])):
+            logs.write(f"    '{version}': {debug_logs},\n")
+    logs.close()
+
+    with open('output/exfat_noacidsigchk1_debug_logs.txt', 'w', encoding='utf-8') as logs:
+        for version, debug_logs in sorted(exfat_noacidsigchk1_pattern_offsets.items(), key=lambda x: version_to_tuple(x[0])):
+            logs.write(f"    '{version}': {debug_logs},\n")
+    logs.close()   
+
+    with open('output/fat32_noacidsigchk2_debug_logs.txt', 'w', encoding='utf-8') as logs:
+        for version, debug_logs in sorted(fat32_noacidsigchk2_pattern_offsets.items(), key=lambda x: version_to_tuple(x[0])):
+            logs.write(f"    '{version}': {debug_logs},\n")
+    logs.close()
+
+    with open('output/exfat_noacidsigchk2_debug_logs.txt', 'w', encoding='utf-8') as logs:
+        for version, debug_logs in sorted(exfat_noacidsigchk2_pattern_offsets.items(), key=lambda x: version_to_tuple(x[0])):
+            logs.write(f"    '{version}': {debug_logs},\n")
+    logs.close()  
+
     if args.ams:
         with open('output/loader_debug_logs.txt', 'w', encoding='utf-8') as logs:
             for version, debug_logs in sorted(loader_pattern_offsets.items(), key=lambda x: version_to_tuple(x[0])):
@@ -961,6 +1065,10 @@ diff_categories = [
     ('blockfirmwareupdates_pattern_diffs', blockfirmwareupdates_pattern_diffs),
     ('nifm_pattern_diffs', nifm_pattern_diffs),
     ('olsc_pattern_diffs', olsc_pattern_diffs),
+    ('fat32_noacidsigchk1_pattern_diffs', fat32_noacidsigchk1_pattern_diffs),
+    ('exfat_noacidsigchk1_pattern_diffs', exfat_noacidsigchk1_pattern_diffs),
+    ('fat32_noacidsigchk2_pattern_diffs', fat32_noacidsigchk2_pattern_diffs),
+    ('exfat_noacidsigchk2_pattern_diffs', exfat_noacidsigchk2_pattern_diffs),
     ('fat32_noncasigchk_pattern_diffs', fat32_noncasigchk_pattern_diffs),
     ('exfat_noncasigchk_pattern_diffs', exfat_noncasigchk_pattern_diffs),
     ('fat32_nocntchk_pattern_diffs', fat32_nocntchk_pattern_diffs),
@@ -1035,11 +1143,10 @@ else:
     for entry in sdk_entries:
         if len(entry) >= 3:
             fw_version = entry[0]
-            full_hash = entry[1].upper()
-            sdk_version = entry[2]
-            if len(full_hash) >= 16:
-                short_16 = full_hash[:16]  # first 16 characters of the hash string
-                sdk_map[(fw_version, short_16)] = sdk_version
+            short_16 = entry[1]
+            full_hash = entry[2].upper()
+            sdk_version = entry[3]
+            sdk_map[(fw_version, short_16)] = sdk_version
 
     print(f"Built SDK map with {len(sdk_map)} unique (fw_version, 16-char short) entries")
 
@@ -1048,7 +1155,6 @@ else:
 
     added_count = 0
     new_kip_entries = []
-    import re
 
     for entry in kip_entries:
         if len(entry) == 5:

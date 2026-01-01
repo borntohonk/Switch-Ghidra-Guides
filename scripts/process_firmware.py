@@ -247,11 +247,11 @@ def sort_and_process():
     usb_buildid = extract_exefs(usb_path)
     if os.path.exists(fat32_path):
         fat32hash = sha256(open('sorted_firmware/by-type/Data/0100000000000819/romfs/nx/fat32_FS.kip1', 'rb').read()).hexdigest().upper()
-        fat32sdkstring = (system_version, fat32hash, fat32_sdkversion)
+        fat32sdkstring = (system_version, fat32hash[:16], fat32hash, fat32_sdkversion)
         sdk_versions.append(fat32sdkstring)
     if os.path.exists(exfat_path):
         exfathash = sha256(open('sorted_firmware/by-type/Data/010000000000081B/romfs/nx/exfat_FS.kip1', 'rb').read()).hexdigest().upper()
-        exfatsdkstring = (system_version, exfathash, exfat_sdkversion)
+        exfatsdkstring = (system_version, exfathash[:16], exfathash, exfat_sdkversion)
         sdk_versions.append(exfatsdkstring)
     print(f'\nfirmware version of files provided is: {system_version}\n')
     with open(f'output/{system_version}/{system_version}_hashes.txt', 'w') as hash_file:
