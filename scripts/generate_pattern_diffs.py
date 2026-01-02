@@ -174,9 +174,14 @@ known_blockfirmwareupdates_patterns = [
 
 known_fat32_and_exfat_noncasigchk_patterns = [
     {
-        'regex': '1E48391F.0071..00544',
+        'regex': '1E4839..00...0054',
+        'offset': '-21',
+        'version_range': '1.0.0 to 3.0.2'
+    },
+    {
+        'regex': '1E4839..00...0054',
         'offset': '-17',
-        'version_range': '10.0.0 to 16.1.0'
+        'version_range': '4.0.0 to 16.1.0'
     },
     {
         'regex': '0694..00.42.0091',
@@ -189,7 +194,7 @@ known_fat32_and_exfat_nocntchk_patterns = [
     {
         'regex': '00..0240F9....08.....00...00...0037',
         'offset': '6',
-        'version_range': '10.0.0 to 18.1.0'
+        'version_range': '1.0.0 to 18.1.0'
     },
     {
         'regex': '00..0240F9....08.....00...00...0054',
