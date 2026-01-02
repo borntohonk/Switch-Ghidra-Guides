@@ -84,22 +84,22 @@ def build_version_to_known_pattern_map(known_patterns: List[Dict]) -> Dict[str, 
 
 known_es_patterns = [
     {
-        'regex': 'E8.00...FF97.0300AA..00.....E0.0091..0094.7E4092.......A9',
+        'regex': 'E8..00......FF97..0300AA....00..........E0..0091....0094..7E4092..............A9',
         'offset': '32',
         'version_range': '1.0.0 to 8.1.1'
     },
     {
-        'regex': '00...............00.....A0..D1...97.......A9',
+        'regex': '00..............................00..........A0....D1......97..............A9',
         'offset': '30',
         'version_range': '9.0.0 to 11.0.1'
     },
     {
-        'regex': '02.00...........00...00.....A0..D1...97.......A9',
+        'regex': '02..00......................00......00..........A0....D1......97..............A9',
         'offset': '32',
         'version_range': '12.0.0 to 18.1.0'
     },
     {
-        'regex': 'A1.00...........00...00.....A0..D1...97.......A9',
+        'regex': 'A1..00......................00......00..........A0....D1......97..............A9',
         'offset': '32',
         'version_range': '19.0.0 to 99.99.99'
     },
@@ -107,12 +107,12 @@ known_es_patterns = [
 
 known_nifm_patterns = [
     {
-        'regex': '03.AAE003.AA...39..04F8....E0',
+        'regex': '03..AAE003..AA......39....04F8........E0',
         'offset': '-29',
         'version_range': '1.0.0 to 19.0.1'
     },
     {
-        'regex': '03.AA...AA.........0314AA..14AA',
+        'regex': '03..AA......AA..................0314AA....14AA',
         'offset': '-17',
         'version_range': '20.0.0 to 99.99.99'
     },
@@ -120,17 +120,17 @@ known_nifm_patterns = [
 
 known_olsc_patterns = [
     {
-        'regex': '00.73..F968024039..00...00',
+        'regex': '00..73....F968024039....00......00',
         'offset': '42',
         'version_range': '6.0.0 to 14.1.2'
     },
     {
-        'regex': '00.73..F968024039..00...00',
+        'regex': '00..73....F968024039....00......00',
         'offset': '38',
         'version_range': '15.0.0 to 18.1.0'
     },
     {
-        'regex': '00.73..F968024039..00...00',
+        'regex': '00..73....F968024039....00......00',
         'offset': '42',
         'version_range': '6.0.0 to 99.99.99'
     },
@@ -138,7 +138,7 @@ known_olsc_patterns = [
 
 known_blankcal0crashfix_patterns = [
     {
-        'regex': '00351F2003D5...............97..0094..00.....61',
+        'regex': '00351F2003D5..............................97....0094....00..........61',
         'offset': '6',
         'version_range': '17.0.0 to 99.99.99'
     },
@@ -146,27 +146,27 @@ known_blankcal0crashfix_patterns = [
 
 known_blockfirmwareupdates_patterns = [
     {
-        'regex': '1139F30301AA81.40F9E0.1191',
+        'regex': '1139F30301AA81..40F9E0..1191',
         'offset': '-30',
         'version_range': '1.0.0 to 5.1.0'
     },
     {
-        'regex': 'F30301AA.4E40F9E0..91',
+        'regex': 'F30301AA..4E40F9E0....91',
         'offset': '-40',
         'version_range': '6.0.0 to 6.2.0'
     },
     {
-        'regex': 'F30301AA014C40F9F40300AAE0..91',
+        'regex': 'F30301AA014C40F9F40300AAE0....91',
         'offset': '-36',
         'version_range': '7.0.0 to 10.2.0'
     },
     {
-        'regex': '280841F9084C00F9................C0035FD6',
+        'regex': '280841F9084C00F9................................C0035FD6',
         'offset': '28',
         'version_range': '11.0.0 to 11.0.1'
     },
     {
-        'regex': '280841F9084C00F9....C0035FD6',
+        'regex': '280841F9084C00F9........C0035FD6',
         'offset': '16',
         'version_range': '12.0.0 to 99.99.99'
     },
@@ -174,17 +174,17 @@ known_blockfirmwareupdates_patterns = [
 
 known_fat32_and_exfat_noncasigchk_patterns = [
     {
-        'regex': '1E4839..00...0054',
-        'offset': '-21',
+        'regex': '881E42B958808C521FC14271',
+        'offset': '-4',
         'version_range': '1.0.0 to 3.0.2'
     },
     {
-        'regex': '1E4839..00...0054',
+        'regex': '1E4839....00......0054',
         'offset': '-17',
         'version_range': '4.0.0 to 16.1.0'
     },
     {
-        'regex': '0694..00.42.0091',
+        'regex': '0694....00..42..0091',
         'offset': '-18',
         'version_range': '17.0.0 to 99.99.99'
     },
@@ -192,17 +192,17 @@ known_fat32_and_exfat_noncasigchk_patterns = [
 
 known_fat32_and_exfat_nocntchk_patterns = [
     {
-        'regex': '00..0240F9....08.....00...00...0037',
+        'regex': '00....0240F9........08..........00......00......0037',
         'offset': '6',
         'version_range': '1.0.0 to 18.1.0'
     },
     {
-        'regex': '00..0240F9....08.....00...00...0054',
+        'regex': '00....0240F9........08..........00......00......0054',
         'offset': '6',
         'version_range': '19.0.0 to 20.5.0'
     },
     {
-        'regex': '00..0240F9....E8.....00...00...0054',
+        'regex': '00....0240F9........E8..........00......00......0054',
         'offset': '6',
         'version_range': '21.0.0 to 99.99.99'
     },
