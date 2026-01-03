@@ -84,22 +84,22 @@ def build_version_to_known_pattern_map(known_patterns: List[Dict]) -> Dict[str, 
 
 known_es_patterns = [
     {
-        'regex': 'E8..00......FF97..0300AA....00..........E0..0091....0094..7E4092..............A9',
-        'offset': '32',
+        'regex': '0091....0094..7E4092',
+        'offset': '10',
         'version_range': '1.0.0 to 8.1.1'
     },
     {
-        'regex': '00..............................00..........A0....D1......97..............A9',
-        'offset': '30',
+        'regex': '00..........A0....D1....FF97',
+        'offset': '14',
         'version_range': '9.0.0 to 11.0.1'
     },
     {
-        'regex': '02..00......................00......00..........A0....D1......97..............A9',
+        'regex': '02........D2..52....0091',
         'offset': '32',
         'version_range': '12.0.0 to 18.1.0'
     },
     {
-        'regex': 'A1..00......................00......00..........A0....D1......97..............A9',
+        'regex': 'A1........031F2A....0091',
         'offset': '32',
         'version_range': '19.0.0 to 99.99.99'
     },
@@ -120,17 +120,17 @@ known_nifm_patterns = [
 
 known_olsc_patterns = [
     {
-        'regex': '00..73....F968024039....00......00',
+        'regex': '00..73....F9....4039',
         'offset': '42',
         'version_range': '6.0.0 to 14.1.2'
     },
     {
-        'regex': '00..73....F968024039....00......00',
+        'regex': '00..73....F9....4039',
         'offset': '38',
         'version_range': '15.0.0 to 18.1.0'
     },
     {
-        'regex': '00..73....F968024039....00......00',
+        'regex': '00..73....F9....4039',
         'offset': '42',
         'version_range': '6.0.0 to 99.99.99'
     },
@@ -138,43 +138,43 @@ known_olsc_patterns = [
 
 known_blankcal0crashfix_patterns = [
     {
-        'regex': '00351F2003D5..............................97....0094....00..........61',
-        'offset': '6',
+        'regex': '03D5..............................97....0094....00..........61',
+        'offset': '2',
         'version_range': '17.0.0 to 99.99.99'
     },
 ]
 
 known_blockfirmwareupdates_patterns = [
     {
-        'regex': '1139F30301AA81..40F9E0..1191',
+        'regex': '1139F3',
         'offset': '-30',
         'version_range': '1.0.0 to 5.1.0'
     },
     {
-        'regex': 'F30301AA..4E40F9E0....91',
+        'regex': 'F30301AA..4E',
         'offset': '-40',
         'version_range': '6.0.0 to 6.2.0'
     },
     {
-        'regex': 'F30301AA014C40F9F40300AAE0....91',
+        'regex': 'F30301AA014C',
         'offset': '-36',
         'version_range': '7.0.0 to 10.2.0'
     },
     {
-        'regex': '280841F9084C00F9................................C0035FD6',
-        'offset': '28',
+        'regex': '9AF0....................C0035FD6',
+        'offset': '16',
         'version_range': '11.0.0 to 11.0.1'
     },
     {
-        'regex': '280841F9084C00F9........C0035FD6',
-        'offset': '16',
+        'regex': '41....4C............C0035FD6',
+        'offset': '14',
         'version_range': '12.0.0 to 99.99.99'
     },
 ]
 
 known_fat32_and_exfat_noncasigchk_patterns = [
     {
-        'regex': '881E42B958808C521FC14271',
+        'regex': '88..42..58',
         'offset': '-4',
         'version_range': '1.0.0 to 3.0.2'
     },
@@ -192,19 +192,14 @@ known_fat32_and_exfat_noncasigchk_patterns = [
 
 known_fat32_and_exfat_nocntchk_patterns = [
     {
-        'regex': '00....0240F9........08..........00......00......0037',
-        'offset': '6',
+        'regex': '40F9........081C00121F05',
+        'offset': '2',
         'version_range': '1.0.0 to 18.1.0'
     },
     {
-        'regex': '00....0240F9........08..........00......00......0054',
-        'offset': '6',
-        'version_range': '19.0.0 to 20.5.0'
-    },
-    {
-        'regex': '00....0240F9........E8..........00......00......0054',
-        'offset': '6',
-        'version_range': '21.0.0 to 99.99.99'
+        'regex': '40F9............40B9091C',
+        'offset': '2',
+        'version_range': '19.0.0 to 99.99.99'
     },
 ]
 

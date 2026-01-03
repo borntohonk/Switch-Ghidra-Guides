@@ -237,10 +237,10 @@ FW_VER_ANY = '99.99.99'
 
 # Define pattern arrays for each module type
 ES_PATTERNS = [
-    Pattern('es_1.0.0-8.1.1',               'E8..00......FF97..0300AA....00..........E0..0091....0094..7E4092..............A9', 32, 0, 'ES', es_cond, mov0_patch, '1.0.0', '8.1.1'),
-    Pattern('es_9.0.0-11.0.1',              '00..............................00..........A0....D1......97..............A9', 30, 0, 'ES', es_cond, mov0_patch, '9.0.0', '11.0.1'),
-    Pattern('es_12.0.0-18.1.0',             '02..00......................00......00..........A0....D1......97..............A9', 32, 0, 'ES', es_cond, mov0_patch, '12.0.0', '18.1.0'),
-    Pattern('es_19.0.0+',                   'A1..00......................00......00..........A0....D1......97..............A9', 32, 0, 'ES', es_cond, mov0_patch, '19.0.0', FW_VER_ANY),
+    Pattern('es_1.0.0-8.1.1',               '0091....0094..7E4092', 10, 0, 'ES', es_cond, mov0_patch, '1.0.0', '8.1.1'),
+    Pattern('es_9.0.0-11.0.1',              '00..........A0....D1....FF97', 14, 0, 'ES', es_cond, mov0_patch, '9.0.0', '11.0.1'),
+    Pattern('es_12.0.0-18.1.0',             '02........D2..52....0091', 32, 0, 'ES', es_cond, mov0_patch, '12.0.0', '18.1.0'),
+    Pattern('es_19.0.0+',                   'A1........031F2A....0091', 32, 0, 'ES', es_cond, mov0_patch, '19.0.0', FW_VER_ANY),
 ]
 
 
@@ -251,31 +251,29 @@ NIFM_PATTERNS = [
 
 
 OLSC_PATTERNS = [
-    Pattern('olsc_6.0.0-14.1.2',            '00..73....F968024039....00......00', 42, 0, 'OLSC', bl_cond, ret1_patch, '6.0.0', '14.1.2'),
-    Pattern('olsc_15.0.0-18.1.0',           '00..73....F968024039....00......00', 38, 0, 'OLSC', bl_cond, ret1_patch, '15.0.0', '18.1.0'),
-    Pattern('olsc_19.0.0+',                 '00..73....F968024039....00......00', 42, 0, 'OLSC', bl_cond, ret1_patch, '19.0.0', FW_VER_ANY),
+    Pattern('olsc_6.0.0-14.1.2',            '00..73....F9....4039', 42, 0, 'OLSC', bl_cond, ret1_patch, '6.0.0', '14.1.2'),
+    Pattern('olsc_15.0.0-18.1.0',           '00..73....F9....4039', 38, 0, 'OLSC', bl_cond, ret1_patch, '15.0.0', '18.1.0'),
+    Pattern('olsc_19.0.0+',                 '00..73....F9....4039', 42, 0, 'OLSC', bl_cond, ret1_patch, '19.0.0', FW_VER_ANY),
 ]
-
 
 NIM_PATTERNS = [
-    Pattern('nim_blankcal0_17.0.0+',        '00351F2003D5..............................97....0094....00..........61', 6, 0, 'NIM', adr_cond, mov2_patch, '17.0.0', FW_VER_ANY),
-    Pattern('nim_blockfw_1.0.0-5.1.0',      '1139F30301AA81..40F9E0..1191', -30, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '1.0.0', '5.1.0'),
-    Pattern('nim_blockfw_6.0.0-6.2.0',      'F30301AA..4E40F9E0....91', -40, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '6.0.0', '6.2.0'),
-    Pattern('nim_blockfw_7.0.0-10.2.0',     'F30301AA014C40F9F40300AAE0....91', -36, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '7.0.0', '10.2.0'),
-    Pattern('nim_blockfw_11.0.0-11.0.1',    '280841F9084C00F9................................C0035FD6', 28, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '11.0.0', '11.0.1'),
-    Pattern('nim_blockfw_12.0.0+',          '280841F9084C00F9........C0035FD6', 16, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '12.0.0', FW_VER_ANY),
+    Pattern('nim_blankcal0_17.0.0+',        '03D5..............................97....0094....00..........61', 2, 0, 'NIM', adr_cond, mov2_patch, '17.0.0', FW_VER_ANY),
+    Pattern('nim_blockfw_1.0.0-5.1.0',      '1139F3', -30, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '1.0.0', '5.1.0'),
+    Pattern('nim_blockfw_6.0.0-6.2.0',      'F30301AA..4E', -40, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '6.0.0', '6.2.0'),
+    Pattern('nim_blockfw_7.0.0-10.2.0',     'F30301AA014C', -36, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '7.0.0', '10.2.0'),
+    Pattern('nim_blockfw_11.0.0-11.0.1',    '9AF0....................C0035FD6', 16, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '11.0.0', '11.0.1'),
+    Pattern('nim_blockfw_12.0.0+',          '41....4C............C0035FD6', 14, 0, 'NIM', block_fw_updates_cond, mov0_ret_patch, '12.0.0', FW_VER_ANY),
+    
 ]
-
 
 FS_PATTERNS = [
     Pattern('fs_noacidsigchk1_1.0.0-9.2.0', 'C8FE4739', -24, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
     Pattern('fs_noacidsigchk2_1.0.0-9.2.0', '0210911F000072', -5, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '9.2.0'),
-    Pattern('fs_noncasigchk_1.0.0-3.0.2',   '881E42B958808C521FC14271', -4, 0, 'FS', tbz_cond, nop_patch, '1.0.0', '3.0.2'),
+    Pattern('fs_noncasigchk_1.0.0-3.0.2',   '88..42..58', -4, 0, 'FS', tbz_cond, nop_patch, '1.0.0', '3.0.2'),
     Pattern('fs_noncasigchk_4.0.0-16.1.0',  '1E4839....00......0054', -17, 0, 'FS', tbz_cond, nop_patch, '4.0.0', '16.1.0'),
     Pattern('fs_noncasigchk_17.0.0+',       '0694....00..42..0091', -18, 0, 'FS', tbz_cond, nop_patch, '17.0.0', FW_VER_ANY),
-    Pattern('fs_nocntchk_1.0.0-18.1.0',     '00....0240F9........08..........00......00......0037', 6, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '18.1.0'),
-    Pattern('fs_nocntchk_19.0.0-20.5.0',    '00....0240F9........08..........00......00......0054', 6, 0, 'FS', bl_cond, ret0_patch, '19.0.0', '20.5.0'),
-    Pattern('fs_nocntchk_21.0.0+',          '00....0240F9........E8..........00......00......0054', 6, 0, 'FS', bl_cond, ret0_patch, '21.0.0', FW_VER_ANY),
+    Pattern('fs_nocntchk_1.0.0-18.1.0',     '40F9........081C00121F05', 2, 0, 'FS', bl_cond, ret0_patch, '1.0.0', '18.1.0'),
+    Pattern('fs_nocntchk_19.0.0+',          '40F9............40B9091C', 2, 0, 'FS', bl_cond, ret0_patch, '19.0.0', FW_VER_ANY),
 ]
 
 

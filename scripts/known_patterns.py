@@ -28,8 +28,8 @@
 
 # es_pattern_diffs
 es_pattern_diffs_partial_regexes = {
-    # Known pattern: E8..00......FF97..0300AA....00..........E0..0091....0094..7E4092..............A9
-    # Offset: 32
+    # Known pattern: 0091....0094..7E4092
+    # Offset: 10
     # Valid from version: 1.0.0 to 8.1.1
     # Original known range: 1.0.0 to 8.1.1
     "E8 2B 00 A9 37 FE FF 97 F3 03 00 AA E0 A3 00 91 85 0E 00 94 E0 C3 00 91 90 0C 00 94 60 7E 40 92 -> BF 43 00 D1 <- FD 7B 41 A9 F4 4F C2 A8 C0 03 5F D6 F5 0F 1D F8 F4 4F 01 A9 FD 7B 02 A9 FD 83 00 91 FF 83 00 D1 F5 03 00 AA B3 22 03 91 E0 03 13 AA F4 03 01 AA C0 7A 00 94 80 06 40 A9 E2 03 15 AA": [{'version': '1.0.0'}],
@@ -43,8 +43,8 @@ es_pattern_diffs_partial_regexes = {
     "E8 27 00 A9 35 FF FF 97 F3 03 00 AA E0 A3 00 91 7A AF FF 97 E0 C3 00 91 F8 4D 00 94 60 7E 40 92 -> FD 7B 46 A9 <- F4 4F 45 A9 FF C3 01 91 C0 03 5F D6 00 00 00 00 00 00 00 00 FF 03 01 D1 F5 0B 00 F9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 88 1C 99 52 13 00 08 8B F5 03 00 AA E0 03 13 AA F4 03 01 AA": [{'version': '7.0.0'}, {'version': '7.0.1'}],
     "E8 27 00 A9 8D FF FF 97 F3 03 00 AA E0 A3 00 91 4A AF FF 97 E0 C3 00 91 8C 4F 00 94 60 7E 40 92 -> FD 7B 46 A9 <- F4 4F 45 A9 FF C3 01 91 C0 03 5F D6 00 00 00 00 00 00 00 00 FF 03 01 D1 F5 0B 00 F9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 88 22 99 52 13 00 08 8B F5 03 00 AA E0 03 13 AA F4 03 01 AA": [{'version': '8.0.0'}, {'version': '8.0.1'}, {'version': '8.1.0'}, {'version': '8.1.1'}],
 
-    # Known pattern: 00..............................00..........A0....D1......97..............A9
-    # Offset: 30
+    # Known pattern: 00..........A0....D1....FF97
+    # Offset: 14
     # Valid from version: 9.0.0 to 11.0.1
     # Original known range: 9.0.0 to 11.0.1
     "02 00 00 14 33 D2 85 52 E0 43 00 91 40 2C 00 94 E0 63 00 91 46 23 00 94 A0 C3 00 D1 44 D7 FF 97 -> E0 03 13 AA <- FD 7B 48 A9 F4 4F 47 A9 FF 43 02 91 C0 03 5F D6 00 00 00 00 00 00 00 00 FC 0F 1C F8 F6 57 01 A9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 FF 43 10 D1 F6 03 02 AA F4 03 01 2A 01 A0 03 91": [{'version': '9.0.0'}, {'version': '9.1.0'}, {'version': '9.2.0'}],
@@ -52,7 +52,7 @@ es_pattern_diffs_partial_regexes = {
     "02 00 00 14 33 D2 85 52 E0 63 00 91 22 2D 00 94 A0 63 00 D1 28 24 00 94 A0 03 01 D1 9E D5 FF 97 -> E0 03 13 AA <- FD 7B 52 A9 F4 4F 51 A9 FC 83 40 F9 FF C3 04 91 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 FC 0F 1C F8 F6 57 01 A9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 FF 43 10 D1 F6 03 02 AA": [{'version': '10.1.0'}, {'version': '10.2.0'}],
     "83 28 00 94 03 00 00 14 33 12 89 52 F3 07 A0 72 A0 63 00 D1 C6 20 00 94 A0 03 01 D1 A3 D6 FF 97 -> E0 03 13 AA <- FD 7B 52 A9 F4 4F 51 A9 FC 83 40 F9 FF C3 04 91 C0 03 5F D6 E0 63 00 91 E1 43 00 91 E5 28 00 94 E8 0B 40 F9 C8 00 00 B4 E0 23 00 91 45 EE FF 97 A0 00 00 34 13 7C 40 92 E8 FF FF 17": [{'version': '11.0.0'}, {'version': '11.0.1'}],
 
-    # Known pattern: 02..00......................00......00..........A0....D1......97..............A9
+    # Known pattern: 02........D2..52....0091
     # Offset: 32
     # Valid from version: 12.0.0 to 18.1.0
     # Original known range: 12.0.0 to 18.1.0
@@ -66,7 +66,7 @@ es_pattern_diffs_partial_regexes = {
     "02 00 00 14 33 D2 85 52 E0 63 00 91 B0 2B 00 94 A0 63 00 91 80 4E 00 94 A0 83 00 D1 CD C7 FF 97 -> E0 03 13 2A <- F4 4F 52 A9 FC 8B 40 F9 FD 7B 50 A9 FF C3 04 91 C0 03 5F D6 FD 7B BC A9 FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 43 10 D1 F6 03 02 AA F4 03 01 2A 01 A0 03 91 A0 63 00 91": [{'version': '17.0.0'}, {'version': '17.0.1'}],
     "02 00 00 14 33 D2 85 52 A0 6B 00 91 18 2D 00 94 A0 6F 00 91 60 50 00 94 A0 83 00 D1 01 C9 FF 97 -> E0 03 13 2A <- F4 4F 51 A9 FC 83 40 F9 FD 7B 4F A9 FF 83 04 91 C0 03 5F D6 FD 7B BC A9 FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 43 10 D1 F6 03 02 AA F4 03 01 2A 01 A0 03 91 A0 63 00 91": [{'version': '18.0.0'}, {'version': '18.0.1'}, {'version': '18.1.0'}],
 
-    # Known pattern: A1..00......................00......00..........A0....D1......97..............A9
+    # Known pattern: A1........031F2A....0091
     # Offset: 32
     # Valid from version: 19.0.0 to 21.1.0
     # Original known range: 19.0.0 to 99.99.99
@@ -79,8 +79,8 @@ es_pattern_diffs_partial_regexes = {
 
 # nim_blankcal0crashfix_pattern_diffs
 nim_blankcal0crashfix_pattern_diffs_partial_regexes = {
-    # Known pattern: 00351F2003D5..............................97....0094....00..........61
-    # Offset: 6
+    # Known pattern: 03D5..............................97....0094....00..........61
+    # Offset: 2
     # Valid from version: 17.0.0 to 21.1.0
     # Original known range: 17.0.0 to 99.99.99
     "21 05 80 52 E0 03 13 AA E2 03 1F AA 3A F8 FC 97 8A 00 00 94 F7 03 00 2A 80 0F 00 35 1F 20 03 D5 -> C2 15 00 10 <- 81 D1 89 52 E0 03 13 AA 32 F8 FC 97 82 00 00 94 F7 03 00 2A 80 0E 00 35 61 02 80 52 E0 03 13 AA 22 00 80 52 2B F8 FC 97 7B 00 00 94 F7 03 00 2A A0 0D 00 35 42 01 80 52 81 02 80 52": [{'version': '17.0.0'}, {'version': '17.0.1'}],
@@ -95,7 +95,7 @@ nim_blankcal0crashfix_pattern_diffs_partial_regexes = {
 
 # nim_blockfirmwareupdates_pattern_diffs
 nim_blockfirmwareupdates_pattern_diffs_partial_regexes = {
-    # Known pattern: 1139F30301AA81..40F9E0..1191
+    # Known pattern: 1139F3
     # Offset: -30
     # Valid from version: 1.0.0 to 5.1.0
     # Original known range: 1.0.0 to 5.1.0
@@ -108,13 +108,13 @@ nim_blockfirmwareupdates_pattern_diffs_partial_regexes = {
     "00 80 02 91 1F 71 FF 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 -> FC 0F 1C F8 <- F6 57 01 A9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 FF 43 17 D1 F4 03 00 AA FF 03 11 39 F3 03 01 AA 81 4E 40 F9 E0 03 11 91 FD B6 FF 97 68 05 00 F0 08 39 11 91 A9 08 00 90 29 41 12 91": [{'version': '5.0.0'}, {'version': '5.0.1'}, {'version': '5.0.2'}],
     "00 80 02 91 1F 71 FF 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 -> FC 0F 1C F8 <- F6 57 01 A9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 FF 43 17 D1 F4 03 00 AA FF 03 11 39 F3 03 01 AA 81 4E 40 F9 E0 03 11 91 FD B6 FF 97 68 05 00 F0 08 39 13 91 A9 08 00 90 29 41 12 91": [{'version': '5.1.0'}],
 
-    # Known pattern: F30301AA..4E40F9E0....91
+    # Known pattern: F30301AA..4E
     # Offset: -40
     # Valid from version: 6.0.0 to 6.2.0
     # Original known range: 6.0.0 to 6.2.0
     "00 80 02 91 B7 2F FF 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 -> FC 6F BA A9 <- FA 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 FD 7B 05 A9 FD 43 01 91 FF 43 17 D1 F4 03 00 AA FF 43 11 39 F3 03 01 AA 81 4E 40 F9 E0 43 11 91 2B 0A 00 94 28 03 00 F0 08 65 10 91": [{'version': '6.0.0'}, {'version': '6.0.1'}, {'version': '6.1.0'}, {'version': '6.2.0'}],
 
-    # Known pattern: F30301AA014C40F9F40300AAE0....91
+    # Known pattern: F30301AA014C
     # Offset: -36
     # Valid from version: 7.0.0 to 10.2.0
     # Original known range: 7.0.0 to 10.2.0
@@ -126,14 +126,14 @@ nim_blockfirmwareupdates_pattern_diffs_partial_regexes = {
     "00 80 02 91 37 FE FE 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 -> FC 6F BA A9 <- FA 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 FD 7B 05 A9 FD 43 01 91 FF 43 17 D1 FF 23 11 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 23 11 91 67 16 00 94 48 04 00 B0 08 79 1C 91": [{'version': '10.0.0'}, {'version': '10.0.1'}, {'version': '10.0.2'}, {'version': '10.0.3'}, {'version': '10.0.4'}],
     "00 80 02 91 03 FA FE 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 00 00 00 00 00 00 00 00 00 00 00 00 -> FC 6F BA A9 <- FA 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 FD 7B 05 A9 FD 43 01 91 FF 43 17 D1 FF 23 11 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 23 11 91 67 16 00 94 48 04 00 90 08 15 1F 91": [{'version': '10.1.0'}, {'version': '10.2.0'}],
 
-    # Known pattern: 280841F9084C00F9................................C0035FD6
-    # Offset: 28
+    # Known pattern: 9AF0....................C0035FD6
+    # Offset: 16
     # Valid from version: 11.0.0 to 11.0.1
     # Original known range: 11.0.0 to 11.0.1
     "FD 03 00 91 28 08 41 F9 08 4C 00 F9 00 80 02 91 9A F0 FE 97 00 7C 40 92 FD 7B C1 A8 C0 03 5F D6 -> FC 0F 1C F8 <- F6 57 01 A9 F4 4F 02 A9 FD 7B 03 A9 FD C3 00 91 FF 03 17 D1 FF 03 11 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 03 11 91 83 15 00 94 68 04 00 D0 08 25 01 91 A8 83 1D F8 68 07 00 D0": [{'version': '11.0.0'}, {'version': '11.0.1'}],
 
-    # Known pattern: 280841F9084C00F9........C0035FD6
-    # Offset: 16
+    # Known pattern: 41....4C............C0035FD6
+    # Offset: 14
     # Valid from version: 12.0.0 to 21.1.0
     # Original known range: 12.0.0 to 99.99.99
     "E2 03 00 AA E3 03 1F 2A E5 03 00 AA 5A D7 FC 97 28 08 41 F9 08 4C 00 F9 E0 03 1F AA C0 03 5F D6 -> FD 7B BD A9 <- FC 57 01 A9 FD 03 00 91 F4 4F 02 A9 FF C3 28 D1 FF 83 1D 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 83 1D 91 B3 15 00 94 E8 C3 1A 91 09 C1 00 91 08 01 01 91 E8 7B 03 F9 E8 7F 03 F9": [{'version': '12.0.0'}, {'version': '12.0.1'}, {'version': '12.0.2'}, {'version': '12.0.3'}],
@@ -189,7 +189,7 @@ nifm_pattern_diffs_partial_regexes = {
 
 # olsc_pattern_diffs
 olsc_pattern_diffs_partial_regexes = {
-    # Known pattern: 00..73....F968024039....00......00
+    # Known pattern: 00..73....F9....4039
     # Offset: 42
     # Valid from version: 6.0.0 to 14.1.2
     # Original known range: 6.0.0 to 14.1.2
@@ -207,7 +207,7 @@ olsc_pattern_diffs_partial_regexes = {
     "C8 16 00 35 40 12 00 F0 00 08 47 F9 42 04 00 D0 42 B0 1A 91 63 04 00 90 63 40 1B 91 21 00 80 52 -> CF 44 00 94 <- 1F 04 00 F1 21 16 00 54 40 12 00 F0 00 0C 47 F9 42 04 00 D0 42 B0 1A 91 63 04 00 90 63 4C 26 91 21 00 80 52 C5 44 00 94 1F 04 00 F1 E1 14 00 54 40 12 00 F0 00 10 47 F9 42 04 00 D0": [{'version': '13.1.0'}, {'version': '13.2.0'}, {'version': '13.2.1'}],
     "C8 16 00 35 60 11 00 F0 00 14 47 F9 62 03 00 D0 42 BC 25 91 83 03 00 90 63 54 28 91 21 00 80 52 -> 6D 24 00 94 <- 1F 04 00 F1 21 16 00 54 60 11 00 F0 00 18 47 F9 62 03 00 D0 42 BC 25 91 83 03 00 90 63 D4 32 91 21 00 80 52 63 24 00 94 1F 04 00 F1 E1 14 00 54 60 11 00 F0 00 1C 47 F9 62 03 00 D0": [{'version': '14.0.0'}, {'version': '14.1.0'}, {'version': '14.1.1'}, {'version': '14.1.2'}],
 
-    # Known pattern: 00..73....F968024039....00......00
+    # Known pattern: 00..73....F9....4039
     # Offset: 38
     # Valid from version: 15.0.0 to 18.1.0
     # Original known range: 15.0.0 to 18.1.0
@@ -217,7 +217,7 @@ olsc_pattern_diffs_partial_regexes = {
     "68 02 40 39 28 1D 00 35 02 07 00 D0 42 C8 23 91 1F 20 03 D5 63 DC 71 70 A0 13 00 D1 21 00 80 52 -> 46 ED FF 97 <- 1F 04 00 F1 E1 1C 00 54 A9 0B 00 D0 A8 C3 5F 38 02 07 00 D0 42 C8 23 91 29 D1 40 F9 23 07 00 D0 63 9C 20 91 A0 13 00 D1 28 01 00 39 21 00 80 52 39 ED FF 97 1F 04 00 F1 41 1B 00 54": [{'version': '17.0.0'}, {'version': '17.0.1'}],
     "68 02 40 39 28 1D 00 35 E2 05 00 F0 42 CC 2A 91 1F 20 03 D5 03 67 60 10 A0 13 00 D1 21 00 80 52 -> EF 4E FF 97 <- 1F 04 00 F1 E1 1C 00 54 89 0A 00 90 A8 C3 5F 38 E2 05 00 F0 42 CC 2A 91 29 C5 42 F9 E3 05 00 D0 63 80 2F 91 A0 13 00 D1 28 01 00 39 21 00 80 52 E2 4E FF 97 1F 04 00 F1 41 1B 00 54": [{'version': '18.0.0'}, {'version': '18.0.1'}, {'version': '18.1.0'}],
 
-    # Known pattern: 00..73....F968024039....00......00
+    # Known pattern: 00..73....F9....4039
     # Offset: 42
     # Valid from version: 19.0.0 to 21.1.0
     # Original known range: 19.0.0 to 99.99.99
@@ -232,7 +232,7 @@ olsc_pattern_diffs_partial_regexes = {
 
 # fat32_noncasigchk_pattern_diffs
 fat32_noncasigchk_pattern_diffs_partial_regexes = {
-    # Known pattern: 881E42B958808C521FC14271
+    # Known pattern: 88..42..58
     # Offset: -4
     # Valid from version: 1.0.0 to 3.0.2
     # Original known range: 1.0.0 to 3.0.2
@@ -280,7 +280,7 @@ fat32_noncasigchk_pattern_diffs_partial_regexes = {
 
 # exfat_noncasigchk_pattern_diffs
 exfat_noncasigchk_pattern_diffs_partial_regexes = {
-    # Known pattern: 881E42B958808C521FC14271
+    # Known pattern: 88..42..58
     # Offset: -4
     # Valid from version: 2.0.0 to 3.0.2
     # Original known range: 2.0.0 to 3.0.2
@@ -327,8 +327,8 @@ exfat_noncasigchk_pattern_diffs_partial_regexes = {
 
 # fat32_nocntchk_pattern_diffs
 fat32_nocntchk_pattern_diffs_partial_regexes = {
-    # Known pattern: 00....0240F9........08..........00......00......0037
-    # Offset: 6
+    # Known pattern: 40F9........081C00121F05
+    # Offset: 2
     # Valid from version: 1.0.0 to 18.1.0
     # Original known range: 1.0.0 to 18.1.0
     "E1 05 00 54 08 1C 00 12 1F 11 00 71 81 00 00 54 79 00 00 37 5A CB 40 91 29 00 00 14 A0 02 40 F9 -> F5 25 00 94 <- 08 1C 00 12 1F 05 00 71 81 00 00 54 78 00 00 37 5A CB 40 91 21 00 00 14 08 08 00 D0 08 81 1E 91 E0 63 00 91 18 D9 76 B8 F0 25 00 94 E8 16 46 F9 00 09 40 F9 A9 02 40 F9 E2 63 00 91": [{'version': '1.0.0'}],
@@ -355,26 +355,21 @@ fat32_nocntchk_pattern_diffs_partial_regexes = {
     "A1 2E 82 D2 81 A4 B7 F2 40 00 9C 52 C0 05 A0 72 41 1A C8 F2 21 9B E4 F2 2D 00 00 14 A0 02 40 F9 -> 3A 5E 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 C1 56 9D D2 21 4E A6 F2 00 C9 40 91 21 14 DC F2 61 6D E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 4F 5E 03 94": [{'version': '18.0.0'}, {'version': '18.0.1'}],
     "C1 C7 90 D2 A1 3D BB F2 40 00 9C 52 C0 05 A0 72 01 A7 C0 F2 C1 8D EA F2 2D 00 00 14 A0 02 40 F9 -> 3A 5E 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 61 D0 9C D2 61 74 A0 F2 00 C9 40 91 41 31 DF F2 61 4C E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 4F 5E 03 94": [{'version': '18.1.0'}],
 
-    # Known pattern: 00....0240F9........08..........00......00......0054
-    # Offset: 6
-    # Valid from version: 19.0.0 to 20.5.0
-    # Original known range: 19.0.0 to 20.5.0
+    # Known pattern: 40F9............40B9091C
+    # Offset: 2
+    # Valid from version: 19.0.0 to 21.1.0
+    # Original known range: 19.0.0 to 99.99.99
     "C0 05 A0 72 E1 B4 D1 F2 81 F0 F8 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> 89 74 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 A1 F9 92 D2 21 43 B5 F2 00 C9 40 91 E1 5C D5 F2 61 5C EB F2 28 00 00 14 1F 05 00 71": [{'version': '19.0.0'}, {'version': '19.0.1'}],
     "C0 05 A0 72 A1 60 D5 F2 61 22 F4 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> D9 89 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 82 94 D2 C1 FD B0 F2 00 C9 40 91 61 A8 C1 F2 61 25 E8 F2 28 00 00 14 1F 05 00 71": [{'version': '20.0.0'}, {'version': '20.0.1'}],
     "C0 05 A0 72 81 AF C6 F2 C1 E7 E0 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> D9 89 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 E4 88 D2 21 ED BC F2 00 C9 40 91 01 E6 C3 F2 01 36 F0 F2 28 00 00 14 1F 05 00 71": [{'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
-
-    # Known pattern: 00....0240F9........E8..........00......00......0054
-    # Offset: 6
-    # Valid from version: 21.0.0 to 21.1.0
-    # Original known range: 21.0.0 to 99.99.99
     "C1 95 97 D2 C1 47 B3 F2 41 A2 D5 F2 61 18 FF F2 00 C9 40 91 73 00 00 14 F9 03 00 2A A0 02 40 F9 -> 12 8C 03 94 <- E8 02 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 2A 83 D2 01 C8 A9 F2 01 24 D0 F2 41 63 F9 F2 00 C9 40 91 62 00 00 14 1F 05 00 71": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}],
 
 }
 
 # exfat_nocntchk_pattern_diffs
 exfat_nocntchk_pattern_diffs_partial_regexes = {
-    # Known pattern: 00....0240F9........08..........00......00......0037
-    # Offset: 6
+    # Known pattern: 40F9........081C00121F05
+    # Offset: 2
     # Valid from version: 2.0.0 to 18.1.0
     # Original known range: 2.0.0 to 18.1.0
     "81 07 00 54 08 1C 00 12 1F 11 00 71 81 00 00 54 79 00 00 37 5A CB 40 91 36 00 00 14 A0 02 40 F9 -> 45 33 00 94 <- 08 1C 00 12 1F 05 00 71 81 00 00 54 78 00 00 37 5A CB 40 91 2E 00 00 14 78 00 00 36 A0 02 40 F9 49 33 00 94 A1 02 40 F9 E0 03 17 AA F6 0D 00 94 60 00 00 34 1A 7C 40 92 25 00 00 14": [{'version': '2.0.0'}, {'version': '2.1.0'}, {'version': '2.2.0'}, {'version': '2.3.0'}],
@@ -400,18 +395,13 @@ exfat_nocntchk_pattern_diffs_partial_regexes = {
     "A1 2E 82 D2 81 A4 B7 F2 40 00 9C 52 C0 05 A0 72 41 1A C8 F2 21 9B E4 F2 2D 00 00 14 A0 02 40 F9 -> 5E 8A 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 C1 56 9D D2 21 4E A6 F2 00 C9 40 91 21 14 DC F2 61 6D E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 73 8A 03 94": [{'version': '18.0.0'}, {'version': '18.0.1'}],
     "C1 C7 90 D2 A1 3D BB F2 40 00 9C 52 C0 05 A0 72 01 A7 C0 F2 C1 8D EA F2 2D 00 00 14 A0 02 40 F9 -> 5E 8A 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 61 D0 9C D2 61 74 A0 F2 00 C9 40 91 41 31 DF F2 61 4C E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 73 8A 03 94": [{'version': '18.1.0'}],
 
-    # Known pattern: 00....0240F9........08..........00......00......0054
-    # Offset: 6
-    # Valid from version: 19.0.0 to 20.5.0
-    # Original known range: 19.0.0 to 20.5.0
+    # Known pattern: 40F9............40B9091C
+    # Offset: 2
+    # Valid from version: 19.0.0 to 21.1.0
+    # Original known range: 19.0.0 to 99.99.99
     "C0 05 A0 72 E1 B4 D1 F2 81 F0 F8 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> 95 A2 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 A1 F9 92 D2 21 43 B5 F2 00 C9 40 91 E1 5C D5 F2 61 5C EB F2 28 00 00 14 1F 05 00 71": [{'version': '19.0.0'}, {'version': '19.0.1'}],
     "C0 05 A0 72 A1 60 D5 F2 61 22 F4 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> 21 B8 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 82 94 D2 C1 FD B0 F2 00 C9 40 91 61 A8 C1 F2 61 25 E8 F2 28 00 00 14 1F 05 00 71": [{'version': '20.0.0'}, {'version': '20.0.1'}],
     "C0 05 A0 72 81 AF C6 F2 C1 E7 E0 F2 3B 00 00 14 08 1C 00 12 1F 0D 00 71 41 06 00 54 A0 02 40 F9 -> 21 B8 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 E4 88 D2 21 ED BC F2 00 C9 40 91 01 E6 C3 F2 01 36 F0 F2 28 00 00 14 1F 05 00 71": [{'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
-
-    # Known pattern: 00....0240F9........E8..........00......00......0054
-    # Offset: 6
-    # Valid from version: 21.0.0 to 21.1.0
-    # Original known range: 21.0.0 to 99.99.99
     "C1 95 97 D2 C1 47 B3 F2 41 A2 D5 F2 61 18 FF F2 00 C9 40 91 73 00 00 14 F9 03 00 2A A0 02 40 F9 -> 6A B8 03 94 <- E8 02 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 2A 83 D2 01 C8 A9 F2 01 24 D0 F2 41 63 F9 F2 00 C9 40 91 62 00 00 14 1F 05 00 71": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}],
 
 }
