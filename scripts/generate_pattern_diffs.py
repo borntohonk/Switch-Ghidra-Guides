@@ -29,6 +29,27 @@ from pattern_diffs import (
     loader_pattern_diffs, erpt_pattern_diffs
 )
 
+def to_version_dict(pattern_list):
+    """Convert list of (version, bytes) tuples → dict[version: bytes]"""
+    if isinstance(pattern_list, dict):
+        return pattern_list                  # still compatible with old format during transition
+    if isinstance(pattern_list, list):
+        return {ver: pat for ver, pat in pattern_list}
+    raise ValueError(f"Unexpected pattern format: {type(pattern_list)}")
+
+
+es_pattern_diffs                = to_version_dict(es_pattern_diffs)
+blockfirmwareupdates_pattern_diffs = to_version_dict(blockfirmwareupdates_pattern_diffs)
+blankcal0crashfix_pattern_diffs = to_version_dict(blankcal0crashfix_pattern_diffs)
+nifm_pattern_diffs              = to_version_dict(nifm_pattern_diffs)
+olsc_pattern_diffs              = to_version_dict(olsc_pattern_diffs)
+fat32_noncasigchk_pattern_diffs = to_version_dict(fat32_noncasigchk_pattern_diffs)
+exfat_noncasigchk_pattern_diffs = to_version_dict(exfat_noncasigchk_pattern_diffs)
+fat32_nocntchk_pattern_diffs    = to_version_dict(fat32_nocntchk_pattern_diffs)
+exfat_nocntchk_pattern_diffs    = to_version_dict(exfat_nocntchk_pattern_diffs)
+loader_pattern_diffs            = to_version_dict(loader_pattern_diffs)
+erpt_pattern_diffs              = to_version_dict(erpt_pattern_diffs)
+
 def parse_version_range(version_str: str) -> Tuple[str, str]:
     """Parse version range string like '1.0.0 to 8.1.1' and return (start, end)"""
     match = re.search(r'(\d+\.\d+\.\d+)\s+to\s+(\d+\.\d+\.\d+)', version_str)
