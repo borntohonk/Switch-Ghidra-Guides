@@ -82,9 +82,9 @@ def update_patch_file(filepath: str, current_db: List[Tuple], unique_index: int 
     try:
         with open(filepath, 'w', encoding='utf-8') as f:
             for entry in combined:
-                if version_to_tuple(entry[0]) >= version_to_tuple("10.0.0"):
-                    f.write(f"{entry},\n")
-                    written_count += 1
+                #if version_to_tuple(entry[0]) >= version_to_tuple("10.0.0"):
+                f.write(f"{entry},\n")
+                written_count += 1
         if written_count > 0:
             print(f"Appended {written_count} new entries (version ≥10.0.0) to {filepath}")
         else:
