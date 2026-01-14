@@ -393,7 +393,7 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
             ARM_CODE = read_data[pattern_diff_string_start:pattern_diff_string_end]
             pattern_diff_string = ARM_CODE.hex().upper()
             diffs[version] = pattern_diff_string
-            if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
+            if module_name == "NIM-FW":
                 patch_fw = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
             if module_name == "NIM" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
                 patch_blank = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
@@ -416,41 +416,44 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
                     find_patterns.write(f'({module_name}) {patch_magic}{patch}{eof_magic}\n\n')
                     find_patterns.write(f'({module_name}) pattern string for diff: \n \n{pattern_diff_string}\n\n')
 
-                    if has_capstone:
-                        instruction_order = []
-                        md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-                        find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (offset: 0x{offset} is what is being patched):\n\n')
-                        for i in md.disasm(ARM_CODE, module_offset - 0x20):
-                            instruction_order.append(i.mnemonic)
-                            if i.address == module_offset:
-                                find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
-                            else:
-                                find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
-                        find_patterns.write(f'\ninstruction order:\n')
-                        find_patterns.write(" ".join(instruction_order))
-                        find_patterns.write(f'\n\n')
 
-                    if module_name == "NIM-FW":
-                        module_name = "NIM_CTEST"
-                    if module_name == "NIM":
-                        module_name = "NIM_CTEST"
-                    if module_name == "NIFM":
-                        module_name = "NFIM_CTEST"
-                    if module_name == "ES":
-                        module_name = "ES_PATCHES"
-                    if module_name == "OLSC":
-                        module_name = "OLSC_PATCHES"
-                    if module_name == "ERPT":
-                        module_name = "ERPT_PATCHES"
-                    patch_path = "patches/atmosphere/exefs_patches/" + module_name.lower() + "/"
-                    patch_string_with_magic = (patch_magic + patch + eof_magic)
-                    ips_db_string = (version, module_id, patch_path, patch_string_with_magic)
-                    ips_db.append(ips_db_string)
+                if module_name == "NIM-FW":
+                    return patch_fw
+
+                if module_name == "NIM-FW":
+                    module_name = "NIM_CTEST"
+                if module_name == "NIM":
+                    module_name = "NIM_CTEST"
+                if module_name == "NIFM":
+                    module_name = "NFIM_CTEST"
+                if module_name == "ES":
+                    module_name = "ES_PATCHES"
+                if module_name == "OLSC":
+                    module_name = "OLSC_PATCHES"
+                if module_name == "ERPT":
+                    module_name = "ERPT_PATCHES"
+                patch_path = "patches/atmosphere/exefs_patches/" + module_name.lower() + "/"
+                patch_string_with_magic = (patch_magic + patch + eof_magic)
+                ips_db_string = (version, module_id, patch_path, patch_string_with_magic)
+                ips_db.append(ips_db_string)
+
+                if has_capstone:
+                    instruction_order = []
+                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                    find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (offset: 0x{offset} is what is being patched):\n\n')
+                    for i in md.disasm(ARM_CODE, module_offset - 0x20):
+                        instruction_order.append(i.mnemonic)
+                        if i.address == module_offset:
+                            find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
+                        else:
+                            find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
+                    find_patterns.write(f'\ninstruction order:\n')
+                    find_patterns.write(" ".join(instruction_order))
+                    find_patterns.write(f'\n\n')
+
             else:
                 find_patterns.write(f'({module_name}) the arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
                 print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
-        if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
-            return patch_fw
 
 def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidra_pattern, conds, module_name, changelog, diffs, patch_offsets, hash, patch_db, loader_ams_string, ips_db):
     with open(path, 'rb') as decompressed_module:
