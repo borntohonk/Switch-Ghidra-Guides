@@ -42,6 +42,8 @@ All material exist purely for research reference.
     * having multiple firmwares processed and their binaries output/, will greatly improve the amount of string diffs populated.
     * [find_patterns.py](scripts/find_patterns.py)
     * requires pycryptodome/pycryptodomex (or python3-pycryptodome from apt if debian/ubuntu which is pycryptodomex, python-pycryptodome from arch linux pacman repositories which is pycryptodome)
+    * requires capstone
+    * both requirements can be installed from pip (python3 -m pip install pycryptodome capstone)
     * running [generate_pattern_diffs.py] (scripts/generate_pattern_diffs.py) afterwards will fill make an attempt at combining the outputs aligned for easier visual creation of patterns.
     * the output from [generate_pattern_diffs.py] (scripts/generate_pattern_diffs.py) should populate [known_patterns.py] (scripts/known_patterns.py)
 

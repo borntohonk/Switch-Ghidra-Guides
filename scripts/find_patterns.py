@@ -38,10 +38,10 @@ import package3_and_stratosphere
 try:
     from capstone import *
     from capstone.arm64 import *
-    has_capstone = True
 
 except ModuleNotFoundError:
-    has_capstone = False
+    print('Please install capstone first!')
+    sys.exit(1)
 
 parser = argparse.ArgumentParser()
 
@@ -228,14 +228,14 @@ ips32_magic = "4950533332" # "IPS32"
 eof_magic = "454F46" # "EOF"
 eeof_magic = "45454F46" # "EEOF"
 
-cmp_patch = "00"
-nop_patch = "1F2003D5" # FS (nop)
-ret0_patch = "E0031F2A" # FS (mov w0, wzr)
-mov0_patch = "E0031FAA" # ES
-mov2_patch = "E2031FAA" # NIM
-ret1_patch = "200080D2" # OLSC
-mov0_ret_patch = "E0031F2AC0035FD6" # NIM
-ctest_patch = "00309AD2001EA1F2610100D4E0031FAAC0035FD6" # NIFM (mov x0, #0xd180 - movk x0, #0x8f0, lsl #16 - svc #0xb - mov x0, xzr - ret)
+cmp_patch = b"\x00"
+nop_patch = b"\x1F\x20\x03\xD5" # FS (nop)
+ret0_patch = b"\xE0\x03\x1F\x2A" # FS (mov w0, wzr)
+mov0_patch = b"\xE0\x03\x1F\xAA" # ES
+mov2_patch = b"\xE2\x03\x1F\xAA" # NIM
+ret1_patch = b"\x20\x00\x80\xD2" # OLSC
+mov0_ret_patch = b"\xE0\x03\x1F\x2A\xC0\x03\x5F\xD6" # NIM
+ctest_patch = b"\x00\x30\x9A\xD2\x00\x1E\xA1\xF2\x61\x01\x00\xD4\xE0\x03\x1F\xAA\xC0\x03\x5F\xD6" # NIFM (mov x0, #0xd180 - movk x0, #0x8f0, lsl #16 - svc #0xb - mov x0, xzr - ret)
 
 patch_size_1 = '0001'
 patch_size_4 = '0004'
@@ -250,7 +250,6 @@ bl_cond = ('25', '94', '97')
 tbz_cond = ('36',)
 cmp_cond = ('6B', 'F1',)
 sub_cond = ('D1',)
-
 
 # FW_VER_ANY constant for version ranges
 FW_VER_ANY = '99.99.99'
@@ -367,6 +366,7 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
         read_data = decompressed_module.read()
         hex_data = read_data.hex().upper()
         result = re.search(pattern, hex_data)
+        patch_type_hex = patch_type.hex().upper()
         module_id = get_module_id(path)
         all_matches = [*re.finditer(pattern, hex_data)]
         match_count = len(all_matches)
@@ -386,36 +386,41 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
             offset = '%06X' % (module_offset)
             patch_bytes_start = module_offset
             patch_bytes_end = patch_bytes_start + 0x4
-            patch_bytes = read_data[patch_bytes_start:patch_bytes_end].hex().upper()
-            patch_byte = patch_bytes[-2:]
+            patch_bytes = read_data[patch_bytes_start:patch_bytes_end]
+            patch_bytes_hex = patch_bytes.hex().upper()
+            patch_byte = patch_bytes_hex[-2:]
             pattern_diff_string_start = module_offset - 0x20
             pattern_diff_string_end = pattern_diff_string_start + 0x60
             ARM_CODE = read_data[pattern_diff_string_start:pattern_diff_string_end]
             pattern_diff_string = ARM_CODE.hex().upper()
             diffs[version] = pattern_diff_string
             if module_name == "NIM-FW":
-                patch_fw = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
+                patch_fw = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type_hex)
             if module_name == "NIM" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
-                patch_blank = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
+                patch_blank = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type_hex)
                 patch = fw_patch + patch_blank
             else:
-                patch = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type)
-            patch_offset_string = (module_name, patch_bytes, offset, module_id)
+                patch = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size, patch_type_hex)
+            patch_offset_string = (module_name, patch_bytes_hex, offset, module_id)
             patch_offsets[version] = patch_offset_string
             if patch_byte in conds:
                 find_patterns.write(f'({module_name}) an arm instruction with ending of 0x{patch_byte} was found at the designated offset.\n')
                 find_patterns.write(f'({module_name}) Sys-patch for {module_name} string still valid for: {version}\n')
                 find_patterns.write(f'({module_name}) Sys-patch {module_name} pattern found at: {offset}\n')
                 find_patterns.write(f'({module_name}) The ghidra-equivalent pattern used was: {ghidra_pattern}\n')
-                find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes}\n')
+                find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes_hex}\n\n')
+                md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                for i in md.disasm(patch_bytes, module_offset):
+                    find_patterns.write('from: 0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+                for i in md.disasm(patch_type, module_offset):
+                    find_patterns.write('to:   0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
                 if module_name == "NIM-FW" and version_to_tuple(version) >= version_to_tuple("17.0.0"):
-                    find_patterns.write(f'({module_name}) See NIM for the correct .ips file combining both patches for NIM:\n\n')
+                    find_patterns.write(f'\n\n({module_name}) See NIM for the correct .ips file combining both patches for NIM:\n\n')
                 else:
-                    find_patterns.write(f'({module_name}) {version} {module_name} moduleid (and what .ips filename should be): {module_id}\n\n')
+                    find_patterns.write(f'\n\n({module_name}) {version} {module_name} moduleid (and what .ips filename should be): {module_id}\n\n')
                     find_patterns.write(f'({module_name}) IPS patch bytes would be:\n')
                     find_patterns.write(f'({module_name}) {patch_magic}{patch}{eof_magic}\n\n')
                     find_patterns.write(f'({module_name}) pattern string for diff: \n \n{pattern_diff_string}\n\n')
-
 
                 if module_name == "NIM-FW":
                     return patch_fw
@@ -437,26 +442,27 @@ def patch_check_module(path, pattern, pattern_offset, pattern_head_offset, ghidr
                 ips_db_string = (version, module_id, patch_path, patch_string_with_magic)
                 ips_db.append(ips_db_string)
 
-                if has_capstone:
-                    instruction_order = []
+                find_patterns.write(f'\n\n{module_name} arm instructions in order from pattern diff string above (offset: 0x{offset} is what is being patched):\n\n')
+                md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                instruction_order = []
+                for i in md.disasm(ARM_CODE, module_offset - 0x20):
                     md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-                    find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (offset: 0x{offset} is what is being patched):\n\n')
-                    for i in md.disasm(ARM_CODE, module_offset - 0x20):
-                        instruction_order.append(i.mnemonic)
-                        if i.address == module_offset:
-                            find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
-                        else:
-                            find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
-                    find_patterns.write(f'\ninstruction order:\n')
-                    find_patterns.write(" ".join(instruction_order))
-                    find_patterns.write(f'\n\n')
+                    instruction_order.append(i.mnemonic)
+                    if i.address == module_offset:
+                        find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
+                    else:
+                        find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
+                find_patterns.write(f'\ninstruction order:\n')
+                find_patterns.write(" ".join(instruction_order))
+                find_patterns.write(f'\n\n')
 
             else:
                 find_patterns.write(f'({module_name}) the arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
-                print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
+                print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes_hex} - PB: {patch_byte} - OFS: {offset}')
 
 def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidra_pattern, conds, module_name, changelog, diffs, patch_offsets, hash, patch_db, loader_ams_string, ips_db):
     with open(path, 'rb') as decompressed_module:
+        cmp_patch_hex = cmp_patch.hex().upper()
         find_patterns = changelog
         read_data = decompressed_module.read()
         hex_data = read_data.hex().upper()
@@ -479,7 +485,8 @@ def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidr
             offset = '%06X' % (module_offset)
             patch_bytes_start = module_offset
             patch_bytes_end = patch_bytes_start + 0x4
-            patch_bytes = read_data[patch_bytes_start:patch_bytes_end].hex().upper()
+            patch_bytes = read_data[patch_bytes_start:patch_bytes_end]
+            patch_bytes_hex = patch_bytes.hex().upper()
             patch_byte = patch_bytes[-2:]
             pattern_diff_string_start = module_offset - 0x20
             pattern_diff_string_end = pattern_diff_string_start + 0x60
@@ -492,35 +499,42 @@ def patch_check_loader(path, pattern, pattern_offset, pattern_head_offset, ghidr
                 find_patterns.write(f'({module_name}) Sys-patch for {module_name} string still valid for: {version}\n')
                 find_patterns.write(f'({module_name}) Sys-patch {module_name} pattern found at: {offset}\n')
                 find_patterns.write(f'({module_name}) The ghidra-equivalent pattern used was: {ghidra_pattern}\n')
-                find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes}\n')
-                find_patterns.write(f'LOADER FULL HASH: {hash}\n\n')
+                find_patterns.write(f'({module_name}) The existing bytes at the offset are: {patch_bytes_hex}\n\n')
+                
+                md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                for i in md.disasm(patch_bytes, module_offset):
+                    find_patterns.write('from: 0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+                for i in md.disasm(cmp_patch, module_offset):
+                    find_patterns.write('to:   0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+
+                find_patterns.write(f'\n\nLOADER FULL HASH: {hash}\n\n')
                 find_patterns.write(f'[Loader:{hash[:16]}]\n')
                 find_patterns.write(f'.nosigchk=0:0x{head_offset}:0x1:01,00\n')
 
-                if has_capstone:
-                    instruction_order = []
-                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-                    find_patterns.write(f'{module_name} arm instructions in order from pattern diff string (offset: 0x{offset} is what is being patched):\n\n')
-                    for i in md.disasm(ARM_CODE, module_offset - 0x20):
-                        instruction_order.append(i.mnemonic)
-                        if i.address == module_offset:
-                            find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
-                        else:
-                            find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
-                    find_patterns.write(f'\ninstruction order:\n')
-                    find_patterns.write(" ".join(instruction_order))
-                    find_patterns.write(f'\n\n')
+                instruction_order = []
+                md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                instruction_order = []
+                find_patterns.write(f'{module_name} arm instructions in order from pattern diff string (offset: 0x{offset} is what is being patched):\n\n')
+                for i in md.disasm(ARM_CODE, module_offset - 0x20):
+                    instruction_order.append(i.mnemonic)
+                    if i.address == module_offset:
+                        find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
+                    else:
+                        find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
+                find_patterns.write(f'\ninstruction order:\n')
+                find_patterns.write(" ".join(instruction_order))
+                find_patterns.write(f'\n\n')
 
                 patch_db_string = (version, f'[Loader:{hash[:16]}]\n.nosigchk=0:0x{head_offset}:0x1:01,00\n\n', "LOADER", loader_ams_string)
                 patch_db.append(patch_db_string)
                 patch_path = "patches/atmosphere/kip_patches/loader_patches/"
-                patch = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size_1, cmp_patch)
+                patch = '%06X%s%s' % ((module_offset + pattern_head_offset), patch_size_1, cmp_patch_hex)
                 patch_string_with_magic = (patch_magic + patch + eof_magic)
                 ips_db_string = (version, hash, patch_path, patch_string_with_magic)
                 ips_db.append(ips_db_string)
             else:
                 find_patterns.write(f'({module_name}) the arm instruction was either not found after the pattern, or is ends differently. Must be checked. Assume it is broken.\n\n')
-                print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes} - PB: {patch_byte} - OFS: {offset}')
+                print(f'DEBUG - ({module_name}) {version} - PBS: {patch_bytes_hex} - PB: {patch_byte} - OFS: {offset}')
 
 
 def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigchk1_pattern, noacidsigchk2_pattern, noncasigchk_offset, nocntchk_offset, noacidsigchk1_offset, noacidsigchk2_offset,  noncasigchk_ghidra_pattern, nocntchk_ghidra_pattern, noacidsigchk1_ghidra_pattern, noacidsigchk2_ghidra_pattern, noncasigchk_patch, nocntchk_patch, noacidsigchk1_patch, noacidsigchk2_patch, noncasigchk_cond, nocntchk_cond, noacidsigchk1_cond, noacidsigchk2_cond, noncasigchk_diffs, nocntchk_diffs, noacidsigchk1_diffs, noacidsigchk2_diffs, nonsigchk_offsets, nocntchk_offsets, noacidsigchk1_offsets, noacidsigchk2_offsets, kip_patch_db, ips_db, module_name, changelog):
@@ -532,6 +546,10 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigc
         result_2 = re.search(nocntchk_pattern, hex_data)
         all_matches_1 =[*re.finditer(noncasigchk_pattern, hex_data)]
         all_matches_2 =[*re.finditer(nocntchk_pattern, hex_data)]
+        nocntchk_patch_hex = nocntchk_patch.hex().upper()
+        noncasigchk_patch_hex = noncasigchk_patch.hex().upper()
+        noacidsigchk1_patch_hex = noacidsigchk1_patch.hex().upper()
+        noacidsigchk2_patch_hex = noacidsigchk2_patch.hex().upper()
         match_count_1 = len(all_matches_1)
         match_count_2 = len(all_matches_2)
         if match_count_1 > 1:
@@ -632,12 +650,27 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigc
                     find_patterns.write(f'(FS-{module_name}) both sys-patch strings are valid for FS-{module_name} for: {version}\n')
                     find_patterns.write(f'(FS-{module_name}) {version} NOCASIGCHK Sys-patch FS-{module_name} pattern found at: {offset_1}\n')
                     find_patterns.write(f'(FS-{module_name}) The ghidra-equivalent pattern used was : {noncasigchk_ghidra_pattern}\n')
-                    find_patterns.write(f'(FS-{module_name}) The existing bytes at the first offset are: {patch_1_bytes}\n')
-                    find_patterns.write(f'(FS-{module_name}) An arm "TBZ" condition is what is supposed to be patched\n')
+                    find_patterns.write(f'(FS-{module_name}) The existing bytes at the first offset are: {patch_1_bytes}\n\n')
+
+                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                    for i in md.disasm(patch_bytes_1, module_offset_1):
+                        find_patterns.write('from: 0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+                    for i in md.disasm(noncasigchk_patch, module_offset_1):
+                        find_patterns.write('to:   0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+
+                    find_patterns.write(f'\n\n(FS-{module_name}) An arm "TBZ" condition is what is supposed to be patched\n')
                     find_patterns.write(f'(FS-{module_name}) {version} Second Sys-patch FS-FAT32 pattern found at: {offset_2}\n')
                     find_patterns.write(f'(FS-{module_name}) The ghidra-equivalent pattern used was : {nocntchk_ghidra_pattern}\n')
-                    find_patterns.write(f'(FS-{module_name}) The existing bytes at the second offset are: {patch_2_bytes}\n')
-                    find_patterns.write(f'(FS-{module_name}) An arm "BL" condition is what is supposed to be patched, it is found within the pattern.\n')
+                    find_patterns.write(f'(FS-{module_name}) The existing bytes at the second offset are: {patch_2_bytes}\n\n')
+
+                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                    for i in md.disasm(patch_bytes_2, module_offset_2):
+                        find_patterns.write('from: 0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+                    for i in md.disasm(nocntchk_patch, module_offset_2):
+                        find_patterns.write('to:   0x%X: (%s) %s %s\n' %(i.address, i.bytes.hex().upper(), i.mnemonic, i.op_str))
+
+
+                    find_patterns.write(f'\n\n(FS-{module_name}) An arm "BL" condition is what is supposed to be patched, it is found within the pattern.\n')
                     find_patterns.write(f'(FS-{module_name}) {version} FS-{module_name} SHA256 hash: {hash}\n\n')
                     find_patterns.write(f'(FS-{module_name}) a hekate string for this would be:\n\n')
                     find_patterns.write(f'#FS {version}-{module_name}\n')
@@ -645,31 +678,31 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigc
                     if version_to_tuple(version) <= version_to_tuple("9.99.9"):
                         find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_3}:0x4:{patch_3_bytes},{noacidsigchk1_patch}\n')
                         find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_4}:0x4:{patch_4_bytes},{noacidsigchk2_patch}\n')
-                    find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n')
-                    find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n\n')
+                    find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch_hex}\n')
+                    find_patterns.write(f'.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch_hex}\n\n')
 
 
                     if version_to_tuple(version) <= version_to_tuple("9.99.9"):
                         patch_db_string = (version,
                                           f'[FS:{hash[:16]}]\n',
-                                          f'.nosigchk=0:0x{hekate_adjusted_offset_3}:0x4:{patch_3_bytes},{noacidsigchk1_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_4}:0x4:{patch_4_bytes},{noacidsigchk2_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n\n',
+                                          f'.nosigchk=0:0x{hekate_adjusted_offset_3}:0x4:{patch_3_bytes},{noacidsigchk1_patch_hex}\n.nosigchk=0:0x{hekate_adjusted_offset_4}:0x4:{patch_4_bytes},{noacidsigchk2_patch_hex}\n.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch_hex}\n.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch_hex}\n\n',
                         module_name)
                         kip_patch_db.append(patch_db_string)
 
                     else:
                         patch_db_string = (version,
                                         f'[FS:{hash[:16]}]\n',
-                                        f'.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch}\n.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch}\n\n',
+                                        f'.nosigchk=0:0x{hekate_adjusted_offset_1}:0x4:{patch_1_bytes},{noncasigchk_patch_hex}\n.nosigchk=0:0x{hekate_adjusted_offset_2}:0x4:{patch_2_bytes},{nocntchk_patch_hex}\n\n',
                                         module_name)
                         kip_patch_db.append(patch_db_string)
 
                     patch_path = "patches/atmosphere/kip_patches/fs_patches/"
 
-                    patch_1 = '%06X%s%s' % ((module_offset_1), patch_size_4, noncasigchk_patch)
-                    patch_2 = '%06X%s%s' % ((module_offset_2), patch_size_4, nocntchk_patch)
+                    patch_1 = '%06X%s%s' % ((module_offset_1), patch_size_4, noncasigchk_patch_hex)
+                    patch_2 = '%06X%s%s' % ((module_offset_2), patch_size_4, nocntchk_patch_hex)
                     if version_to_tuple(version) <= version_to_tuple("9.99.9"):
-                        patch_3 = '%06X%s%s' % ((module_offset_3), patch_size_4, noacidsigchk1_patch)
-                        patch_4 = '%06X%s%s' % ((module_offset_4), patch_size_4, noacidsigchk2_patch)
+                        patch_3 = '%06X%s%s' % ((module_offset_3), patch_size_4, noacidsigchk1_patch_hex)
+                        patch_4 = '%06X%s%s' % ((module_offset_4), patch_size_4, noacidsigchk2_patch_hex)
                         patch_string_with_magic = (patch_magic + patch_3 + patch_4 + patch_1 + patch_2 + eof_magic)     
                     else:
                         patch_string_with_magic = (patch_magic + patch_1 + patch_2 + eof_magic)
@@ -678,35 +711,35 @@ def patch_check_fs(path, hash, noncasigchk_pattern, nocntchk_pattern, noacidsigc
 
                     find_patterns.write(f'(FS-{module_name}) NONCASIGCHK string for diff: \n \n{pattern_diff_string_1}\n\n')
 
-                    if has_capstone:
-                        instruction_order = []
-                        md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-                        find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (NONCASIGCHK) (offset: 0x{offset_1} is what is being patched):\n\n')
-                        for i in md.disasm(ARM_CODE_1, module_offset_1 - 0x20):
-                            instruction_order.append(i.mnemonic)
-                            if i.address == module_offset_1:
-                                find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
-                            else:
-                                find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
-                        find_patterns.write(f'\ninstruction order:\n')
-                        find_patterns.write(" ".join(instruction_order))
-                        find_patterns.write(f'\n\n')
+                    instruction_order = []
+                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                    instruction_order = []
+                    find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (NONCASIGCHK) (offset: 0x{offset_1} is what is being patched):\n\n')
+                    for i in md.disasm(ARM_CODE_1, module_offset_1 - 0x20):
+                        instruction_order.append(i.mnemonic)
+                        if i.address == module_offset_1:
+                            find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
+                        else:
+                            find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
+                    find_patterns.write(f'\ninstruction order:\n')
+                    find_patterns.write(" ".join(instruction_order))
+                    find_patterns.write(f'\n\n')
 
                     find_patterns.write(f'(FS-{module_name}) NOCNTCHK string for diff: \n \n{pattern_diff_string_2}\n\n')
 
-                    if has_capstone:
-                        instruction_order = []
-                        md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
-                        find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (NOCNTCHK) (offset: 0x{offset_2} is what is being patched):\n\n')
-                        for i in md.disasm(ARM_CODE_2, module_offset_2 - 0x20):
-                            instruction_order.append(i.mnemonic)
-                            if i.address == module_offset_2:
-                                find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
-                            else:
-                                find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
-                        find_patterns.write(f'\ninstruction order:\n')
-                        find_patterns.write(" ".join(instruction_order))
-                        find_patterns.write(f'\n\n')
+                    instruction_order = []
+                    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+                    instruction_order = []
+                    find_patterns.write(f'{module_name} arm instructions in order from pattern diff string above (NOCNTCHK) (offset: 0x{offset_2} is what is being patched):\n\n')
+                    for i in md.disasm(ARM_CODE_2, module_offset_2 - 0x20):
+                        instruction_order.append(i.mnemonic)
+                        if i.address == module_offset_2:
+                            find_patterns.write(f"\n0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n\n")
+                        else:
+                            find_patterns.write(f"0x{i.address:X}:\t{i.mnemonic}\t{i.op_str}\n")
+                    find_patterns.write(f'\ninstruction order:\n')
+                    find_patterns.write(" ".join(instruction_order))
+                    find_patterns.write(f'\n\n')
 
                 else:
                     find_patterns.write(f'(FS-{module_name}) The second pattern doesnt match what it should match.\n\n\n')
