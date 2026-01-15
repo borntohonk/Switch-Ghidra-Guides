@@ -19,18 +19,17 @@
 # SOFTWARE.
 
 import re
+import lz4.block
 
 #20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
 #21.0.0 romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4
 
-
-# this should be redundant if one runs scripts/process_firwmare.py
-#with open('webkit_wkc.nro.lz4', 'rb') as file:
-#    input_data = file.read()
-#    decompressed = lz4.block.decompress(input_data)
-#    decompressed_browser_file = open('foss_browser_ssl.nro', 'wb')
-#    decompressed_browser_file.write(decompressed)
-#    decompressed_browser_file.close()
+with open('webkit_wkc.nro.lz4', 'rb') as file:
+    input_data = file.read()
+    decompressed = lz4.block.decompress(input_data)
+    decompressed_browser_file = open('foss_browser_ssl.nro', 'wb')
+    decompressed_browser_file.write(decompressed)
+    decompressed_browser_file.close()
 
     
 def get_module_id():

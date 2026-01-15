@@ -4,4 +4,4 @@
 ('21.0.0', '[Loader:D02BA50E8FEAA611]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.0-master-bfe98bc5b'),
 ('21.0.0', '[Loader:C0CBC78DC3FAE61A]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.0-master-d9fc6e99e'),
 ('21.1.0', '[Loader:C35504BA1B31B41E]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.1-master-21c0f75a2'),
-('21.2.0', '[Loader:213B2B2A183241EC]\n.nosigchk=0:0x005F7A:0x1:01,00\n\n', 'LOADER', 'Atmosphere-1.10.2-master-eb34f9789'),
+('21.2.0', '[LOADER:213B2B2A183241EC]\n.nosigchk=0:0x005F78:0x4:1F00016B,1F00006B\n\n', 'LOADER', 'Atmosphere-1.10.2-master-eb34f9789'),

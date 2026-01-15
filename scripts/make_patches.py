@@ -27,6 +27,7 @@ import ast
 import shutil
 import glob
 import sys
+import re
 
 # --- Atmosphere IPS patches ---
 REQUIRED_DIRS = [
@@ -71,7 +72,7 @@ def create_directories():
     os.makedirs(atmosphere_parent, exist_ok=True)  # exist_ok safe since we just deleted
     print(f"   [NEW] Created {atmosphere_parent}/")
 
-    # Create the required exefs_patches subdirectories
+    # Create the required exefs_patches and kip_patches subdirectories
     for directory in REQUIRED_DIRS:
         os.makedirs(directory, exist_ok=True)
         print(f"      [OK] {directory}")
@@ -84,7 +85,7 @@ def create_directories():
     print(f"   [NEW] Created {BOOTLOADER_DIR}/")
 
 def process_atmosphere_ips():
-    """Original logic: generate .ips files from ips_patches.txt."""
+    """Generate .ips files from ips_patches.txt — paths are now correct from find_patterns.py."""
     if not os.path.exists(IPS_PATCHES_FILE):
         print(f"Warning: '{IPS_PATCHES_FILE}' not found — skipping Atmosphere IPS generation.")
         return 0
@@ -113,9 +114,12 @@ def process_atmosphere_ips():
             ipspath = entry[2].strip()
             patch_hex = entry[3].strip()
 
-            if not ipspath.endswith('/') or ipspath not in REQUIRED_DIRS:
+            if not ipspath.endswith('/'):
                 print(f"Warning: NSO line {line_num}: Invalid path '{ipspath}'. Skipping.")
                 continue
+
+            # Ensure the directory exists (though create_directories should have handled)
+            os.makedirs(ipspath, exist_ok=True)
 
             filename = os.path.join(ipspath, f"{moduleid}.ips")
             patch_bytes = bytes.fromhex(patch_hex)
@@ -146,7 +150,7 @@ def generate_hekate_patches_ini():
 
         total_sections = 0
 
-        # --- FS KIP patches ---
+        # --- FS KIP patches --- (now 3-tuple: version, patch_string, fs_type)
         if os.path.exists(FS_KIP_FILE):
             print(f"   Processing {FS_KIP_FILE}...")
             with open(FS_KIP_FILE, 'r', encoding='utf-8') as f:
@@ -162,20 +166,19 @@ def generate_hekate_patches_ini():
 
                 try:
                     entry = ast.literal_eval(line)
-                    if len(entry) != 5:
-                        print(f"Warning: FS line {line_num}: Expected 5-tuple, got {len(entry)}. Skipping.")
+                    if len(entry) != 4:
+                        print(f"Warning: FS line {line_num}: Expected 4-tuple, got {len(entry)}. Skipping.")
                         continue
 
                     fw_version = entry[0]
-                    title_block = entry[1].strip()
-                    patch_block = entry[2].strip()
-                    fs_type = entry[3]
-                    sdk_version = entry[4]
+                    patch_string = entry[1].strip()  # This is title_block + content
+                    fs_type = entry[2]
+                    sdk_version = entry[3]
 
-                    out_file.write(f'#FS {fw_version}-{fs_type} - SDKVersion:{sdk_version}\n')
-                    out_file.write(f"{title_block}\n")
-                    out_file.write(f"{patch_block}\n")
-                    out_file.write('\n')  # ← This adds the blank line between sections
+                    # Write without SDK (since it's not in the tuple)
+                    out_file.write(f'#FS {fw_version}-{fs_type} - SDKVersion: {sdk_version}\n')
+                    out_file.write(f"{patch_string}\n")
+                    out_file.write('\n')  # Blank line between sections
                     fs_count += 1
 
                 except Exception as e:
@@ -185,7 +188,7 @@ def generate_hekate_patches_ini():
             total_sections += fs_count
             print(f"      Added {fs_count} FS sections")
 
-        # --- Loader KIP patches ---
+        # --- Loader KIP patches --- (now 3-tuple: version, patch_string, module_name)
         if os.path.exists(LDR_KIP_FILE):
             print(f"   Processing {LDR_KIP_FILE}...")
             with open(LDR_KIP_FILE, 'r', encoding='utf-8') as f:
@@ -201,16 +204,23 @@ def generate_hekate_patches_ini():
 
                 try:
                     entry = ast.literal_eval(line)
-                    if len(entry) < 4:
-                        print(f"Warning: Loader line {line_num}: Too few elements. Skipping.")
+                    if len(entry) not in (3, 4):
+                        print(f"Warning: Loader line {line_num}: Expected 3 or 4-tuple, got {len(entry)}. Skipping.")
                         continue
 
+                    fw_version = entry[0]
                     patch_block = entry[1].strip()
-                    ams_version = entry[-1]
 
-                    out_file.write(f'#loader {ams_version}\n')
+                    if len(entry) == 4:
+                        # New format: has atmosphere_string
+                        ams_version = entry[3]
+                    else:
+                        # Old/fallback format: no atmosphere string
+                        ams_version = "unknown"
+
+                    out_file.write(f'#loader {ams_version} (fw: {fw_version})\n')
                     out_file.write(f"{patch_block}\n")
-                    out_file.write('\n')  # ← This adds the blank line between loader sections too
+                    out_file.write('\n')
                     ldr_count += 1
 
                 except Exception as e:
@@ -249,16 +259,9 @@ def main():
                     if last_line.endswith(','):
                         last_line = last_line[:-1]
                     last_entry = ast.literal_eval(last_line)
-                    ams_string = last_entry[-1]  # Last element is the full Atmosphere string
-
-                    import re
-                    match = re.match(r'Atmosphere-(\d+\.\d+\.\d+)(-prerelease|-master)?', ams_string)
-                    if match:
-                        version = match.group(1)
-                        tag = match.group(2) or ''
-                        current_atmosphere_version = version + ('p' if '-prerelease' in tag else '')
-                    else:
-                        print(f"Warning: Could not parse Atmosphere version from: {ams_string}")
+                    # Now last_entry[-1] is module_name ("LOADER") — fallback to "unknown"
+                    # If you add ams_version back to tuple later, parse it here
+                    current_atmosphere_version = "unknown"  # Or extract from elsewhere
                 else:
                     print("Warning: ldr_kip_patches.txt is empty — using fallback Atmosphere version.")
         except Exception as e:
@@ -266,24 +269,7 @@ def main():
     else:
         print("Warning: ldr_kip_patches.txt not found — using fallback Atmosphere version.")
 
-    highest_firmware_version = "unknown"
-    if os.path.exists(LDR_KIP_FILE):
-        try:
-            with open(LDR_KIP_FILE, 'r', encoding='utf-8') as f:
-                lines = [line.strip() for line in f.readlines() if line.strip() and line.strip().endswith(',')]
-                if lines:
-                    last_line = lines[-1]
-                    if last_line.endswith(','):
-                        last_line = last_line[:-1]
-                    last_entry = ast.literal_eval(last_line)
-                    highest_firmware_version = last_entry[0]
-                    print(f"Detected highest supported firmware: {highest_firmware_version} (from latest Loader patch)")
-                else:
-                    print("Warning: ldr_kip_patches.txt is empty — using fallback firmware version.")
-        except Exception as e:
-            print(f"Error reading/parsing ldr_kip_patches.txt for firmware version: {e}")
-    else:
-        print("Warning: ldr_kip_patches.txt not found — using fallback firmware version.")
+    highest_firmware_version = "21.2.0"  # Latest supported HOS from Atmosphere 1.10.2 (as of Jan 2026)
 
     # --- Create final zip archive ---
     archive_string = f"Hekate+AMS-package3-sigpatches-{current_atmosphere_version}-cfw-{highest_firmware_version}"
