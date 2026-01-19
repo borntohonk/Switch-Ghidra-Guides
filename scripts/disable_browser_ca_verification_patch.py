@@ -21,6 +21,33 @@
 import re
 import lz4.block
 
+try:
+    from capstone import *
+    from capstone.arm64 import *
+
+except ModuleNotFoundError:
+    print('Please install capstone first!')
+    sys.exit(1)
+
+def get_arm_instruction_order(arm_diff_string, arm_offset):
+    md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+    instruction_order = []
+    print(f'Instruction order, the offset being patched is 0x{hex(arm_offset)[2:].upper()}:\n\n')
+    for i in md.disasm(arm_diff_string, arm_offset - 0x20):
+        md = Cs(CS_ARCH_ARM64, CS_MODE_ARM)
+        instruction_order.append(i.mnemonic)
+        if i.address == arm_offset:
+            hex_bytearray = i.bytes.hex().upper()
+            formatted_hex_bytearray = ' '.join([hex_bytearray[i:i+2] for i in range(0, len(hex_bytearray), 2)])
+            print(f"\n0x{i.address:06X}:\t ({formatted_hex_bytearray})\t{i.mnemonic}\t{i.op_str}\n")
+        else:
+            hex_bytearray = i.bytes.hex().upper()
+            formatted_hex_bytearray = ' '.join([hex_bytearray[i:i+2] for i in range(0, len(hex_bytearray), 2)])
+            print(f"0x{i.address:06X}:\t ({formatted_hex_bytearray})\t{i.mnemonic}\t{i.op_str}")
+    print(f'\ninstruction order:\n')
+    print(" ".join(instruction_order))
+    print(f'\n\n')
+
 #20.0.0 romfs/nro/netfront/core_3/default/cfi_enabled/webkit_wkc.nro.lz4
 #21.0.0 romfs/nro/netfront/core_3/Default/cfi_nncfi/webkit_wkc.nro.lz4
 
@@ -39,11 +66,14 @@ def get_module_id():
 
 with open('foss_browser_ssl.nro', 'rb') as fi:
     read_data = fi.read()
-    result = re.search(rb'\x72\x48\x00\x80\x52\xe2\x13\x88\x1a', read_data)
-    patch1 = '%08X%s%s' % (result.start() + 0x1, '0004', 'E8031F2A')
-    patch2 = '%08X%s%s' % (result.end(), '0001', '1F')
+    result = re.search(rb'\x42\x00\x80\x52\xf4\x40\x05\x94\x20\xf9\xff\x35\xe0\x72\x41\xf9\x01\x08\x80\x52\x22\x00\x80\x52', read_data) # 21.0.0 + (might need diffing in future)
+    patch = '%08X%s%s' % (result.start(), '0004', 'E2031F2A') # 21.2.0 apparently
+    diff_start = result.start() - 0x20
+    diff_end = diff_start + 0x60
+    diff_bytes = read_data[diff_start:diff_end]
+    get_arm_instruction_order(diff_bytes, result.start())
     text_file = open(get_module_id() + '.ips', 'wb')
     print('browser-ssl build-id: ' + get_module_id())
-    print('disable_browser_ca_verification offsets and patches at: ' + patch1 + patch2)
-    text_file.write(bytes.fromhex(str(f'4950533332' + patch1 + patch2 + '45454F46')))
+    print('disable_browser_ca_verification offsets and patches at: ' + patch)
+    text_file.write(bytes.fromhex(str(f'4950533332' + patch + '45454F46')))
     text_file.close()
