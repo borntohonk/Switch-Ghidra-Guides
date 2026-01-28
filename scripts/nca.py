@@ -348,7 +348,7 @@ class Nca:
     Handles both Standard crypto (fixed keys) and Titlekey crypto (encrypted keys)
     encryption types. Decrypts all 4 sections and prepares them for extraction.
     """
-    def __init__(self, nca_data, titlekey=None):
+    def __init__(self, nca_data, master_kek_source=None, titlekey=None):
         """
         Args:
             nca_data: Complete NCA file data
@@ -376,7 +376,7 @@ class Nca:
             self.sections.append(nca_data[self.header.sectionTables[i].offset:self.header.sectionTables[i].endOffset])
         
         # Setup key area
-        self._setup_key_area(key_sources)
+        self._setup_key_area()
         
         # Parse filesystem headers
         self.fsheaders = [
@@ -410,11 +410,14 @@ class Nca:
             return 1
         return 0
     
-    def _setup_key_area(self, key_sources):
+    def _setup_key_area(self):
         """Setup key area and derive decryption keys."""
-        self.master_kek_source = key_sources.master_kek_sources[self.master_key_revision]
-        self.keys = crypto.single_keygen(self.master_kek_source)
-        self.master_kek, self.master_key, self.package2_key, self.titlekek, \
+        self.tsec_root_key_prod, self.tsec_root_key_dev = crypto.tsec_keygen()
+        self.keygen = crypto.Keygen(self.tsec_root_key_prod)
+        self.master_keys = self.keygen.master_key
+        master_key = self.master_keys[self.master_key_revision]
+        self.keys = crypto.single_keygen_master_key(master_key)
+        self.master_key, self.package2_key, self.titlekek, \
             self.key_area_key_system, self.key_area_key_ocean, self.key_area_key_application = self.keys
         
         # Setup key area key types

@@ -22,6 +22,7 @@ import os
 import sys
 import shutil
 import argparse
+import crypto
 from pathlib import Path
 import nca
 from key_sources import KeySources
@@ -30,6 +31,11 @@ from hashlib import sha256
 import romfs
 import util
 import pfs0
+from keys import RootKeys
+
+def format_bytes_as_hex(data: bytes) -> str:
+    """Transforms 16 bytes into a comma-separated hex string."""
+    return "bytes([" + ", ".join(f"0x{b:02X}" for b in data) + "]),"
 
 titleids_to_store = [
     '0100000000000809', # system_update
@@ -45,14 +51,34 @@ titleids_to_store = [
     '0100000000000803', # browser
 ]
 
-def _extract_system_version(system_nca_path):
+def move_and_overwrite_folder(source_folder, destination_folder):
+    """
+    Moves a source folder and its contents to a destination folder, 
+    overwriting the destination if it already exists.
+    
+    Args:
+        source_folder (str): Path to the source folder.
+        destination_folder (str): Path to the destination folder.
+    """
+    # Step 1: Check if the destination folder already exists and remove it
+    if os.path.exists(destination_folder):
+        #print(f"Destination folder '{destination_folder}' found. Removing existing folder...")
+        shutil.rmtree(destination_folder) # Recursively removes the directory and all its contents
+        #print(f"Removed '{destination_folder}'.")
+
+    # Step 2: Move the source folder to the destination location
+    #print(f"Moving '{source_folder}' to '{destination_folder}'...")
+    shutil.move(source_folder, destination_folder)
+    #print("Move complete.")
+
+def _extract_system_version(system_nca_path, mkeksource):
     """Extract firmware version from system update NCA."""
     # Clean temp directory if it exists from previous runs
     if os.path.isdir("temp"):
         shutil.rmtree("temp")
     util.mkdirp("temp")
     
-    system_nca = nca.Nca(util.InitializeFile(system_nca_path))
+    system_nca = nca.Nca(util.InitializeFile(system_nca_path), master_kek_source=mkeksource, titlekey=None)
     
     romfs_data = nca.save_section(system_nca, 0)
     romfs.romfs_process(romfs_data, output_path=Path("temp"), list_only=False, print_info=False)
@@ -78,10 +104,10 @@ def _extract_system_version(system_nca_path):
     return firmware_version
 
 
-def _copy_sorted_nca(titleId, content_type, nca_path, firmware_version):
+def _copy_sorted_nca(titleId, content_type, nca_path):
     """Copy NCA file to sorted firmware directory."""
     try:
-        output_dir = f"sorted_firmware/{firmware_version}/by-type/{content_type}/{titleId}"
+        output_dir = f"sorted_firmware/temp/by-type/{content_type}/{titleId}"
         util.mkdirp(output_dir)
         shutil.copy(nca_path, f"{output_dir}/data.nca")
     except Exception as e:
@@ -106,25 +132,17 @@ def sort_nca(location):
             sorted_nca_files.append((nca_header.titleId, nca_header.content_type, nca_path))
     
     # Extract system version from system update NCA
-    firmware_version = None
     master_key_rev = None
-    
-    for titleId, content_type, nca_path in sorted_nca_files:
-        if titleId == "0100000000000809":  # system_update
-            nca_header = nca.NcaHeaderOnly(util.InitializeFile(nca_path))
-            master_key_rev = nca_header.master_key_revision
-            firmware_version = _extract_system_version(nca_path)
-            sorted_nca_files.remove((titleId, content_type, nca_path))
-            break
-    
-    if firmware_version is None:
-        raise ValueError("Could not find system_update NCA in firmware")
+    temp_folder = "temp"
     
     # Copy remaining NCAs to sorted directory
     for titleId, content_type, nca_path in sorted_nca_files:
-        _copy_sorted_nca(titleId, content_type, nca_path, firmware_version)
+        _copy_sorted_nca(titleId, content_type, nca_path)
+        if titleId == "0100000000000809":  # system_update
+            nca_header = nca.NcaHeaderOnly(util.InitializeFile(nca_path))
+            master_key_rev = nca_header.master_key_revision
     
-    return firmware_version, master_key_rev
+    return temp_folder, master_key_rev
 
 keygen_revisions = [
     (0x00, '1.0.0'), # KeyGenerationOld 0x00
@@ -168,6 +186,7 @@ DATA_TITLES = {
     '0100000000000819': 'fat32',
     '010000000000081B': 'exfat',
     '0100000000000803': 'browser',
+    '0100000000000809': 'SystemVersion',
 }
 
 
@@ -177,7 +196,7 @@ def _extract_nca_data(titleId, system_version, nca_type='Program'):
     if not nca_path.exists():
         return None
     
-    nca_data = nca.Nca(util.InitializeFile(nca_path))
+    nca_data = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None, titlekey=None)
     pfs0_section = nca.save_section(nca_data, 0)
     return pfs0_section
 
@@ -197,39 +216,82 @@ def _extract_pfs0_and_get_module_id(titleId, system_version, title_name, nca_typ
     return None
 
 
-def _process_filesystem_packages(system_version, master_key_revision, key_sources):
+def _process_filesystem_packages(master_key_revision, key_sources):
     """Process fat32 and exfat filesystem packages."""
     master_kek_source = None
     fat32_sdkversion = None
     exfat_sdkversion = None
-    
-    fat32_path = Path(f'sorted_firmware/{system_version}/by-type/Data/0100000000000819/data.nca')
-    exfat_path = Path(f'sorted_firmware/{system_version}/by-type/Data/010000000000081B/data.nca')
+    fat32_path = Path(f'sorted_firmware/temp/by-type/Data/0100000000000819/data.nca')
+    exfat_path = Path(f'sorted_firmware/temp/by-type/Data/010000000000081B/data.nca')
     
     master_key_keygen_list = [revision[0] for revision in keygen_revisions]
     
     # New key derivation workflow
     if master_key_revision not in master_key_keygen_list or master_key_revision == master_key_keygen_list[-1]:
+        root_keys = RootKeys()
         if fat32_path.exists():
-            master_kek_source, fat32_sdkversion = extract_packages.process_package_with_key_derivation(fat32_path, system_version)
+            master_kek_source, device_master_key_source_source, fat32_sdkversion = extract_packages.erista_process_package_with_key_derivation(fat32_path)
+            if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+                mariko_master_kek_source, mariko_master_kek_source_dev = extract_packages.mariko_process_package_with_key_derivation(fat32_path)
         if exfat_path.exists() and master_kek_source:
-            exfat_sdkversion = extract_packages.process_filesystem_package(exfat_path, system_version, master_kek_source)[1]
+            exfat_sdkversion = extract_packages.process_filesystem_package(exfat_path, master_kek_source)[1]
         
         if master_kek_source and master_kek_source not in key_sources.master_kek_sources:
             print("A new master_kek_source was detected, add it to key_sources.py")
+            tsec_root_key_02, tsec_root_key_02_dev = crypto.tsec_keygen()
+            keygen = crypto.Keygen(tsec_root_key_02)
+            keygen_dev = crypto.KeygenDev(tsec_root_key_02_dev)
+            master_key_00_dev = keygen_dev.master_key[0]
+            master_key_00 = keygen.master_key[0]
+            master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = crypto.single_keygen_master_kek(master_kek_source)
+            master_kek_dev, master_key_dev, package2_key_dev, titlekek_dev, key_area_key_system_dev, key_area_key_ocean_dev, key_area_key_application_dev = crypto.single_keygen_dev(master_kek_source)
+            
+            print(f'new master_kek:                      {master_kek.hex().upper()}')
+            print(f'new master_key:                      {master_key.hex().upper()}')
+            print(f'new package2_key:                    {package2_key.hex().upper()}')
+            print(f'new titlekek:                        {titlekek.hex().upper()}')
+            print(f'new key_area_key_system:             {key_area_key_system.hex().upper()}')
+            print(f'new key_area_key_ocean:              {key_area_key_ocean.hex().upper()}')
+            print(f'new key_area_key_application:        {key_area_key_application.hex().upper()}')
+            print("")
+            print(f'new master_kek_dev:                  {master_kek_dev.hex().upper()}')
+            print(f'new master_key_dev:                  {master_key_dev.hex().upper()}')
+            print(f'new package2_key_dev:                {package2_key_dev.hex().upper()}')
+            print(f'new titlekek_dev:                    {titlekek_dev.hex().upper()}')
+            print(f'new key_area_key_system_dev:         {key_area_key_system_dev.hex().upper()}')
+            print(f'new key_area_key_ocean_dev:          {key_area_key_ocean_dev.hex().upper()}')
+            print(f'new key_area_key_application_dev:    {key_area_key_application_dev.hex().upper()}') 
+            DeviceMasterKek = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek)
+            DeviceMasterKekSourceSource = crypto.encrypt_ecb(DeviceMasterKek, master_key_00)
+            DeviceMasterKek_dev = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek_dev)
+            DeviceMasterKekSourceSource_dev = crypto.encrypt_ecb(DeviceMasterKek_dev, master_key_00_dev)
+            print("atmosphere specific keys:")
+            print(f'master_kek_source =                  {format_bytes_as_hex(master_kek_source)}')
+            print(f'DeviceMasterKeySourceSource          {format_bytes_as_hex(device_master_key_source_source)}')
+            print(f'DeviceMasterKekSource =              {format_bytes_as_hex(DeviceMasterKekSourceSource)}')
+            print(f'DeviceMasterKekSourceDev =           {format_bytes_as_hex(DeviceMasterKekSourceSource_dev)}')
+            if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+                print(f'mariko_master_kek_source =           {format_bytes_as_hex(mariko_master_kek_source)}')
+                print(f'mariko_master_kek__source_dev =      {format_bytes_as_hex(mariko_master_kek_source_dev)}')
+            else:
+                print("No mariko_bek, or incorrect mariko_bek in keys.py")
+            print("Add all the keys to their respective sections inside of key_sources.py, then re-run process_firwmare.py")
+            sys.exit(1)
+        else:
+            print("Update keygen_revisions (in this file) to include the new firmware revision, example if latest entry is 0x14, add 0x15, then re-run process_firwmare.py")
             sys.exit(1)
     
     # Existing key workflow
     else:
         key_index = master_key_revision
-        master_kek_source = key_sources.master_kek_sources[key_index]
+        master_kek_source = key_sources.master_kek_sources[key_index - 0x8]
         
         if fat32_path.exists():
-            fat32_result = extract_packages.process_filesystem_package(fat32_path, system_version, master_kek_source)
+            fat32_result = extract_packages.process_filesystem_package(fat32_path, master_kek_source)
             fat32_sdkversion = fat32_result[1] if fat32_result else None
         
         if exfat_path.exists():
-            exfat_result = extract_packages.process_filesystem_package(exfat_path, system_version, master_kek_source)
+            exfat_result = extract_packages.process_filesystem_package(exfat_path, master_kek_source)
             exfat_sdkversion = exfat_result[1] if exfat_result else None
     
     return master_kek_source, fat32_sdkversion, exfat_sdkversion
@@ -418,16 +480,17 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
     util.mkdirp('output')
     
     # Extract and sort NCAs
-    system_version, master_key_revision = sort_nca(firmware_location)
+    temp_folder, master_key_revision = sort_nca(firmware_location)
     key_revision = master_key_revision + 1
     
-    print(f'\nFirmware version: {system_version}\n')
-    
     # Process filesystem packages (fat32/exfat)
-    master_kek_source, fat32_sdkversion, exfat_sdkversion = _process_filesystem_packages(
-        system_version, master_key_revision, key_sources
-    )
+    master_kek_source, fat32_sdkversion, exfat_sdkversion = _process_filesystem_packages(master_key_revision, key_sources)
     
+    system_update_data_patch = f'sorted_firmware/temp/by-type/Data/0100000000000809/data.nca'
+    system_version = _extract_system_version(system_update_data_patch, master_kek_source)
+    print(f'\nFirmware version: {system_version}\n')
+    move_and_overwrite_folder(f'sorted_firmware/{temp_folder}', f'sorted_firmware/{system_version}')
+
     # Extract program NCAs and get module IDs
     module_ids = {}
     for titleId, name in PROGRAM_TITLES.items():

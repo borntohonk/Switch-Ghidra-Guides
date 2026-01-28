@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 import re
-import nca
+from nca import Nca, SectionExtractor, NcaInfo
 import os
 import struct
 from pathlib import Path
@@ -45,7 +45,7 @@ class Package1Context:
         self.key_revision = 0
 
 
-def decrypt_package1(encrypted_package1):
+def decrypt_erista_package1(encrypted_package1):
     """Decrypt Package1 (PK11) bootloader.
     
     Package1 contains the first bootloader stage and is encrypted with
@@ -67,6 +67,27 @@ def decrypt_package1(encrypted_package1):
     
     return encrypted_package1
 
+def decrypt_mariko_package1(encrypted_package1):
+    """Decrypt Package1 (PK11) bootloader.
+    
+    Package1 contains the first bootloader stage and is encrypted with
+    a fixed key. This extracts and decrypts it.
+    """
+    root_keys = RootKeys()
+    
+    # Parse Package1 header
+    header = encrypted_package1[0x0:0x190]
+    bl_size = int.from_bytes(encrypted_package1[0x154:0x158], 'little')
+    
+    if bl_size > 0:
+        aes_iv = encrypted_package1[0x170:0x180]
+        encrypted_data = encrypted_package1[0x180:0x180 + bl_size]
+        decrypted_data = crypto.decrypt_cbc(encrypted_package1, root_keys.mariko_bek, aes_iv)
+        package1_dec = header + decrypted_data[0x10:]
+        return package1_dec
+    
+    return encrypted_package1
+
 def try_decrypt_package2(package2_data):    
     package2_keys = crypto.get_package2_keys()
     for package2_key in package2_keys:
@@ -82,7 +103,35 @@ def try_decrypt_package2(package2_data):
     raise ValueError("No valid key found")
 
 
-def extract_key_sources_from_package1(decrypted_package1):
+def erista_extract_key_sources_from_package1(decrypted_package1):
+    """Extract master_kek_source from decrypted Package1.
+    
+    The master_kek_source is embedded in Package1 and used to derive
+    all other master keys.
+    """
+    # Search for OYASUMI magic which precedes key sources
+    result_oyasumi = re.search(bytes([0x4F, 0x59, 0x41, 0x53, 0x55, 0x4D, 0x49]), decrypted_package1)
+    if not result_oyasumi:
+        raise ValueError("Failed to find key source magic in Package1")
+
+    result_package2 = re.search(bytes([0x70, 0x61, 0x63, 0x6B, 0x61, 0x67, 0x65, 0x32]), decrypted_package1)
+    if not result_package2:
+        raise ValueError("Failed to find key source magic in Package1")
+    
+
+    
+    # master_kek_source is at a fixed offset after the magic
+    master_kek_source_start = result_oyasumi.end() + 0x42
+    master_kek_source_end = master_kek_source_start + 0x10
+    master_kek_source = decrypted_package1[master_kek_source_start:master_kek_source_end]
+
+    device_master_key_source_source_start = result_package2.start() - 0x14
+    device_master_key_source_source_end = device_master_key_source_source_start + 0x10
+    device_master_key_source_source = decrypted_package1[device_master_key_source_source_start:device_master_key_source_source_end]
+
+    return master_kek_source, device_master_key_source_source
+
+def mariko_extract_key_sources_from_package1(decrypted_package1):
     """Extract master_kek_source from decrypted Package1.
     
     The master_kek_source is embedded in Package1 and used to derive
@@ -94,11 +143,14 @@ def extract_key_sources_from_package1(decrypted_package1):
         raise ValueError("Failed to find key source magic in Package1")
     
     # master_kek_source is at a fixed offset after the magic
-    master_kek_source_start = result.end() + 0x42
-    master_kek_source_end = master_kek_source_start + 0x10
-    master_kek_source = decrypted_package1[master_kek_source_start:master_kek_source_end]
+    mariko_master_kek_source_dev_start = result.start() + 0x29
+    mariko_master_kek_source_dev_end = mariko_master_kek_source_dev_start + 0x10
+    mariko_master_kek_source_dev = decrypted_package1[mariko_master_kek_source_dev_start:mariko_master_kek_source_dev_end]
+    mariko_master_kek_source_start = mariko_master_kek_source_dev_start + 0x10
+    mariko_master_kek_source_end = mariko_master_kek_source_dev_end + 0x10   
+    mariko_master_kek_source = decrypted_package1[mariko_master_kek_source_start:mariko_master_kek_source_end]
     
-    return master_kek_source
+    return mariko_master_kek_source, mariko_master_kek_source_dev
 
 
 # ============================================================================
@@ -277,15 +329,14 @@ def extract_kips_from_ini1(ini1_data, output_dir):
 # Filesystem Package Processing
 # ============================================================================
 
-def process_filesystem_package(nca_path, version, master_kek_source):
+def process_filesystem_package(nca_path, master_kek_source):
     """Process a filesystem package (fat32 or exfat).
     
     This extracts the RomFS, decrypts Package2, and extracts filesystem KIPs.
     
     Mirrors hactools workflow for process_package2.
     """
-    nca_file = nca.Nca(util.InitializeFile(nca_path))
-    romfs_data = nca.save_section(nca_file, 0)
+    nca_file = Nca(util.InitializeFile(nca_path), master_kek_source=None, titlekey=None)
     sdk_version = nca_file.sdkversion
     title_id = nca_file.titleId
     
@@ -297,14 +348,14 @@ def process_filesystem_package(nca_path, version, master_kek_source):
         fs_type = "exfat"
         output_subdir = "010000000000081B"
     else:
-        raise ValueError(f"Unknown filesystem package title ID: {title_id}")
-    
-    # Extract RomFS to get Package2 and other files
-    romfs_dir = Path(f"sorted_firmware/{version}/by-type/Data/{output_subdir}/romfs")
-    romfs.romfs_process(romfs_data, output_path=romfs_dir, list_only=False, print_info=False)
+        raise ValueError(f"Unknown filesystem package title ID: {title_id}")   
+
+    romfs_dir = Path(f"sorted_firmware/temp/by-type/Data/{output_subdir}/romfs/")
+    Path(romfs_dir).mkdir(parents=True, exist_ok=True)
+    SectionExtractor.extract_section_romfs(nca_file, romfs_dir)
     
     # Derive keys from master_kek_source
-    master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = crypto.single_keygen(master_kek_source)
+    master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = crypto.single_keygen_master_kek(master_kek_source)
     
     # Read and decrypt Package2
     package2_path = romfs_dir / "nx" / "package2"
@@ -358,25 +409,24 @@ def extract_filesystem_kips_for_hashing(version, fs_type):
 # High-level Workflows
 # ============================================================================
 
-def process_package_with_key_derivation(nca_path, version):
+def erista_process_package_with_key_derivation(nca_path):
     """Process fat32 package to derive master_kek_source.
     
     This is typically done when processing a new firmware version.
     We extract Package1 to get the master_kek_source, then use it
     to decrypt Package2 in subsequent packages.
     """
-    nca_file = nca.Nca(util.InitializeFile(nca_path))
-    romfs_data = nca.save_section(nca_file, 0)
+    nca_file = Nca(util.InitializeFile(nca_path), master_kek_source=None, titlekey=None)
     sdk_version = nca_file.sdkversion
     title_id = nca_file.titleId
     
     if title_id != "0100000000000819":
         raise ValueError("Key derivation only supported for fat32 package (0100000000000819)")
-    
-    # Extract RomFS
-    romfs_dir = Path(f"sorted_firmware/{version}/by-type/Data/0100000000000819/romfs")
-    romfs.romfs_process(romfs_data, output_path=romfs_dir, list_only=False, print_info=False)
-    
+
+    romfs_dir = Path(f"sorted_firmware/temp/by-type/Data/0100000000000819/romfs")
+    Path(romfs_dir).mkdir(parents=True, exist_ok=True)
+    SectionExtractor.extract_section_romfs(nca_file, romfs_dir)
+
     # Read and decrypt Package1
     package1_path = romfs_dir / "nx" / "package1"
     if not package1_path.exists():
@@ -386,13 +436,47 @@ def process_package_with_key_derivation(nca_path, version):
         encrypted_package1 = f.read()
     
     # Decrypt Package1
-    decrypted_package1 = decrypt_package1(encrypted_package1)
+    decrypted_package1 = decrypt_erista_package1(encrypted_package1)
     
     # Extract master_kek_source
-    master_kek_source = extract_key_sources_from_package1(decrypted_package1)
+    master_kek_source, device_master_key_source_source = erista_extract_key_sources_from_package1(decrypted_package1)
     
-    return master_kek_source, sdk_version
+    return master_kek_source, device_master_key_source_source, sdk_version
 
+
+def mariko_process_package_with_key_derivation(nca_path):
+    """Process fat32 package to derive master_kek_source.
+    
+    This is typically done when processing a new firmware version.
+    We extract Package1 to get the master_kek_source, then use it
+    to decrypt Package2 in subsequent packages.
+    """
+    nca_file = Nca(util.InitializeFile(nca_path), master_kek_source=None, titlekey=None)
+    sdk_version = nca_file.sdkversion
+    title_id = nca_file.titleId
+    
+    if title_id != "0100000000000819":
+        raise ValueError("Key derivation only supported for fat32 package (0100000000000819)")
+    
+    romfs_dir = Path(f"sorted_firmware/temp/by-type/Data/0100000000000819/romfs")
+    Path(romfs_dir).mkdir(parents=True, exist_ok=True)
+    SectionExtractor.extract_section_romfs(nca_file, romfs_dir)
+
+    # Read and decrypt Package1
+    package1_path = romfs_dir / "a" / "package1"
+    if not package1_path.exists():
+        raise FileNotFoundError(f"Package1 not found at {package1_path}")
+    
+    with open(package1_path, 'rb') as f:
+        encrypted_package1 = f.read()
+    
+    # Decrypt Package1
+    decrypted_package1 = decrypt_mariko_package1(encrypted_package1)
+    
+    # Extract master_kek_source
+    mariko_master_kek_source, mariko_master_kek_source_dev = mariko_extract_key_sources_from_package1(decrypted_package1)
+    
+    return mariko_master_kek_source, mariko_master_kek_source_dev
 
 if __name__ == "__main__":
     pass

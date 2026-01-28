@@ -192,7 +192,7 @@ def get_module_id(input):
         return(f.read(0x10).hex().upper())
     
 def extract_browser_dll_romfs(nca_path, version):
-    nca_file = nca.Nca(InitializeFile(nca_path))
+    nca_file = nca.Nca(InitializeFile(nca_path), master_kek_source=None, titlekey=None)
     romfs_data = nca.save_section(nca_file, 0)
     romfs.romfs_process(romfs_data, output_path=Path(f"sorted_firmware/{version}/by-type/Data/0100000000000803/romfs"), list_only=False, print_info=False)
 

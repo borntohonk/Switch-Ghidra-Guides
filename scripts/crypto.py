@@ -95,7 +95,7 @@ def generateKek(src, masterKey, kek_seed, key_seed):
     else:
         return src_kek
 
-def single_keygen(master_kek_source, tsec_root_revision=2):
+def single_keygen_master_kek(master_kek_source, tsec_root_revision=2):
     key_sources = KeySources()
     tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
     if tsec_root_revision == 0:
@@ -112,6 +112,38 @@ def single_keygen(master_kek_source, tsec_root_revision=2):
     key_area_key_ocean = generateKek(key_sources.key_area_key_ocean_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
     key_area_key_application = generateKek(key_sources.key_area_key_application_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
     return master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application
+
+def single_keygen_master_key(master_key):
+    key_sources = KeySources()
+    package2_key = decrypt_ecb(key_sources.package2_key_source, master_key)
+    titlekek = decrypt_ecb(key_sources.titlekek_source, master_key)
+    key_area_key_system = generateKek(key_sources.key_area_key_system_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_ocean = generateKek(key_sources.key_area_key_ocean_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_application = generateKek(key_sources.key_area_key_application_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    return master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application
+
+def single_keygen_dev(master_kek_source, tsec_root_revision=2):
+    key_sources = KeySources()
+    tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
+    if tsec_root_revision == 0:
+        tsec_root_key = tsec_keys.tsec_root_key_00_dev
+    if tsec_root_revision == 1:
+        tsec_root_key = tsec_keys.tsec_root_key_01_Dev
+    if tsec_root_revision == 2:
+        tsec_root_key = tsec_keys.tsec_root_key_02_dev
+    master_kek = decrypt_ecb(master_kek_source, tsec_root_key)
+    master_key = decrypt_ecb(key_sources.master_key_source, master_kek)
+    package2_key = decrypt_ecb(key_sources.package2_key_source, master_key)
+    titlekek = decrypt_ecb(key_sources.titlekek_source, master_key)
+    key_area_key_system = generateKek(key_sources.key_area_key_system_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_ocean = generateKek(key_sources.key_area_key_ocean_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    key_area_key_application = generateKek(key_sources.key_area_key_application_source, master_key , key_sources.aes_kek_generation_source, key_sources.aes_key_generation_source)
+    return master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application
+
+def tsec_keygen():
+    key_sources = KeySources()
+    tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
+    return tsec_keys.tsec_root_key_02, tsec_keys.tsec_root_key_02_dev
 
 class BaseKeygen:
     """Base class for key generation with shared initialization logic."""
@@ -173,15 +205,20 @@ class Keygen(BaseKeygen):
     
     def _derive_master_keys(self):
         """Derive production master keys."""
-        return [decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek]
-
+        old_master_keys_prod = master_keys_prod()
+        new_master_keys_prod = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek])[1:]
+        combined_master_keys_prod = old_master_keys_prod + new_master_keys_prod
+        return combined_master_keys_prod
 
 class KeygenDev(BaseKeygen):
     """Development keygen using development master keys."""
     
     def _derive_master_keys(self):
         """Derive development master keys."""
-        return master_keys_dev()
+        old_master_keys_dev = master_keys_dev()
+        new_master_keys_dev = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek])[1:]
+        combined_master_keys_dev = old_master_keys_dev + new_master_keys_dev
+        return combined_master_keys_dev
 
 class TsecKeygen():
     def __init__(self, hovi_kek):
@@ -209,7 +246,7 @@ class TsecKeygen():
             self.tsec_root_kek_source_dev               = bytes([0x48, 0x4F, 0x56, 0x49, 0x5F, 0x4B, 0x45, 0x4B, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x44, 0x45, 0x56]) # HOVI_KEK_KEY_DEV
 
             # tsec auth hash/signature can be found by searching for "1D E3 64 58 FA 9E C2 98 D5 B4 57 74 B5 82 E7 11", selecting the last result +0x1, or +0x30 from start of result found (zeroes encrypted by tsec_secret_06)
-            self.tsec_auth_signature_00                 = bytes([0xA7, 0x7B, 0x86, 0x58, 0x6A, 0xE1, 0xB0, 0x3D, 0x4F, 0xFB, 0xA3, 0xAD, 0xA8, 0xF8, 0xDE, 0x32]) # source 0x3300 encrypted package1 6.2.0 
+            self.tsec_auth_signature_00                 = bytes([0xA7, 0x7B, 0x86, 0x58, 0x6A, 0xE1, 0xB0, 0x3D, 0x4F, 0xFB, 0xA3, 0xAD, 0xA8, 0xF8, 0xDE, 0x32]) # source 0x3300 encrypted package1 6.2.0
             self.tsec_auth_signature_01                 = bytes([0xA3, 0xFF, 0xB0, 0xF6, 0xBC, 0x49, 0xA0, 0x6D, 0xF2, 0xFC, 0x79, 0x16, 0x97, 0xD8, 0x1D, 0x32]) # source 0x3B00 encrypted package1 7.0.0
             self.tsec_auth_signature_02                 = bytes([0x0B, 0x55, 0xCC, 0x08, 0x20, 0xE6, 0x30, 0x7F, 0xD0, 0x87, 0x47, 0x9E, 0xAA, 0x2E, 0x7F, 0x98]) # source 0x3D00 encrypted package1 8.1.0+
 
@@ -279,24 +316,24 @@ class TsecKeygen():
             # Derive Package1 MAC keys
             setattr(self, f'package1_mac_key_{pk1_rev}{suffix}', encrypt_ecb(sig, mac_kek))
 
-def get_latest_master_key():
+def master_key_0a():
     key_sources = KeySources()
     hovi_kek = key_sources.tsec_secret_26
     tsec_keygen = TsecKeygen(hovi_kek)
     tsec_root_key_02 = tsec_keygen.tsec_root_key_02
     tsec_root_key_02_dev = tsec_keygen.tsec_root_key_02_dev
-    latest_master_kek_source = key_sources.master_kek_sources[-1]
-    master_kek = decrypt_ecb(latest_master_kek_source, tsec_root_key_02)
-    master_kek_dev = decrypt_ecb(latest_master_kek_source, tsec_root_key_02_dev)
+    master_kek_0a_source = key_sources.master_kek_sources[0]
+    master_kek = decrypt_ecb(master_kek_0a_source, tsec_root_key_02)
+    master_kek_dev = decrypt_ecb(master_kek_0a_source, tsec_root_key_02_dev)
     master_key = decrypt_ecb(key_sources.master_key_source, master_kek)
     master_key_dev = decrypt_ecb(key_sources.master_key_source, master_kek_dev)
     return master_key, master_key_dev
 
-def master_keys():
-    latest_master_key = get_latest_master_key()[0]
+def master_keys_prod():
+    master_key_0a_prod, master_key_0a_dev = master_key_0a()
     key_sources = KeySources()
-    master_key_vectors = key_sources.master_key_vectors
-    current_master_key = latest_master_key
+    master_key_vectors = key_sources.master_key_vectors[0:8]
+    current_master_key = master_key_0a_prod
     master_key = []
     first = True
     for i in reversed(master_key_vectors):
@@ -315,10 +352,10 @@ def master_keys():
     return master_key
 
 def master_keys_dev():
-    latest_master_key = get_latest_master_key()[1]
+    master_key_0a_prod, master_key_0a_dev = master_key_0a()
     key_sources = KeySources()
-    master_key_vectors = key_sources.master_key_vectors_dev
-    current_master_key = latest_master_key
+    master_key_vectors = key_sources.master_key_vectors_dev[0:8]
+    current_master_key = master_key_0a_dev
     master_key = []
     first = True
     for i in reversed(master_key_vectors):
@@ -376,7 +413,7 @@ def do_keygen(keys = "prod.keys"):
 
         manual_crypto.write(f'\n')
         # Write master_kek_sources
-        count = -0x1
+        count = 0x7
         for i in key_sources.master_kek_sources:
             count = count + 0x1
             keys = f'master_kek_source_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
@@ -398,7 +435,7 @@ def do_keygen(keys = "prod.keys"):
         manual_crypto.write(f'\n')
         # generate master_kek_%% from all provided master_kek_sources
         master_keks = keygen.master_kek
-        count = -0x1
+        count = 0x7
         for i in master_keks:
             count = count + 0x1
             keys = f'master_kek_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
@@ -547,7 +584,7 @@ def do_dev_keygen(keys = "dev.keys"):
 
         manual_crypto.write(f'\n')
         # Write master_kek_sources
-        count = -0x1
+        count = 0x7
         for i in key_sources.master_kek_sources:
             count = count + 0x1
             keys = f'master_kek_source_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
@@ -556,7 +593,7 @@ def do_dev_keygen(keys = "dev.keys"):
         manual_crypto.write(f'\n')
         # generate master_kek_%% from all provided mariko_master_kek_sources
         master_keks = keygen.master_kek
-        count = -0x1
+        count = 0x7
         for i in master_keks:
             count = count + 0x1
             keys = f'master_kek_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
@@ -566,7 +603,7 @@ def do_dev_keygen(keys = "dev.keys"):
         manual_crypto.write(f'master_key_source = ' + f'{key_sources.master_key_source.hex().upper()}\n\n')
 
         # generate master_key_%% from all provided master_kek_%% using Master_Key_Source
-        master_keys = master_keys_dev()
+        master_keys = keygen.master_key
         # Write master_key_%%
         count = -0x1
         for i in master_keys:

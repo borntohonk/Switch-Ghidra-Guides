@@ -344,10 +344,10 @@ def extract_cnmt_from_nsp(
 
     if print_progress:
         print(f"[CNMT] Opening CNMT NCA: {cnmt_nca.filename}")
-
     # Open and decrypt CNMT NCA
     nca_file = nca.Nca(
         util.InitializeFile(nca_path),
+        master_kek_source=None,
         titlekey=titlekey
     )
 
@@ -506,6 +506,7 @@ def extract_exefs_from_nsp(
 
     nca_obj = nca.Nca(
         util.InitializeFile(primary_path),
+        master_kek_source=None,
         titlekey=metadata.primary_titlekey
     )
 

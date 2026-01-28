@@ -90,6 +90,7 @@ def process_single_nsp(nsp_file: Path, verbose: bool = False):
                 print(f"\n[EXEFS] Extracting section 0 (exefs)...")
             exefs_data = nca.save_section(
                 nca.Nca(util.InitializeFile(metadata.primary_nca.filepath), 
+                         master_kek_source=None,
                          titlekey=metadata.primary_titlekey),
                 0
             )
