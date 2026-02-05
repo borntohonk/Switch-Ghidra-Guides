@@ -31,6 +31,7 @@ from hashlib import sha256
 import romfs
 import util
 import pfs0
+import emummc_h
 from keys import RootKeys
 
 def format_bytes_as_hex(data: bytes) -> str:
@@ -392,6 +393,16 @@ def _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth
                 browser_module_id = util.get_module_id(f'output/{system_version}/{system_version}_foss_browser_ssl.nro')
                 with open(strings_file, 'a') as f:
                     f.write(f'{system_version} foss_ssl_browser_moduleid: {browser_module_id}')
+
+
+    if util.version_to_tuple(system_version) > util.version_to_tuple("21.0.0"):
+        exfat_kip = f'output/{system_version}/{system_version}_exfat_uFS.kip1'
+        fat32_kip = f'output/{system_version}/{system_version}_fat32_uFS.kip1'
+        print(f'exfat emummc.h for {system_version}')
+        emummc_h.produce_emummc_h(exfat_kip, firmware_version_no_dot, "EXFAT_")
+        print('\n\n')
+        print(f'fat32 emummc.h for {system_version}')
+        emummc_h.produce_emummc_h(fat32_kip, firmware_version_no_dot, "")
 
 
 def _get_valid_firmware_folders(firmwares_dir='firmwares'):
