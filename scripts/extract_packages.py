@@ -195,6 +195,8 @@ def decrypt_and_extract_package2(package2_data, package2_key):
         return ctx
     
     ctx.is_decrypted = True
+    bootloader_version = '0x' + header_dec[0x5d:0x5e].hex().upper()
+
     ctx.data = package2_data[0:0x100] + header_dec   # for now; body added later
     
     # Parse sizes (little-endian) from decrypted header
@@ -244,7 +246,7 @@ def decrypt_and_extract_package2(package2_data, package2_key):
         #print("Searching for INI1 embedded in kernel...")
         ctx.ini1_bin = extract_ini1_from_kernel(ctx.kernel_bin)
     
-    return ctx
+    return ctx, bootloader_version
 
 def extract_ini1_from_kernel(kernel_data):
     """Extract INI1 from kernel section.
@@ -366,13 +368,13 @@ def process_filesystem_package(nca_path, master_kek_source):
         package2_data = f.read()
     
     # Decrypt Package2
-    package2_ctx = decrypt_and_extract_package2(package2_data, package2_key)
+    package2_ctx, bootloader_version = decrypt_and_extract_package2(package2_data, package2_key)
     
     # Extract filesystem KIPs from INI1
     if package2_ctx.ini1_bin:
         extract_kips_from_ini1(package2_ctx.ini1_bin, romfs_dir / "nx")
     
-    return sdk_version
+    return sdk_version, bootloader_version
 
 
 def extract_filesystem_kips_for_hashing(version, fs_type):

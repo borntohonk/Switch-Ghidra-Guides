@@ -35,8 +35,26 @@ import emummc_h
 from keys import RootKeys
 
 def format_bytes_as_hex(data: bytes) -> str:
-    """Transforms 16 bytes into a comma-separated hex string."""
+    """Transforms bytes into a comma-separated hex string."""
     return "bytes([" + ", ".join(f"0x{b:02X}" for b in data) + "]),"
+
+def to_c_hex_array_16(hex_str: str) -> str:
+    """
+    Converts a hex string (at least 32 chars) into this exact format:
+    { 0xAF, 0x1D, 0xBD, 0xC7, 0x82, 0x98, 0x3C, 0xBD }
+    
+    Only uses the first 16 bytes / 32 hex characters.
+    """
+
+    hex_str = hex_str.strip().upper()
+    if len(hex_str) < 16:
+        raise ValueError("Input must contain at least 16 hex characters")
+
+    data = hex_str[:16]
+    bytes_formatted = [f"0x{data[i:i+2]}" for i in range(0, 16, 2)]
+    inner = ", ".join(bytes_formatted)
+    
+    return f"{{ {inner} }}"
 
 titleids_to_store = [
     '0100000000000809', # system_update
@@ -235,7 +253,7 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
                 mariko_master_kek_source, mariko_master_kek_source_dev = extract_packages.mariko_process_package_with_key_derivation(fat32_path)
         if exfat_path.exists() and master_kek_source:
-            exfat_sdkversion = extract_packages.process_filesystem_package(exfat_path, master_kek_source)[1]
+            exfat_sdkversion, exfat_bootloader_version = extract_packages.process_filesystem_package(exfat_path, master_kek_source)[1]
         
         if master_kek_source and master_kek_source not in key_sources.master_kek_sources:
             print("A new master_kek_source was detected, add it to key_sources.py")
@@ -281,8 +299,8 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             print(f'master_kek_sources belong in exosphere/program/source/boot/secmon_boot_key_data.s')
             print(f'they also belong in fusee/program/source/fusee_key_derivation.cpp')
             print("Add all the keys to their respective sections inside of key_sources.py, then re-run process_firwmare.py")
-
             # refer to https://github.com/Atmosphere-NX/Atmosphere/commit/18bb1fdea00781dac30a051aad6ae1d80ad67137 as to what values should go where
+            # emummc/keyless update https://github.com/Atmosphere-NX/Atmosphere/commit/1e88f37892555da4c38ca6c95f43c56cc6bb87e6
             # some values are made with scripts/find_patterns.py
             sys.exit(1)
         else:
@@ -298,14 +316,12 @@ def _process_filesystem_packages(master_key_revision, key_sources):
         master_kek_source = key_sources.master_kek_sources[key_index - 0x8]
         
         if fat32_path.exists():
-            fat32_result = extract_packages.process_filesystem_package(fat32_path, master_kek_source)
-            fat32_sdkversion = fat32_result[1] if fat32_result else None
+            fat32_sdkversion, bootloader_version = extract_packages.process_filesystem_package(fat32_path, master_kek_source)
         
         if exfat_path.exists():
-            exfat_result = extract_packages.process_filesystem_package(exfat_path, master_kek_source)
-            exfat_sdkversion = exfat_result[1] if exfat_result else None
-    
-    return master_kek_source, fat32_sdkversion, exfat_sdkversion
+            exfat_sdkversion, bootloader_version = extract_packages.process_filesystem_package(exfat_path, master_kek_source)
+
+    return master_kek_source, fat32_sdkversion, exfat_sdkversion, bootloader_version
 
 
 def _copy_kip1_files(system_version):
@@ -340,9 +356,12 @@ def _copy_exefs_files(system_version):
             util.decompress_exefs(main_path, f'output/{system_version}/{system_version}_uncompressed_{name}.nso0')
 
 
-def _write_hashes_file(system_version, module_ids):
+def _write_hashes_file(system_version, module_ids, bootloader_version):
     """Write module IDs and filesystem hashes to output file."""
     hash_file_path = f'output/{system_version}/{system_version}_hashes.txt'
+
+    version_with_underscores = system_version.replace(".", "_")
+    version_no_dot = system_version.replace(".", "")
     
     fat32_kip1_path = Path(f'sorted_firmware/{system_version}/by-type/Data/0100000000000819/romfs/nx/FS.kip1')
     exfat_kip1_path = Path(f'sorted_firmware/{system_version}/by-type/Data/010000000000081B/romfs/nx/FS.kip1')
@@ -350,16 +369,30 @@ def _write_hashes_file(system_version, module_ids):
     with open(hash_file_path, 'w') as f:
         if fat32_kip1_path.exists():
             fat32_hash = sha256(open(fat32_kip1_path, 'rb').read()).hexdigest().upper()
-            f.write(f'{system_version} fat32 sha256 = {fat32_hash}\n')
+            f.write(f'{system_version} fat32 sha256 = {fat32_hash} */\n')
+            f.write(f'{to_c_hex_array_16(fat32_hash)}, /* FsVersion_{version_with_underscores}\n')
+            f.write(f'^ add to fusee/program/source/fusee_stratosphere.cpp\n')
         else:
             f.write(f'{system_version} No fat32 present in this firmware version\n')
         
         if exfat_kip1_path.exists():
             exfat_hash = sha256(open(exfat_kip1_path, 'rb').read()).hexdigest().upper()
             f.write(f'{system_version} exfat sha256 = {exfat_hash}\n')
+            f.write(f'{to_c_hex_array_16(exfat_hash)}, /* FsVersion_{version_with_underscores}_Exfat */\n')
+            f.write(f'^ add to fusee/program/source/fusee_stratosphere.cpp\n')
         else:
             f.write(f'{system_version} No exFAT present in this firmware version\n')
-        
+        f.write(f'\n\nThe following list of files also need FS related updates in atmosphere:\n')
+        f.write(f'the package2 bootloader version is: {bootloader_version}\n')
+        f.write(f'emummc/source/FS/FS_offsets.c\n')
+        f.write(f'emummc/source/FS/FS_versions.h\n')
+        f.write(f'fusee/program/source/fusee_stratosphere.cpp\n')
+        f.write(f'libraries/libstratosphere/include/stratosphere/hos/hos_types.hpp\n')
+        f.write(f'libraries/libvapours/include/vapours/ams/ams_api_version.h\n')
+        f.write(f'libraries/libvapours/include/vapours/ams/ams_target_firmware.h\n')
+        f.write(f'creation of the two emummc.h files:\n')
+        f.write(f'emummc/source/FS/offsets/{version_no_dot}.h\n')
+        f.write(f'emummc/source/FS/offsets/{version_no_dot}_exfat.h\n\n')
         # Write module IDs
         for title_name, title_id in module_ids.items():
             f.write(f'{system_version} {title_name}_moduleid: {title_id}\n')
@@ -505,7 +538,7 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
     key_revision = master_key_revision + 1
     
     # Process filesystem packages (fat32/exfat)
-    master_kek_source, fat32_sdkversion, exfat_sdkversion = _process_filesystem_packages(master_key_revision, key_sources)
+    master_kek_source, fat32_sdkversion, exfat_sdkversion, bootloader_version = _process_filesystem_packages(master_key_revision, key_sources)
     
     system_update_data_patch = f'sorted_firmware/temp/by-type/Data/0100000000000809/data.nca'
     system_version = _extract_system_version(system_update_data_patch, master_kek_source)
@@ -525,7 +558,7 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
     _copy_exefs_files(system_version)
     
     # Write hashes and metadata
-    _write_hashes_file(system_version, module_ids)
+    _write_hashes_file(system_version, module_ids, bootloader_version)
     
     dauth_file_path = f'output/{system_version}/{system_version}_system_update_file'
     dauth_digest_path = f'output/{system_version}/{system_version}_system_digest'
