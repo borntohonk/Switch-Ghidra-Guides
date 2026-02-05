@@ -437,11 +437,12 @@ def erista_process_package_with_key_derivation(nca_path):
     
     # Decrypt Package1
     decrypted_package1 = decrypt_erista_package1(encrypted_package1)
+    package1_version = decrypted_package1[0x10:0x18].decode('utf-8')
     
     # Extract master_kek_source
     master_kek_source, device_master_key_source_source = erista_extract_key_sources_from_package1(decrypted_package1)
     
-    return master_kek_source, device_master_key_source_source, sdk_version
+    return master_kek_source, device_master_key_source_source, sdk_version, package1_version
 
 
 def mariko_process_package_with_key_derivation(nca_path):

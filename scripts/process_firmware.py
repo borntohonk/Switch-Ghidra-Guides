@@ -231,7 +231,7 @@ def _process_filesystem_packages(master_key_revision, key_sources):
     if master_key_revision not in master_key_keygen_list or master_key_revision == master_key_keygen_list[-1]:
         root_keys = RootKeys()
         if fat32_path.exists():
-            master_kek_source, device_master_key_source_source, fat32_sdkversion = extract_packages.erista_process_package_with_key_derivation(fat32_path)
+            master_kek_source, device_master_key_source_source, fat32_sdkversion, package1_version = extract_packages.erista_process_package_with_key_derivation(fat32_path)
             if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
                 mariko_master_kek_source, mariko_master_kek_source_dev = extract_packages.mariko_process_package_with_key_derivation(fat32_path)
         if exfat_path.exists() and master_kek_source:
@@ -266,7 +266,9 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             DeviceMasterKekSourceSource = crypto.encrypt_ecb(DeviceMasterKek, master_key_00)
             DeviceMasterKek_dev = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek_dev)
             DeviceMasterKekSourceSource_dev = crypto.encrypt_ecb(DeviceMasterKek_dev, master_key_00_dev)
-            print("atmosphere specific keys:")
+            print(f"atmosphere specific keys:")
+            print(f'package1 version:                    {package1_version}')
+            print(f'package1 version belongs in fusee/program/source/fusee_setup_horizon.cpp')
             print(f'master_kek_source =                  {format_bytes_as_hex(master_kek_source)}')
             print(f'DeviceMasterKeySourceSource          {format_bytes_as_hex(device_master_key_source_source)}')
             print(f'DeviceMasterKekSource =              {format_bytes_as_hex(DeviceMasterKekSourceSource)}')
@@ -276,10 +278,18 @@ def _process_filesystem_packages(master_key_revision, key_sources):
                 print(f'mariko_master_kek__source_dev =      {format_bytes_as_hex(mariko_master_kek_source_dev)}')
             else:
                 print("No mariko_bek, or incorrect mariko_bek in keys.py")
+            print(f'master_kek_sources belong in exosphere/program/source/boot/secmon_boot_key_data.s')
+            print(f'they also belong in fusee/program/source/fusee_key_derivation.cpp')
             print("Add all the keys to their respective sections inside of key_sources.py, then re-run process_firwmare.py")
+
+            # refer to https://github.com/Atmosphere-NX/Atmosphere/commit/18bb1fdea00781dac30a051aad6ae1d80ad67137 as to what values should go where
+            # some values are made with scripts/find_patterns.py
             sys.exit(1)
         else:
-            print("Update keygen_revisions (in this file) to include the new firmware revision, example if latest entry is 0x14, add 0x15, then re-run process_firwmare.py")
+            print(f"Update keygen_revisions (in this file) to include the new firmware revision, example if latest entry is 0x14, add 0x15, then re-run process_firwmare.py")
+            print(f'also in exosphere/program/source/boot/secmon_package2.cpp')
+            print(f'and in fusee/program/source/fusee_package2.cpp')
+            print(f'and libraries/libexosphere/include/exosphere/pkg1/pkg1_key_generation.hpp')
             sys.exit(1)
     
     # Existing key workflow
