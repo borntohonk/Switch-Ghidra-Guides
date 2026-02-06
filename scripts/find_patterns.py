@@ -147,8 +147,19 @@ def find_and_patch(
         head_offset = patch_offset + rule.head_offset
 
         patch_size_int = int(rule.patch_size_hex, 16)
-        existing = data[head_offset:head_offset + patch_size_int]
+        patch_size_int_for_mnemonic = patch_size_int
+        if patch_size_int_for_mnemonic < 4:
+            patch_size_int_for_mnemonic = 4 # force 4 size for patches that are only 1 byte width
+        existing = data[head_offset:head_offset + patch_size_int_for_mnemonic]
         mnemonic = get_arm_cond(existing, head_offset)
+
+        if module_name == "NOGC":
+            patch_offset = patch_offset + 0x101
+            head_offset = head_offset + 0x101
+            if rule.name == "fs_nogc3_19.0.0+":
+                patch_offset = patch_offset - 0x1
+                head_offset = head_offset - 0x1
+
 
         if mnemonic not in rule.condition_mnemonics:
             log_file.write(
@@ -473,6 +484,32 @@ def build_ips_file(magic: str, records: list[str], end_magic: str = "454F46") ->
 # as it finds searches for "009401C0BE12(6)1F00(2)", testing 4 bytes from from offset (6) for cmp_cond byte of "6B",
 # and then applies the patch of "00", two bytes offset after the testing point (0)1F00(2), turning (6)1F00(2)->01<-6B - cmp w0, w1 -  into (6)1F00(2)->00<-6B - cmp w0, w0
 
+# mov 200 -> mov 400 (80 patch) ("first nogc patch") .start() + 12/0xc (13/0xd for what actually needs to be patched)
+# .start() + 13
+#fd 7b be a9 f. .. 0. .9 fd 03 00 91 .. 40 80 52 .. 01 ae 72 02 40 80 52
+#fd7bbea9f...0..9fd030091..408052..01ae7202408052
+
+# mov 200 -> mov 400 (80 patch) ("second nogc patch")
+# this moved in 21.0.0 - pattern cannot match backwards and new one.
+
+# 21.0.0+
+# .start() + 33
+#fd 7b be a9 f. .. 0. .9 fd 03 00 91 .. 40 80 52 .. 01 ae 72 02 40 80 52
+#fd7bbea9f...0..9fd030091..408052..01ae7202408052
+
+# offset of nogc patch 1 + 0x14 (0x15 if first pattern is 0x0)
+# this pattern cannot support both 21.0.0+ and below at same time
+
+# 19.0.0 to 20.0.0 
+# .start() + 1
+# 16 40 80 52 76 01 ae 72 e0 03 15 aa e1 03 16 aa 02 40 80 52 a6 16 00 94 .8 05 00 .0 e0 03 16 aa 08 .. .. f9 01 40 80 52 08 41 00 91 a8 02 00 f9
+# 164080527601ae72e00315aae10316aa02408052a6160094.80500.0e00316aa08....f90140805208410091a80200f9
+
+
+#stp patch mov + ret == ("third nogc patch") -> .start() + 4
+# 00 00 00 00 fd 7b bd a9 f5 0b 00 f9 f4 4f 02 a9 fd 03 00 91 f3 03 00 aa .. 2. 00 94 08 0c 40 39 .. 0. 00 .. .. 0. .. .. .. 0. .. .. .. .. 00 94
+# 00000000fd7bbda9f50b00f9f44f02a9fd030091f30300aa..2.0094080c4039..0.00....0.......0.........0094
+
 patch_magic = "5041544348" # "PATCH"
 ips32_magic = "4950533332" # "IPS32"
 eof_magic = "454F46" # "EOF"
@@ -769,6 +806,56 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
             patch_size_hex="0004",
         )
     ],
+    "NOGC" : [
+        PatchRule(
+            name="fs_nogc1_19.0.0+",
+            module="FS",
+            min_version="19.0.0",
+            max_version=FW_VER_ANY,
+            pattern="FD7BBEA9F...0..9FD030091..408052..01AE7202408052",
+            offset=13,
+            head_offset=-1,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x80",
+            patch_size_hex="0001",
+        ),
+        PatchRule(
+            name="fs_nogc2_19.0.0-20.1.1",
+            module="FS",
+            min_version="19.0.0",
+            max_version="20.5.0",
+            pattern="164080527601AE72E00315AAE10316AA02408052A6160094.80500.0E00316AA08....F90140805208410091A80200F9",
+            offset=1,
+            head_offset=-1,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x80",
+            patch_size_hex="0001",
+        ),
+        PatchRule(
+            name="fs_nogc2_21.0.0+",
+            module="FS",
+            min_version="21.0.0",
+            max_version=FW_VER_ANY,
+            pattern="FD7BBEA9F...0..9FD030091..408052..01AE7202408052",
+            offset=37,
+            head_offset=-1,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x80",
+            patch_size_hex="0001",
+        ),
+        PatchRule(
+            name="fs_nogc3_19.0.0+",
+            module="FS",
+            min_version="19.0.0",
+            max_version=FW_VER_ANY,
+            pattern="00000000FD7BBDA9F50B00F9F44F02A9FD030091F30300AA..2.0094080C4039..0.00....0.......0.........0094",
+            offset=4,
+            head_offset=0,
+            condition_mnemonics=("stp"),
+            patch_bytes=b"\xE0\x03\x1F\x2A\xC0\x03\x5F\xD6",
+            patch_size_hex="0008",
+        )
+    ],
     "LOADER" : [
         PatchRule(
             name="noacidsigchk_10.0.0+",
@@ -908,6 +995,10 @@ ldr_kip_patch_database = []
 ips_patch_database = []
 ssl_ips_patch_database = []
 
+nogc_kip_patch_database = []
+nogc_ips_patch_database = []
+nogc_pattern_diffs = {}
+
 es_pattern_diffs = {}
 blockfirmwareupdates_pattern_diffs = {}
 blankcal0crashfix_pattern_diffs = {}
@@ -929,7 +1020,7 @@ ssl_pattern_3_diffs = {}
 # Pattern offsets (used internally but can be simplified)
 pattern_offsets_map = {
     'es': {}, 'nifm': {}, 'olsc': {}, 'nim': {}, 'browser': {},
-    'fat32_nc': {}, 'exfat_nc': {}, 'ssl_1': {}, 'ssl_2': {}, 'ssl_3': {},
+    'fat32_nc': {}, 'exfat_nc': {}, 'fat32_nogc': {}, 'exfat_nogc': {}, 'ssl_1': {}, 'ssl_2': {}, 'ssl_3': {},
 }
 
 if args.ams:
@@ -987,11 +1078,21 @@ def _process_firmware_version(version: str):
                 fat32_noncasigchk_pattern_diffs, pattern_offsets_map['fat32_nc'],
                 ips_patch_database, hekate_patch_db=fs_kip_patch_database,
                 is_fs=True, fs_type="FAT32", compressed_path=existing_files.get('fat32_comp'))
+            
+            find_and_patch(existing_files['fat32_decomp'], version, "NOGC", log,
+                nogc_pattern_diffs, pattern_offsets_map['fat32_nogc'],
+                nogc_ips_patch_database, hekate_patch_db=nogc_kip_patch_database,
+                is_fs=True, fs_type="FAT32", compressed_path=existing_files.get('fat32_comp'))
         
         if 'exfat_decomp' in existing_files:
             find_and_patch(existing_files['exfat_decomp'], version, "FS", log,
                 exfat_noncasigchk_pattern_diffs, pattern_offsets_map['exfat_nc'],
                 ips_patch_database, hekate_patch_db=fs_kip_patch_database,
+                is_fs=True, fs_type="EXFAT", compressed_path=existing_files.get('exfat_comp'))
+            
+            find_and_patch(existing_files['exfat_decomp'], version, "NOGC", log,
+                nogc_pattern_diffs, pattern_offsets_map['exfat_nogc'],
+                nogc_ips_patch_database, hekate_patch_db=nogc_kip_patch_database,
                 is_fs=True, fs_type="EXFAT", compressed_path=existing_files.get('exfat_comp'))
         
         # Browser patch
@@ -1188,12 +1289,14 @@ print("Updating patch databases incrementally...")
 print("="*80 + "\n")
 
 # Remove duplicates from all databases
+nogc_kip_patch_database = remove_duplicates_by_index(nogc_kip_patch_database, 1)
 fs_kip_patch_database = remove_duplicates_by_index(fs_kip_patch_database, 1)
 ldr_kip_patch_database = remove_duplicates_by_index(ldr_kip_patch_database, 1)
 ips_patch_database = remove_duplicates_by_index(ips_patch_database, 1)
 ssl_ips_patch_database = remove_duplicates_by_index(ssl_ips_patch_database, 1)
 
 # Update patch files
+nogc_kip_updated = update_patch_file('patch_database/nogc_kip_patches.txt', nogc_kip_patch_database)
 fs_kip_updated = update_patch_file('patch_database/fs_kip_patches.txt', fs_kip_patch_database)
 ldr_kip_updated = update_patch_file('patch_database/ldr_kip_patches.txt', ldr_kip_patch_database)
 ips_updated = update_patch_file('patch_database/ips_patches.txt', ips_patch_database)
