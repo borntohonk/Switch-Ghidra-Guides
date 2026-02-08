@@ -111,14 +111,14 @@ def erista_extract_key_sources_from_package1(decrypted_package1):
     """
     # Search for OYASUMI magic which precedes key sources
     result_oyasumi = re.search(bytes([0x4F, 0x59, 0x41, 0x53, 0x55, 0x4D, 0x49]), decrypted_package1)
+    # this is in "Secure Monitor"
     if not result_oyasumi:
-        raise ValueError("Failed to find key source magic in Package1")
+        raise ValueError("Failed to find key source magic in Package1 - for oyasumi string")
 
     result_package2 = re.search(bytes([0x70, 0x61, 0x63, 0x6B, 0x61, 0x67, 0x65, 0x32]), decrypted_package1)
+    # this is in "Secure Monitor - every version has every other device master key source source directly above the last one in 0x10 sizes, 21.0.0 = 0x120 size keyblock, 20.0.0 0x110 size keyblock, and so on"
     if not result_package2:
-        raise ValueError("Failed to find key source magic in Package1")
-    
-
+        raise ValueError("Failed to find key source magic in Package1 - for package2 string")
     
     # master_kek_source is at a fixed offset after the magic
     master_kek_source_start = result_oyasumi.end() + 0x42

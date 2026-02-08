@@ -253,7 +253,7 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
                 mariko_master_kek_source, mariko_master_kek_source_dev = extract_packages.mariko_process_package_with_key_derivation(fat32_path)
         if exfat_path.exists() and master_kek_source:
-            exfat_sdkversion, exfat_bootloader_version = extract_packages.process_filesystem_package(exfat_path, master_kek_source)[1]
+            exfat_sdkversion, exfat_bootloader_version = extract_packages.process_filesystem_package(exfat_path, master_kek_source)
         
         if master_kek_source and master_kek_source not in key_sources.master_kek_sources:
             print("A new master_kek_source was detected, add it to key_sources.py")
@@ -284,6 +284,16 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             DeviceMasterKekSourceSource = crypto.encrypt_ecb(DeviceMasterKek, master_key_00)
             DeviceMasterKek_dev = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek_dev)
             DeviceMasterKekSourceSource_dev = crypto.encrypt_ecb(DeviceMasterKek_dev, master_key_00_dev)
+
+            # the input of this and output is console unique:
+            # device_master_key_source_kek_source = key_sources.device_master_key_source_kek_source
+            # KeyblobKeySource = key_sources.KeyblobKeySource
+            # work_buffer = crypto.decrypt_ecb(KeyblobKeySource, tsec_key)
+            # AesKeySlot_Device = crypto.decrypt_ecb(work_buffer, secure_boot_key)
+            # DeviceMasterKeySourceKekErista = crypto.decrypt_ecb(device_master_key_source_kek_source, AesKeySlot_Device)
+            # DeviceMasterKek = crypto.decrypt_ecb(DeviceMasterKekSourceSource, master_key_00)
+            # device_master_key_source = crypto.decrypt_ecb(device_master_key_source_source, DeviceMasterKeySourceKekErista)
+
             print(f"atmosphere specific keys:")
             print(f'package1 version:                    {package1_version}')
             print(f'package1 version belongs in fusee/program/source/fusee_setup_horizon.cpp')
@@ -293,7 +303,7 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             print(f'DeviceMasterKekSourceDev =           {format_bytes_as_hex(DeviceMasterKekSourceSource_dev)}')
             if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
                 print(f'mariko_master_kek_source =           {format_bytes_as_hex(mariko_master_kek_source)}')
-                print(f'mariko_master_kek__source_dev =      {format_bytes_as_hex(mariko_master_kek_source_dev)}')
+                print(f'mariko_master_kek_source_dev =       {format_bytes_as_hex(mariko_master_kek_source_dev)}')
             else:
                 print("No mariko_bek, or incorrect mariko_bek in keys.py")
             print(f'master_kek_sources belong in exosphere/program/source/boot/secmon_boot_key_data.s')
