@@ -36,7 +36,7 @@ from keys import RootKeys
 
 def format_bytes_as_hex(data: bytes) -> str:
     """Transforms bytes into a comma-separated hex string."""
-    return "bytes([" + ", ".join(f"0x{b:02X}" for b in data) + "]),"
+    return ", ".join(f"0x{b:02X}" for b in data)
 
 def to_c_hex_array_16(hex_str: str) -> str:
     """
@@ -261,7 +261,9 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             keygen = crypto.Keygen(tsec_root_key_02)
             keygen_dev = crypto.KeygenDev(tsec_root_key_02_dev)
             master_key_00_dev = keygen_dev.master_key[0]
+            previous_master_key_dev = keygen_dev.master_key[-1]
             master_key_00 = keygen.master_key[0]
+            previous_master_key = keygen.master_key[-1]
             master_kek, master_key, package2_key, titlekek, key_area_key_system, key_area_key_ocean, key_area_key_application = crypto.single_keygen_master_kek(master_kek_source)
             master_kek_dev, master_key_dev, package2_key_dev, titlekek_dev, key_area_key_system_dev, key_area_key_ocean_dev, key_area_key_application_dev = crypto.single_keygen_dev(master_kek_source)
             
@@ -279,7 +281,9 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             print(f'new titlekek_dev:                    {titlekek_dev.hex().upper()}')
             print(f'new key_area_key_system_dev:         {key_area_key_system_dev.hex().upper()}')
             print(f'new key_area_key_ocean_dev:          {key_area_key_ocean_dev.hex().upper()}')
-            print(f'new key_area_key_application_dev:    {key_area_key_application_dev.hex().upper()}') 
+            print(f'new key_area_key_application_dev:    {key_area_key_application_dev.hex().upper()}')
+            DevelopmentMasterKeyVector = crypto.encrypt_ecb(previous_master_key_dev, master_key_dev)
+            ProductionMasterKeyVector = crypto.encrypt_ecb(previous_master_key, master_key)
             DeviceMasterKek = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek)
             DeviceMasterKekSourceSource = crypto.encrypt_ecb(DeviceMasterKek, master_key_00)
             DeviceMasterKek_dev = crypto.decrypt_ecb(key_sources.DeviceMasterKekSource, master_kek_dev)
@@ -294,21 +298,114 @@ def _process_filesystem_packages(master_key_revision, key_sources):
             # DeviceMasterKek = crypto.decrypt_ecb(DeviceMasterKekSourceSource, master_key_00)
             # device_master_key_source = crypto.decrypt_ecb(device_master_key_source_source, DeviceMasterKeySourceKekErista)
 
-            print(f"atmosphere specific keys:")
-            print(f'package1 version:                    {package1_version}')
-            print(f'package1 version belongs in fusee/program/source/fusee_setup_horizon.cpp')
-            print(f'master_kek_source =                  {format_bytes_as_hex(master_kek_source)}')
-            print(f'DeviceMasterKeySourceSource          {format_bytes_as_hex(device_master_key_source_source)}')
-            print(f'DeviceMasterKekSource =              {format_bytes_as_hex(DeviceMasterKekSourceSource)}')
-            print(f'DeviceMasterKekSourceDev =           {format_bytes_as_hex(DeviceMasterKekSourceSource_dev)}')
+
+            print(f'Additionally add these to key_sources.py:')
+            print(f'device_master_key_source_sources:')
+            print(f'bytes([{format_bytes_as_hex(device_master_key_source_source)}]),')
+            print(f'device_master_kek_sources:')
+            print(f'bytes([{format_bytes_as_hex(DeviceMasterKekSourceSource)}]),')
+
+            print(f'master_key_vectors:')
+            print(f'bytes([{format_bytes_as_hex(ProductionMasterKeyVector)}]),')
+
+            print(f'master_kek_sources:')
+            print(f'bytes([{format_bytes_as_hex(master_kek_source)}]),')
+
+
             if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
-                print(f'mariko_master_kek_source =           {format_bytes_as_hex(mariko_master_kek_source)}')
-                print(f'mariko_master_kek_source_dev =       {format_bytes_as_hex(mariko_master_kek_source_dev)}')
+                print(f'mariko_master_kek_sources:')
+                print(f'bytes([{format_bytes_as_hex(mariko_master_kek_source)}]),')
             else:
                 print("No mariko_bek, or incorrect mariko_bek in keys.py")
-            print(f'master_kek_sources belong in exosphere/program/source/boot/secmon_boot_key_data.s')
-            print(f'they also belong in fusee/program/source/fusee_key_derivation.cpp')
-            print("Add all the keys to their respective sections inside of key_sources.py, then re-run process_firwmare.py")
+
+            print(f'master_key_vectors_dev:')
+            print(f'bytes([{format_bytes_as_hex(DevelopmentMasterKeyVector)}]),')
+
+            #print(f"atmosphere specific keys:\n")
+            # the following is intended to be writing to a file:
+            print(f'\n\nIn "exosphere/program/source/boot/secmon_boot_key_data.s":\n')
+
+            print(f'Replace the key under "/* Mariko Development Master Kek Source. */", with:')
+            print(f'.byte {format_bytes_as_hex(mariko_master_kek_source_dev)}')
+
+            print(f'Replace the key under "/* Mariko Production Master Kek Source. */", with:')
+            print(f'.byte {format_bytes_as_hex(mariko_master_kek_source)}')
+
+            print(f'Under "/* Development Master Key Vectors. */", add the following at the end:')
+            print(f'.byte {format_bytes_as_hex(DevelopmentMasterKeyVector)} /* Master Key {master_key_keygen_list[-2]:02X} encrypted with Master Key {master_key_revision:02X}. */')
+
+            print(f'Under "/* Production Master Key Vectors. */", add the following at the end:')
+            print(f'.byte {format_bytes_as_hex(ProductionMasterKeyVector)} /* Master Key {master_key_keygen_list[-2]:02X} encrypted with Master Key {master_key_revision:02X}. */')
+
+            print(f'Under "/* Device Master Key Source Sources. */", add the following at the end:')
+            print(f'.byte {format_bytes_as_hex(device_master_key_source_source)} /* XX.XX.XX Device Master Key Source Source. */')
+
+            print(f'Under "/* Development Device Master Kek Sources. */", add the following at the end:')
+            print(f'.byte {format_bytes_as_hex(DeviceMasterKekSourceSource_dev)} /* XX.XX.XX Device Master Kek Source. */')
+
+            print(f'Under "/* Production Device Master Kek Sources. */", add the following at the end:')
+            print(f'.byte {format_bytes_as_hex(DeviceMasterKekSourceSource)} /* XX.XX.XX Device Master Kek Source. *\n')
+            print(f'That concludes what needs to be added to "exosphere/program/source/boot/secmon_boot_key_data.s"\n')
+
+            print(f'in "fusee/program/source/fusee_key_derivation.cpp":\n')
+            print(f'Replace "MarikoMasterKekSource" with:')
+            print(f'{format_bytes_as_hex(mariko_master_kek_source)}')
+            print(f'Replace "MarikoMasterKekSourceDev" with:')
+            print(f'{format_bytes_as_hex(mariko_master_kek_source_dev)}')
+            print(f'Replace "EristaMasterKekSource" with:')
+            print(f'{format_bytes_as_hex(master_kek_source)}')
+
+            print(f'Under "DeviceMasterKeySourceSources", add the following at the end:')
+            print(f'{{ {format_bytes_as_hex(device_master_key_source_source)} }}, /* XX.XX.XX Device Master Key Source Source. */')
+            
+            print(f'Under "DeviceMasterKekSources", add the following at the end:')
+            print(f'{{ {format_bytes_as_hex(DeviceMasterKekSourceSource)} }}, /* XX.XX.XX Device Master Kek Source. */')
+
+            print(f'Under "DeviceMasterKekSourcesDev", add the following at the end:')
+            print(f'{{ {format_bytes_as_hex(DeviceMasterKekSourceSource_dev)} }}, /* XX.XX.XX Device Master Kek Source. */')
+
+            print(f'Under "MasterKeySources", add the following at the end:')
+            print(f'{{ {format_bytes_as_hex(ProductionMasterKeyVector)} }}, /* Master Key {master_key_keygen_list[-2]:02X} encrypted with Master Key {master_key_revision:02X}. */')
+
+            print(f'Under "MasterKeySourcesDev", add the following at the end:')
+            print(f'{{ {format_bytes_as_hex(DevelopmentMasterKeyVector)} }}, /* Master Key {master_key_keygen_list[-2]:02X} encrypted with Master Key {master_key_revision:02X}. */\n')
+
+            print(f'That concludes what needs to be added to "fusee/program/source/fusee_key_derivation.cpp"\n')
+
+            print(f'In "exosphere/program/source/boot/secmon_package2.cpp":\n')
+            print(f'at line 97; replace the line with this:')
+            print(f'static_assert(pkg1::KeyGeneration_Count == {master_key_revision + 1});\n')
+            print(f'That concludes what needs to be added to "exosphere/program/source/boot/secmon_package2.cpp"\n')
+            
+            print(f'in "fusee/program/source/fusee_setup_horizon.cpp":\n')
+            print(f'add the following two lines:')
+            print(f' }} else if (std::memcmp(package1 + 0x10, "{package1_version}", 8) == 0) {{')
+            print(f'return ams::TargetFirmware_XX_XX_XX;\n')
+            print(f'That concludes what needs to be added to "fusee/program/source/fusee_setup_horizon.cpp"\n')
+
+            print(f'this file only needs +1 keygeneration')
+            print(f'libraries/libexosphere/include/exosphere/pkg1/pkg1_key_generation.hpp\n')
+
+            print(f'this "needs" package2 bootloader version (the regular process_firmware.py with new sources added to key_sources.py and keygen revision added to keygen_revisions will output that)')
+            print(f'libraries/libexosphere/include/exosphere/pkg2.hpp\n')
+
+            print(f'this needs just new TargetFirmware_XX_XX_XX')
+            print(f'libraries/libexosphere/source/fuse/fuse_api.cpp\n')
+
+            print(f'this also just need new TargetFirmware_XX_XX_XX')
+            print(f'libraries/libstratosphere/include/stratosphere/hos/hos_types.hpp\n')
+
+            print(f'this needs to reference the pkg1 keygeneration for the new version, and define the range of firmware versions')
+            print(f'libraries/libstratosphere/source/fs/impl/fs_id_string_impl.os.generic.cpp\n')
+
+            print(f'this needs to change the atmosphere version, and supported firmware version')
+            print(f'libraries/libvapours/include/vapours/ams/ams_api_version.h\n')
+
+            print(f'this is updated with the target')
+            print(f'libraries/libvapours/include/vapours/ams/ams_target_firmware.h\n')
+
+            print(f"don't forget to replace XX.XX.XX and XX_XX_XX with ex 21_00_00, 22_00_00, and so on \n\n")
+
             # refer to https://github.com/Atmosphere-NX/Atmosphere/commit/18bb1fdea00781dac30a051aad6ae1d80ad67137 as to what values should go where
             # emummc/keyless update https://github.com/Atmosphere-NX/Atmosphere/commit/1e88f37892555da4c38ca6c95f43c56cc6bb87e6
             # some values are made with scripts/find_patterns.py
