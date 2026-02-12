@@ -41,22 +41,22 @@ NCA_SIGNATURE1_SIZE = 0x100
 NCA_SIGNATURE2_OFFSET = 0x100
 NCA_SIGNATURE2_SIZE = 0x100
 NCA_MAGIC_OFFSET = 0x200
-NCA_MAGIC_SIZE = 4
+NCA_MAGIC_SIZE = 0x4
 NCA_DISTRIBUTION_OFFSET = 0x204
 NCA_CONTENT_TYPE_OFFSET = 0x205
 NCA_CRYPTO_TYPE_OFFSET = 0x206
 NCA_KEY_INDEX_OFFSET = 0x207
 NCA_SIZE_OFFSET = 0x208
-NCA_SIZE_SIZE = 8
+NCA_SIZE_SIZE = 0x8
 NCA_TITLE_ID_OFFSET = 0x210
-NCA_TITLE_ID_SIZE = 8
+NCA_TITLE_ID_SIZE = 0x8
 NCA_CONTENT_INDEX_OFFSET = 0x218
 NCA_SDK_VERSION_OFFSET = 0x21C
-NCA_SDK_VERSION_SIZE = 4
+NCA_SDK_VERSION_SIZE = 0x4
 NCA_KEY_GENERATION_OFFSET = 0x220
 NCA_CRYPTO_TYPE2_OFFSET = 0x221
 NCA_RIGHTS_ID_OFFSET = 0x230
-NCA_RIGHTS_ID_SIZE = 16
+NCA_RIGHTS_ID_SIZE = 0x10
 NCA_SECTION_TABLE_OFFSET = 0x240
 NCA_SECTION_ENTRY_SIZE = 0x10
 NCA_ENCRYPTED_KEY_AREA_OFFSET = 0x300
@@ -73,7 +73,9 @@ FS_HEADER_PATCH_INFO_OFFSET = 0x100
 FS_HEADER_GENERATION_OFFSET = 0x140
 FS_HEADER_SECURE_VALUE_OFFSET = 0x144
 FS_HEADER_SPARSE_INFO_OFFSET = 0x148
-FS_HEADER_RESERVED_OFFSET = 0x1A0
+FS_HEADER_COMPRESSION_INFO_OFFSET = 0x178
+FS_HEADER_META_DATA_HASH_DATA_INFO_OFFSET = 0x1A0
+FS_HEADER_RESERVED = 0x1D0
 FS_HEADER_SIZE = 0x200
 
 # SectionTableEntry offsets
@@ -168,10 +170,12 @@ class FsHeader:
         self._parse_fs_type()
         
         self.patchInfo = self.fsheader[FS_HEADER_PATCH_INFO_OFFSET:FS_HEADER_PATCH_INFO_OFFSET + 0x40]
-        self.generation = self.fsheader[FS_HEADER_GENERATION_OFFSET:FS_HEADER_GENERATION_OFFSET + 4]
-        self.secureValue = self.fsheader[FS_HEADER_SECURE_VALUE_OFFSET:FS_HEADER_SECURE_VALUE_OFFSET + 4]
-        self.sparseInfo = self.fsheader[FS_HEADER_SPARSE_INFO_OFFSET:FS_HEADER_SPARSE_INFO_OFFSET + 0x58]
-        self.reserved = self.fsheader[FS_HEADER_RESERVED_OFFSET:FS_HEADER_RESERVED_OFFSET + 0x60]
+        self.generation = self.fsheader[FS_HEADER_GENERATION_OFFSET:FS_HEADER_GENERATION_OFFSET + 0x4]
+        self.secureValue = self.fsheader[FS_HEADER_SECURE_VALUE_OFFSET:FS_HEADER_SECURE_VALUE_OFFSET + 0x4]
+        self.sparseInfo = self.fsheader[FS_HEADER_SPARSE_INFO_OFFSET:FS_HEADER_SPARSE_INFO_OFFSET + 0x30]
+        self.compressionInfo = self.fsheader[FS_HEADER_COMPRESSION_INFO_OFFSET:FS_HEADER_COMPRESSION_INFO_OFFSET + 0x28]
+        self.metadatahashdataInfo = self.fsheader[FS_HEADER_META_DATA_HASH_DATA_INFO_OFFSET:FS_HEADER_META_DATA_HASH_DATA_INFO_OFFSET + 0x30]
+        self.reserved = self.fsheader[FS_HEADER_RESERVED:FS_HEADER_RESERVED + 0x30]
         self.CryptoCounterCtr = bytearray((b"\x00" * 8) + self.generation + self.secureValue)[::-1]
     
     def _parse_fs_type(self):
@@ -193,8 +197,8 @@ class FsHeader:
             self.superblockHash = self.hashData.master_hash
             self.id = int.from_bytes(self.hashData.version, byteorder='little', signed=False)
             
-            content_start = self.hashData.levels[self.max_layer].data_offset
-            content_size = self.hashData.levels[self.max_layer].data_size
+            content_start = self.hashData.levels[self.max_layer].logical_offset
+            content_size = self.hashData.levels[self.max_layer].hash_data_size
             
             self.content_start = content_start
             self.content_end = content_start + content_size
@@ -714,14 +718,14 @@ class NcaInfo:
         for level_idx in range(level_count):
             ivfc_level = fsheader.ivfc_levels[level_idx + 1]
             ivfc_level_prev = fsheader.ivfc_levels[level_idx]
-            hash_block_size = fsheader.ivfc_levels[1].data_size
+            hash_block_size = fsheader.ivfc_levels[1].block_size
             
             section_lines.append(f'        Level {level_idx}:')
-            section_lines.append(f'            Data Offset:            0x{ivfc_level.data_offset:012x}')
-            section_lines.append(f'            Data Size:              0x{ivfc_level.data_size:012x}')
+            section_lines.append(f'            Data Offset:            0x{ivfc_level.logical_offset:012x}')
+            section_lines.append(f'            Data Size:              0x{ivfc_level.hash_data_size:012x}')
             
             if level_idx != 0:
-                section_lines.append(f'            Hash Offset:            0x{ivfc_level_prev.data_offset:012x}')
+                section_lines.append(f'            Hash Offset:            0x{ivfc_level_prev.logical_offset:012x}')
             section_lines.append(f'            Hash Block Size:        0x{hash_block_size:08x}')
     
     def _build_pfs0_info(self, section_idx, fsheader, section_lines, npdm_lines, kac_lines, sac_lines, fac_lines):

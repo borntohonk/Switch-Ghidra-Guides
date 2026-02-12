@@ -18,34 +18,36 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class IvfcLevel:
-    def __init__(self, ivfclevel):
-        self.ivfclevel = ivfclevel
-        self.data_offset_raw = self.ivfclevel[0x0:0x8]
-        self.data_offset = int.from_bytes(self.data_offset_raw, byteorder='little', signed=False)
-        self.data_size_raw = self.ivfclevel[0x8:0x10]
-        self.data_size = int.from_bytes(self.data_size_raw, byteorder='little', signed=False)
-        self.hash_offset_raw = self.ivfclevel[0x10:0x14]
-        self.hash_offset = int.from_bytes(self.hash_offset_raw, byteorder='little', signed=False)
-        self.hash_block_size_raw = self.ivfclevel[0x14:0x18]
-        self.hash_block_size = int.from_bytes(self.hash_block_size_raw, byteorder='little', signed=False)
-        self.reserved = self.ivfclevel[0x1C:0x18]
+class InfoLevelHash: # InfoLevelHash
+    def __init__(self, infolevelhash):
+        self.infolevelhash = infolevelhash
+        self.max_layers = self.infolevelhash[0x0:0x4]
+        self.ivfc_levels = self.infolevelhash[0x4:0x94]
+        self.signature_salt = self.infolevelhash[0x94:0xB4]
 
-class Ivfc():
+class IvfcLevels: # HierarchicalIntegrityVerificationLevelInformation
+    def __init__(self, ivfc_levels):
+        self.ivfc_levels = ivfc_levels
+        self.logical_offset = int.from_bytes(self.ivfc_levels[0x0:0x8], byteorder='little', signed=False)
+        self.hash_data_size = int.from_bytes(self.ivfc_levels[0x8:0x10], byteorder='little', signed=False)
+        self.block_size = int.from_bytes(self.ivfc_levels[0x10:0x14], byteorder='little', signed=False)
+        self.reserved = self.ivfc_levels[0x14:0x18]
+
+class Ivfc(): # IntegrityMetaInfo
     def __init__(self, hashData):
         self.hashData = hashData
-        self.magic = hashData[0x0:0x4]
-        self.version = hashData[0x4:0x8]
-        self.master_hash_size = hashData[0x8:0xC]
-        self.info_level_hash = hashData[0xC:0xC0]
-        self.master_hash = hashData[0xC0:0xE0]
-        self.reserved = hashData[0xE0:0xF8]
-        self.max_layers_raw = self.info_level_hash[0x0:0x4]
+        self.magic = self.hashData[0x0:0x4]
+        self.version = self.hashData[0x4:0x8]
+        self.master_hash_size = self.hashData[0x8:0xC]
+        self.info_level_hash = InfoLevelHash(self.hashData[0xC:0xC0])
+        self.master_hash = self.hashData[0xC0:0xE0]
+        self.reserved = self.hashData[0xE0:0xF8]
+        self.max_layers_raw = self.info_level_hash.max_layers
         self.max_layers = int.from_bytes(self.max_layers_raw, byteorder='little', signed=False)
         self.max_layer_count = self.max_layers - 1
-        self.infolevels = self.hashData[0x10:0xA0]
+        self.info_levels = self.info_level_hash.ivfc_levels
         self.levels = []
         for i in range(self.max_layers):
             x = i * 0x18
             y = x - 0x18
-            self.levels.append(IvfcLevel(self.infolevels[y:x]))
+            self.levels.append(IvfcLevels(self.info_levels[y:x]))

@@ -88,12 +88,8 @@ def process_single_nsp(nsp_file: Path, verbose: bool = False):
             # Extract exefs (section 0)
             if verbose:
                 print(f"\n[EXEFS] Extracting section 0 (exefs)...")
-            exefs_data = nca.save_section(
-                nca.Nca(util.InitializeFile(metadata.primary_nca.filepath), 
-                         master_kek_source=None,
-                         titlekey=metadata.primary_titlekey),
-                0
-            )
+            nca_data = nca.Nca(util.InitializeFile(metadata.primary_nca.filepath), master_kek_source=None, titlekey=metadata.primary_titlekey)
+            exefs_data = nca.save_section(nca_data, 0)
 
             # Extract PFS0 from exefs
             title_id = f"{cnmt_obj.title_id:016X}"
