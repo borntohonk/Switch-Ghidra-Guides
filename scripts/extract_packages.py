@@ -53,40 +53,159 @@ def decrypt_erista_package1(encrypted_package1):
     """
     key_sources = KeySources()
     tsec_keys = crypto.TsecKeygen(key_sources.tsec_secret_26)
-    
+    falcon_decryption_key = key_sources.tsec_secret_06
+
+    code_enc_key = tsec_keys.code_enc_key
+
     # Parse Package1 header
     header = encrypted_package1[0x0:0x190]
     bl_size = int.from_bytes(encrypted_package1[0x154:0x158], 'little')
-    
+
     if bl_size > 0:
         aes_iv = encrypted_package1[0x170:0x180]
         encrypted_data = encrypted_package1[0x180:0x180 + bl_size]
         decrypted_data = crypto.decrypt_cbc(encrypted_data, tsec_keys.package1_key_08, aes_iv)
-        package1_dec = header + decrypted_data[0x10:]
-        return package1_dec
+        package1_dec = bytearray(header + decrypted_data[0x10:])
+
+        # The TSEC FW sections (Falcon payloads) are plaintext in the raw binary.
+        # Patch them back after the CBC pass, which would otherwise corrupt them.
+        tsec_sections = split_tsec_firmware_sections(encrypted_package1)
+        if tsec_sections:
+            for name, start, end in tsec_sections:
+                section_data = encrypted_package1[start:end]
+                if name == 'secure_boot_encrypted':
+                    section_data = decrypt_secure_boot_section(section_data, falcon_decryption_key)
+                elif name == 'keygen_encrypted':
+                    section_data = decrypt_keygen_section(section_data, code_enc_key)
+                package1_dec[start:end] = section_data
+
+        return bytes(package1_dec)
     
     return encrypted_package1
 
 def decrypt_mariko_package1(encrypted_package1):
     """Decrypt Package1 (PK11) bootloader.
-    
+
     Package1 contains the first bootloader stage and is encrypted with
     a fixed key. This extracts and decrypts it.
     """
     root_keys = RootKeys()
-    
+
     # Parse Package1 header
     header = encrypted_package1[0x0:0x190]
     bl_size = int.from_bytes(encrypted_package1[0x154:0x158], 'little')
-    
+
     if bl_size > 0:
         aes_iv = encrypted_package1[0x170:0x180]
         encrypted_data = encrypted_package1[0x180:0x180 + bl_size]
         decrypted_data = crypto.decrypt_cbc(encrypted_package1, root_keys.mariko_bek, aes_iv)
         package1_dec = header + decrypted_data[0x10:]
         return package1_dec
-    
+
     return encrypted_package1
+
+
+def split_tsec_firmware_sections(firmware):
+    """Identify TSEC firmware section boundaries within a firmware blob.
+
+    Locates the KeyTable by searching for the 'HOVI_COMMON' magic (which sits
+    at offset 0x60 within the table), then reads the five size fields packed
+    after the seven 16-byte key fields to compute each section's range.
+
+    Returns a list of (name, start, end) tuples in layout order, or None if
+    the magic is not present.  For firmware >= 6.2.0 the two secure_boot
+    sections are appended when their sizes are non-zero.
+    """
+    hovi_pos = firmware.find(b'HOVI_COMMON_01\x00\x00')
+    if hovi_pos < 0:
+        return None
+
+    table_offset = hovi_pos - 0x60
+    if table_offset < 0:
+        return None
+
+    # KeyTable layout:
+    #   7 x 16-byte fields (debug_key, boot_hash, keygen_ldr_hash, keygen_hash,
+    #                        keygen_iv, hovi_eks_seed, howi_common_seed)
+    #   5 x u32 (boot_size, keygen_ldr_size, keygen_size,
+    #             secure_boot_ldr_size, secure_boot_size)
+    sizes_offset = table_offset + 7 * 0x10
+    boot_size, keygen_ldr_size, keygen_size, secure_boot_ldr_size, secure_boot_size = \
+        struct.unpack_from('<5I', firmware, sizes_offset)
+
+    sections = []
+
+    boot_start = table_offset - boot_size
+    sections.append(('boot',              boot_start,            table_offset))
+    sections.append(('key_table',         table_offset,          table_offset + 0x100))
+
+    keygen_ldr_start = table_offset + 0x100
+    keygen_ldr_end   = keygen_ldr_start + keygen_ldr_size
+    sections.append(('keygen_ldr',        keygen_ldr_start,      keygen_ldr_end))
+
+    keygen_end = keygen_ldr_end + keygen_size
+    sections.append(('keygen_encrypted',  keygen_ldr_end,        keygen_end))
+
+    if secure_boot_ldr_size != 0 and secure_boot_size != 0:
+        # Physical layout: secure_boot_encrypted (secure_boot_size) precedes
+        # secure_boot_ldr (secure_boot_ldr_size) in the firmware image, even
+        # though the key table lists ldr_size as the 4th field and size as 5th.
+        secure_boot_end = keygen_end + secure_boot_size
+        sections.append(('secure_boot_encrypted', keygen_end,       secure_boot_end))
+        sections.append(('secure_boot_ldr',       secure_boot_end,  secure_boot_end + secure_boot_ldr_size))
+
+    return sections
+
+def decrypt_secure_boot_section(data, key):
+    """Partially decrypt the secure_boot_encrypted Falcon payload.
+
+    Skips the first 0x300-byte preamble, then decrypts in ECB mode up to and
+    including the three-block sentinel (encrypted form of 48 zero bytes).
+    Bytes after the sentinel are left untouched.  Raises if the sentinel is
+    absent or does not decrypt to zeros.
+    """
+
+    _SECURE_BOOT_PREAMBLE = 0x300
+    _SECURE_BOOT_SENTINEL = bytes([
+        0x1D, 0xE3, 0x64, 0x58, 0xFA, 0x9E, 0xC2, 0x98,
+        0xD5, 0xB4, 0x57, 0x74, 0xB5, 0x82, 0xE7, 0x11,
+    ]) * 3  # ECB(zeros, key) repeated 3 times
+
+    preamble = data[:_SECURE_BOOT_PREAMBLE]
+    payload  = data[_SECURE_BOOT_PREAMBLE:]
+
+    sentinel_pos = payload.find(_SECURE_BOOT_SENTINEL)
+    if sentinel_pos < 0:
+        raise ValueError("secure_boot: sentinel not found")
+
+    decrypt_end = sentinel_pos + len(_SECURE_BOOT_SENTINEL)
+    decrypted   = crypto.decrypt_ecb(payload[:decrypt_end], key)
+
+    if decrypted[sentinel_pos:decrypt_end] != b'\x00' * 0x30:
+        raise ValueError("secure_boot: sentinel did not decrypt to zeros — wrong key?")
+
+    return preamble + decrypted + payload[decrypt_end:]
+
+
+_KEYGEN_SENTINEL = b'\x00' * 0x30
+
+
+def decrypt_keygen_section(data, key):
+    """Decrypt the keygen_encrypted Falcon payload.
+
+    AES-128-CBC, zero IV, full section, no preamble skip.
+    Verifies decryption succeeded by checking that the plaintext contains
+    48 trailing zero bytes (three full AES blocks of padding).
+    Raises if the sentinel is absent.
+    """
+    iv = b'\x00' * 0x10
+    decrypted = crypto.decrypt_cbc(data, key, iv)
+
+    if decrypted[-0x30:] != _KEYGEN_SENTINEL:
+        raise ValueError("keygen: trailing zero sentinel not found — wrong key?")
+
+    return decrypted
+
 
 def try_decrypt_package2(package2_data):    
     package2_keys = crypto.get_package2_keys()

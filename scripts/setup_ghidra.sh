@@ -11,14 +11,14 @@ source $HOME/.bashrc && \
 wget https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.2_build/ghidra_12.1.2_PUBLIC_20260605.zip -O ghidra.zip && \
 unzip ghidra.zip -d ghidra && \
 rm ghidra.zip && \
-GHIDRA_VERSION="ghidra_12.1.2_PUBLIC_20260605"
+GHIDRA_VERSION="ghidra_12.1.2_PUBLIC"
 
 GHIDRA_DIR=$(ls -1d $HOME/ghidra/ghidra_* | head -n1)
 export GHIDRA_INSTALL_DIR="$GHIDRA_DIR"
 GHIDRA_RUN="$GHIDRA_DIR/ghidraRun"
 
 chmod +x "$GHIDRA_RUN" && \
-git clone https://github.com/Adubbz/Ghidra-Switch-Loader.git && \
+git clone https://github.com/borntohonk/Ghidra-Switch-Loader.git && \
 cd Ghidra-Switch-Loader && \
 chmod +x gradlew && \
 ./gradlew && \
@@ -32,7 +32,7 @@ export JAVA_HOME=\$HOME/ojdk21/jdk-21.0.9+10
 export PATH="\$JAVA_HOME/bin:\$PATH"
 export GHIDRA_INSTALL_DIR="$GHIDRA_INSTALL_DIR"
 ghidra() {
-    "\$GHIDRA_INSTALL_DIR/ghidraRun" "\$@"
+    "\$GHIDRA_INSTALL_DIR/ghidraRun"
 }
 EOF
 

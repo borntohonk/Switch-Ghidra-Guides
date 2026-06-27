@@ -7,7 +7,7 @@ This guide is done on Windows 10, and assumes you have some sort of git shell in
 3. get ghidra https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.2_build/ghidra_12.1.2_PUBLIC_20260605.zip
 
 4. extract it (example ghidra_12.1.2_PUBLIC_20260605.zip ), and move the folder (example "ghidra_12.1.2_PUBLIC_20260605.zip) to C:/ghidra/ghidra_12.1.2_PUBLIC
-5. get the code repository, using git clone "git clone https://github.com/Adubbz/Ghidra-Switch-Loader"
+5. get the code repository, using git clone "git clone https://github.com/borntohonk/Ghidra-Switch-Loader"
 6. open a terminal cmd prompt in the folder you just git cloned and put ( set "GHIDRA_INSTALL_DIR" "C:/ghidra/ghidra_12.1_PUBLIC ) without the brackets into your cmd terminal, powershell or manually as an enviroment variable. (this value is only retained while the cmd window is open, don't rely on the "set" command for different sessions)
 7. run gradlew in the Ghidra-Switch-Loader directory by clicking "gradlew.bat" or putting ./gradlew in your cmd/powershell terminal.
 8. go to your ghidra folder (should be C:/ghidra/ghidra_12.1_PUBLIC in this specific example)
@@ -26,7 +26,7 @@ guide for winget users (applicable for windows 10 and windows 11), open terminal
 4. mkdir C:/ghidra
 5. Expand-Archive -LiteralPath "ghidra_12.1.2_PUBLIC_20260605.zip" -DestinationPath "C:/ghidra"
 6. rm ghidra_12.1.2_PUBLIC_20260605.zip
-7. git clone https://github.com/Adubbz/Ghidra-Switch-Loader
+7. git clone https://github.com/borntohonk/Ghidra-Switch-Loader
 8. cd Ghidra-Switch-Loader
 # (note this requires running terminal as administrator)
 9. [Environment]::SetEnvironmentVariable("GHIDRA_INSTALL_DIR", "C:\ghidra\ghidra_12.1.2_PUBLIC" ,"Machine")
