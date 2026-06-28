@@ -45,9 +45,39 @@ class Package1Context:
         self.key_revision = 0
 
 
+def verify_erista_package1_mac(encrypted_package1, mac_key):
+    """Verify the AES-CMAC tag on a modern Erista package1.
+
+    Layout (from LibHac Package1.cs):
+      0x6FE0  Stage1Footer (0x20 bytes): [Pk11Size(4), Reserved(12), Iv(16)]
+      0x7000  encrypted PK11 body       (Pk11Size bytes)
+      0x7000 + Pk11Size  MAC tag        (16 bytes)
+
+    MAC input  = footer (0x20) + encrypted PK11 (Pk11Size)
+    MAC tag    = data[0x7000 + Pk11Size : +0x10]
+    """
+    _MODERN_STAGE1_SIZE = 0x7000
+    _FOOTER_SIZE        = 0x20   # sizeof(Package1Stage1Footer)
+    _FOOTER_OFFSET      = _MODERN_STAGE1_SIZE - _FOOTER_SIZE  # 0x6FE0
+
+    pk11_size   = int.from_bytes(encrypted_package1[_FOOTER_OFFSET:_FOOTER_OFFSET + 4], 'little')
+    mac_target  = encrypted_package1[_FOOTER_OFFSET : _FOOTER_OFFSET + _FOOTER_SIZE + pk11_size]
+    tag_offset  = _MODERN_STAGE1_SIZE + pk11_size
+    expected    = encrypted_package1[tag_offset : tag_offset + 0x10]
+
+    computed = crypto.compute_cmac(mac_target, mac_key)
+    return {
+        'match':      computed == expected,
+        'computed':   computed.hex().upper(),
+        'expected':   expected.hex().upper(),
+        'pk11_size':  hex(pk11_size),
+        'tag_offset': hex(tag_offset),
+    }
+
+
 def decrypt_erista_package1(encrypted_package1):
     """Decrypt Package1 (PK11) bootloader.
-    
+
     Package1 contains the first bootloader stage and is encrypted with
     a fixed key. This extracts and decrypts it.
     """
@@ -56,6 +86,9 @@ def decrypt_erista_package1(encrypted_package1):
     falcon_decryption_key = key_sources.tsec_secret_06
 
     code_enc_key = tsec_keys.code_enc_key
+    mac_result = verify_erista_package1_mac(encrypted_package1, tsec_keys.package1_mac_key_08)
+    validity = "(Valid)" if mac_result['match'] else "(Invalid)"
+    print(f"    PK11 MAC:{validity}", mac_result['expected'])
 
     # Parse Package1 header
     header = encrypted_package1[0x0:0x190]
@@ -80,7 +113,7 @@ def decrypt_erista_package1(encrypted_package1):
                 package1_dec[start:end] = section_data
 
         return bytes(package1_dec)
-    
+
     return encrypted_package1
 
 def decrypt_mariko_package1(encrypted_package1):

@@ -28,10 +28,12 @@ from key_sources import KeySources
 try:
     from Cryptodome.Cipher import AES
     from Cryptodome.Util import Counter
+    from Cryptodome.Hash import CMAC
 except ModuleNotFoundError:
     try:
         from Crypto.Cipher import AES
         from Crypto.Util import Counter
+        from Crypto.Hash import CMAC
     except ModuleNotFoundError:
         print('Please install pycryptodome(ex) first!')
         sys.exit(1)
@@ -73,6 +75,12 @@ def encrypt_ecb(input, key):
     """Encrypt using ECB mode."""
     crypto = aes_128.AESECB(key)
     return crypto.encrypt(input)
+
+def compute_cmac(data, key):
+    """Compute AES-128-CMAC tag over data."""
+    c = CMAC.new(key, ciphermod=AES)
+    c.update(data)
+    return c.digest()
 
 def decrypt_cbc(input, key, IV):
     """Decrypt using CBC mode."""
