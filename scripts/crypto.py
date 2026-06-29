@@ -20,6 +20,7 @@
 
 import sys
 from hashlib import sha256
+from struct import pack
 
 from keys import RootKeys
 import aes_128
@@ -75,6 +76,60 @@ def encrypt_ecb(input, key):
     """Encrypt using ECB mode."""
     crypto = aes_128.AESECB(key)
     return crypto.encrypt(input)
+
+def calculate_falcon_hs_auth_hash(raw_imem_page_bytes, imem_start_addr, tsec_secret_1):
+    """Compute the TSEC Falcon HS auth hash that the cauth hardware verifies on NS→HS transition.
+
+    The hardware checks: AES_ECB(c3, DM_MAC(page_bytes, imem_start_addr))
+    where c3 = AES_ECB(tsec_secret_1, zeros) and DM_MAC is the Davies-Meyer MAC
+    defined by the TSEC cauth security model.
+
+    Parameters:
+        raw_imem_page_bytes (bytes): raw IMEM bytes for the cauth-covered region,
+            taken directly from the firmware image (may span both unencrypted and
+            layer-1-encrypted content — the hardware hashes what is in IMEM, not
+            what is in the decrypted view).
+        imem_start_addr (int): IMEM byte address of the first covered page
+            (= start_page field from cauth register × 0x100).
+        tsec_secret_1 (bytes): 16-byte hardware signing key (csecret slot 0x01,
+            KeySources.tsec_secret_01).
+
+    Returns:
+        bytes: 16-byte auth hash.
+
+    Usage:
+        key_sources = KeySources()
+        fw = open('tsec_keygen.bin', 'rb').read()
+
+        # cauth register at NS→HS transition: 0x01030044
+        #   page_count   = 0x01  →  1 page (0x100 bytes)
+        #   flags        = 0x03  →  bit17 set (encrypted), bit16 set
+        #   start_page   = 0x44  →  IMEM byte address 0x4400
+        #
+        # tsec_keygen IMEM base = 0x4000, so file_offset = IMEM_addr − 0x4000:
+        #   file[0x400:0x500]  →  IMEM[0x4400:0x4500]
+
+        h = calculate_falcon_hs_auth_hash(
+            fw[0x400:0x500],          # 1 raw page from firmware file
+            0x4400,                   # IMEM start address from cauth
+            key_sources.tsec_secret_01,
+        )
+        # h == b'\\x86:\\x8c\\x95...' == bytes.fromhex('863a8c95ad4df7f1180b51bf1003db14')
+        # This matches the $c6 cadd-embedded value in the tsec_keygen NS code.
+    """
+    def _davies_meyer_mac(data, address):
+        ciphertext = bytearray(16)
+        for i in range(0, len(data), 0x100):
+            blocks = data[i:i + 0x100] + pack("<IIII", address, 0, 0, 0)
+            for k in range(0, len(blocks), 16):
+                aes = AES.new(bytes(blocks[k:k+16]), AES.MODE_ECB)
+                ciphertext = bytearray(bytes(x ^ y for x, y in zip(aes.encrypt(bytes(ciphertext)), bytes(ciphertext))))
+            address += 0x100
+        return bytes(ciphertext)
+
+    c3 = encrypt_ecb(bytes(16), tsec_secret_1)
+    mac = _davies_meyer_mac(raw_imem_page_bytes, imem_start_addr)
+    return encrypt_ecb(mac, c3)
 
 def compute_cmac(data, key):
     """Compute AES-128-CMAC tag over data."""
@@ -233,6 +288,62 @@ class TsecKeygen():
         if sha256(hovi_kek).hexdigest().upper() == "CEFE01C9E3EEEF1A73B8C10D742AE386279B7DFF30A2FBC0AABD058C1F135833":
             self.hovi_kek = hovi_kek
             self.tsec_secret_26 = self.hovi_kek
+
+            # This is atmosphere's tsec_keygen.bin (T210 Erista, file size 0x1F00):
+            #
+            # Encryption layers:
+            #   file[0x000:0x410]  - unencrypted NS Falcon code (IMEM base 0x4000)
+            #   file[0x410:0x1A00] - layer-1: AES-128-ECB with tsec_secret_06
+            #   file[0x1A00:0x1F00]- layer-2: AES-128-CBC with atmosphere_key_output_c2 (IV = zeros)
+            #
+            # Layer-2 key derivation (performed by the second HS block at IMEM[0x4519]):
+            #   1. auth_hash = calculate_falcon_hs_auth_hash(fw[0x400:0x500], imem_addr=0x4400, tsec_secret_01)
+            #                = 863A8C95AD4DF7F1180B51BF1003DB14
+            #      (Davies-Meyer MAC of the cauth-covered HS page, wrapped by AES(tsec_secret_01, zeros);
+            #       embedded as cadd nibbles in NS code IMEM[0x4065:0x4165])
+            #   2. csigenc   = AES_ECB(KEY=hovi_kek, PT=auth_hash) = 41FCD9969516BEF3D52043BFCD87F429
+            #      (Falcon csigenc semantics: KEY is the register ($c2=hovi_kek), PT is the live auth sig)
+            #   3. For each cN: output_key = AES_ECB(KEY=csigenc, PT=cN_nibbles_combined)
+            #      (Falcon cenc with ckeyreg=csigenc; each cN_nibbles_combined is the 32-nibble cadd
+            #       sequence from the second HS block reconstructed as a 16-byte value)
+            self.atmosphere_tsec_keygen_auth_signature = b'\x86\x3a\x8c\x95\xad\x4d\xf7\xf1\x18\x0b\x51\xbf\x10\x03\xdb\x14'
+            # csigenc = AES_ECB(KEY=hovi_kek, PT=auth_hash) = 41FCD9969516BEF3D52043BFCD87F429
+            self.atmosphere_tsec_keygen_key = encrypt_ecb(self.atmosphere_tsec_keygen_auth_signature, self.hovi_kek)
+
+
+            self.C2_NIBBLES_COMBINED = b'\xBC\xBF\xC1\x0B\x81\xD2\x47\x66\x97\x93\x98\x25\x6D\x83\x23\xE4'
+            self.C3_NIBBLES_COMBINED = b'\x42\x84\xFD\x6D\x6D\x2F\xFC\xB7\x8D\x87\x46\x14\x71\x88\x53\x9C'
+            self.C4_NIBBLES_COMBINED = b'\xF5\xD8\x6D\x71\x01\x36\x56\x66\xCD\x83\x95\x2E\x76\x9E\x95\x81'
+            self.C5_NIBBLES_COMBINED = b'\x4F\x3C\x17\x84\x8A\xA5\xCD\xBE\xB0\x9C\x55\x1F\x75\x16\x98\xCA'
+            self.C6_NIBBLES_COMBINED = b'\x69\x1D\xB4\xB8\x9F\x19\xF4\xF8\xF4\x7B\xAB\xB4\xA0\xB5\x98\x66'
+
+            # $c2 → 1DBC7263E0274F22E737A5988EA4EE90
+            # AES-128-CBC key for layer-2 (file[0x1A00:0x1F00], IV = zeros).
+            # Used by the second HS block to decrypt the inner Falcon stage before lcall 0x900.
+            self.atmosphere_key_output_c2 = encrypt_ecb(self.C2_NIBBLES_COMBINED, self.atmosphere_tsec_keygen_key)
+
+            # $c3 → 4B4F00000000000000000000000048EC  (= tsec_root_key_02)
+            # TsecRoot (production): written to SE keyslot 13 (AesKeySlot_TsecRoot).
+            # fusee derives MasterKek on production hardware:
+            #   SetEncryptedAesKey128(MasterKek, TsecRoot, EristaMasterKekSource)  [fusee_key_derivation.cpp:288]
+            self.atmosphere_key_output_c3 = encrypt_ecb(self.C3_NIBBLES_COMBINED, self.atmosphere_tsec_keygen_key)
+
+            # $c4 → CA990000000000000000000000001DF2  (= tsec_root_key_02_dev)
+            # TsecRootDev (development): written to SE keyslot 11 (AesKeySlot_TsecRootDev).
+            # fusee uses this instead of TsecRoot when HardwareState != Production:
+            #   SetEncryptedAesKey128(MasterKek, TsecRootDev, EristaMasterKekSource)  [fusee_key_derivation.cpp:288]
+            self.atmosphere_key_output_c4 = encrypt_ecb(self.C4_NIBBLES_COMBINED, self.atmosphere_tsec_keygen_key)
+
+            # $c5 → 484F56495F454B535F30310000000000  ("HOVI_EKS_01\x00\x00\x00\x00\x00")
+            # Input seed passed to the inner Falcon stage at IMEM[0x900] for hovi_EKS key derivation.
+            # Zeroed by the inner code after use — not written to a keyslot.
+            self.atmosphere_key_output_c5 = encrypt_ecb(self.C5_NIBBLES_COMBINED, self.atmosphere_tsec_keygen_key)
+
+            # $c6 → 892A36228D49E0484D480CB0ACDA0234  (= keygen_auth_signature)
+            # Auth signature produced by the inner Falcon stage's own cauth verification.
+            # Passed into the inner code's csigenc chain to derive the console-unique tsec_key
+            # (HOVI_EKS_01 path) and hovi_common_key. Not written to a keyslot directly.
+            self.atmosphere_key_output_c6 = encrypt_ecb(self.C6_NIBBLES_COMBINED, self.atmosphere_tsec_keygen_key)
 
             # This is "gen_usr_key", of keygen_ldr:
 
