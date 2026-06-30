@@ -208,18 +208,146 @@ def tsec_keygen():
     tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
     return tsec_keys.tsec_root_key_02, tsec_keys.tsec_root_key_02_dev
 
+def derive_keyblob_keys():
+    key_sources = KeySources()
+    tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
+    secure_boot_key = key_sources.secure_boot_key
+    tsec_key = tsec_keys.tsec_key
+    keyblob_key_sources = key_sources.keyblob_key_sources
+    keyblob_mac_key_source = key_sources.keyblob_mac_key_source
+    keyblob_keys = []
+    keyblob_mac_keys = []
+    for i in keyblob_key_sources:
+        keyblob_kek = decrypt_ecb(i, tsec_key)
+        keyblob_key = decrypt_ecb(keyblob_kek, secure_boot_key)
+        keyblob_keys.append(keyblob_key)
+        keyblob_mac_key = decrypt_ecb(keyblob_mac_key_source, keyblob_key)
+        keyblob_mac_keys.append(keyblob_mac_key)
+    return keyblob_keys, keyblob_mac_keys
+
+def decrypt_keyblobs(encrypted_keyblobs, keyblob_keys, keyblob_mac_keys, warn=True):
+    """Decrypt encrypted keyblobs.
+
+    Each encrypted keyblob is 0xB0 bytes with layout:
+        [0x00:0x10] CMAC tag
+        [0x10:0x20] CTR counter
+        [0x20:0xB0] AES-128-CTR encrypted payload (0x90 bytes)
+
+    The CMAC covers bytes [0x10:0xB0] (counter + encrypted payload).
+
+    Args:
+        encrypted_keyblobs: list of 0xB0-byte blobs (one per slot up to USED_KEYBLOB_COUNT)
+        keyblob_keys: list of 16-byte decryption keys
+        keyblob_mac_keys: list of 16-byte CMAC keys
+        warn: if True, print a warning when the CMAC does not match
+
+    Returns:
+        list of decrypted payloads (bytes, 0x90 bytes each), or None for skipped slots
+    """
+    USED_KEYBLOB_COUNT = 6
+    keyblobs = []
+    
+    for i in range(USED_KEYBLOB_COUNT):
+        enc_kb = encrypted_keyblobs[i]
+        if isinstance(enc_kb, list):
+            enc_kb = b''.join(enc_kb)
+        key = keyblob_keys[i]
+        mac_key = keyblob_mac_keys[i]
+
+        if all(b == 0 for b in key) or all(b == 0 for b in mac_key) or all(b == 0 for b in enc_kb):
+            keyblobs.append(None)
+            continue
+
+        cmac_stored = enc_kb[0x00:0x10]
+        counter = enc_kb[0x10:0x20]
+        encrypted_payload = enc_kb[0x20:]
+
+        cmac_computed = compute_cmac(enc_kb[0x10:0x10 + 0xA0], mac_key)
+        if cmac_computed != cmac_stored and warn:
+            print(f"Warning: Keyblob MAC {i:02x} is invalid. Are SBK/TSEC key correct?")
+
+        decrypted = decrypt_ctr(encrypted_payload, key, counter)
+        keyblobs.append([decrypted[j:j+16] for j in range(0, len(decrypted), 16)])
+
+    return keyblobs
+
+def encrypt_keyblobs(keyblobs, keyblob_keys, keyblob_mac_keys, counters=None):
+    """Encrypt plaintext keyblobs to produce encrypted keyblob structures.
+
+    Inverse of decrypt_keyblobs. Each output is 0xB0 bytes:
+        [0x00:0x10] CMAC over [0x10:0xB0]
+        [0x10:0x20] CTR counter
+        [0x20:0xB0] AES-128-CTR encrypted payload
+
+    Args:
+        keyblobs: list of 0x90-byte plaintext payloads, or None to skip a slot
+        keyblob_keys: list of 16-byte encryption keys
+        keyblob_mac_keys: list of 16-byte CMAC keys
+        counters: optional list of 16-byte counters; defaults to all-zeros per slot
+
+    Returns:
+        list of encrypted keyblob bytes (0xB0 each), or None for skipped slots
+    """
+    encrypted_keyblobs = []
+    for i in range(USED_KEYBLOB_COUNT):
+        kb = keyblobs[i]
+        key = keyblob_keys[i]
+        mac_key = keyblob_mac_keys[i]
+
+        if kb is None or all(b == 0 for b in key) or all(b == 0 for b in mac_key):
+            encrypted_keyblobs.append(None)
+            continue
+
+        counter = (counters[i] if counters else None) or bytes(16)
+        encrypted_payload = encrypt_ctr(kb, key, counter)
+        cmac = compute_cmac(counter + encrypted_payload, mac_key)
+        encrypted_keyblobs.append(cmac + counter + encrypted_payload)
+
+    return encrypted_keyblobs
+
 class BaseKeygen:
     """Base class for key generation with shared initialization logic."""
     
-    def __init__(self, tsec_root_key):
+    def __init__(self, tsec_keys, isdev):
         self.key_sources = KeySources()
-        self.tsec_root_key = tsec_root_key
+        self.tsec_keys = tsec_keys
+
+        if isdev == True:
+            self.tsec_root_key_00 = self.tsec_keys.tsec_root_key_00_dev
+            self.tsec_root_key_01 = self.tsec_keys.tsec_root_key_01_dev
+            self.tsec_root_key_02 = self.tsec_keys.tsec_root_key_02_dev
+        elif isdev == False:
+            self.tsec_root_key_00 = self.tsec_keys.tsec_root_key_00
+            self.tsec_root_key_01 = self.tsec_keys.tsec_root_key_01
+            self.tsec_root_key_02 = self.tsec_keys.tsec_root_key_02
+
         self.mariko_master_kek_sources = self.key_sources.mariko_master_kek_sources
         self.master_kek_sources = self.key_sources.master_kek_sources
         self.master_key_vectors = self.key_sources.master_key_vectors
         
+        self.encrypted_keyblobs = self.key_sources.encrypted_keyblobs
+        keyblob_keys, keyblob_mac_keys = derive_keyblob_keys()
+        self.keyblobs = decrypt_keyblobs(self.encrypted_keyblobs, keyblob_keys, keyblob_mac_keys)
+
+        master_keks_0_5 = []
+        self.package1_keys = []
+        for i in self.keyblobs:
+            master_keks_0_5.append(i[0])
+            self.package1_keys.append(i[8])
+
         # Decrypt master keys
-        self.master_kek = [decrypt_ecb(i, self.tsec_root_key) for i in self.master_kek_sources]
+        self.master_kek_source_06 = self.key_sources.master_kek_source_06
+        self.master_kek_06 = decrypt_ecb(self.master_kek_source_06, self.tsec_root_key_00)
+        self.master_kek_source_07 = self.key_sources.master_kek_source_07
+        self.master_kek_07 = decrypt_ecb(self.master_kek_source_07, self.tsec_root_key_01)
+        self.master_kek_root_key_02 = [decrypt_ecb(i, self.tsec_root_key_02) for i in self.master_kek_sources]
+        self.master_kek = []
+        for i in master_keks_0_5:
+            self.master_kek.append(i)
+        self.master_kek.append(self.master_kek_06)
+        self.master_kek.append(self.master_kek_07)
+        for i in self.master_kek_root_key_02:
+            self.master_kek.append(i)
         self.master_key = self._derive_master_keys()
         self.current_master_key = self.master_key[-1]
         
@@ -262,14 +390,13 @@ class BaseKeygen:
             for i in self.master_key
         ]
 
-
 class Keygen(BaseKeygen):
     """Production keygen using production master keys."""
     
     def _derive_master_keys(self):
         """Derive production master keys."""
         old_master_keys_prod = master_keys_prod()
-        new_master_keys_prod = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek])[1:]
+        new_master_keys_prod = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek_root_key_02])[1:]
         combined_master_keys_prod = old_master_keys_prod + new_master_keys_prod
         return combined_master_keys_prod
 
@@ -279,7 +406,7 @@ class KeygenDev(BaseKeygen):
     def _derive_master_keys(self):
         """Derive development master keys."""
         old_master_keys_dev = master_keys_dev()
-        new_master_keys_dev = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek])[1:]
+        new_master_keys_dev = ([decrypt_ecb(self.key_sources.master_key_source, i) for i in self.master_kek_root_key_02])[1:]
         combined_master_keys_dev = old_master_keys_dev + new_master_keys_dev
         return combined_master_keys_dev
 
@@ -575,7 +702,7 @@ def do_keygen(keys = "prod.keys"):
     key_sources = KeySources()
     hovi_kek = key_sources.tsec_secret_26
     tsec_keygen = TsecKeygen(hovi_kek)
-    keygen = Keygen(tsec_keygen.tsec_root_key_02)
+    keygen = Keygen(tsec_keygen, isdev=False)
 
     with open(keys, 'w') as manual_crypto:
         manual_crypto.write(f'tsec_secret_26 = ' + f'{hovi_kek.hex().upper()}\n\n')
@@ -629,9 +756,9 @@ def do_keygen(keys = "prod.keys"):
             manual_crypto.write(f'{keys}\n')
 
         manual_crypto.write(f'\n')
-        # generate master_kek_%% from all provided master_kek_sources
+        # generate master_kek_%% from all provided master_kek_sources and keyblobs
         master_keks = keygen.master_kek
-        count = 0x7
+        count = -0x1
         for i in master_keks:
             count = count + 0x1
             keys = f'master_kek_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
@@ -648,8 +775,15 @@ def do_keygen(keys = "prod.keys"):
             count = count + 0x1
             keys = f'master_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
             manual_crypto.write(f'{keys}\n')
+        manual_crypto.write(f'\n')
+        package1_keys = keygen.package1_keys
+        count = -0x1
+        for i in package1_keys:
+            count = count + 0x1
+            keys = f'package1_key_{hex(count)[2:].zfill(2)} = '  + (i.hex().upper())
+            manual_crypto.write(f'{keys}\n')
 
-        manual_crypto.write(f'\npackage1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
+        manual_crypto.write(f'package1_key_06 = ' + f'{tsec_keygen.package1_key_06.hex().upper()}\n')
         manual_crypto.write(f'package1_key_07 = ' + f'{tsec_keygen.package1_key_07.hex().upper()}\n')
         manual_crypto.write(f'package1_key_08 = ' + f'{tsec_keygen.package1_key_08.hex().upper()}\n\n')
         manual_crypto.write(f'package1_mac_key_06 = ' + f'{tsec_keygen.package1_mac_key_06.hex().upper()}\n')
@@ -749,7 +883,7 @@ def do_dev_keygen(keys = "dev.keys"):
     key_sources = KeySources()
     hovi_kek = key_sources.tsec_secret_26
     tsec_keygen = TsecKeygen(hovi_kek)
-    keygen = KeygenDev(tsec_keygen.tsec_root_key_02_dev)
+    keygen = KeygenDev(tsec_keygen, isdev=True)
 
     with open(keys, 'w') as manual_crypto:
         manual_crypto.write(f'tsec_secret_26 = ' + f'{hovi_kek.hex().upper()}\n\n')
@@ -791,7 +925,7 @@ def do_dev_keygen(keys = "dev.keys"):
 
         manual_crypto.write(f'\n')
         # generate master_kek_%% from all provided mariko_master_kek_sources
-        master_keks = keygen.master_kek
+        master_keks = keygen.master_kek_root_key_02
         count = 0x7
         for i in master_keks:
             count = count + 0x1
@@ -912,8 +1046,7 @@ def get_package2_keys():
     """
     key_sources = KeySources()
     tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
-    tsec_root_key = tsec_keys.tsec_root_key_02
-    keygen = Keygen(tsec_root_key)
+    keygen = Keygen(tsec_keys, isdev=False)
     return keygen.package2_key
 
 
@@ -925,8 +1058,7 @@ def get_package2_keys_dev():
     """
     key_sources = KeySources()
     tsec_keys = TsecKeygen(key_sources.tsec_secret_26)
-    tsec_root_key = tsec_keys.tsec_root_key_02_dev
-    keygen = KeygenDev(tsec_root_key)
+    keygen = KeygenDev(tsec_keys, isdev=True)
     return keygen.package2_key
 
 
