@@ -527,6 +527,7 @@ class TsecKeygen():
             self.keygen_auth_signature = b'\x89\x2A\x36\x22\x8D\x49\xE0\x48\x4D\x48\x0C\xB0\xAC\xDA\x02\x34' # keygen auth signature
             self.key_sources = KeySources()
             self.unknown_tsec_secret_3F = self.key_sources.zeroes
+            self.tsec_signature_key = encrypt_ecb(self.key_sources.zeroes, self.key_sources.tsec_secret_01)
             self.tsec_secret_00 = self.key_sources.tsec_secret_00
 
             # HOVI_EKS_01 ( output is the normal tsec_key - console unique)

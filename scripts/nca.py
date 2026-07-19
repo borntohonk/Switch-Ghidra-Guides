@@ -300,11 +300,12 @@ class NcaHeaderOnly:
     Used when you only need metadata about an NCA file without
     decrypting the full content sections.
     """
-    def __init__(self, nca_data):
+    def __init__(self, nca_data, isdev=False):
         """
         Args:
             nca_data: Complete NCA file data (at least first 0xC00 bytes)
         """
+        isdev=isdev
         self.nca_data = nca_data
         self.sections = []
         
@@ -313,7 +314,7 @@ class NcaHeaderOnly:
         self.root_keys = RootKeys()
         key_sources = KeySources()
         self.tsec_keys = crypto.TsecKeygen(key_sources.tsec_secret_26)
-        self.header_key = crypto.Keygen(self.tsec_keys.tsec_root_key_02).header_key
+        self.header_key = crypto.Keygen(self.tsec_keys, isdev).header_key
         self.decrypted_nca_header = crypto.decrypt_xts(self.encrypted_header, self.header_key)
         
         # Parse the header
@@ -352,12 +353,13 @@ class Nca:
     Handles both Standard crypto (fixed keys) and Titlekey crypto (encrypted keys)
     encryption types. Decrypts all 4 sections and prepares them for extraction.
     """
-    def __init__(self, nca_data, master_kek_source=None, titlekey=None):
+    def __init__(self, nca_data, master_kek_source=None, titlekey=None, isdev=False):
         """
         Args:
             nca_data: Complete NCA file data
             titlekey: Optional titlekey for titlekey-encrypted content
         """
+        isdev=isdev
         self.nca_data = nca_data
         self.sections = []
         
@@ -366,7 +368,7 @@ class Nca:
         self.root_keys = RootKeys()
         key_sources = KeySources()
         self.tsec_keys = crypto.TsecKeygen(key_sources.tsec_secret_26)
-        self.header_key = crypto.Keygen(self.tsec_keys.tsec_root_key_02).header_key
+        self.header_key = crypto.Keygen(self.tsec_keys, isdev).header_key
         self.decrypted_nca_header = crypto.decrypt_xts(self.encrypted_header, self.header_key)
         
         # Parse the header
@@ -414,10 +416,12 @@ class Nca:
             return 1
         return 0
     
-    def _setup_key_area(self):
+    def _setup_key_area(self, isdev=False):
         """Setup key area and derive decryption keys."""
-        self.tsec_root_key_prod, self.tsec_root_key_dev = crypto.tsec_keygen()
-        self.keygen = crypto.Keygen(self.tsec_root_key_prod)
+        isdev = isdev
+        key_sources = KeySources()
+        self.tsec_keys = crypto.TsecKeygen(key_sources.tsec_secret_26)
+        self.keygen = crypto.Keygen(self.tsec_keys, isdev)
         self.master_keys = self.keygen.master_key
         master_key = self.master_keys[self.master_key_revision]
         self.keys = crypto.single_keygen_master_key(master_key)
