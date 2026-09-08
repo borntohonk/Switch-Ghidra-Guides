@@ -17,9 +17,10 @@ The Python toolkit under [scripts/](scripts/) works independently of hactool, li
 - `capstone` — ARM64 disassembly (pattern finding, emummc offsets)
 - `lz4` — firmware decompression
 - `cryptography` — NPDM signature handling
+- `zstandard` — zbic zstd decompression
 
 ```
-python3 -m pip install pycryptodome capstone lz4 cryptography
+python3 -m pip install pycryptodome capstone lz4 cryptography zstandard
 ```
 
 ---

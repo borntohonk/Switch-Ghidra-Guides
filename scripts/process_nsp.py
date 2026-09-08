@@ -146,8 +146,8 @@ Examples:
 
     for nsp_file in nsp_files:
         try:
-            #process_single_nsp(nsp_file, verbose=args.verbose)
-            process_sdk_object_only(nsp_file)
+            process_single_nsp(nsp_file, verbose=args.verbose)
+            #process_sdk_object_only(nsp_file)
         except KeyboardInterrupt:
             print("\nInterrupted by user")
             break

@@ -24,6 +24,11 @@ import hashlib
 # pip install lz4
 import lz4.block
 
+import zbic
+import zstandard as zstd
+
+_zstd_dctx = zstd.ZstdDecompressor()
+
 uncompress = lz4.block.decompress
 
 # KIP1 format offsets and constants
@@ -46,13 +51,34 @@ NSO_COMPRESSED_SIZES_OFFSET = 0x60
 NSO_TEXT_COMPRESS_FLAG = 1
 NSO_RO_COMPRESS_FLAG = 2
 NSO_DATA_COMPRESS_FLAG = 4
-NSO_COMPRESSION_FLAGS_MASK = 0xF8
+# NSO flags bit layout (see switchbrew.org/wiki/NSO):
+#   0-2: per-segment (text/ro/data) "is compressed"
+#   3-5: per-segment "check hash on load"
+#   6:   [20.0.0+] ExecuteOnlyMemory
+#   7:   [22.0.0+] UseZbicCompression - segments use zstd instead of LZ4
+NSO_FLAG_ZBIC = 0x80
+# Cleared after decompression: per-segment compress bits (0-2) and the
+# file-global ZBIC bit (7), since output segments are stored raw either way.
+NSO_COMPRESSION_FLAGS_MASK = 0x78
 
 # Segment indices
 SEGMENT_TEXT = 0
 SEGMENT_RO = 1
 SEGMENT_DATA = 2
 NUM_SEGMENTS = 3
+
+def decompress_segment(compressed: bytes, decompressed_size: int, is_zbic: bool) -> bytes:
+    if is_zbic:
+        frame = zbic.zbic_to_zstd(compressed)
+        out = _zstd_dctx.decompress(frame, max_output_size=decompressed_size)
+        if len(out) != decompressed_size:
+            raise Exception(
+                'zbic decompress size mismatch: got %d, expected %d'
+                % (len(out), decompressed_size)
+            )
+        return out
+    return uncompress(compressed, uncompressed_size=decompressed_size)
+
 
 def read_file(filename: str) -> bytes:
     """Read entire file into bytes."""
@@ -241,8 +267,8 @@ def decompress_nso(fileobj: BinaryIO) -> bytes:
     """Decompress NSO0 executable file.
     
     Decompresses all three segments (text, read-only, data) using LZ4
-    if needed, and updates the header to reflect the decompressed sizes
-    and clear compression flags.
+    or zstd ("zbic", NSO_FLAG_ZBIC) as needed, and updates the header
+    to reflect the decompressed sizes and clear compression/zbic flags.
     
     Args:
         fileobj: File object positioned at start of NSO0 file
@@ -278,9 +304,11 @@ def decompress_nso(fileobj: BinaryIO) -> bytes:
     ro_content = f.read_from(rfilesize if rfilesize > 0 else rsize, roff)
     data_content = f.read_from(dfilesize if dfilesize > 0 else dsize, doff)
 
-    text = text_content if not (text_compr and tfilesize > 0) else uncompress(text_content, uncompressed_size=tsize)
-    ro = ro_content if not (ro_compr and rfilesize > 0) else uncompress(ro_content, uncompressed_size=rsize)
-    data = data_content if not (data_compr and dfilesize > 0) else uncompress(data_content, uncompressed_size=dsize)
+    is_zbic = bool(flags & NSO_FLAG_ZBIC)
+
+    text = text_content if not (text_compr and tfilesize > 0) else decompress_segment(text_content, tsize, is_zbic)
+    ro = ro_content if not (ro_compr and rfilesize > 0) else decompress_segment(ro_content, rsize, is_zbic)
+    data = data_content if not (data_compr and dfilesize > 0) else decompress_segment(data_content, dsize, is_zbic)
 
     text = text.ljust(tsize, b'\x00')
     ro = ro.ljust(rsize, b'\x00')

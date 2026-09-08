@@ -24,7 +24,7 @@
 """
 hac.py - Nintendo Switch file format tool (inspired by hactool)
 
-Supported types: nca, xci, nsp, pfs0, romfs, npdm, ini1, kip1, pk21/package2, keygen
+Supported types: nca, xci, nsp, pfs0, romfs, npdm, ini1, kip1, nso0, pk21/package2, keygen
 """
 
 import argparse
@@ -65,7 +65,7 @@ def main():
 
     parser.add_argument(
         "-t", "--intype", required=True,
-        choices=["nca", "xci", "nsp", "pfs0", "romfs", "npdm", "ini1", "kip1", "pk21", "package2", "keygen"],
+        choices=["nca", "xci", "nsp", "pfs0", "romfs", "npdm", "ini1", "kip1", "nso0", "pk21", "package2", "keygen"],
         help="input file format/type"
     )
     parser.add_argument(
@@ -86,7 +86,7 @@ def main():
     npdm_g = parser.add_argument_group("NPDM options")
     npdm_g.add_argument("--json", metavar="FILE", help="export NPDM as JSON")
 
-    pkg_g = parser.add_argument_group("Package2 / INI1 / KIP options")
+    pkg_g = parser.add_argument_group("Package2 / INI1 / KIP/ NSO options")
     pkg_g.add_argument("--uncompressed", metavar="FILE", help="decompress KIP1/NSO")
 
     nca_g = parser.add_argument_group("NCA options")
@@ -222,6 +222,13 @@ def main():
         if not args.uncompressed:
             parser.error("--uncompressed FILE required")
         util.decompress_kip(str(input_path), args.uncompressed)
+        print(f"Decompressed to: {args.uncompressed}")
+        return 0
+
+    if args.intype == "nso0":
+        if not args.uncompressed:
+            parser.error("--uncompressed FILE required")
+        util.decompress_exefs(str(input_path), args.uncompressed)
         print(f"Decompressed to: {args.uncompressed}")
         return 0
     
