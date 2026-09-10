@@ -1,0 +1,64 @@
+{
+  "error_upload_services": {
+    "program_identified": "Error_Upload_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000E6888",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710001E480", "lr": "0x710001FE40", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710001E750", "lr": "0x710001FFAC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710001E770", "lr": "0x7100020148", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710001E9D0", "lr": "0x710001FD78", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710001D7B0", "lr": "0x71000202AC", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::eupld::sf::IRequest": {
+      "_srv": "SRV_71000E8918",
+      "_hash": "935f1afeba86e8a9",
+      "0": {"vt":  "0x20", "func": "0x710001E480", "lr": "0x7100065018", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "Initialize", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x710001E750", "lr": "0x7100064E38", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UploadAll", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x710001E770", "lr": "0x710006517C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "UploadSelected", "wire_order": "buffers=[in]"},
+      "3": {"vt":  "0x38", "func": "0x710001E9D0", "lr": "0x71000652EC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetUploadStatus", "wire_order": "buffers=[out]"},
+      "4": {"vt":  "0x40", "func": "0x710001D7B0", "lr": "0x7100064EE4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CancelUpload", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x710001EAE0", "lr": "0x7100064D50", "inbytes":   "0x0", "outbytes":   "0x0", "name": "GetResult", "wire_order": "N/A"}
+    },
+    "nn::eupld::sf::IControl": {
+      "_srv": "SRV_71000E8980",
+      "_hash": "6b2374d7f73d6488",
+      "_likely_basis": "DB position 3/3 in Error_Upload_services, anchored",
+      "3": {"vt":  "0x20", "func": "0x710006A9B0", "lr": "0x710006565C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetAutoUpload", "wire_order": "in_data[0x8]"},
+      "4": {"vt":  "0x28", "func": "0x710006AA50", "lr": "0x7100065690", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetAutoUpload", "wire_order": "out_data[0x8]"}
+    },
+    "_services": ["acc:e:u1", "bgtc:t", "bsd:a", "bsd:s", "bsd:u", "dauth:0", "erpt:c", "erpt:r", "eupld:c", "eupld:r", "fatal:u", "nifm:a", "nifm:s", "nifm:u", "nsd:a", "nsd:u", "pdm:ntfy", "pdm:qry", "pm:bm", "psc:m", "set:sys", "sfdnsres", "srepo:a", "srepo:u", "ssl:s"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x7100076330", "cmd_proof_offset": "0x7100076358", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100075b74"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x7100026740", "cmd_proof_offset": "0x7100026744", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x71000224a0"] }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000799b0", "cmd_proof_offset": "0x71000799dc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100079134", "0x71000792b4", "0x7100079434"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000799b0", "cmd_proof_offset": "0x71000799dc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100079134", "0x71000792b4", "0x7100079434"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000799b0", "cmd_proof_offset": "0x71000799dc", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100079134", "0x71000792b4", "0x7100079434"] }
+        }
+      }
+    }
+  }
+}

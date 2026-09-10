@@ -1,0 +1,47 @@
+{
+  "loader_services": {
+    "program_identified": "Loader_services",
+    "nn::ldr::detail::IProcessManagerInterface": {
+      "_srv": "SRV_71000411E0",
+      "_hash": "c9f593a4b02c83d1",
+      "_likely_basis": "DB position 1/4 in Loader_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x710001A0F0", "lr": "0x7100001120", "inbytes":  "0x10", "outbytes":   "0x0", "inhandles": [1], "outhandles": [1], "name": "CreateProcess", "wire_order": "in_data[0x10]"},
+      "1": {"vt":  "0x28", "func": "0x710001A3C0", "lr": "0x7100001324", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "GetProgramInfo", "wire_order": "in_data[0x18]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710001A3E0", "lr": "0x71000014E0", "inbytes":  "0x10", "outbytes":   "0x8", "name": "PinProgram", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x710001A640", "lr": "0x7100000F78", "inbytes":   "0x8", "outbytes":   "0x0", "name": "UnpinProgram", "wire_order": "in_data[0x8]"}
+    },
+    "nn::ldr::detail::IShellInterface": {
+      "_srv": "SRV_7100041228",
+      "_hash": "ba0b531c49541169",
+      "0": {"vt":  "0x20", "func": "0x7100001620", "lr": "0x7100001900", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "SetProgramArgument", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "1": {"vt":  "0x28", "func": "0x7100001630", "lr": "0x71000017A8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FlushArguments", "wire_order": "N/A"}
+    },
+    "nn::ldr::detail::IDebugMonitorInterface": {
+      "_srv": "SRV_7100041278",
+      "_hash": "19d3de7f534422f2",
+      "_hash_alt": "820a2065ac394d1f",
+      "0": {"vt":  "0x20", "func": "0x7100001620", "lr": "0x7100001D70", "inbytes":   "0x8", "outbytes":   "0x0", "buffers": [5], "name": "SetProgramArgument2", "wire_order": "in_data[0x8]; buffers=[in]"},
+      "1": {"vt":  "0x28", "func": "0x7100001630", "lr": "0x7100001C10", "inbytes":   "0x0", "outbytes":   "0x0", "name": "FlushArguments2", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100001A70", "lr": "0x7100001F24", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [10], "name": "GetProcessModuleInfo", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[out]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000420D0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710001A0F0", "lr": "0x710001BAB0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710001A3C0", "lr": "0x710001BC1C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710001A3E0", "lr": "0x710001BDB8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710001A640", "lr": "0x710001B9E8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100019420", "lr": "0x710001BF1C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fsp-ldr", "ldr:dmnt", "ldr:pm", "ldr:shel"],
+    "_invokes": {
+      "fsp-ldr": {
+        "interface": "nn::fssrv::sf::IFileSystemProxyForLoader",
+        "commands": {
+          "0": { "name": "OpenCodeFileSystem", "vt_off": "0x20", "stub": "0x7100011fa0", "cmd_proof_offset": "0x710001200c", "cmd_proof_instruction": "mov w7,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710000e0f8"] },
+          "2": { "name": "SetCurrentProcess", "vt_off": "0x30", "stub": "0x7100012080", "cmd_proof_offset": "0x7100012084", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x710000e0b8"] }
+        }
+      }
+    }
+  }
+}

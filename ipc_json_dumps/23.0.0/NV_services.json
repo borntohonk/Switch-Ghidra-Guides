@@ -1,0 +1,63 @@
+{
+  "nv_services": {
+    "program_identified": "NV_services",
+    "nns::nvdrv::INvDrvDebugFSServices": {
+      "_srv": "SRV_71000E5668",
+      "_hash": "df05dd6450e9e728",
+      "0": {"vt":  "0x20", "func": "0x7100016000", "lr": "0x7100001C38", "inbytes":   "0x0", "outbytes":   "0x4", "inhandles": [1], "name": "DebugFSOpen", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000162D0", "lr": "0x7100001A80", "inbytes":   "0x4", "outbytes":   "0x0", "name": "DebugFSClose", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000162F0", "lr": "0x7100001DC4", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [6], "name": "GetDebugFSKeys", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "3": {"vt":  "0x38", "func": "0x7100016550", "lr": "0x7100001F88", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5, 6], "name": "GetDebugFSValue", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[in, out]"},
+      "4": {"vt":  "0x40", "func": "0x71000151E0", "lr": "0x7100002158", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [5, 5], "name": "SetDebugFSValue", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[in, in]"}
+    },
+    "nv::gemcontrol::INvGemControl": {
+      "_srv": "SRV_71000E5670",
+      "_hash": "a4d01235e724ff5b",
+      "0": {"vt":  "0x20", "func": "0x7100016000", "lr": "0x7100002558", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Initialize", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000162D0", "lr": "0x71000027F8", "inbytes":   "0x0", "outbytes":   "0x4", "outhandles": [1], "name": "GetEventHandle", "wire_order": "out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000162F0", "lr": "0x7100002990", "inbytes":   "0x1", "outbytes":   "0x4", "name": "ControlNotification", "wire_order": "in_data[0x1]; out_data[0x4]"},
+      "3": {"vt":  "0x38", "func": "0x7100016550", "lr": "0x7100002B20", "inbytes":  "0x10", "outbytes":   "0x4", "name": "SetNotificationPerm", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x71000151E0", "lr": "0x7100002CA0", "inbytes":  "0x10", "outbytes":   "0x4", "name": "SetCoreDumpPerm", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "6": {"vt":  "0x48", "func": "0x7100016660", "lr": "0x7100002618", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Reset", "wire_order": "out_data[0x4]"},
+      "7": {"vt":  "0x50", "func": "0x71000167A0", "lr": "0x71000024A8", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetAruid2", "wire_order": "out_data[0x10]"}
+    },
+    "nv::gemcoredump::INvGemCoreDump": {
+      "_srv": "SRV_71000E5678",
+      "_hash": "14272d962fd797e1",
+      "_hash_alt": "0c320a523aa9d433",
+      "0": {"vt":  "0x20", "func": "0x7100016000", "lr": "0x710000301C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Initialize", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000162D0", "lr": "0x7100002F48", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetAruid", "wire_order": "out_data[0x10]"},
+      "3": {"vt":  "0x30", "func": "0x71000162F0", "lr": "0x71000030C4", "inbytes":   "0x0", "outbytes":  "0x10", "name": "GetNextBlockSize", "wire_order": "out_data[0x10]"},
+      "4": {"vt":  "0x38", "func": "0x7100016550", "lr": "0x7100003264", "inbytes":  "0x10", "outbytes":  "0x10", "buffers": [34], "name": "ReadNextBlock2", "wire_order": "in_data[0x10]; out_data[0x10]; buffers=[out]"}
+    },
+    "nns::nvdrv::INvDrvServices": {
+      "_srv": "SRV_71000E5680",
+      "_hash": "0080d5f8df85e762",
+      "_hash_alt": "710f988a7ad1dae3",
+      "0":  {"vt":  "0x20", "func": "0x71000B7C50", "lr": "0x7100003A0C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [5], "name": "Open", "wire_order": "out_data[0x8]; buffers=[in]"},
+      "1":  {"vt":  "0x28", "func": "0x71000B7C50", "lr": "0x7100003BD8", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [33, 34], "name": "Ioctl", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[in, out]"},
+      "2":  {"vt":  "0x30", "func": "0x71000B7C50", "lr": "0x7100003DB0", "inbytes":   "0x4", "outbytes":   "0x4", "name": "Close", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x71000B7C50", "lr": "0x7100003F30", "inbytes":   "0x4", "outbytes":   "0x4", "inhandles": [1, 1], "name": "Initialize", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x71000B7C50", "lr": "0x7100004110", "inbytes":   "0x8", "outbytes":   "0x4", "outhandles": [1], "name": "QueryEvent", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "5":  {"vt":  "0x48", "func": "0x71000B7C50", "lr": "0x71000042D0", "inbytes":   "0x8", "outbytes":   "0x4", "inhandles": [1], "name": "MapSharedMem", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "6":  {"vt":  "0x50", "func": "0x71000B7C50", "lr": "0x7100003778", "inbytes":   "0x0", "outbytes":  "0x24", "name": "GetStatus", "wire_order": "out_data[0x24]"},
+      "7":  {"vt":  "0x58", "func": "0x7100081C30", "lr": "0x7100004490", "inbytes":   "0x8", "outbytes":   "0x4", "name": "SetAruidWithoutCheck", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x7100081C50", "lr": "0x7100004610", "inbytes":   "0x8", "outbytes":   "0x4", "pid": true, "name": "SetAruid", "wire_order": "in_data[0x8]; out_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x7100081CB0", "lr": "0x71000035AC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DumpStatus", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x7100081D20", "lr": "0x71000047C0", "inbytes":   "0x4", "outbytes":   "0x4", "inhandles": [1], "name": "InitializeDevtools", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x7100081D80", "lr": "0x710000498C", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [33, 34, 33], "name": "Ioctl2", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[in, out, in]"},
+      "12": {"vt":  "0x80", "func": "0x7100081DC0", "lr": "0x7100004B7C", "inbytes":   "0x8", "outbytes":   "0x4", "buffers": [33, 34, 34], "name": "Ioctl3", "wire_order": "in_data[0x8]; out_data[0x4]; buffers=[in, out, out]"},
+      "13": {"vt":  "0x88", "func": "0x7100081DE0", "lr": "0x71000036C0", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetGraphicsFirmwareMemoryMarginEnabled", "wire_order": "in_data[0x8]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_71000E5FE8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100016000", "lr": "0x71000179C0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000162D0", "lr": "0x7100017B2C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x71000162F0", "lr": "0x7100017CC8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100016550", "lr": "0x71000178F8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000151E0", "lr": "0x7100017E2C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["clkrst", "erpt:c", "fatal:u", "host1x", "i2c:pcv", "nvdbg:d", "nvdrv", "nvdrv:a", "nvdrv:s", "nvdrv:t", "nvdrvdbg", "nvgem:c", "nvgem:cd", "psc:m", "rgltr", "set:sys"]
+  }
+}

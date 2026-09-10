@@ -1,0 +1,26 @@
+{
+  "pgl_services": {
+    "_services": ["fatal:u", "fsp-srv", "ldr:shel", "pm:shell", "set:sys"],
+    "_invokes": {
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "10": { "name": "OpenFileSystemWithId", "vt_off": "0x48", "stub": "0x7100013040", "cmd_proof_offset": "0x71000130b8", "cmd_proof_instruction": "mov w7,#0xa", "cmd_hex_and_dec": "0xa / 10", "calls": ["0x7100010534", "0x7100023a18"] },
+          "618": { "name": "GetProgramId", "vt_off": "0x2e0", "stub": "0x7100014a90", "cmd_proof_offset": "0x7100014a9c", "cmd_proof_instruction": "mov w5,#0x26a", "cmd_hex_and_dec": "0x26a / 618", "calls": ["0x7100023c40"] }
+        }
+      },
+      "ldr:shel": {
+        "interface": "nn::ldr::detail::IShellInterface",
+        "commands": {
+          "0": { "name": "SetProgramArgument", "vt_off": "0x20", "stub": "0x710000d970", "cmd_proof_offset": "0x710000d978", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710000d8ac"] }
+        }
+      },
+      "pm:shell": {
+        "interface": "nn::pm::detail::IShellInterface",
+        "commands": {
+          "3": { "name": "GetProcessEventEvent", "vt_off": "0x38", "stub": "0x710000df80", "cmd_proof_offset": "0x710000df84", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x710000ddac"] }
+        }
+      }
+    }
+  }
+}

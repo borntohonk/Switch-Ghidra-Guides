@@ -1,0 +1,107 @@
+{
+  "cabinet": {
+    "_services": ["appletAE", "audout:u", "audren:u", "dispdrv", "fatal:u", "fsp-srv", "hid:dbg", "hid:sys", "ldn:m", "lp2p:m", "mii:e", "mii:u", "nfc:sys", "nfp:sys", "ngc:u", "nifm:a", "nifm:s", "nifm:u", "ns:am2", "ns:ec", "ns:rid", "ns:ro", "ns:rt", "ns:su", "ns:vm", "ns:web", "nvdrv", "nvdrv:a", "nvmemp", "prepo:a2", "prepo:m", "prepo:s", "prepo:u", "set:sys", "ssl:s"],
+    "_invokes": {
+      "audren:u": {
+        "interface": "nn::audio::detail::IAudioRendererManager",
+        "commands": {
+          "0": { "name": "OpenAudioRenderer", "vt_off": "0x20", "stub": "0x71001c2550", "cmd_proof_offset": "0x71001c25c8", "cmd_proof_instruction": "mov w7,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001becb0"] },
+          "1": { "name": "GetWorkBufferSize", "vt_off": "0x28", "stub": "0x71001c2620", "cmd_proof_offset": "0x71001c2624", "cmd_proof_instruction": "mov w3,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x71001bea80"] },
+          "4": { "name": "GetAudioDeviceServiceWithRevisionInfo", "vt_off": "0x40", "stub": "0x71001c27a0", "cmd_proof_offset": "0x71001c27fc", "cmd_proof_instruction": "mov w4,#0x4", "cmd_hex_and_dec": "0x4 / 4", "calls": ["0x71001bc228"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "9": { "name": "OpenDataFileSystemByProgramId", "vt_off": "0x40", "stub": "0x710014f1d0", "cmd_proof_offset": "0x710014f224", "cmd_proof_instruction": "mov w3,#0x9", "cmd_hex_and_dec": "0x9 / 9", "calls": ["0x7100162a98"] },
+          "17": { "name": "OpenHostFileSystem", "vt_off": "0x68", "stub": "0x710014f4a0", "cmd_proof_offset": "0x710014f4f8", "cmd_proof_instruction": "mov w4,#0x11", "cmd_hex_and_dec": "0x11 / 17", "calls": ["0x710015fc2c"] },
+          "18": { "name": "OpenSdCardFileSystem", "vt_off": "0x70", "stub": "0x710014f540", "cmd_proof_offset": "0x710014f584", "cmd_proof_instruction": "mov w2,#0x12", "cmd_hex_and_dec": "0x12 / 18", "calls": ["0x7100163068", "0x71001630d8", "0x7100163118", "0x710016315c", "0x71001631a0", "0x71001631e4", "0x7100163228", "0x710016326c", "0x71001632b0", "0x71001632f4"] },
+          "36": { "name": "OpenHostFileSystemWithOption", "vt_off": "0xf8", "stub": "0x710014f820", "cmd_proof_offset": "0x710014f880", "cmd_proof_instruction": "mov w5,#0x24", "cmd_hex_and_dec": "0x24 / 36", "calls": ["0x710015fbc4"] },
+          "201": { "name": "OpenDataStorageByProgramId", "vt_off": "0x220", "stub": "0x71001507b0", "cmd_proof_offset": "0x7100150804", "cmd_proof_instruction": "mov w3,#0xc9", "cmd_hex_and_dec": "0xc9 / 201", "calls": ["0x7100162928"] },
+          "202": { "name": "OpenDataStorageByDataId", "vt_off": "0x228", "stub": "0x7100150850", "cmd_proof_offset": "0x71001508ac", "cmd_proof_instruction": "mov w4,#0xca", "cmd_hex_and_dec": "0xca / 202", "calls": ["0x7100163910"] },
+          "204": { "name": "OpenDataFileSystemWithProgramIndex", "vt_off": "0x238", "stub": "0x7100150990", "cmd_proof_offset": "0x71001509e4", "cmd_proof_instruction": "mov w3,#0xcc", "cmd_hex_and_dec": "0xcc / 204", "calls": ["0x7100162b04"] },
+          "205": { "name": "OpenDataStorageWithProgramIndex", "vt_off": "0x240", "stub": "0x7100150a30", "cmd_proof_offset": "0x7100150a84", "cmd_proof_instruction": "mov w3,#0xcd", "cmd_hex_and_dec": "0xcd / 205", "calls": ["0x7100162994"] },
+          "400": { "name": "OpenDeviceOperator", "vt_off": "0x258", "stub": "0x7100150c40", "cmd_proof_offset": "0x7100150c84", "cmd_proof_instruction": "mov w2,#0x190", "cmd_hex_and_dec": "0x190 / 400", "calls": ["0x710016336c"] },
+          "1005": { "name": "GetGlobalAccessLogMode", "vt_off": "0x398", "stub": "0x71001512c0", "cmd_proof_offset": "0x71001512c4", "cmd_proof_instruction": "mov w2,#0x3ed", "cmd_hex_and_dec": "0x3ed / 1005", "calls": ["0x7100163de4"] },
+          "1006": { "name": "OutputAccessLogToSdCard", "vt_off": "0x3a0", "stub": "0x71001512d0", "cmd_proof_offset": "0x71001512d8", "cmd_proof_instruction": "mov w3,#0x3ee", "cmd_hex_and_dec": "0x3ee / 1006", "calls": ["0x71001645f4", "0x7100164684", "0x7100164988", "0x7100164a64", "0x7100164b48"] },
+          "1011": { "name": "GetProgramIndexForAccessLog", "vt_off": "0x3c0", "stub": "0x71001513a0", "cmd_proof_offset": "0x71001513a4", "cmd_proof_instruction": "mov w3,#0x3f3", "cmd_hex_and_dec": "0x3f3 / 1011", "calls": ["0x7100163fd8"] },
+          "1016": { "name": "FlushAccessLogOnSdCard", "vt_off": "0x3d8", "stub": "0x71001513d0", "cmd_proof_offset": "0x71001513d4", "cmd_proof_instruction": "mov w1,#0x3f8", "cmd_hex_and_dec": "0x3f8 / 1016", "calls": ["0x71001646e0", "0x7100164ab0", "0x7100164b94"] }
+        },
+        "sub_interfaces": {
+          "400 (nn::fssrv::sf::IDeviceOperator)": {
+            "0": { "name": "IsSdCardInserted", "vt_off": "0x20", "stub": "0x710015b540", "cmd_proof_offset": "0x710015b544", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001633a8", "0x7100163420", "0x7100163450", "0x7100163480", "0x71001634b0", "0x71001634e0", "0x7100163510", "0x7100163540", "0x7100163570", "0x71001635a0"] }
+          }
+        }
+      },
+      "ldn:m": {
+        "interface": "nn::ldn::detail::IMonitorServiceCreator",
+        "commands": {
+          "0": { "name": "CreateMonitorService", "vt_off": "0x20", "stub": "0x710004fa50", "cmd_proof_offset": "0x710004fa94", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004ef08"] }
+        },
+        "sub_interfaces": {
+          "0 (nn::ldn::detail::IMonitorService)": {
+            "100": { "name": "Initialize", "vt_off": "0x50", "stub": "0x7100022850", "cmd_proof_offset": "0x7100022854", "cmd_proof_instruction": "mov w1,#0x64", "cmd_hex_and_dec": "0x64 / 100", "calls": ["0x710004ef38"] }
+          }
+        }
+      },
+      "lp2p:m": {
+        "interface": "nn::lp2p::monitor::detail::ISfMonitorServiceCreator",
+        "commands": {
+          "0": { "name": "CreateMonitorService", "vt_off": "0x20", "stub": "0x7100225d60", "cmd_proof_offset": "0x7100225dbc", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100225b18"] }
+        },
+        "sub_interfaces": {
+          "0 (nn::lp2p::monitor::detail::ISfMonitorService)": {
+            "0": { "name": "Initialize", "vt_off": "0x20", "stub": "0x710001ba10", "cmd_proof_offset": "0x710001ba14", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100225b2c"] }
+          }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001f4130", "cmd_proof_offset": "0x71001f415c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001f38b4", "0x71001f3a34", "0x71001f3bb4"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001f4130", "cmd_proof_offset": "0x71001f415c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001f38b4", "0x71001f3a34", "0x71001f3bb4"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71001f4130", "cmd_proof_offset": "0x71001f415c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71001f38b4", "0x71001f3a34", "0x71001f3bb4"] }
+        }
+      },
+      "nvmemp": {
+        "commands": {
+          "1": { "vt_off": "0x28", "stub": "0x71000bfed0", "cmd_proof_offset": "0x71000bfed4", "cmd_proof_instruction": "mov w2,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x71000bf548"] }
+        }
+      },
+      "prepo:a2": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x710004b7a0", "cmd_proof_offset": "0x710004b7b8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x710004e4d4"] }
+        }
+      },
+      "prepo:m": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x710004b7a0", "cmd_proof_offset": "0x710004b7b8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x710004e4d4"] }
+        }
+      },
+      "prepo:s": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x710004b7a0", "cmd_proof_offset": "0x710004b7b8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x710004e4d4"] }
+        }
+      },
+      "prepo:u": {
+        "interface": "nn::prepo::detail::ipc::IPrepoService",
+        "commands": {
+          "20102": { "name": "SaveSystemReport", "vt_off": "0x98", "stub": "0x710004b7a0", "cmd_proof_offset": "0x710004b7b8", "cmd_proof_instruction": "mov w7,#0x4e86", "cmd_hex_and_dec": "0x4e86 / 20102", "calls": ["0x710004e4d4"] }
+        }
+      }
+    }
+  }
+}

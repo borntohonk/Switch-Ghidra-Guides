@@ -1,0 +1,180 @@
+{
+  "friend_services": {
+    "program_identified": "Friend_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710015A5B8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100038010", "lr": "0x71000399D0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000382E0", "lr": "0x7100039B3C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100038300", "lr": "0x7100039CD8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100038560", "lr": "0x7100039908", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000373A0", "lr": "0x7100039E3C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::friends::detail::ipc::IServiceCreator": {
+      "_srv": "SRV_710015CA50",
+      "_hash": "4f06bbb0506f4ca4",
+      "0": {"vt":  "0x20", "lr": "0x7100080D28", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::friends::detail::ipc::IFriendService"], "_srv_outinterfaces": "SRV_710015CA58", "name": "CreateFriendService", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x7100080ECC", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::friends::detail::ipc::INotificationService"], "_srv_outinterfaces": "SRV_710015CA68", "name": "CreateNotificationService", "wire_order": "in_data[0x10]"},
+      "2": {"vt":  "0x30", "lr": "0x71000810A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::friends::detail::ipc::IDaemonSuspendSessionService"], "_srv_outinterfaces": "SRV_710015CA70", "name": "CreateDaemonSuspendSessionService", "wire_order": "N/A"}
+    },
+    "nn::friends::detail::ipc::IFriendService": {
+      "_srv": "SRV_710015CA58",
+      "_hash": "9af47f4e15ff5eed",
+      "_hash_alt": "171422d63fb33a07",
+      "0":     {"vt":  "0x20", "func": "0x71000CA680", "lr": "0x7100081A08", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCompletionEvent", "wire_order": "N/A"},
+      "1":     {"vt":  "0x28", "func": "0x71000CA690", "lr": "0x7100081B68", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "10100": {"vt":  "0x30", "func": "0x71000CA6A0", "lr": "0x7100081CA4", "inbytes":  "0x30", "outbytes":   "0x4", "buffers": [10], "pid": true, "name": "GetFriendListIds", "wire_order": "in_u64_0; in_u64_4; out_buf0; in_u64_3; in_u64_2; in_u64_1; in_u64_5; out_data[0x4]"},
+      "10101": {"vt":  "0x38", "func": "0x71000CA6B0", "lr": "0x7100081EA4", "inbytes":  "0x30", "outbytes":   "0x4", "buffers": [6], "pid": true, "name": "GetFriendList", "wire_order": "in_u64_0; in_u64_4; out_buf0; in_u64_3; in_u64_2; in_u64_1; in_u64_5; out_data[0x4]"},
+      "10102": {"vt":  "0x40", "func": "0x71000CA6C0", "lr": "0x71000820A4", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [6, 9], "pid": true, "name": "UpdateFriendInfo", "wire_order": "in_buf0; out_buf0; in_data[0x18]"},
+      "10110": {"vt":  "0x48", "func": "0x71000CA6D0", "lr": "0x7100082294", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendProfileImage", "wire_order": "in_u64_0; out_buf0; in_u64_2; in_u64_1; out_data[0x4]"},
+      "10111": {"vt":  "0x50", "func": "0x71000CA6E0", "lr": "0x7100082464", "inbytes":  "0x20", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendProfileImageWithImageSize", "wire_order": "out_buf0; in_data[0x20]; out_data[0x4]"},
+      "10120": {"vt":  "0x58", "func": "0x71000CA6F0", "lr": "0x7100082640", "inbytes":  "0x10", "outbytes":   "0x1", "name": "CheckFriendListAvailability", "wire_order": "in_u64_1; in_u64_0; out_data[0x1]"},
+      "10121": {"vt":  "0x60", "func": "0x71000CA700", "lr": "0x71000827BC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "EnsureFriendListAvailable", "wire_order": "in_u64_0; in_u64_1"},
+      "10200": {"vt":  "0x68", "func": "0x71000CA710", "lr": "0x7100082938", "inbytes":  "0x20", "outbytes":   "0x0", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "pid": true, "name": "SendFriendRequestForApplication", "wire_order": "in_buf0; in_buf1; in_data[0x20]"},
+      "10211": {"vt":  "0x70", "func": "0x71000CA720", "lr": "0x7100082B1C", "inbytes":  "0x80", "outbytes":   "0x0", "buffers": [25, 25, 5], "buffer_entry_sizes": ["0x301", "0x301", "0x0"], "pid": true, "name": "AddFacedFriendRequestForApplication", "wire_order": "in_buf0; in_buf1; in_buf2; in_data[0x80]"},
+      "10400": {"vt":  "0x78", "func": "0x71000CA730", "lr": "0x7100082D44", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [10], "name": "GetBlockedUserListIds", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "10420": {"vt":  "0x80", "func": "0x71000CA740", "lr": "0x7100082F20", "inbytes":  "0x10", "outbytes":   "0x1", "name": "CheckBlockedUserListAvailability", "wire_order": "in_u64_1; in_u64_0; out_data[0x1]"},
+      "10421": {"vt":  "0x88", "func": "0x71000CA750", "lr": "0x710008309C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "EnsureBlockedUserListAvailable", "wire_order": "in_u64_0; in_u64_1"},
+      "10500": {"vt":  "0x90", "func": "0x71000CA760", "lr": "0x7100083214", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "GetProfileList", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "10501": {"vt":  "0x98", "func": "0x71000CA770", "lr": "0x71000833E4", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "GetProfileListV2", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "10600": {"vt":  "0xB0", "func": "0x71000CA790", "lr": "0x710008394C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeclareOpenOnlinePlaySession", "wire_order": "in_data[0x10]"},
+      "10601": {"vt":  "0xB8", "func": "0x71000CA7A0", "lr": "0x7100083ABC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeclareCloseOnlinePlaySession", "wire_order": "in_data[0x10]"},
+      "10610": {"vt":  "0xC0", "func": "0x71000CA7B0", "lr": "0x7100083C34", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "pid": true, "name": "UpdateUserPresence", "wire_order": "in_buf0; in_data[0x18]"},
+      "10700": {"vt":  "0xC8", "func": "0x71000CA7C0", "lr": "0x7100083E14", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "GetPlayHistoryRegistrationKey", "wire_order": "out_buf0; in_data[0x18]"},
+      "10701": {"vt":  "0xD0", "func": "0x71000CA7D0", "lr": "0x7100083FD8", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "GetPlayHistoryRegistrationKeyWithNetworkServiceAccountId", "wire_order": "out_buf0; in_data[0x10]"},
+      "10702": {"vt":  "0xD8", "func": "0x71000CA7E0", "lr": "0x7100084190", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [25, 25, 25], "buffer_entry_sizes": ["0x301", "0x301", "0x301"], "pid": true, "name": "AddPlayHistory", "wire_order": "in_buf0; in_buf1; in_buf2; in_data[0x18]"},
+      "11000": {"vt":  "0xE0", "func": "0x71000CA7F0", "lr": "0x7100084370", "inbytes":  "0xA4", "outbytes":  "0xA0", "name": "GetProfileImageUrl", "wire_order": "in_data[0xA4]; out_data[0xA0]"},
+      "11001": {"vt":  "0xE8", "func": "0x71000CA770", "lr": "0x7100084520", "inbytes":  "0xA4", "outbytes":  "0xA0", "name": "GetProfileImageUrlV2", "wire_order": "in_data[0xA4]; out_data[0xA0]"},
+      "20100": {"vt":  "0xF0", "func": "0x71000CA800", "lr": "0x71000846D0", "inbytes":  "0x28", "outbytes":   "0x4", "pid": true, "name": "GetFriendCount", "wire_order": "in_data[0x28]; out_data[0x4]"},
+      "20101": {"vt":  "0xF8", "func": "0x71000CA810", "lr": "0x7100084880", "inbytes":  "0x10", "outbytes":   "0x4", "name": "GetNewlyFriendCount", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "20102": {"vt": "0x100", "func": "0x71000CA820", "lr": "0x7100084A04", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "GetFriendDetailedInfo", "wire_order": "out_buf0; in_data[0x18]"},
+      "20103": {"vt": "0x108", "func": "0x71000CA830", "lr": "0x7100084BBC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SyncFriendList", "wire_order": "in_data[0x10]"},
+      "20104": {"vt": "0x110", "func": "0x71000CA840", "lr": "0x7100084D2C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "RequestSyncFriendList", "wire_order": "in_data[0x10]"},
+      "20105": {"vt": "0x118", "func": "0x71000CA850", "lr": "0x7100084EA4", "inbytes":  "0x28", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendListForViewerV1", "wire_order": "out_buf0; in_data[0x28]; out_data[0x4]"},
+      "20106": {"vt": "0x120", "func": "0x71000CA860", "lr": "0x7100085094", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "UpdateFriendInfoForViewerV1", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "20107": {"vt": "0x128", "func": "0x71000CA870", "lr": "0x7100085264", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "GetFriendDetailedInfoV2", "wire_order": "out_buf0; in_data[0x18]"},
+      "20108": {"vt": "0x130", "func": "0x71000CA880", "lr": "0x7100085424", "inbytes":  "0x28", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendListForViewerV2", "wire_order": "out_buf0; in_data[0x28]; out_data[0x4]"},
+      "20109": {"vt": "0x138", "func": "0x71000CA890", "lr": "0x7100085614", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "UpdateFriendInfoForViewerV2", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "20110": {"vt": "0x140", "func": "0x71000CA8A0", "lr": "0x71000857F4", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "LoadFriendSettingV1", "wire_order": "out_buf0; in_data[0x18]"},
+      "20111": {"vt": "0x148", "func": "0x71000CA8B0", "lr": "0x71000859B4", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "LoadFriendSettingV2", "wire_order": "out_buf0; in_data[0x18]"},
+      "20200": {"vt": "0x150", "func": "0x71000CA8C0", "lr": "0x7100085B70", "inbytes":  "0x10", "outbytes":   "0x8", "name": "GetReceivedFriendRequestCount", "wire_order": "in_data[0x10]; out_data[0x8]"},
+      "20201": {"vt": "0x158", "func": "0x71000CA8D0", "lr": "0x7100085D04", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendRequestListV1", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20202": {"vt": "0x160", "func": "0x71000CA8E0", "lr": "0x7100085EE4", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendRequestListV2", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20203": {"vt": "0x168", "func": "0x71000CA8F0", "lr": "0x71000860C0", "inbytes":  "0x10", "outbytes":   "0x4", "name": "GetFriendRequestReceivedNotificationCount", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "20300": {"vt": "0x170", "func": "0x71000CA900", "lr": "0x7100086244", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetFriendCandidateList", "wire_order": "in_u64_2; in_u64_0; out_buf0; in_u64_1; out_data[0x4]"},
+      "20301": {"vt": "0x178", "func": "0x71000CA910", "lr": "0x710008642C", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [26, 6], "name": "GetNintendoNetworkIdInfo", "wire_order": "in_u64_2; in_u64_1; out_buf1; out_buf0; in_u64_0; out_data[0x4]"},
+      "20400": {"vt": "0x180", "func": "0x71000CA920", "lr": "0x7100086614", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetBlockedUserListV1", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20401": {"vt": "0x188", "func": "0x71000CA930", "lr": "0x71000867EC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SyncBlockedUserList", "wire_order": "in_data[0x10]"},
+      "20402": {"vt": "0x190", "func": "0x71000CA940", "lr": "0x7100086964", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetBlockedUserListV2", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20500": {"vt": "0x198", "func": "0x71000CA950", "lr": "0x7100086B44", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "GetProfileExtraListV1", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "20501": {"vt": "0x1A0", "func": "0x71000CA960", "lr": "0x7100086D10", "inbytes":  "0x18", "outbytes":   "0x8", "name": "GetRelationship", "wire_order": "in_u64_1; in_u64_0; in_u64_2; out_data[0x8]"},
+      "20502": {"vt": "0x1A8", "func": "0x71000CA970", "lr": "0x7100086EA4", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [6, 9], "name": "GetProfileExtraListV2", "wire_order": "in_buf0; out_buf0; in_data[0x10]"},
+      "20600": {"vt": "0x1B0", "func": "0x71000CA980", "lr": "0x7100087084", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "GetUserPresenceViewV1", "wire_order": "in_u64_0; out_buf0; in_u64_1"},
+      "20601": {"vt": "0x1B8", "func": "0x71000CA990", "lr": "0x7100087234", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "GetUserPresenceViewV2", "wire_order": "in_u64_0; out_buf0; in_u64_1"},
+      "20700": {"vt": "0x1C0", "func": "0x71000CA9A0", "lr": "0x71000873E4", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetPlayHistoryListV1", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20701": {"vt": "0x1C8", "func": "0x71000CA9B0", "lr": "0x71000875C0", "inbytes":  "0x10", "outbytes":  "0x10", "name": "GetPlayHistoryStatistics", "wire_order": "in_u64_1; in_u64_0; out_data[0x10]"},
+      "20702": {"vt": "0x1D0", "func": "0x71000CA9C0", "lr": "0x7100087744", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetPlayHistoryListV2", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "20800": {"vt": "0x1D8", "func": "0x71000CA9D0", "lr": "0x7100087924", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "LoadUserSettingV1", "wire_order": "out_buf0; in_data[0x10]"},
+      "20801": {"vt": "0x1E0", "func": "0x71000CA9E0", "lr": "0x7100087ACC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "SyncUserSetting", "wire_order": "in_u64_0; in_u64_1"},
+      "20802": {"vt": "0x1E8", "func": "0x71000CA9F0", "lr": "0x7100087C44", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [26], "name": "LoadUserSettingV2", "wire_order": "out_buf0; in_data[0x10]"},
+      "20900": {"vt": "0x1F0", "func": "0x71000CAA00", "lr": "0x7100087DE8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "RequestListSummaryOverlayNotification", "wire_order": "N/A"},
+      "21000": {"vt": "0x1F8", "func": "0x71000CAA10", "lr": "0x7100087F24", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [26], "name": "GetExternalApplicationCatalog", "wire_order": "in_u64_2; out_buf0; in_u64_0; in_u64_1"},
+      "22000": {"vt": "0x200", "func": "0x71000CAA20", "lr": "0x71000880E4", "inbytes":  "0x10", "outbytes":   "0x4", "buffers": [6], "name": "GetReceivedFriendInvitationListV1", "wire_order": "out_buf0; in_data[0x10]; out_data[0x4]"},
+      "22001": {"vt": "0x208", "func": "0x71000CAA30", "lr": "0x71000882C4", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [22], "name": "GetReceivedFriendInvitationDetailedInfoV1", "wire_order": "out_buf0; in_data[0x18]"},
+      "22002": {"vt": "0x210", "func": "0x71000CAA40", "lr": "0x7100088484", "inbytes":  "0x10", "outbytes":   "0x4", "buffers": [6], "name": "GetReceivedFriendInvitationListV2", "wire_order": "out_buf0; in_data[0x10]; out_data[0x4]"},
+      "22003": {"vt": "0x218", "func": "0x71000CAA50", "lr": "0x7100088664", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [22], "name": "GetReceivedFriendInvitationDetailedInfoV2", "wire_order": "out_buf0; in_data[0x18]"},
+      "22010": {"vt": "0x220", "func": "0x71000CAA60", "lr": "0x7100088820", "inbytes":  "0x10", "outbytes":   "0x4", "name": "GetReceivedFriendInvitationCountCache", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "30100": {"vt": "0x228", "func": "0x71000CAA70", "lr": "0x710008899C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DropFriendNewlyFlags", "wire_order": "in_data[0x10]"},
+      "30101": {"vt": "0x230", "func": "0x71000CAA80", "lr": "0x7100088B0C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "DeleteFriend", "wire_order": "in_data[0x18]"},
+      "30110": {"vt": "0x238", "func": "0x71000CAA90", "lr": "0x7100088C8C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "DropFriendNewlyFlag", "wire_order": "in_u64_1; in_u64_0; in_u64_2"},
+      "30120": {"vt": "0x240", "func": "0x71000CAAA0", "lr": "0x7100088E0C", "inbytes":  "0x20", "outbytes":   "0x0", "name": "ChangeFriendFavoriteFlag", "wire_order": "in_data[0x20]"},
+      "30121": {"vt": "0x248", "func": "0x71000CAAB0", "lr": "0x7100088F8C", "inbytes":  "0x20", "outbytes":   "0x0", "name": "ChangeFriendOnlineNotificationFlag", "wire_order": "in_data[0x20]"},
+      "30130": {"vt": "0x250", "func": "0x71000CAAC0", "lr": "0x710008910C", "inbytes":  "0x70", "outbytes":   "0x0", "name": "SetFriendNote", "wire_order": "in_data[0x70]"},
+      "30131": {"vt": "0x258", "func": "0x71000CAAD0", "lr": "0x71000892BC", "inbytes":  "0x20", "outbytes":   "0x0", "name": "RequestUploadPendingNote", "wire_order": "in_data[0x20]"},
+      "30190": {"vt": "0x260", "func": "0x71000CAAE0", "lr": "0x710008943C", "inbytes":  "0x20", "outbytes":   "0x0", "name": "RequestSyncLocalUpdates", "wire_order": "in_data[0x20]"},
+      "30200": {"vt": "0x268", "func": "0x71000CAAF0", "lr": "0x71000895BC", "inbytes":  "0x20", "outbytes":   "0x0", "name": "SendFriendRequest", "wire_order": "in_data[0x20]"},
+      "30201": {"vt": "0x270", "func": "0x71000CAB00", "lr": "0x7100089748", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "name": "SendFriendRequestWithApplicationInfoV1", "wire_order": "in_buf0; in_buf1; in_data[0x30]"},
+      "30202": {"vt": "0x278", "func": "0x71000CAB10", "lr": "0x710008991C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "CancelFriendRequest", "wire_order": "in_data[0x18]"},
+      "30203": {"vt": "0x280", "func": "0x71000CAB20", "lr": "0x7100089A9C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "AcceptFriendRequest", "wire_order": "in_data[0x18]"},
+      "30204": {"vt": "0x288", "func": "0x71000CAB30", "lr": "0x7100089C1C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "RejectFriendRequest", "wire_order": "in_data[0x18]"},
+      "30205": {"vt": "0x290", "func": "0x71000CAB40", "lr": "0x7100089D9C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "ReadFriendRequest", "wire_order": "in_data[0x18]"},
+      "30210": {"vt": "0x298", "func": "0x71000CAB50", "lr": "0x7100089F20", "inbytes":  "0x10", "outbytes":  "0x40", "name": "GetFacedFriendRequestRegistrationKey", "wire_order": "in_data[0x10]; out_data[0x40]"},
+      "30211": {"vt": "0x2A0", "func": "0x71000CAB60", "lr": "0x710008A0C0", "inbytes":  "0x78", "outbytes":   "0x0", "buffers": [5], "name": "AddFacedFriendRequest", "wire_order": "in_buf0; in_data[0x78]"},
+      "30212": {"vt": "0x2A8", "func": "0x71000CAB70", "lr": "0x710008A2BC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "CancelFacedFriendRequest", "wire_order": "in_data[0x18]"},
+      "30213": {"vt": "0x2B0", "func": "0x71000CAB80", "lr": "0x710008A444", "inbytes":  "0x18", "outbytes":   "0x4", "buffers": [6], "name": "GetFacedFriendRequestProfileImage", "wire_order": "out_buf0; in_data[0x18]; out_data[0x4]"},
+      "30214": {"vt": "0x2B8", "func": "0x71000CAB90", "lr": "0x710008A610", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [9, 6], "name": "GetFacedFriendRequestProfileImageFromPath", "wire_order": "in_buf0; out_buf0; out_data[0x4]"},
+      "30215": {"vt": "0x2C0", "func": "0x71000CABA0", "lr": "0x710008A7D8", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "name": "SendFriendRequestWithExternalApplicationCatalogId", "wire_order": "in_buf0; in_buf1; in_data[0x30]"},
+      "30216": {"vt": "0x2C8", "func": "0x71000CABB0", "lr": "0x710008A9AC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "ResendFacedFriendRequest", "wire_order": "in_data[0x18]"},
+      "30217": {"vt": "0x2D0", "func": "0x71000CABC0", "lr": "0x710008AB2C", "inbytes":  "0x80", "outbytes":   "0x0", "name": "SendFriendRequestWithNintendoNetworkIdInfo", "wire_order": "in_data[0x80]"},
+      "30218": {"vt": "0x2D8", "func": "0x71000CABD0", "lr": "0x710008ACF8", "inbytes":  "0x38", "outbytes":   "0x0", "buffers": [25, 25], "buffer_entry_sizes": ["0x301", "0x301"], "name": "SendFriendRequestWithApplicationInfoV2", "wire_order": "in_buf0; in_buf1; in_data[0x38]"},
+      "30400": {"vt": "0x2E0", "func": "0x71000CABE0", "lr": "0x710008AECC", "inbytes":  "0x20", "outbytes":   "0x0", "name": "BlockUser", "wire_order": "in_data[0x20]"},
+      "30401": {"vt": "0x2E8", "func": "0x71000CABF0", "lr": "0x710008B054", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "BlockUserWithApplicationInfoV1", "wire_order": "in_buf0; in_data[0x30]"},
+      "30402": {"vt": "0x2F0", "func": "0x71000CAC00", "lr": "0x710008B21C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "UnblockUser", "wire_order": "in_data[0x18]"},
+      "30403": {"vt": "0x2F8", "func": "0x71000CAC10", "lr": "0x710008B3A4", "inbytes":  "0x38", "outbytes":   "0x0", "buffers": [25], "buffer_entry_sizes": ["0x301"], "name": "BlockUserWithApplicationInfoV2", "wire_order": "in_buf0; in_data[0x38]"},
+      "30500": {"vt": "0x300", "func": "0x71000CAC20", "lr": "0x710008B584", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [26], "name": "GetProfileExtraFromFriendCodeV1", "wire_order": "out_buf0; in_data[0x30]"},
+      "30501": {"vt": "0x308", "func": "0x71000CAC30", "lr": "0x710008B754", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [26], "name": "GetProfileExtraFromFriendCodeV2", "wire_order": "out_buf0; in_data[0x30]"},
+      "30700": {"vt": "0x310", "func": "0x71000CAC40", "lr": "0x710008B91C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeletePlayHistory", "wire_order": "in_data[0x10]"},
+      "30701": {"vt": "0x318", "func": "0x71000CAC50", "lr": "0x710008BAA0", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [25, 25, 25], "buffer_entry_sizes": ["0x301", "0x301", "0x301"], "name": "AddPlayHistoryWithApplication", "wire_order": "in_buf0; in_buf1; in_buf2; in_data[0x28]"},
+      "30810": {"vt": "0x320", "func": "0x71000CAC60", "lr": "0x710008BC6C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "ChangePresencePermission", "wire_order": "in_data[0x18]"},
+      "30811": {"vt": "0x328", "func": "0x71000CAC70", "lr": "0x710008BDEC", "inbytes":  "0x18", "outbytes":   "0x0", "name": "ChangeFriendRequestReception", "wire_order": "in_data[0x18]"},
+      "30812": {"vt": "0x330", "func": "0x71000CAC80", "lr": "0x710008BF6C", "inbytes":  "0x18", "outbytes":   "0x0", "name": "ChangePlayLogPermission", "wire_order": "in_data[0x18]"},
+      "30820": {"vt": "0x338", "func": "0x71000CAC90", "lr": "0x710008C0EC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "IssueFriendCode", "wire_order": "in_data[0x10]"},
+      "30830": {"vt": "0x340", "func": "0x71000CACA0", "lr": "0x710008C25C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "ClearPlayLog", "wire_order": "in_data[0x10]"},
+      "30900": {"vt": "0x348", "func": "0x71000CACB0", "lr": "0x710008C3DC", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [21, 9, 5], "name": "SendFriendInvitationV1", "wire_order": "in_buf0; in_buf2; in_buf1; in_data[0x28]"},
+      "30901": {"vt": "0x350", "func": "0x71000CACC0", "lr": "0x710008C5CC", "inbytes":  "0x30", "outbytes":   "0x0", "buffers": [21, 9, 5], "name": "SendFriendInvitationV2", "wire_order": "in_buf0; in_buf1; in_buf2; in_data[0x30]"},
+      "30910": {"vt": "0x358", "func": "0x71000CACD0", "lr": "0x710008C7B0", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [9], "name": "ReadFriendInvitation", "wire_order": "in_buf0; in_data[0x10]"},
+      "30911": {"vt": "0x360", "func": "0x71000CACE0", "lr": "0x710008C96C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "ReadAllFriendInvitations", "wire_order": "in_data[0x10]"},
+      "31000": {"vt": "0x368", "func": "0x71000CACF0", "lr": "0x710008CADC", "inbytes":  "0x28", "outbytes":   "0x0", "outinterfaces": ["nn::friends::detail::ipc::INotificationService"], "_srv_outinterfaces": "SRV_710015CA60", "name": "OpenUser", "wire_order": "in_data[0x28]"},
+      "40100": {"vt": "0x378", "func": "0x71000CAD50", "lr": "0x710008CEDC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteFriendListCache", "wire_order": "in_u64_0; in_u64_1"},
+      "40400": {"vt": "0x380", "func": "0x71000CAD60", "lr": "0x710008D04C", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteBlockedUserListCache", "wire_order": "in_u64_0; in_u64_1"},
+      "49900": {"vt": "0x388", "func": "0x71000CAD70", "lr": "0x710008D1BC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "DeleteNetworkServiceAccountCache", "wire_order": "in_u64_0; in_u64_1"}
+    },
+    "nn::friends::detail::ipc::INotificationService": {
+      "_srv": "SRV_710015CA68",
+      "_hash": "a74ad54acffa6305",
+      "0": {"vt":  "0x20", "lr": "0x710008D718", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x710008D4B0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Clear", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "lr": "0x710008D4EC", "inbytes":   "0x0", "outbytes":  "0x10", "name": "Pop", "wire_order": "out_data[0x10]"}
+    },
+    "_services": ["acc:aa", "acc:e:u1", "arp:r", "bgtc:t", "bsd:a", "bsd:s", "bsd:u", "fatal:u", "friend:a", "friend:m", "friend:s", "friend:u", "friend:v", "fsp-srv", "nifm:a", "nifm:s", "nifm:u", "npns:s", "nsd:a", "nsd:u", "ovln:snd", "pdm:qry", "psc:m", "set:sys", "sfdnsres", "srepo:a", "srepo:u", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"],
+    "_invokes": {
+      "bgtc:t": {
+        "interface": "nn::bgtc::ITaskServiceRoot",
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x710007d610", "cmd_proof_offset": "0x710007d638", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710007ce64"] }
+        }
+      },
+      "bsd:s": {
+        "interface": "nn::socket::sf::IClient",
+        "commands": {
+          "33": { "name": "RegisterClientShared", "vt_off": "0x128", "stub": "0x710003fd80", "cmd_proof_offset": "0x710003fd84", "cmd_proof_instruction": "mov w5,#0x21", "cmd_hex_and_dec": "0x21 / 33", "calls": ["0x710003bff0"] }
+        }
+      },
+      "fsp-srv": {
+        "interface": "nn::fssrv::sf::IFileSystemProxy",
+        "commands": {
+          "23": { "name": "CreateSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x90", "stub": "0x710000ed40", "cmd_proof_offset": "0x710000ed44", "cmd_proof_instruction": "mov w3,#0x17", "cmd_hex_and_dec": "0x17 / 23", "calls": ["0x710001ba20"] },
+          "52": { "name": "OpenSaveDataFileSystemBySystemSaveDataId", "vt_off": "0x128", "stub": "0x710000f100", "cmd_proof_offset": "0x710000f15c", "cmd_proof_instruction": "mov w4,#0x34", "cmd_hex_and_dec": "0x34 / 52", "calls": ["0x710001bff8"] }
+        }
+      },
+      "nifm:a": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000eb600", "cmd_proof_offset": "0x71000eb62c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000ead84", "0x71000eaf04", "0x71000eb084"] }
+        }
+      },
+      "nifm:s": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000eb600", "cmd_proof_offset": "0x71000eb62c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000ead84", "0x71000eaf04", "0x71000eb084"] }
+        }
+      },
+      "nifm:u": {
+        "interface": "nn::nifm::detail::IStaticService",
+        "commands": {
+          "0": { "vt_off": "0x28", "stub": "0x71000eb600", "cmd_proof_offset": "0x71000eb62c", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000ead84", "0x71000eaf04", "0x71000eb084"] }
+        }
+      }
+    }
+  }
+}

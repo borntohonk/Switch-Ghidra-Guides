@@ -1,0 +1,173 @@
+{
+  "usb_services": {
+    "program_identified": "USB_services",
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710008DCF8",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x71000161C0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x710001632C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x71000164C8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x71000160F8", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x710001662C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::usb::ds::IDsRootSession": {
+      "_srv": "SRV_710008ED58",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 2/15 in USB_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x71000244D8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::usb::ds::IDsService"], "_srv_outinterfaces": "SRV_710008ED60", "name": "CreateDsService", "wire_order": "N/A"}
+    },
+    "nn::usb::ds::IDsService": {
+      "_srv": "SRV_710008ED60",
+      "_hash": "41f7936dc8790e46",
+      "0":  {"vt":  "0x20", "func": "0x710002DA90", "lr": "0x7100024CBC", "inbytes":   "0x4", "outbytes":   "0x0", "inhandles": [1], "name": "Initialize", "wire_order": "in_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710002DAF0", "lr": "0x7100024E4C", "inbytes":   "0x1", "outbytes":   "0x0", "outinterfaces": ["nn::usb::ds::IDsInterface"], "_srv_outinterfaces": "SRV_710008ED68", "name": "RegisterInterface", "wire_order": "in_data[0x1]"},
+      "2":  {"vt":  "0x30", "func": "0x710002DB20", "lr": "0x7100025018", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangeEvent", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x710002DB30", "lr": "0x7100024980", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetState", "wire_order": "out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x710002DB40", "lr": "0x7100024884", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ClearDeviceData", "wire_order": "N/A"},
+      "5":  {"vt":  "0x48", "func": "0x710002DB50", "lr": "0x710002517C", "inbytes":   "0x0", "outbytes":   "0x1", "buffers": [5], "name": "AddUsbStringDescriptor", "wire_order": "in_buf0; out_data[0x1]"},
+      "6":  {"vt":  "0x50", "func": "0x710002DB60", "lr": "0x7100024A74", "inbytes":   "0x1", "outbytes":   "0x0", "name": "DeleteUsbStringDescriptor", "wire_order": "in_data[0x1]"},
+      "7":  {"vt":  "0x58", "func": "0x710002DB70", "lr": "0x7100025330", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5], "name": "SetUsbDeviceDescriptor", "wire_order": "in_buf0; in_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x710002DB90", "lr": "0x71000254DC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetBinaryObjectStore", "wire_order": "buffers=[in]"},
+      "9":  {"vt":  "0x68", "func": "0x710002DBA0", "lr": "0x7100024930", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnableDevice", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x710002DBB0", "lr": "0x7100024B30", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisableDevice", "wire_order": "N/A"},
+      "11": {"vt":  "0x78", "func": "0x710002DBC0", "lr": "0x71000247C0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetSpeed", "wire_order": "out_data[0x4]"}
+    },
+    "nn::usb::ds::IDsInterface": {
+      "_srv": "SRV_710008ED68",
+      "_hash": "5afb30dce9c4900f",
+      "0":  {"vt":  "0x20", "func": "0x7100027F60", "lr": "0x7100025B8C", "inbytes":   "0x1", "outbytes":   "0x0", "outinterfaces": ["nn::usb::ds::IDsEndpoint"], "_srv_outinterfaces": "SRV_710008ED70", "name": "RegisterEndpoint", "wire_order": "in_data[0x1]"},
+      "1":  {"vt":  "0x28", "func": "0x7100027F90", "lr": "0x7100025D58", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetSetupEvent", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x7100027FA0", "lr": "0x7100025EBC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetSetupPacket", "wire_order": "buffers=[out]"},
+      "3":  {"vt":  "0x38", "func": "0x7100027FB0", "lr": "0x7100026030", "inbytes":  "0x10", "outbytes":   "0x4", "name": "CtrlInAsync", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x7100027FC0", "lr": "0x71000261B0", "inbytes":  "0x10", "outbytes":   "0x4", "name": "CtrlOutAsync", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "5":  {"vt":  "0x48", "func": "0x7100027FD0", "lr": "0x7100026328", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCtrlInCompletionEvent", "wire_order": "N/A"},
+      "6":  {"vt":  "0x50", "func": "0x7100027FE0", "lr": "0x71000258E0", "inbytes":   "0x0", "outbytes":  "0x84", "name": "GetCtrlInUrbReport", "wire_order": "out_data[0x84]"},
+      "7":  {"vt":  "0x58", "func": "0x7100027FF0", "lr": "0x7100026488", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCtrlOutCompletionEvent", "wire_order": "N/A"},
+      "8":  {"vt":  "0x60", "func": "0x7100028000", "lr": "0x71000259D8", "inbytes":   "0x0", "outbytes":  "0x84", "name": "GetCtrlOutUrbReport", "wire_order": "out_data[0x84]"},
+      "9":  {"vt":  "0x68", "func": "0x7100028010", "lr": "0x71000257CC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "CtrlStall", "wire_order": "N/A"},
+      "10": {"vt":  "0x70", "func": "0x7100028020", "lr": "0x71000265F0", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [5], "name": "AppendConfigurationData", "wire_order": "in_buf0; in_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x7100028030", "lr": "0x710002679C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "SetGuid", "wire_order": "in_buf0"},
+      "12": {"vt":  "0x80", "func": "0x7100028040", "lr": "0x710002690C", "inbytes":   "0x8", "outbytes":   "0x0", "inhandles": [1], "name": "RegisterTransferMemory", "wire_order": "in_data[0x8]"}
+    },
+    "nn::usb::ds::IDsEndpoint": {
+      "_srv": "SRV_710008ED70",
+      "_hash": "6d13bec5b12c862d",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x7100027130", "inbytes":  "0x10", "outbytes":   "0x4", "name": "PostBufferAsync", "wire_order": "in_data[0x10]; out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x7100026BD0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cancel", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x71000272A8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCompletionEvent", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x7100026CEC", "inbytes":   "0x0", "outbytes":  "0x84", "name": "GetUrbReport", "wire_order": "out_data[0x84]"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x7100026E00", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Stall", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x7100014E60", "lr": "0x7100026C80", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetZlt", "wire_order": "in_data[0x1]"},
+      "6": {"vt":  "0x50", "func": "0x7100014FA0", "lr": "0x7100026EC4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsStalled", "wire_order": "out_data[0x1]"},
+      "7": {"vt":  "0x58", "func": "0x7100015080", "lr": "0x7100027408", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStallClearedEvent", "wire_order": "N/A"}
+    },
+    "nn::usb::hs::IClientRootSession": {
+      "_srv": "SRV_710008F728",
+      "_hash": "fca24a75d7bb0257",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x7100034268", "inbytes":   "0x0", "outbytes":   "0x0", "inhandles": [1], "name": "BindClientProcess", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x71000343C4", "inbytes":  "0x10", "outbytes":   "0x4", "buffers": [6], "name": "QueryAllInterfaces", "wire_order": "in_data[0x10]; out_data[0x4]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x7100034594", "inbytes":  "0x10", "outbytes":   "0x4", "buffers": [6], "name": "QueryAvailableInterfaces", "wire_order": "in_data[0x10]; out_data[0x4]; buffers=[out]"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x710003475C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "QueryAcquiredInterfaces", "wire_order": "out_data[0x4]; buffers=[out]"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x710003490C", "inbytes":  "0x12", "outbytes":   "0x0", "outhandles": [1], "name": "CreateInterfaceAvailableEvent", "wire_order": "in_data[0x12]"},
+      "5": {"vt":  "0x48", "func": "0x7100014E60", "lr": "0x7100034080", "inbytes":   "0x1", "outbytes":   "0x0", "name": "DestroyInterfaceAvailableEvent", "wire_order": "in_data[0x1]"},
+      "6": {"vt":  "0x50", "func": "0x7100014FA0", "lr": "0x7100034AB8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetInterfaceStateChangeEvent", "wire_order": "N/A"},
+      "7": {"vt":  "0x58", "func": "0x7100015080", "lr": "0x7100034C24", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [6, 6], "outinterfaces": ["nn::usb::hs::IClientIfSession"], "_srv_outinterfaces": "SRV_710008F730", "name": "AcquireUsbIf", "wire_order": "in_data[0x4]; buffers=[out, out]"},
+      "8": {"vt":  "0x60", "func": "0x7100015160", "lr": "0x7100034E40", "inbytes":   "0xC", "outbytes":   "0x4", "name": "SetTestMode", "wire_order": "in_data[0xC]; out_data[0x4]"}
+    },
+    "nn::usb::hs::IClientIfSession": {
+      "_srv": "SRV_710008F730",
+      "_hash": "563ba861233b4532",
+      "0": {"vt":  "0x20", "func": "0x7100038EE0", "lr": "0x71000353B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetStateChangeEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100038EF0", "lr": "0x7100035520", "inbytes":   "0x1", "outbytes":   "0x0", "buffers": [6], "name": "SetInterface", "wire_order": "in_data[0x1]; out_buf0"},
+      "2": {"vt":  "0x30", "func": "0x7100038F00", "lr": "0x71000356CC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetInterface", "wire_order": "out_buf0"},
+      "3": {"vt":  "0x38", "func": "0x7100038F10", "lr": "0x7100035840", "inbytes":   "0x1", "outbytes":   "0x0", "buffers": [6], "name": "GetAlternateInterface", "wire_order": "in_data[0x1]; out_buf0"},
+      "4": {"vt":  "0x40", "func": "0x7100038F20", "lr": "0x7100035100", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetCurrentFrame", "wire_order": "out_data[0x4]"},
+      "5": {"vt":  "0x48", "func": "0x7100038F30", "lr": "0x71000359EC", "inbytes":  "0x10", "outbytes":   "0x0", "name": "CtrlXferAsync", "wire_order": "in_data[0x10]"},
+      "6": {"vt":  "0x50", "func": "0x7100038F40", "lr": "0x7100035B68", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCtrlXferCompletionEvent", "wire_order": "N/A"},
+      "7": {"vt":  "0x58", "func": "0x7100038F50", "lr": "0x7100035CCC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetCtrlXferReport", "wire_order": "out_buf0"},
+      "8": {"vt":  "0x60", "func": "0x7100038F60", "lr": "0x7100035260", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetDevice", "wire_order": "N/A"},
+      "9": {"vt":  "0x68", "func": "0x7100038F70", "lr": "0x7100035E40", "inbytes":  "0x14", "outbytes":   "0x7", "outinterfaces": ["nn::usb::hs::IClientEpSession"], "_srv_outinterfaces": "SRV_710008F738", "name": "OpenUsbEp", "wire_order": "in_data[0x14]; out_data[0x7]"}
+    },
+    "nn::usb::hs::IClientEpSession": {
+      "_srv": "SRV_710008F738",
+      "_hash": "4e9ffc63cdbd1107",
+      "_hash_alt": "51ff3566b49327b9",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x7100036280", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ReOpen", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x71000361B8", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Close", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x7100036548", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetCompletionEvent", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x7100036210", "inbytes":   "0x0", "outbytes":   "0x0", "name": "PopulateRing", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x71000366B0", "inbytes":  "0x18", "outbytes":   "0x4", "name": "PostBufferAsync", "wire_order": "in_data[0x18]; out_data[0x4]"},
+      "5": {"vt":  "0x48", "func": "0x7100014E60", "lr": "0x7100036834", "inbytes":   "0x4", "outbytes":   "0x4", "buffers": [34], "name": "GetXferReport", "wire_order": "in_data[0x4]; out_data[0x4]; buffers=[out]"},
+      "6": {"vt":  "0x50", "func": "0x7100014FA0", "lr": "0x71000369FC", "inbytes":  "0x20", "outbytes":   "0x4", "buffers": [33], "name": "BatchBufferAsync", "wire_order": "in_data[0x20]; out_data[0x4]; buffers=[in]"},
+      "7": {"vt":  "0x58", "func": "0x7100015080", "lr": "0x7100036378", "inbytes":  "0x10", "outbytes":   "0x0", "name": "CreateSmmuSpace", "wire_order": "in_data[0x10]"},
+      "8": {"vt":  "0x60", "func": "0x7100015160", "lr": "0x7100036BBC", "inbytes":   "0x4", "outbytes":   "0x0", "inhandles": [1], "name": "ShareReportRing", "wire_order": "in_data[0x4]"}
+    },
+    "nn::usb::pd::detail::IPdManager": {
+      "_srv": "SRV_7100090558",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 9/15 in USB_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100058718", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::usb::pd::detail::IPdSession"], "_srv_outinterfaces": "SRV_7100090560", "name": "OpenSession", "wire_order": "N/A"}
+    },
+    "nn::usb::pd::detail::IPdSession": {
+      "_srv": "SRV_7100090560",
+      "_hash": "c1bfa73ed4796aa0",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x7100058E18", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "BindNoticeEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x7100058C48", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UnbindNoticeEvent", "wire_order": "N/A"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x7100058A34", "inbytes":   "0x0", "outbytes":  "0x14", "name": "GetStatus", "wire_order": "out_data[0x14]"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x7100058B5C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetNotice", "wire_order": "out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x71000589F4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "EnablePowerRequestNotice", "wire_order": "N/A"},
+      "5": {"vt":  "0x48", "func": "0x7100014E60", "lr": "0x7100058C1C", "inbytes":   "0x0", "outbytes":   "0x0", "name": "DisablePowerRequestNotice", "wire_order": "N/A"},
+      "6": {"vt":  "0x50", "func": "0x7100014FA0", "lr": "0x7100058AE8", "inbytes":   "0x1", "outbytes":   "0x0", "name": "ReplyPowerRequest", "wire_order": "in_data[0x1]"}
+    },
+    "nn::usb::pd::detail::IPdCradleManager": {
+      "_srv": "SRV_7100090568",
+      "_hash": "ae38467756a410ed",
+      "_likely_basis": "DB position 11/15 in USB_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100059098", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::usb::pd::detail::IPdCradleSession"], "_srv_outinterfaces": "SRV_7100090570", "name": "OpenCradleSession", "wire_order": "N/A"}
+    },
+    "nn::usb::pd::detail::IPdCradleSession": {
+      "_srv": "SRV_7100090570",
+      "_hash": "f54611185573ebba",
+      "0": {"vt":  "0x20", "func": "0x7100014800", "lr": "0x7100059568", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetCradleVdo", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x7100014AD0", "lr": "0x7100059940", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetCradleVdo", "wire_order": "in_data[0x4]; out_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100014AF0", "lr": "0x71000595B4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "ResetCradleUsbHub", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100014D50", "lr": "0x7100059454", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetHostPdcFirmwareType", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000139F0", "lr": "0x710005967C", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetHostPdcFirmwareRevision", "wire_order": "out_data[0x2]"},
+      "5": {"vt":  "0x48", "func": "0x7100014E60", "lr": "0x7100059520", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetHostPdcManufactureId", "wire_order": "out_data[0x2]"},
+      "6": {"vt":  "0x50", "func": "0x7100014FA0", "lr": "0x7100059638", "inbytes":   "0x0", "outbytes":   "0x2", "name": "GetHostPdcDeviceId", "wire_order": "out_data[0x2]"},
+      "7": {"vt":  "0x58", "func": "0x7100015080", "lr": "0x7100059710", "inbytes":   "0x0", "outbytes":   "0x1", "name": "EnableCradleRecovery", "wire_order": "out_data[0x1]"},
+      "8": {"vt":  "0x60", "func": "0x7100015160", "lr": "0x7100059378", "inbytes":   "0x0", "outbytes":   "0x1", "name": "DisableCradleRecovery", "wire_order": "out_data[0x1]"}
+    },
+    "nn::usb::pm::IPmMainService": {
+      "_srv": "SRV_7100090860",
+      "_hash": "241a2b4010232698",
+      "0": {"vt":  "0x20", "func": "0x710005BC50", "lr": "0x710005C138", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetPowerEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "func": "0x710005BC60", "lr": "0x710005C29C", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [6], "name": "GetPowerState", "wire_order": "buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710005BC70", "lr": "0x710005C408", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetDataEvent", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x710005BC80", "lr": "0x710005BE70", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDataRole", "wire_order": "out_data[0x4]"},
+      "4": {"vt":  "0x40", "func": "0x710005BC90", "lr": "0x710005BF48", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetDiagData", "wire_order": "in_data[0x8]"},
+      "5": {"vt":  "0x48", "func": "0x710005BC90", "lr": "0x710005C570", "inbytes":   "0x4", "outbytes":   "0x4", "name": "GetDiagData", "wire_order": "in_data[0x4]; out_data[0x4]"}
+    },
+    "nn::usb::pm::IPmObserverService": {
+      "_srv": "SRV_71000908E8",
+      "_hash": "fbf1578afdde9d50",
+      "0": {"vt":  "0x20", "lr": "0x710005C8B8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "GetTopologyChangeEvent", "wire_order": "N/A"},
+      "1": {"vt":  "0x28", "lr": "0x710005CA1C", "inbytes":   "0x0", "outbytes":   "0x4", "buffers": [6], "name": "GetFlattenedTopology", "wire_order": "out_data[0x4]; buffers=[out]"}
+    },
+    "nn::usb::qdb::IQdbManager": {
+      "_srv": "SRV_71000909A8",
+      "_hash": "2ba0703b406ef890",
+      "0": {"vt":  "0x20", "lr": "0x7100060CBC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [5], "name": "ImportQuirkDevices", "wire_order": "buffers=[in]"},
+      "1": {"vt":  "0x28", "lr": "0x7100060E34", "inbytes":   "0x6", "outbytes":   "0x1", "buffers": [5], "name": "HasQuirk", "wire_order": "in_data[0x6]; out_data[0x1]; buffers=[in]"}
+    },
+    "_services": ["clkrst", "fatal:u", "i2c:pcv", "ins:s", "psc:m", "set:sys", "usb:ds", "usb:hs", "usb:hs:a", "usb:obsv", "usb:pd", "usb:pd:c", "usb:pm", "usb:qdb"],
+    "_invokes": {
+      "ins:s": {
+        "interface": "nn::ins::ISenderManager",
+        "commands": {
+          "0": { "name": "GetNotifyEvent", "vt_off": "0x20", "stub": "0x710005d130", "cmd_proof_offset": "0x710005d138", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710005ce50"] }
+        }
+      }
+    }
+  }
+}

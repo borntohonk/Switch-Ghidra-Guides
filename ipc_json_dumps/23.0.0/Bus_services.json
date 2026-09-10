@@ -1,0 +1,178 @@
+{
+  "bus_services": {
+    "program_identified": "Bus_services",
+    "nn::pinmux::IManager": {
+      "_srv": "SRV_7100058090",
+      "_hash": "a81cc4d061fa9988",
+      "_likely_basis": "DB position 1/15 in Bus_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x710000D90C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::pinmux::ISession"], "_srv_outinterfaces": "SRV_7100058098", "name": "OpenSession", "wire_order": "in_data[0x4]"}
+    },
+    "nn::pinmux::ISession": {
+      "_srv": "SRV_7100058098",
+      "_hash": "2e0bbbdbedcc0eb6",
+      "0":  {"vt":  "0x20", "func": "0x71000292D0", "lr": "0x710000DC10", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetPinAssignment", "wire_order": "in_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x7100029300", "lr": "0x710000DED8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetPinAssignment", "wire_order": "out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x7100029350", "lr": "0x710000DD80", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetPinAssignmentForHardwareTest", "wire_order": "in_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x7100029370", "lr": "0x710000DDC8", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetSfioConfiguration", "wire_order": "in_data[0x1]"},
+      "4":  {"vt":  "0x40", "func": "0x71000293C0", "lr": "0x710000DCB0", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetSfioConfiguration", "wire_order": "out_data[0x1]"},
+      "5":  {"vt":  "0x48", "func": "0x71000293D0", "lr": "0x710000DF84", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetInputEnableConfiguration", "wire_order": "in_data[0x1]"},
+      "6":  {"vt":  "0x50", "func": "0x7100029420", "lr": "0x710000E060", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetInputEnableConfiguration", "wire_order": "out_data[0x1]"},
+      "7":  {"vt":  "0x58", "func": "0x7100029440", "lr": "0x710000DE28", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetPullConfiguration", "wire_order": "in_data[0x4]"},
+      "8":  {"vt":  "0x60", "func": "0x7100029490", "lr": "0x710000E150", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetPullConfiguration", "wire_order": "out_data[0x4]"},
+      "9":  {"vt":  "0x68", "func": "0x7100029510", "lr": "0x710000DD24", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetPmConfiguration", "wire_order": "in_data[0x4]"},
+      "10": {"vt":  "0x70", "func": "0x7100029520", "lr": "0x710000E10C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetPmConfiguration", "wire_order": "out_data[0x4]"},
+      "11": {"vt":  "0x78", "func": "0x7100029530", "lr": "0x710000DC6C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "Cmd11", "wire_order": "in_data[0x4]"},
+      "12": {"vt":  "0x80", "func": "0x7100029580", "lr": "0x710000DCF4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "Cmd12", "wire_order": "out_data[0x4]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_7100058600",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x710000FBD0", "lr": "0x7100010FD0", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x710000FEA0", "lr": "0x710001113C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x710000FEC0", "lr": "0x71000112D8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100010120", "lr": "0x7100010F08", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x710000ED30", "lr": "0x710001143C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "nn::gpio::IManager": {
+      "_srv": "SRV_7100059968",
+      "_hash": "5f77c95831efa835",
+      "0":  {"vt":  "0x20", "func": "0x710000FBD0", "lr": "0x71000278BC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::gpio::IPadSession"], "_srv_outinterfaces": "SRV_7100059970", "name": "OpenSessionForDevDeprecated", "wire_order": "in_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710000FEA0", "lr": "0x7100027A8C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::gpio::IPadSession"], "_srv_outinterfaces": "SRV_7100059970", "name": "OpenSessionDeprecated", "wire_order": "in_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x710000FEC0", "lr": "0x7100027C5C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::gpio::IPadSession"], "_srv_outinterfaces": "SRV_7100059970", "name": "OpenSessionForTestDeprecated", "wire_order": "in_data[0x4]"},
+      "6":  {"vt":  "0x38", "func": "0x7100010120", "lr": "0x710002756C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetWakePinDebugMode", "wire_order": "in_data[0x4]"},
+      "7":  {"vt":  "0x40", "func": "0x710000ED30", "lr": "0x7100027E2C", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::gpio::IPadSession"], "_srv_outinterfaces": "SRV_7100059970", "name": "OpenSession", "wire_order": "in_data[0x8]"},
+      "8":  {"vt":  "0x48", "func": "0x7100010230", "lr": "0x7100028000", "inbytes":   "0x4", "outbytes":   "0x1", "name": "IsWakeEventActive", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "9":  {"vt":  "0x50", "func": "0x7100010370", "lr": "0x71000276E8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetWakeEventActiveFlagSetForDebug", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x58", "func": "0x7100010450", "lr": "0x7100027648", "inbytes":   "0x8", "outbytes":   "0x0", "name": "DumpStateForDebug", "wire_order": "in_data[0x8]"}
+    },
+    "nn::gpio::IPadSession": {
+      "_srv": "SRV_7100059970",
+      "_hash": "6d24cc7de149e88b",
+      "_likely_basis": "DB position 5/15 in Bus_services, anchored",
+      "0":  {"vt":  "0x20", "func": "0x71000292D0", "lr": "0x71000282A8", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDirectionDeprecated", "wire_order": "in_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x7100029300", "lr": "0x7100028604", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDirection", "wire_order": "out_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x7100029350", "lr": "0x710002845C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetInterruptMode", "wire_order": "in_data[0x4]"},
+      "3":  {"vt":  "0x38", "func": "0x7100029370", "lr": "0x71000287EC", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetInterruptMode", "wire_order": "out_data[0x4]"},
+      "4":  {"vt":  "0x40", "func": "0x71000293C0", "lr": "0x71000288A0", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetInterruptEnable", "wire_order": "in_data[0x1]"},
+      "5":  {"vt":  "0x48", "func": "0x71000293D0", "lr": "0x71000284B4", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetInterruptEnable", "wire_order": "out_data[0x1]"},
+      "8":  {"vt":  "0x50", "func": "0x7100029420", "lr": "0x710002864C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetValue", "wire_order": "in_data[0x4]"},
+      "9":  {"vt":  "0x58", "func": "0x7100029440", "lr": "0x71000286A4", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetValue", "wire_order": "out_data[0x4]"},
+      "10": {"vt":  "0x60", "func": "0x7100029490", "lr": "0x7100028BA8", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "BindInterrupt", "wire_order": "N/A"},
+      "11": {"vt":  "0x68", "func": "0x7100029510", "lr": "0x71000288FC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "UnbindInterrupt", "wire_order": "N/A"},
+      "12": {"vt":  "0x70", "func": "0x7100029520", "lr": "0x7100028390", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetDebounceEnabled", "wire_order": "in_data[0x1]"},
+      "13": {"vt":  "0x78", "func": "0x7100029530", "lr": "0x7100028558", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetDebounceEnabled", "wire_order": "out_data[0x1]"},
+      "14": {"vt":  "0x80", "func": "0x7100029580", "lr": "0x71000283D4", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDebounceTime", "wire_order": "in_data[0x4]"},
+      "15": {"vt":  "0x88", "func": "0x7100029590", "lr": "0x7100028360", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetDebounceTime", "wire_order": "out_data[0x4]"},
+      "16": {"vt":  "0x90", "func": "0x71000295E0", "lr": "0x7100028750", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetValueForSleepState", "wire_order": "in_data[0x4]"},
+      "17": {"vt":  "0x98", "func": "0x7100029600", "lr": "0x71000287A8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetMaxDebounceTime", "wire_order": "out_data[0x4]"},
+      "18": {"vt":  "0xA0", "func": "0x7100029650", "lr": "0x7100028A18", "inbytes":   "0x0", "outbytes":   "0x0", "name": "SetDirectionInput", "wire_order": "N/A"},
+      "19": {"vt":  "0xA8", "func": "0x7100029660", "lr": "0x710002895C", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDirectionOutput", "wire_order": "in_data[0x4]"},
+      "20": {"vt":  "0xB0", "func": "0x7100029680", "lr": "0x7100028304", "inbytes":   "0x1", "outbytes":   "0x0", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x1]"},
+      "21": {"vt":  "0xB8", "func": "0x7100029690", "lr": "0x710002842C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "NOT_IN_DATABASE", "wire_order": "out_data[0x1]"}
+    },
+    "nn::i2c::IManager": {
+      "_srv": "SRV_7100059F00",
+      "_hash": "7bb7c6af390ce886",
+      "0": {"vt":  "0x20", "lr": "0x710002C34C", "inbytes":  "0x10", "outbytes":   "0x0", "outinterfaces": ["nn::i2c::ISession"], "_srv_outinterfaces": "SRV_7100059F08", "name": "OpenSessionForDev", "wire_order": "in_data[0x10]"},
+      "1": {"vt":  "0x28", "lr": "0x710002C52C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::i2c::ISession"], "_srv_outinterfaces": "SRV_7100059F08", "name": "OpenSession", "wire_order": "in_data[0x4]"},
+      "4": {"vt":  "0x30", "lr": "0x710002C6FC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::i2c::ISession"], "_srv_outinterfaces": "SRV_7100059F08", "name": "OpenSession2", "wire_order": "in_data[0x4]"}
+    },
+    "nn::i2c::ISession": {
+      "_srv": "SRV_7100059F08",
+      "_hash": "e24e06ae4d8726cc",
+      "_hash_alt": "9200a4cc01a871f9",
+      "_likely_basis": "DB position 7/15 in Bus_services, anchored",
+      "10": {"vt":  "0x20", "lr": "0x710002CA40", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [33], "name": "Send", "wire_order": "in_data[0x4]; buffers=[in]"},
+      "11": {"vt":  "0x28", "lr": "0x710002CC00", "inbytes":   "0x4", "outbytes":   "0x0", "buffers": [34], "name": "Receive", "wire_order": "in_data[0x4]; buffers=[out]"},
+      "12": {"vt":  "0x30", "lr": "0x710002CDC0", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [34, 9], "name": "ExecuteCommandList", "wire_order": "buffers=[out, in]"}
+    },
+    "nn::led::detail::IManager": {
+      "_srv": "SRV_710005A360",
+      "_hash": "a81cc4d061fa9988",
+      "_likely_basis": "DB position 8/15 in Bus_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x710002F3AC", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::led::detail::IController"], "_srv_outinterfaces": "SRV_710005A368", "name": "OpenController", "wire_order": "in_data[0x4]"}
+    },
+    "nn::led::detail::IController": {
+      "_srv": "SRV_710005A368",
+      "_hash": "af788e65f08d20d6",
+      "0":  {"vt":  "0x20", "func": "0x710002E6E0", "lr": "0x710002F6AC", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StartLighting", "wire_order": "N/A"},
+      "1":  {"vt":  "0x28", "func": "0x710002E6F0", "lr": "0x710002FAC4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StopLighting", "wire_order": "N/A"},
+      "2":  {"vt":  "0x30", "func": "0x710002E740", "lr": "0x710002F934", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetLightingMode", "wire_order": "in_data[0x1]"},
+      "3":  {"vt":  "0x38", "func": "0x710002E750", "lr": "0x710002F9D0", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetLightingMode", "wire_order": "out_data[0x1]"},
+      "4":  {"vt":  "0x40", "func": "0x710002E7A0", "lr": "0x710002F7D0", "inbytes":   "0x0", "outbytes":   "0x1", "name": "IsLighting", "wire_order": "out_data[0x1]"},
+      "5":  {"vt":  "0x48", "func": "0x710002E7F0", "lr": "0x710002FBEC", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetRisingTime", "wire_order": "in_data[0x8]"},
+      "6":  {"vt":  "0x50", "func": "0x710002E800", "lr": "0x710002FCBC", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetRisingTime", "wire_order": "out_data[0x8]"},
+      "7":  {"vt":  "0x58", "func": "0x710002E850", "lr": "0x710002FA80", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetFallingTime", "wire_order": "in_data[0x8]"},
+      "8":  {"vt":  "0x60", "func": "0x710002E860", "lr": "0x710002FE08", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetFallingTime", "wire_order": "out_data[0x8]"},
+      "9":  {"vt":  "0x68", "func": "0x710002E8B0", "lr": "0x710002F8A8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetPeakTime", "wire_order": "in_data[0x8]"},
+      "10": {"vt":  "0x70", "func": "0x710002E8C0", "lr": "0x710002FD5C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetPeakTime", "wire_order": "out_data[0x8]"},
+      "11": {"vt":  "0x78", "func": "0x710002E910", "lr": "0x710002F778", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetPulseInterval", "wire_order": "in_data[0x8]"},
+      "12": {"vt":  "0x80", "func": "0x710002E920", "lr": "0x710002F860", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetPulseInterval", "wire_order": "out_data[0x8]"},
+      "13": {"vt":  "0x88", "func": "0x710002E970", "lr": "0x710002FC64", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetPulseCount", "wire_order": "in_data[0x4]"},
+      "14": {"vt":  "0x90", "func": "0x710002E980", "lr": "0x710002F730", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetPulseCount", "wire_order": "out_data[0x4]"},
+      "15": {"vt":  "0x98", "func": "0x710002E9D0", "lr": "0x710002F98C", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetMaxPulseCount", "wire_order": "out_data[0x4]"},
+      "16": {"vt":  "0xA0", "func": "0x710002EA20", "lr": "0x710002F6D8", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetBreathInterval", "wire_order": "in_data[0x8]"},
+      "17": {"vt":  "0xA8", "func": "0x710002EA30", "lr": "0x710002FAEC", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetBreathInterval", "wire_order": "out_data[0x8]"},
+      "18": {"vt":  "0xB0", "func": "0x710002EA80", "lr": "0x710002FD04", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetConstantBrightness", "wire_order": "in_data[0x4]"},
+      "19": {"vt":  "0xB8", "func": "0x710002EA90", "lr": "0x710002FF48", "inbytes":   "0x0", "outbytes":   "0x4", "name": "GetConstantBrightness", "wire_order": "out_data[0x4]"},
+      "20": {"vt":  "0xC0", "func": "0x710002EAA0", "lr": "0x710002FB30", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetBreathingStatus", "wire_order": "out_data[0x1]"},
+      "21": {"vt":  "0xC8", "func": "0x710002EAF0", "lr": "0x710002FC38", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd21", "wire_order": "N/A"},
+      "22": {"vt":  "0xD0", "func": "0x710002EB40", "lr": "0x710002FEC4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd22", "wire_order": "N/A"},
+      "23": {"vt":  "0xD8", "func": "0x710002EB90", "lr": "0x7100030000", "inbytes":   "0x1", "outbytes":   "0x0", "name": "Cmd23", "wire_order": "in_data[0x1]"},
+      "24": {"vt":  "0xE0", "func": "0x710002EBA0", "lr": "0x710002F8EC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "Cmd24", "wire_order": "out_data[0x1]"}
+    },
+    "nn::pwm::IManager": {
+      "_srv": "SRV_710005A9F0",
+      "_hash": "7ce43fdf3d513ae9",
+      "0": {"vt":  "0x20", "lr": "0x710003509C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::pwm::IChannelSession"], "_srv_outinterfaces": "SRV_710005A9F8", "name": "OpenSessionForDev", "wire_order": "in_data[0x4]"},
+      "1": {"vt":  "0x28", "lr": "0x710003526C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::pwm::IChannelSession"], "_srv_outinterfaces": "SRV_710005A9F8", "name": "OpenSession", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "lr": "0x710003543C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::pwm::IChannelSession"], "_srv_outinterfaces": "SRV_710005A9F8", "name": "OpenSession2", "wire_order": "in_data[0x4]"}
+    },
+    "nn::pwm::IChannelSession": {
+      "_srv": "SRV_710005A9F8",
+      "_hash": "374a909ca1deb230",
+      "0": {"vt":  "0x20", "func": "0x710000FBD0", "lr": "0x7100035874", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetPeriod", "wire_order": "in_data[0x8]"},
+      "1": {"vt":  "0x28", "func": "0x710000FEA0", "lr": "0x71000359D0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetPeriod", "wire_order": "out_data[0x8]"},
+      "4": {"vt":  "0x30", "func": "0x710000FEC0", "lr": "0x7100035744", "inbytes":   "0x1", "outbytes":   "0x0", "name": "SetEnabled", "wire_order": "in_data[0x1]"},
+      "5": {"vt":  "0x38", "func": "0x7100010120", "lr": "0x710003592C", "inbytes":   "0x0", "outbytes":   "0x1", "name": "GetEnabled", "wire_order": "out_data[0x1]"},
+      "6": {"vt":  "0x40", "func": "0x710000ED30", "lr": "0x7100035C0C", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetDutyCycle", "wire_order": "in_data[0x8]"},
+      "7": {"vt":  "0x48", "func": "0x7100010230", "lr": "0x71000357C0", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetDutyCycle", "wire_order": "out_data[0x8]"}
+    },
+    "nn::sasbus::IManager": {
+      "_srv": "SRV_710005AC90",
+      "_hash": "a81cc4d061fa9988",
+      "_likely_basis": "DB position 12/15 in Bus_services, anchored",
+      "0": {"vt":  "0x20", "lr": "0x7100037E3C", "inbytes":   "0x4", "outbytes":   "0x0", "outinterfaces": ["nn::sasbus::ISession"], "_srv_outinterfaces": "SRV_710005AC98", "name": "OpenSession", "wire_order": "in_data[0x4]"}
+    },
+    "nn::sasbus::ISession": {
+      "_srv": "SRV_710005AC98",
+      "_hash": "efc96f09688d1143",
+      "0": {"vt":  "0x20", "func": "0x710000FBD0", "lr": "0x7100038330", "inbytes":   "0x1", "outbytes":   "0x0", "buffers": [33], "name": "Send", "wire_order": "in_data[0x1]; buffers=[in]"},
+      "1": {"vt":  "0x28", "func": "0x710000FEA0", "lr": "0x71000384E0", "inbytes":   "0x1", "outbytes":   "0x0", "buffers": [34], "name": "Receive", "wire_order": "in_data[0x1]; buffers=[out]"},
+      "2": {"vt":  "0x30", "func": "0x710000FEC0", "lr": "0x7100038694", "inbytes":  "0x18", "outbytes":   "0x0", "inhandles": [1], "name": "StartPeriodicReceiveMode", "wire_order": "in_data[0x18]"},
+      "3": {"vt":  "0x38", "func": "0x7100010120", "lr": "0x71000381C4", "inbytes":   "0x0", "outbytes":   "0x0", "name": "StopPeriodicReceiveMode", "wire_order": "N/A"},
+      "4": {"vt":  "0x40", "func": "0x710000ED30", "lr": "0x7100038820", "inbytes":  "0x10", "outbytes":   "0x0", "inhandles": [1], "name": "Cmd4", "wire_order": "in_data[0x10]"},
+      "5": {"vt":  "0x48", "func": "0x7100010230", "lr": "0x7100038170", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Cmd5", "wire_order": "N/A"}
+    },
+    "nn::uart::IManager": {
+      "_srv": "SRV_710005AF40",
+      "_hash": "972997f112de58b0",
+      "6": {"vt":  "0x20", "lr": "0x710003B1A8", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::uart::IPortSession"], "_srv_outinterfaces": "SRV_710005AF48", "name": "CreatePortSession", "wire_order": "N/A"}
+    },
+    "nn::uart::IPortSession": {
+      "_srv": "SRV_710005AF48",
+      "_hash": "fb756410f6f4357a",
+      "_hash_alt": "8fef5b95276ac77f",
+      "0": {"vt":  "0x20", "func": "0x710000FBD0", "lr": "0x710003B828", "inbytes":  "0x28", "outbytes":   "0x1", "inhandles": [1, 1], "name": "OpenPort", "wire_order": "in_data[0x28]; out_data[0x1]"},
+      "1": {"vt":  "0x28", "func": "0x710000FEA0", "lr": "0x710003BA58", "inbytes":  "0x28", "outbytes":   "0x1", "inhandles": [1, 1], "name": "OpenPortForDev", "wire_order": "in_data[0x28]; out_data[0x1]"},
+      "2": {"vt":  "0x30", "func": "0x710000FEC0", "lr": "0x710003B538", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetWritableLength", "wire_order": "out_data[0x8]"},
+      "3": {"vt":  "0x38", "func": "0x7100010120", "lr": "0x710003BC7C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [33], "name": "Send", "wire_order": "out_data[0x8]; buffers=[in]"},
+      "4": {"vt":  "0x40", "func": "0x710000ED30", "lr": "0x710003B610", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetReadableLength", "wire_order": "out_data[0x8]"},
+      "5": {"vt":  "0x48", "func": "0x7100010230", "lr": "0x710003BE3C", "inbytes":   "0x0", "outbytes":   "0x8", "buffers": [34], "name": "Receive", "wire_order": "out_data[0x8]; buffers=[out]"},
+      "6": {"vt":  "0x50", "func": "0x7100010370", "lr": "0x710003C000", "inbytes":  "0x10", "outbytes":   "0x1", "outhandles": [1], "name": "BindPortEvent", "wire_order": "in_data[0x10]; out_data[0x1]"},
+      "7": {"vt":  "0x58", "func": "0x7100010450", "lr": "0x710003C1C0", "inbytes":   "0x4", "outbytes":   "0x1", "name": "UnbindPortEvent", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "8": {"vt":  "0x60", "func": "0x7100010530", "lr": "0x710003C338", "inbytes":  "0x28", "outbytes":   "0x0", "inhandles": [1, 1], "name": "OpenPort2", "wire_order": "in_data[0x28]"}
+    },
+    "_services": ["clkrst", "fatal:u", "i2c:pcv", "pinmux", "psc:m", "rgltr", "sasbus"]
+  }
+}
