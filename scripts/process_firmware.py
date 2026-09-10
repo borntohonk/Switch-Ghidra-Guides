@@ -162,9 +162,12 @@ def _process_filesystem_packages(master_key_revision, key_sources, fat32_nca_obj
             exfat_sdkversion = exfat_data.sdkversion
         if master_kek_source and master_kek_source not in key_sources.master_kek_sources:
             print("A new master_kek_source was detected, add it to key_sources.py")
-            tsec_root_key_02, tsec_root_key_02_dev = crypto.tsec_keygen()
-            keygen = crypto.Keygen(tsec_root_key_02)
-            keygen_dev = crypto.KeygenDev(tsec_root_key_02_dev)
+            key_sources = KeySources()
+            tsec_keygen = crypto.TsecKeygen(key_sources.tsec_secret_26)
+            tsec_root_key_02 = tsec_keygen.tsec_root_key_02
+            tsec_root_key_02_dev = tsec_keygen.tsec_root_key_02_dev
+            keygen = crypto.Keygen(tsec_keygen, isdev=False)
+            keygen_dev = crypto.Keygen(tsec_keygen, isdev=True)
             master_key_00_dev = keygen_dev.master_key[0]
             previous_master_key_dev = keygen_dev.master_key[-1]
             master_key_00 = keygen.master_key[0]
@@ -230,11 +233,17 @@ def _process_filesystem_packages(master_key_revision, key_sources, fat32_nca_obj
             # the following is intended to be writing to a file:
             print(f'\n\nIn "exosphere/program/source/boot/secmon_boot_key_data.s":\n')
 
-            print(f'Replace the key under "/* Mariko Development Master Kek Source. */", with:')
-            print(f'.byte {format_bytes_as_hex(mariko_master_kek_source_dev)}')
 
-            print(f'Replace the key under "/* Mariko Production Master Kek Source. */", with:')
-            print(f'.byte {format_bytes_as_hex(mariko_master_kek_source)}')
+            if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+                print(f'Replace the key under "/* Mariko Development Master Kek Source. */", with:')
+                print(f'.byte {format_bytes_as_hex(mariko_master_kek_source_dev)}')
+            else: mariko_master_kek_source_dev = None
+
+
+            if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+                print(f'Replace the key under "/* Mariko Production Master Kek Source. */", with:')
+                print(f'.byte {format_bytes_as_hex(mariko_master_kek_source)}')
+            else: mariko_master_kek_source = None
 
             print(f'Under "/* Development Master Key Vectors. */", add the following at the end:')
             print(f'.byte {format_bytes_as_hex(DevelopmentMasterKeyVector)} /* Master Key {master_key_keygen_list[-2]:02X} encrypted with Master Key {master_key_revision:02X}. */')
@@ -253,10 +262,11 @@ def _process_filesystem_packages(master_key_revision, key_sources, fat32_nca_obj
             print(f'That concludes what needs to be added to "exosphere/program/source/boot/secmon_boot_key_data.s"\n')
 
             print(f'in "fusee/program/source/fusee_key_derivation.cpp":\n')
-            print(f'Replace "MarikoMasterKekSource" with:')
-            print(f'{format_bytes_as_hex(mariko_master_kek_source)}')
-            print(f'Replace "MarikoMasterKekSourceDev" with:')
-            print(f'{format_bytes_as_hex(mariko_master_kek_source_dev)}')
+            if sha256(root_keys.mariko_bek).hexdigest().upper() == "491A836813E0733A0697B2FA27D0922D3D6325CE3C6BBEA982CF4691FAF6451A":
+                print(f'Replace "MarikoMasterKekSource" with:')
+                print(f'{format_bytes_as_hex(mariko_master_kek_source)}')
+                print(f'Replace "MarikoMasterKekSourceDev" with:')
+                print(f'{format_bytes_as_hex(mariko_master_kek_source_dev)}')
             print(f'Replace "EristaMasterKekSource" with:')
             print(f'{format_bytes_as_hex(master_kek_source)}')
 
@@ -928,10 +938,10 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
         nca_titleId, nca_content_type, nca_path, nca_titleid_type, nca_titleid_name = line
         if nca_titleId == "0100000000000819":  # fat32
             fat32_nca_path = nca_path
-            fat32_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            fat32_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
         if nca_titleId == "010000000000081B":  # exfat
             exfat_nca_path = nca_path
-            exfat_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            exfat_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
 
     try: 
         if exfat_nca_object:
@@ -945,46 +955,46 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
         nca_titleId, nca_content_type, nca_path, nca_titleid_type, nca_titleid_name = line
         if nca_titleId == "0100000000000809":  # system_update
             system_update_nca_path = nca_path
-            system_update_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            system_update_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
         if nca_titleId == "010000000000001E":  # account
             account_nca_path = nca_path
-            account_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            account_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, account_nca_object)
         if nca_titleId == "010000000000001F":  # ns
             ns_nca_path = nca_path
-            ns_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            ns_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, ns_nca_object)
         if nca_titleId == "0100000000000023":  # am
             am_nca_path = nca_path
-            am_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            am_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, am_nca_object)
         if nca_titleId == "0100000000000024":  # ssl
             ssl_nca_path = nca_path
-            ssl_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            ssl_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, ssl_nca_object)
         if nca_titleId == "0100000000000025":  # nim
             nim_nca_path = nca_path
-            nim_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            nim_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, nim_nca_object)
         if nca_titleId == "010000000000000F":  # nifm
             nifm_nca_path = nca_path
-            nifm_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            nifm_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, nifm_nca_object)
         if nca_titleId == "0100000000000033":  # es
             es_nca_path = nca_path
-            es_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            es_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, es_nca_object)
         if nca_titleId == "010000000000003E":  # olsc
             olsc_nca_path = nca_path
-            olsc_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            olsc_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, olsc_nca_object)
         if nca_titleId == "0100000000000006":  # usb
             usb_nca_path = nca_path
-            usb_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            usb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, usb_nca_object)
         if nca_titleId == "0100000000000803":  # browser
             browser_nca_path = nca_path
-            browser_nca_object = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
+            browser_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
 
     system_version = _extract_system_version(system_update_nca_object, master_kek_source)
     print(f'\nFirmware version: {system_version}\n')
