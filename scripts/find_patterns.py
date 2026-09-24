@@ -1523,7 +1523,10 @@ def _process_firmware_version(version: str):
 
 def _process_ams_modules(version: str):
     """Process ERPT and LOADER modules from Atmosphere package."""
+    # fetch latest official atmosphere option
     ams_string = package3_and_stratosphere.download_and_extract_package3_and_stratosphere_romfs()
+    # manual archive option
+    # ams_string = package3_and_stratosphere.download_and_extract_package3_and_stratosphere_romfs("atmosphere-1.12.0-master-259747d5f.zip")
     uncompressed_erpt_path = f'package3_and_stratosphere_extracted/uncompressed_erpt.nso0'
     
     with open('output/erpt_patch_summary.txt', 'w', encoding='utf-8') as erpt_log:

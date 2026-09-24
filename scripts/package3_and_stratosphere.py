@@ -217,14 +217,17 @@ def download_asset(release, asset_name_contains="atmosphere"):
     sys.exit(1)
 
 
-def download_and_extract_package3_and_stratosphere_romfs():
-    release = get_newest_release()
-    
-    print(f"Selected: {release['tag_name']} "
-          f"({'pre-release' if release['prerelease'] else 'stable'}) "
-          f"published {release['published_at'][:10]}")
-
-    zip_path = download_asset(release, asset_name_contains="atmosphere-")
+def download_and_extract_package3_and_stratosphere_romfs(manual_zip_path=None):
+    if manual_zip_path is not None:
+        zip_path = Path(manual_zip_path)
+        is_prerelease = "prerelease" in zip_path.name.lower()
+    else:
+        release = get_newest_release()
+        print(f"Selected: {release['tag_name']} "
+              f"({'pre-release' if release['prerelease'] else 'stable'}) "
+              f"published {release['published_at'][:10]}")
+        zip_path = download_asset(release, asset_name_contains="atmosphere-")
+        is_prerelease = release["prerelease"]
 
     match = re.search(r"atmosphere-([\d.]+).*?([0-9A-Fa-f]{9,})", zip_path.name)
     if not match:
@@ -236,7 +239,7 @@ def download_and_extract_package3_and_stratosphere_romfs():
 
     print(f"Version: {atmosphere_version}")
     print(f"Hash: {atmosphere_hash}")
-    if release['prerelease']:
+    if is_prerelease:
         ams_string = f"Atmosphere-{atmosphere_version}-prerelease-{atmosphere_hash}"
     else:
         ams_string = f"Atmosphere-{atmosphere_version}-master-{atmosphere_hash}"
