@@ -319,6 +319,216 @@ usb_pattern_3_diffs_partial_regexes = {
 
 }
 
+# systemweb_pattern_diffs_0
+systemweb_pattern_diffs_0_universal_regex = {
+    # Known pattern: CB..01..EB..1A0054
+    # Offset: 5
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 0F 6A FD 97 E0 03 14 AA E1 03 1F 2A 06 47 FB 97": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_1
+systemweb_pattern_diffs_1_universal_regex = {
+    # Known pattern: 526208A072
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "F8 69 FD 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_2
+systemweb_pattern_diffs_2_universal_regex = {
+    # Known pattern: 91028BA052
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "82 0E A0 52 FC 69 FD 97 60 42 1C 91 61 82 06 91 02 01 A0 52 F8 69 FD 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_3
+systemweb_pattern_diffs_3_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "22 09 80 52 60 46 00 F9 60 42 02 91 07 0A F9 97 00 1D 80 52 FC AF FC 97 1F 20 03 D5 A1 46 27 50 -> 82 0A A0 52 <- F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA 39 92 F9 97 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_4
+systemweb_pattern_diffs_4_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 20
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "FC AF FC 97 1F 20 03 D5 A1 46 27 50 82 0A A0 52 F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA -> 39 92 F9 97 <- 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97 F7 03 00 AA 81 C0 00 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_5
+systemweb_pattern_diffs_5_universal_regex = {
+    # Known pattern: 0168A152
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 E2 69 FD 97 A0 62 01 91 76 2E 08 F9 48 6C FD 97 E0 03 15 AA -> 01 68 A1 52 <- 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9": [{'version': '23.0.0'}],
+}
+
+# systemweb_pattern_diffs_6
+systemweb_pattern_diffs_6_universal_regex = {
+    # Known pattern: 60820691..68A152
+    # Offset: 4
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "48 6C FD 97 E0 03 15 AA 01 68 A1 52 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_0
+openweb_pattern_diffs_0_universal_regex = {
+    # Known pattern: CB..01..EB..1A0054
+    # Offset: 5
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 E5 DA FE 97 E0 03 14 AA E1 03 1F 2A 7F B7 FD 97": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_1
+openweb_pattern_diffs_1_universal_regex = {
+    # Known pattern: 526208A072
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "CE DA FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_2
+openweb_pattern_diffs_2_universal_regex = {
+    # Known pattern: 91028BA052
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "82 0E A0 52 D2 DA FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 CE DA FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_3
+openweb_pattern_diffs_3_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "22 09 80 52 60 46 00 F9 60 42 02 91 9C DE FE 97 00 1D 80 52 18 3C 06 94 E1 0D 00 F0 21 48 0F 91 -> 82 0A A0 52 <- F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA 9E A2 FF 97 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_4
+openweb_pattern_diffs_4_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 20
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "18 3C 06 94 E1 0D 00 F0 21 48 0F 91 82 0A A0 52 F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA -> 9E A2 FF 97 <- 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94 F7 03 00 AA D6 C6 03 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_5
+openweb_pattern_diffs_5_universal_regex = {
+    # Known pattern: 0168A152
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 B8 DA FE 97 A0 62 01 91 76 2E 08 F9 1E DD FE 97 E0 03 15 AA -> 01 68 A1 52 <- 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9": [{'version': '23.0.0'}],
+}
+
+# openweb_pattern_diffs_6
+openweb_pattern_diffs_6_universal_regex = {
+    # Known pattern: 60820691..68A152
+    # Offset: 4
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "1E DD FE 97 E0 03 15 AA 01 68 A1 52 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_0
+offlineweb_pattern_diffs_0_universal_regex = {
+    # Known pattern: CB..01..EB..1A0054
+    # Offset: 5
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "3F 05 40 F1 A8 16 00 54 EA 07 40 F9 09 00 9E 52 C9 BD A1 72 09 01 09 8B 29 01 14 CB 5F 01 09 EB -> 23 1A 00 54 <- 09 00 82 92 08 01 14 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB 49 1F 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 BE 76 FE 97 60 22 00 91 E1 03 1F 2A 87 A2 FD 97": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_1
+offlineweb_pattern_diffs_1_universal_regex = {
+    # Known pattern: 526208A072
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "A7 76 FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91 C0 03 5F D6 E0 47 00 B0 00 30 43 F9 81 8D 19 94 20 EC FF 34": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_2
+offlineweb_pattern_diffs_2_universal_regex = {
+    # Known pattern: 91028BA052
+    # Offset: 1
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "82 0E A0 52 AB 76 FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 A7 76 FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_3
+offlineweb_pattern_diffs_3_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "5F 23 01 39 5F FF 00 A9 5F FF 01 A9 5F FF 02 A9 5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 -> 82 0A A0 52 <- F8 03 00 AA 08 03 02 94 77 06 40 F9 78 06 00 F9 D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_4
+offlineweb_pattern_diffs_4_universal_regex = {
+    # Known pattern: 820AA052F80300AA
+    # Offset: 16
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 82 0A A0 52 F8 03 00 AA 08 03 02 94 77 06 40 F9 -> 78 06 00 F9 <- D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94 37 03 40 F9 38 03 00 F9 D7 00 00 B4 E0 03 17 AA": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_5
+offlineweb_pattern_diffs_5_universal_regex = {
+    # Known pattern: 0168A152
+    # Offset: 0
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "2B 76 FE 97 60 A2 35 91 A9 AD 00 94 60 A2 39 91 F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 -> 01 68 A1 52 <- 7E F3 FD 97 E1 03 00 AA 60 82 06 91 02 68 A1 52 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9": [{'version': '23.0.0'}],
+}
+
+# offlineweb_pattern_diffs_6
+offlineweb_pattern_diffs_6_universal_regex = {
+    # Known pattern: 60820691..68A152
+    # Offset: 4
+    # Match position: 0
+    # Valid from version: 23.0.0 to 23.0.0
+    # Original known range: 23.0.0 to 99.99.99
+    "F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 01 68 A1 52 7E F3 FD 97 E1 03 00 AA 60 82 06 91 -> 02 68 A1 52 <- 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9 9F BE 7B F1 08 0F 00 54 E9 1B 40 F9 3F 41 40 F1": [{'version': '23.0.0'}],
+}
+
 # olsc_pattern_diffs
 olsc_pattern_diffs_partial_regexes = {
     # Known pattern: 00..73....F9....4039
@@ -738,10 +948,11 @@ loader_pattern_diffs_partial_regexes = {
     # Known pattern: 009401C0BE121F00
     # Offset: 6
     # Match position: 0
-    # Valid from version: 22.1.0 to 22.5.0
+    # Valid from version: 22.1.0 to 23.0.0
     # Original known range: 22.1.0 to 99.99.99
     "F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FB 73 45 A9 FD 7B C8 A8 C0 03 5F D6 4C 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 C0 22 40 39 00 01 00 35 C0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 03 15 AA 88 2A 00 94 00 F0 FF 35": [{'version': '22.1.0'}],
     "E0 03 13 2A F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FD 7B C8 A8 C0 03 5F D6 20 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 A0 22 40 39 00 01 00 35 A0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 E3 01 91 E4 29 00 94 E0 EF FF 35": [{'version': '22.5.0'}],
+    "F5 5B 42 A9 E0 03 13 2A F3 53 41 A9 F7 63 43 A9 FD 7B C7 A8 C0 03 5F D6 4C 54 00 94 01 C0 BE 12 -> 1F 00 01 6B <- A9 FA FF 54 A0 22 40 39 00 01 00 35 A0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 82 F9 FF 54 22 00 80 52 E1 03 19 AA E0 A3 01 91 10 2B 00 94 A0 F0 FF 35": [{'version': '23.0.0'}],
 
 }
 
@@ -756,9 +967,10 @@ erpt_pattern_diffs_partial_regexes = {
     # Known pattern: FD7B02A9FD830091F55B04A9
     # Offset: -4
     # Match position: 0
-    # Valid from version: 22.5.0 to 22.5.0
+    # Valid from version: 22.5.0 to 23.0.0
     # Original known range: 22.5.0 to 99.99.99
     "5F 6B 21 38 F4 BF 00 B9 64 FF FF 17 42 04 00 11 E0 5B 40 F9 E2 BF 00 B9 92 FF FF 17 00 00 00 00 -> FF 03 05 D1 <- FD 7B 02 A9 FD 83 00 91 F5 5B 04 A9 76 04 00 D0 F5 03 01 2A F3 53 03 A9 D4 82 41 F9 F7 63 05 A9 F8 03 00 AA C0 1C 00 12 F7 03 02 AA F9 6B 06 A9 F9 03 03 2A FA 03 05 AA FB 73 07 A9": [{'version': '22.5.0'}],
+    "01 00 80 52 E0 03 02 AA 4D FF FF 17 E0 83 04 91 01 00 80 52 A8 FE FF 17 00 00 00 00 00 00 00 00 -> FF 83 02 D1 <- FD 7B 02 A9 FD 83 00 91 F5 5B 04 A9 D5 00 00 B0 B5 42 02 91 A0 06 40 F9 1F 00 15 EB E0 06 00 54 96 00 00 90 D6 02 14 91 F3 53 03 A9 F7 2B 00 F9 97 00 00 B0 F7 82 2E 91 04 00 00 14": [{'version': '23.0.0'}],
 
 }
 
