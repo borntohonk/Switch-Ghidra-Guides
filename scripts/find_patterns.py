@@ -1273,7 +1273,7 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
             head_offset=0,
             match_position=0,
             condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_bytes=b"\x1F\x20\x03\xD5",
             patch_size_hex="0004",
         ),
         PatchRule(
@@ -1373,7 +1373,7 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
             head_offset=0,
             match_position=0,
             condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_bytes=b"\x1F\x20\x03\xD5",
             patch_size_hex="0004",
         ),
         PatchRule(
@@ -1473,7 +1473,7 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
             head_offset=0,
             match_position=0,
             condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_bytes=b"\x1F\x20\x03\xD5",
             patch_size_hex="0004",
         ),
         PatchRule(
@@ -1833,7 +1833,7 @@ def _process_firmware_version(version: str):
 
                 find_and_patch(existing_files['usb'], version, "USB", log,
                     usb_pattern_3_diffs, pattern_offsets_map['usb'], ips_patch_database,
-                    prior_patch_fragment=usb_patch_3, suppress_logging=True)
+                    prior_patch_fragment=usb_patch_3, suppress_logging=False)
 
         if 'systemweb' in existing_files:
             if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
@@ -1844,37 +1844,37 @@ def _process_firmware_version(version: str):
 
                 systemweb_frag_1 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_1, pattern_offsets_map['systemweb_1'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_0, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_0, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_1",
                     record_ips_entry=False)
 
                 systemweb_frag_2 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_2, pattern_offsets_map['systemweb_2'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_1, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_1, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_2",
                     record_ips_entry=False)
 
                 systemweb_frag_3 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_3, pattern_offsets_map['systemweb_3'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_2, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_2, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_3",
                     record_ips_entry=False)
 
                 systemweb_frag_4 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_4, pattern_offsets_map['systemweb_4'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_3, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_3, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_4",
                     record_ips_entry=False)
 
                 systemweb_frag_5 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_5, pattern_offsets_map['systemweb_5'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_4, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_4, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_5",
                     record_ips_entry=False)
 
                 find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_6, pattern_offsets_map['systemweb_6'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_5, suppress_logging=True,
+                    prior_patch_fragment=systemweb_frag_5, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_6")
 
         if 'openweb' in existing_files:
@@ -1886,37 +1886,37 @@ def _process_firmware_version(version: str):
 
                 openweb_frag_1 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_1, pattern_offsets_map['openweb_1'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_0, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_0, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_1",
                     record_ips_entry=False)
 
                 openweb_frag_2 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_2, pattern_offsets_map['openweb_2'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_1, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_1, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_2",
                     record_ips_entry=False)
 
                 openweb_frag_3 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_3, pattern_offsets_map['openweb_3'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_2, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_2, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_3",
                     record_ips_entry=False)
 
                 openweb_frag_4 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_4, pattern_offsets_map['openweb_4'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_3, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_3, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_4",
                     record_ips_entry=False)
 
                 openweb_frag_5 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_5, pattern_offsets_map['openweb_5'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_4, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_4, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_5",
                     record_ips_entry=False)
 
                 find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_6, pattern_offsets_map['openweb_6'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_5, suppress_logging=True,
+                    prior_patch_fragment=openweb_frag_5, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_6")
 
         if 'offlineweb' in existing_files:
@@ -1928,37 +1928,37 @@ def _process_firmware_version(version: str):
 
                 offlineweb_frag_1 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_1, pattern_offsets_map['offlineweb_1'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_0, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_0, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_1",
                     record_ips_entry=False)
 
                 offlineweb_frag_2 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_2, pattern_offsets_map['offlineweb_2'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_1, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_1, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_2",
                     record_ips_entry=False)
 
                 offlineweb_frag_3 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_3, pattern_offsets_map['offlineweb_3'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_2, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_2, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_3",
                     record_ips_entry=False)
 
                 offlineweb_frag_4 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_4, pattern_offsets_map['offlineweb_4'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_3, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_3, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_4",
                     record_ips_entry=False)
 
                 offlineweb_frag_5 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_5, pattern_offsets_map['offlineweb_5'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_4, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_4, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_5",
                     record_ips_entry=False)
 
                 find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_6, pattern_offsets_map['offlineweb_6'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_5, suppress_logging=True,
+                    prior_patch_fragment=offlineweb_frag_5, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_6")
         
         # NIM has multiple patches (firmware block + crash fix)
@@ -1969,7 +1969,7 @@ def _process_firmware_version(version: str):
             
             find_and_patch(existing_files['nim'], version, "NIM", log,
                 blankcal0crashfix_pattern_diffs, pattern_offsets_map['nim'], ips_patch_database,
-                prior_patch_fragment=block_fw_fragment, suppress_logging=True)
+                prior_patch_fragment=block_fw_fragment, suppress_logging=False)
         
         # Filesystem patches
         if 'fat32' in existing_files:
@@ -2008,12 +2008,12 @@ def _process_firmware_version(version: str):
             
             ssl_frag_2 = find_and_patch(existing_files['ssl'], version, "SSL", log,
                 ssl_pattern_2_diffs, pattern_offsets_map['ssl_2'], ssl_ips_patch_database,
-                prior_patch_fragment=ssl_frag_1, suppress_logging=True,
+                prior_patch_fragment=ssl_frag_1, suppress_logging=False,
                 record_ips_entry=False)
             
             find_and_patch(existing_files['ssl'], version, "SSL", log,
                 ssl_pattern_3_diffs, pattern_offsets_map['ssl_3'], ssl_ips_patch_database,
-                prior_patch_fragment=ssl_frag_2, suppress_logging=True)
+                prior_patch_fragment=ssl_frag_2, suppress_logging=False)
 
 
 def _process_ams_modules(version: str):
