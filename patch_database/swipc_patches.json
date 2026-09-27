@@ -97,7 +97,7 @@
         },
         "rules": [
             {
-                "pattern": "08008012.9120591.F1E00F..84200B9",
+                "pattern": "08008012?9120591?F1E00F??84200B9",
                 "patch": "080080D2",
                 "offset": 16,
                 "match_position": 0
@@ -112,6 +112,159 @@
                 "pattern": "88160012",
                 "patch": "08000852",
                 "offset": 8,
+                "match_position": 0
+            }
+        ]
+    },
+    "systemWeb": {
+        "file": "out/applets/systemWeb",
+        "output": {
+            "dir": "out/exefs_patches/browser_memory_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "CB??01??EB??1A0054",
+                "patch": "1F2003D5",
+                "offset": 5,
+                "match_position": 0
+            },
+            {
+                "pattern": "526208A072",
+                "patch": "02008052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "91028BA052",
+                "patch": "8280A052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "02008052",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "1F2003D5",
+                "offset": 20,
+                "match_position": 0
+            },
+            {
+                "pattern": "0168A152",
+                "patch": "0158A152",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "60820691??68A152",
+                "patch": "0358A152",
+                "offset": 4,
+                "match_position": 0
+            }
+        ]
+    },
+    "openWeb": {
+        "file": "out/applets/openWeb",
+        "output": {
+            "dir": "out/exefs_patches/browser_memory_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "CB??01??EB??1A0054",
+                "patch": "1F2003D5",
+                "offset": 5,
+                "match_position": 0
+            },
+            {
+                "pattern": "526208A072",
+                "patch": "02008052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "91028BA052",
+                "patch": "8280A052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "02008052",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "1F2003D5",
+                "offset": 20,
+                "match_position": 0
+            },
+            {
+                "pattern": "0168A152",
+                "patch": "0158A152",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "60820691??68A152",
+                "patch": "0358A152",
+                "offset": 4,
+                "match_position": 0
+            }
+        ]
+    },
+    "LibAppletOff": {
+        "file": "out/applets/LibAppletOff",
+        "output": {
+            "dir": "out/exefs_patches/browser_memory_patches"
+
+        },
+        "rules": [
+            {
+                "pattern": "CB??01??EB??1A0054",
+                "patch": "1F2003D5",
+                "offset": 5,
+                "match_position": 0
+            },
+            {
+                "pattern": "526208A072",
+                "patch": "02008052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "91028BA052",
+                "patch": "8280A052",
+                "offset": 1,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "02008052",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "820AA052F80300AA",
+                "patch": "1F2003D5",
+                "offset": 16,
+                "match_position": 0
+            },
+            {
+                "pattern": "0168A152",
+                "patch": "0158A152",
+                "offset": 0,
+                "match_position": 0
+            },
+            {
+                "pattern": "60820691??68A152",
+                "patch": "0258A152",
+                "offset": 4,
                 "match_position": 0
             }
         ]

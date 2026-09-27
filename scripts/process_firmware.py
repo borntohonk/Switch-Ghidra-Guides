@@ -129,6 +129,8 @@ def _extract_pfs0_and_get_module_id(nca_data, titleId, system_version, title_nam
         print(f"Skipping {title_name} ({titleId}) for firmware {system_version}; title is only present on 6.0.0+")
         return None
 
+    if titleId == '010000000000100F':
+        title_name = 'LibAppletOff'
     exefs_path = Path(f'output/{system_version}/{system_version}_{title_name}.nso0')
     exefs_data = nca.SectionExtractor.extract_section_pfs0_main_only(nca_data, exefs_path)
     exefs_data
@@ -993,6 +995,18 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
             usb_nca_path = nca_path
             usb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, usb_nca_object)
+        if nca_titleId == "010000000000100F":  # LibAppletOff
+            offlineweb_nca_path = nca_path
+            offlineweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, offlineweb_nca_object)
+        if nca_titleId == "0100000000001042":  # systemWeb
+            systemweb_nca_path = nca_path
+            systemweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, systemweb_nca_object)
+        if nca_titleId == "0100000000001043":  # openWeb
+            openweb_nca_path = nca_path
+            openweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, openweb_nca_object)
         if nca_titleId == "0100000000000803":  # browser
             browser_nca_path = nca_path
             browser_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)

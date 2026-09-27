@@ -16,6 +16,9 @@ titleids_to_store = {
     "010000000000003E": "olsc",
     '0100000000000006': 'usb',
     '0100000000000803': 'browser',
+    '010000000000100F': 'LibAppletOff ',
+    '0100000000001042': 'systemWeb',
+    '0100000000001043': 'openWeb',
 }
 
 def sort_nca(location):

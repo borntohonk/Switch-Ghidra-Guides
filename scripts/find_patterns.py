@@ -98,10 +98,12 @@ def find_and_patch(
     suppress_logging: bool = False,
     is_fs: bool = False,
     fs_type: str = "",
-    prior_patch_fragment: str = None,
+    prior_patch_fragment: Optional[List[Tuple[int, str, bytes]]] = None,
     hash_path: Optional[str] = None,
-    atmosphere_string: Optional[str] = None
-) -> Optional[str]:
+    atmosphere_string: Optional[str] = None,
+    rule_tag: Optional[str] = None,
+    record_ips_entry: bool = True
+) -> Optional[List[Tuple[int, str, bytes]]]:
     if not os.path.exists(module_path):
         log_file.write(f"({module_name}) File not found: {module_path}\n")
         return None
@@ -113,6 +115,7 @@ def find_and_patch(
     rules = [
         r for r in PATCH_RULES.get(module_name, [])
         if MAKEHOSVERSION(r.min_version, r.max_version, version)
+        and (rule_tag is None or r.tag == rule_tag)
     ]
 
     if not rules:
@@ -268,21 +271,26 @@ def find_and_patch(
 
     if not found_any:
         log_file.write(f"({module_name}) No valid patch location found for {version}\n\n")
-        return None
+        return prior_patch_fragment
 
     collect_embedded_patches(module_name, version, module_id, successful_patches)
 
-    # ─── IPS fragment building (unchanged) ───
-    if collected_ips_records:
-        if prior_patch_fragment:
-            full_ips_content = prior_patch_fragment + "".join(collected_ips_records)
-        else:
-            magic = ips32_magic if len(collected_ips_records) > 1 else patch_magic
-            end_magic = eeof_magic if magic == ips32_magic else eof_magic
-            # Rebuild records with correct offset format based on magic type
-            rebuilt_records = [build_ips_record(offset, size_hex, patch_data, magic) 
-                              for offset, size_hex, patch_data in raw_ips_components]
-            full_ips_content = build_ips_file(magic, rebuilt_records, end_magic)
+    # ─── IPS fragment building ───
+    # prior_patch_fragment carries the *raw* (offset, size_hex, patch_bytes) records
+    # accumulated so far in this chain (not a pre-built IPS string) so that the
+    # magic/offset-width and single trailing EOF/EEOF marker are only decided once,
+    # from the true total record count, instead of being baked in at each link and
+    # then concatenated (which produced malformed multi-record files with a stray
+    # mid-stream EOF marker and no terminating one).
+    all_raw_components = (prior_patch_fragment or []) + raw_ips_components
+
+    full_ips_content = None
+    if all_raw_components:
+        magic = ips32_magic if len(all_raw_components) > 1 else patch_magic
+        end_magic = eeof_magic if magic == ips32_magic else eof_magic
+        rebuilt_records = [build_ips_record(offset, size_hex, patch_data, magic)
+                          for offset, size_hex, patch_data in all_raw_components]
+        full_ips_content = build_ips_file(magic, rebuilt_records, end_magic)
 
         # patch path logic unchanged
         if module_name in ["FS", "LOADER"]:
@@ -295,7 +303,13 @@ def find_and_patch(
         else:
             patch_path = f"patches/atmosphere/exefs_patches/{module_name.lower()}_patches/"
 
-        ips_patch_database.append((version, module_id, patch_path, full_ips_content))
+        # Only the terminating call of a chain (record_ips_entry=True, the default)
+        # should actually persist an entry — otherwise every intermediate link's
+        # partial fragment also gets appended, and since dedup keeps the FIRST
+        # entry per module_id, the fully-chained final result would be discarded
+        # in favor of whichever partial fragment was recorded first.
+        if record_ips_entry:
+            ips_patch_database.append((version, module_id, patch_path, full_ips_content))
 
     # ─── Hekate patch block (unchanged, uses is_fs, fs_type, atmosphere_string) ───
     if hekate_patch_db is not None and hekate_lines:
@@ -320,7 +334,7 @@ def find_and_patch(
             log_file.write(f"     {ln}\n")
         log_file.write('\n')
 
-    return full_ips_content if collected_ips_records else None
+    return all_raw_components if all_raw_components else None
 
 def mkdirp(path):
     try:
@@ -361,6 +375,27 @@ def load_existing_pattern_diffs(filepath: str) -> Dict[str, Dict[str, str]]:
         'usb_pattern_3_diffs': {},
         'olsc_pattern_diffs': {},
         'am_pattern_diffs': {},
+        'systemweb_pattern_diffs_0': {},
+        'systemweb_pattern_diffs_1': {},
+        'systemweb_pattern_diffs_2': {},
+        'systemweb_pattern_diffs_3': {},
+        'systemweb_pattern_diffs_4': {},
+        'systemweb_pattern_diffs_5': {},
+        'systemweb_pattern_diffs_6': {},
+        'openweb_pattern_diffs_0': {},
+        'openweb_pattern_diffs_1': {},
+        'openweb_pattern_diffs_2': {},
+        'openweb_pattern_diffs_3': {},
+        'openweb_pattern_diffs_4': {},
+        'openweb_pattern_diffs_5': {},
+        'openweb_pattern_diffs_6': {},
+        'offlineweb_pattern_diffs_0': {},
+        'offlineweb_pattern_diffs_1': {},
+        'offlineweb_pattern_diffs_2': {},
+        'offlineweb_pattern_diffs_3': {},
+        'offlineweb_pattern_diffs_4': {},
+        'offlineweb_pattern_diffs_5': {},
+        'offlineweb_pattern_diffs_6': {},
         'fat32_noncasigchk_pattern_diffs': {},
         'exfat_noncasigchk_pattern_diffs': {},
         'fat32_noacidsigchk1_pattern_diffs': {},
@@ -774,6 +809,7 @@ class PatchRule:
     patch_size_hex: str
     description: str = ""
     extra_condition: Optional[Callable[[str, bytes], bool]] = None
+    tag: Optional[str] = None  # unique per-rule selector for chained find_and_patch calls; distinct from `name`, which is used for embedded-patch grouping
 
 PATCH_RULES: Dict[str, List[PatchRule]] = {
     "ES": [
@@ -1225,6 +1261,306 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
             patch_size_hex="0004",
         )
     ],
+    "SYSTEMWEB" : [
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_0",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="CB..01..EB..1A0054",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("b.lo"),
+            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_1",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="526208A072",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_2",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="91028BA052",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x82\x80\xA0\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_3",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_4",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=20,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("bl"),
+            patch_bytes=b"\x1F\x20\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_5",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="SystemWebMemoryPatches",
+            tag="SystemWebMemoryPatches_6",
+            module="SYSTEMWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="60820691..68A152",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+    ],
+    "OPENWEB" : [
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_0",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="CB..01..EB..1A0054",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("b.lo"),
+            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_1",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="526208A072",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_2",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="91028BA052",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x82\x80\xA0\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_3",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_4",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=20,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("bl"),
+            patch_bytes=b"\x1F\x20\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_5",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_6",
+            module="OPENWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="60820691..68A152",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+    ],
+    "OFFLINEWEB" : [
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_0",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="CB..01..EB..1A0054",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("b.lo"),
+            patch_bytes=b"\x1F\x00\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_1",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="526208A072",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_2",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="91028BA052",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x82\x80\xA0\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_3",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_4",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="820AA052F80300AA",
+            offset=16,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("str"),
+            patch_bytes=b"\x1F\x20\x03\xD5",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_5",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_6",
+            module="OFFLINEWEB",
+            min_version="23.0.0",
+            max_version=FW_VER_ANY,
+            pattern="60820691..68A152",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x02\x58\xA1\x52",
+            patch_size_hex="0004",
+        ),
+    ],
     "ERPT" : [
         PatchRule(
             name="no_erpt",
@@ -1383,6 +1719,29 @@ usb_pattern_2_diffs = {}
 usb_pattern_3_diffs = {}
 olsc_pattern_diffs = {}
 am_pattern_diffs = {}
+systemweb_pattern_diffs_0 = {}
+systemweb_pattern_diffs_1 = {}
+systemweb_pattern_diffs_2 = {}
+systemweb_pattern_diffs_3 = {}
+systemweb_pattern_diffs_4 = {}
+systemweb_pattern_diffs_5 = {}
+systemweb_pattern_diffs_6 = {}
+
+openweb_pattern_diffs_0 = {}
+openweb_pattern_diffs_1 = {}
+openweb_pattern_diffs_2 = {}
+openweb_pattern_diffs_3 = {}
+openweb_pattern_diffs_4 = {}
+openweb_pattern_diffs_5 = {}
+openweb_pattern_diffs_6 = {}
+
+offlineweb_pattern_diffs_0 = {}
+offlineweb_pattern_diffs_1 = {}
+offlineweb_pattern_diffs_2 = {}
+offlineweb_pattern_diffs_3 = {}
+offlineweb_pattern_diffs_4 = {}
+offlineweb_pattern_diffs_5 = {}
+offlineweb_pattern_diffs_6 = {}
 fat32_nocntchk_pattern_diffs = {}
 exfat_nocntchk_pattern_diffs = {}
 fat32_noncasigchk_pattern_diffs = {}
@@ -1399,6 +1758,9 @@ ssl_pattern_3_diffs = {}
 # Pattern offsets (used internally but can be simplified)
 pattern_offsets_map = {
     'es': {}, 'nifm': {}, 'olsc': {}, 'am': {}, 'nim': {}, 'ns': {}, 'usb': {}, 'browser': {},
+    'systemweb_0': {}, 'systemweb_1': {}, 'systemweb_2': {}, 'systemweb_3': {}, 'systemweb_4': {}, 'systemweb_5': {}, 'systemweb_6': {},
+    'openweb_0': {}, 'openweb_1': {}, 'openweb_2': {}, 'openweb_3': {}, 'openweb_4': {}, 'openweb_5': {}, 'openweb_6': {},
+    'offlineweb_0': {}, 'offlineweb_1': {}, 'offlineweb_2': {}, 'offlineweb_3': {}, 'offlineweb_4': {}, 'offlineweb_5': {}, 'offlineweb_6': {},
     'fat32_nc': {}, 'exfat_nc': {}, 'fat32_nogc': {}, 'exfat_nogc': {}, 'ssl_1': {}, 'ssl_2': {}, 'ssl_3': {},
 }
 
@@ -1419,6 +1781,9 @@ def _process_firmware_version(version: str):
         'am': f'output/{version}/{version}_am.nso0',
         'ssl': f'output/{version}/{version}_ssl.nso0',
         'usb': f'output/{version}/{version}_usb.nso0',
+        'systemweb': f'output/{version}/{version}_systemWeb.nso0',
+        'openweb': f'output/{version}/{version}_openWeb.nso0',
+        'offlineweb': f'output/{version}/{version}_LibAppletOff.nso0',
         'fat32_hash': f'output/{version}/{version}_fat32.hash',
         'fat32': f'output/{version}/{version}_fat32_FS.kip1',
         'exfat_hash': f'output/{version}/{version}_exfat.hash',
@@ -1463,16 +1828,144 @@ def _process_firmware_version(version: str):
                     usb_pattern_1_diffs, pattern_offsets_map['usb'], ips_patch_database)
             if MAKEHOSVERSION("11.0.0", FW_VER_ANY, version):
                 usb_patch_3 = find_and_patch(existing_files['usb'], version, "USB", log,
-                    usb_pattern_2_diffs, pattern_offsets_map['usb'], ips_patch_database)
+                    usb_pattern_2_diffs, pattern_offsets_map['usb'], ips_patch_database,
+                    record_ips_entry=False)
 
                 find_and_patch(existing_files['usb'], version, "USB", log,
                     usb_pattern_3_diffs, pattern_offsets_map['usb'], ips_patch_database,
                     prior_patch_fragment=usb_patch_3, suppress_logging=True)
+
+        if 'systemweb' in existing_files:
+            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
+                systemweb_frag_0 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_0, pattern_offsets_map['systemweb_0'], ips_patch_database,
+                    rule_tag="SystemWebMemoryPatches_0",
+                    record_ips_entry=False)
+
+                systemweb_frag_1 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_1, pattern_offsets_map['systemweb_1'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_0, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_1",
+                    record_ips_entry=False)
+
+                systemweb_frag_2 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_2, pattern_offsets_map['systemweb_2'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_1, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_2",
+                    record_ips_entry=False)
+
+                systemweb_frag_3 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_3, pattern_offsets_map['systemweb_3'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_2, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_3",
+                    record_ips_entry=False)
+
+                systemweb_frag_4 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_4, pattern_offsets_map['systemweb_4'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_3, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_4",
+                    record_ips_entry=False)
+
+                systemweb_frag_5 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_5, pattern_offsets_map['systemweb_5'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_4, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
+                    systemweb_pattern_diffs_6, pattern_offsets_map['systemweb_6'], ips_patch_database,
+                    prior_patch_fragment=systemweb_frag_5, suppress_logging=True,
+                    rule_tag="SystemWebMemoryPatches_6")
+
+        if 'openweb' in existing_files:
+            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
+                openweb_frag_0 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_0, pattern_offsets_map['openweb_0'], ips_patch_database,
+                    rule_tag="OpenWebMemoryPatches_0",
+                    record_ips_entry=False)
+
+                openweb_frag_1 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_1, pattern_offsets_map['openweb_1'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_0, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_1",
+                    record_ips_entry=False)
+
+                openweb_frag_2 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_2, pattern_offsets_map['openweb_2'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_1, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_2",
+                    record_ips_entry=False)
+
+                openweb_frag_3 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_3, pattern_offsets_map['openweb_3'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_2, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_3",
+                    record_ips_entry=False)
+
+                openweb_frag_4 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_4, pattern_offsets_map['openweb_4'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_3, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_4",
+                    record_ips_entry=False)
+
+                openweb_frag_5 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_5, pattern_offsets_map['openweb_5'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_4, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
+                    openweb_pattern_diffs_6, pattern_offsets_map['openweb_6'], ips_patch_database,
+                    prior_patch_fragment=openweb_frag_5, suppress_logging=True,
+                    rule_tag="OpenWebMemoryPatches_6")
+
+        if 'offlineweb' in existing_files:
+            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
+                offlineweb_frag_0 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_0, pattern_offsets_map['offlineweb_0'], ips_patch_database,
+                    rule_tag="OfflineWebMemoryPatches_0",
+                    record_ips_entry=False)
+
+                offlineweb_frag_1 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_1, pattern_offsets_map['offlineweb_1'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_0, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_1",
+                    record_ips_entry=False)
+
+                offlineweb_frag_2 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_2, pattern_offsets_map['offlineweb_2'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_1, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_2",
+                    record_ips_entry=False)
+
+                offlineweb_frag_3 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_3, pattern_offsets_map['offlineweb_3'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_2, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_3",
+                    record_ips_entry=False)
+
+                offlineweb_frag_4 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_4, pattern_offsets_map['offlineweb_4'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_3, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_4",
+                    record_ips_entry=False)
+
+                offlineweb_frag_5 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_5, pattern_offsets_map['offlineweb_5'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_4, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
+                    offlineweb_pattern_diffs_6, pattern_offsets_map['offlineweb_6'], ips_patch_database,
+                    prior_patch_fragment=offlineweb_frag_5, suppress_logging=True,
+                    rule_tag="OfflineWebMemoryPatches_6")
         
         # NIM has multiple patches (firmware block + crash fix)
         if 'nim' in existing_files:
             block_fw_fragment = find_and_patch(existing_files['nim'], version, "NIM", log,
-                blockfirmwareupdates_pattern_diffs, pattern_offsets_map['nim'], ips_patch_database)
+                blockfirmwareupdates_pattern_diffs, pattern_offsets_map['nim'], ips_patch_database,
+                record_ips_entry=False)
             
             find_and_patch(existing_files['nim'], version, "NIM", log,
                 blankcal0crashfix_pattern_diffs, pattern_offsets_map['nim'], ips_patch_database,
@@ -1510,11 +2003,13 @@ def _process_firmware_version(version: str):
         # SSL has multiple patterns (3 separate patches)
         if 'ssl' in existing_files:
             ssl_frag_1 = find_and_patch(existing_files['ssl'], version, "SSL", log,
-                ssl_pattern_1_diffs, pattern_offsets_map['ssl_1'], ssl_ips_patch_database)
+                ssl_pattern_1_diffs, pattern_offsets_map['ssl_1'], ssl_ips_patch_database,
+                record_ips_entry=False)
             
             ssl_frag_2 = find_and_patch(existing_files['ssl'], version, "SSL", log,
                 ssl_pattern_2_diffs, pattern_offsets_map['ssl_2'], ssl_ips_patch_database,
-                prior_patch_fragment=ssl_frag_1, suppress_logging=True)
+                prior_patch_fragment=ssl_frag_1, suppress_logging=True,
+                record_ips_entry=False)
             
             find_and_patch(existing_files['ssl'], version, "SSL", log,
                 ssl_pattern_3_diffs, pattern_offsets_map['ssl_3'], ssl_ips_patch_database,
@@ -1750,6 +2245,27 @@ if __name__ == '__main__':
         ('usb_pattern_1_diffs', usb_pattern_1_diffs),
         ('usb_pattern_2_diffs', usb_pattern_2_diffs),
         ('usb_pattern_3_diffs', usb_pattern_3_diffs),
+        ('systemweb_pattern_diffs_0', systemweb_pattern_diffs_0),
+        ('systemweb_pattern_diffs_1', systemweb_pattern_diffs_1),
+        ('systemweb_pattern_diffs_2', systemweb_pattern_diffs_2),
+        ('systemweb_pattern_diffs_3', systemweb_pattern_diffs_3),
+        ('systemweb_pattern_diffs_4', systemweb_pattern_diffs_4),
+        ('systemweb_pattern_diffs_5', systemweb_pattern_diffs_5),
+        ('systemweb_pattern_diffs_6', systemweb_pattern_diffs_6),
+        ('openweb_pattern_diffs_0', openweb_pattern_diffs_0),
+        ('openweb_pattern_diffs_1', openweb_pattern_diffs_1),
+        ('openweb_pattern_diffs_2', openweb_pattern_diffs_2),
+        ('openweb_pattern_diffs_3', openweb_pattern_diffs_3),
+        ('openweb_pattern_diffs_4', openweb_pattern_diffs_4),
+        ('openweb_pattern_diffs_5', openweb_pattern_diffs_5),
+        ('openweb_pattern_diffs_6', openweb_pattern_diffs_6),
+        ('offlineweb_pattern_diffs_0', offlineweb_pattern_diffs_0),
+        ('offlineweb_pattern_diffs_1', offlineweb_pattern_diffs_1),
+        ('offlineweb_pattern_diffs_2', offlineweb_pattern_diffs_2),
+        ('offlineweb_pattern_diffs_3', offlineweb_pattern_diffs_3),
+        ('offlineweb_pattern_diffs_4', offlineweb_pattern_diffs_4),
+        ('offlineweb_pattern_diffs_5', offlineweb_pattern_diffs_5),
+        ('offlineweb_pattern_diffs_6', offlineweb_pattern_diffs_6),
         ('olsc_pattern_diffs', olsc_pattern_diffs),
         ('am_pattern_diffs', am_pattern_diffs),
         ('fat32_noacidsigchk1_pattern_diffs', fat32_noacidsigchk1_pattern_diffs),
