@@ -76,7 +76,7 @@ applet_titleids = {
     "010000000000100B": "LibAppletShop",
     "010000000000100C": "overlayDisp",
     "010000000000100D": "photoViewer",
-    "010000000000100F": "LibAppletOff",
+    "010000000000100F": "offlineWeb",
     "0100000000001010": "LibAppletLns",
     "0100000000001011": "LibAppletAuth",
     "0100000000001012": "starter",
@@ -87,7 +87,38 @@ applet_titleids = {
     "0100000000001048": "splay",
 }
 
-def sort_nca(location):
+NPDM_MAGIC = b'META\x00\x00\x00\x00'
+NPDM_TITLE_NAME_OFFSET = 0x20
+NPDM_TITLE_NAME_SIZE = 0x10
+
+def get_npdm_title_name(nca_data):
+    """Return the npdm Title Name from the first PFS0 section containing a META header, else None."""
+    for i in range(4):
+        if not (nca_data.has_section(i) and nca_data.get_section_type(i) == "PFS0"):
+            continue
+        fs_header = nca_data.fsheaders[i]
+        pfs0_data = nca_data.decrypted_sections[i][fs_header.content_start:fs_header.content_end]
+        start = pfs0_data.find(NPDM_MAGIC)
+        if start == -1:
+            continue
+        raw = pfs0_data[start + NPDM_TITLE_NAME_OFFSET:start + NPDM_TITLE_NAME_OFFSET + NPDM_TITLE_NAME_SIZE]
+        return raw.split(b'\x00', 1)[0].decode('utf-8', errors='replace')
+    return None
+
+def report_unhandled(unhandled):
+    """Print unhandled Program-type titleIDs as one block."""
+    if not unhandled:
+        return
+    print(f"\n[swipc] ===== Unhandled titleIDs ({len(unhandled)}) =====")
+    for title_id, nca_path in unhandled:
+        try:
+            name = get_npdm_title_name(nca.Nca(util.InitializeFile(nca_path), master_kek_source=None))
+        except Exception:
+            name = None
+        print(f"[swipc] 0x{title_id.lower()}  content_type=0  {name or '(no npdm)':<24} {os.path.basename(nca_path)}")
+    print("[swipc] =====================================\n")
+
+def sort_nca(location, unhandled=None):
     """Sort and extract NCA files from firmware location."""
     nca_files = []
     sorted_nca_files = []
@@ -117,6 +148,11 @@ def sort_nca(location):
         
         if titleid_type is not None:
             sorted_nca_files.append((nca_header.titleId, nca_header.content_type, nca_path, titleid_type, titleid_name))
+
+        if titleid_type is None and unhandled is not None \
+                and nca_header.content_type == "Program" \
+                and all(t != nca_header.titleId for t, _ in unhandled):
+            unhandled.append((nca_header.titleId, nca_path))
     
     return sorted_nca_files
 
@@ -130,7 +166,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         output_folder = sys.argv[2]
     
-    nca_files = sort_nca(input_folder)
+    unhandled = []
+    nca_files = sort_nca(input_folder, unhandled)
 
     for line in nca_files:
         titleId, content_type, nca_path, titleid_type, titleid_name = line
@@ -190,3 +227,4 @@ if __name__ == "__main__":
                             continue
                         if i == "ProcessMana":
                             continue
+    report_unhandled(unhandled)
