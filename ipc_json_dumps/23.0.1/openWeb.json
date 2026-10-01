@@ -1,0 +1,5 @@
+{
+  "openweb": {
+    "_services": ["acc:u1", "appletAE", "audout:u", "audren:u", "bsd:a", "bsd:s", "bsd:u", "caps:a", "caps:ss", "csrng", "dispdrv", "fatal:u", "friend:a", "friend:m", "friend:s", "friend:u", "friend:v", "fsp-srv", "hid:dbg", "hid:sys", "ldn:m", "ldr:ro", "lp2p:m", "nifm:a", "nifm:s", "nifm:u", "nim:shp", "ns:am2", "ns:ec", "ns:rid", "ns:ro", "ns:rt", "ns:su", "ns:vm", "ns:web", "nsd:a", "nsd:u", "nvdrv", "nvdrv:a", "nvmemp", "pctl:a", "pctl:r", "pctl:s", "prepo:a2", "prepo:m", "prepo:s", "prepo:u", "set:sys", "sfdnsres", "ssl:s", "time:a", "time:r", "time:s", "time:su", "time:u"]
+  }
+}
