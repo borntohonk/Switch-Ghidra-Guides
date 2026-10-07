@@ -32,11 +32,11 @@ import io
 
 def print_split_hex(label, hex_string, lines_to_append_to):
     hex_upper = hex_string.upper() if isinstance(hex_string, str) else hex_string.hex().upper()
-    label_padded = f'{label:<35}'
+    label_padded = f'{label:<41}'
     lines_to_append_to.append(f'{label_padded} {hex_upper[:64]}')
     for i in range(64, len(hex_upper), 64):
         chunk = hex_upper[i:i+64]
-        lines_to_append_to.append(f'                                    {chunk}')
+        lines_to_append_to.append(f'                                          {chunk}')
 
 def mkdirp(path):
     try:
