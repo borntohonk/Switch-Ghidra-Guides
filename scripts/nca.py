@@ -1438,28 +1438,39 @@ class NcaInfo:
             npdm.NpdmInfoPrint(npdm_data, npdm_lines, kac_lines, sac_lines, fac_lines)
 
     def _extract_npdm(self, section_idx):
-            """Extract NPDM data from a PFS0 section."""
-            decrypted_section = self.nca.decrypted_sections[section_idx]
-            fsheader = self.nca.fsheaders[section_idx]
-            pfs0_data = decrypted_section[fsheader.content_start:fsheader.content_end]  # Slice to PFS0 content only
-            match = re.search(self.NPDM_PATTERN, pfs0_data)
-            
-            if not match:
-                return None
-            
-            start_of_npdm = match.start()
-            
-            # Read ACI offset and size from NPDM header
-            aci_offset_pos = start_of_npdm + self.NPDM_ACI_OFFSET_OFFSET
-            aci_offset = int.from_bytes(pfs0_data[aci_offset_pos:aci_offset_pos + self.NPDM_ACI_OFFSET_SIZE], 
-                                    byteorder='little', signed=False)
-            
-            aci_size_pos = start_of_npdm + self.NPDM_ACI_SIZE_OFFSET
-            aci_size = int.from_bytes(pfs0_data[aci_size_pos:aci_size_pos + self.NPDM_ACI_SIZE_SIZE], 
-                                    byteorder='little', signed=False)
-            
-            end_of_npdm = aci_offset + aci_size + start_of_npdm
-            return pfs0_data[start_of_npdm:end_of_npdm]
+        """Extract NPDM data from a PFS0 section.
+
+        Uses save_section() so lazy-decrypt and sparse/Indirect layers work
+        the same as the rest of the pipeline (decrypted_sections may be None).
+        """
+        try:
+            pfs0_data = save_section(self.nca, section_idx)
+        except Exception:
+            return None
+        if not pfs0_data:
+            return None
+
+        match = re.search(self.NPDM_PATTERN, pfs0_data)
+        if not match:
+            return None
+
+        start_of_npdm = match.start()
+
+        # Read ACI offset and size from NPDM header
+        aci_offset_pos = start_of_npdm + self.NPDM_ACI_OFFSET_OFFSET
+        aci_offset = int.from_bytes(
+            pfs0_data[aci_offset_pos:aci_offset_pos + self.NPDM_ACI_OFFSET_SIZE],
+            byteorder='little', signed=False,
+        )
+
+        aci_size_pos = start_of_npdm + self.NPDM_ACI_SIZE_OFFSET
+        aci_size = int.from_bytes(
+            pfs0_data[aci_size_pos:aci_size_pos + self.NPDM_ACI_SIZE_SIZE],
+            byteorder='little', signed=False,
+        )
+
+        end_of_npdm = aci_offset + aci_size + start_of_npdm
+        return pfs0_data[start_of_npdm:end_of_npdm]
 
 
     

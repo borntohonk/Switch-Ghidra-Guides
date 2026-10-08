@@ -57,6 +57,9 @@ ROMFS_OUTPUT_DIR = Path("nsp/extracted_romfs/")
 # Helpers: title identity and Program NCA lookup
 # ---------------------------------------------------------------------------
 
+def process_sdk_object_only(nsp_file: Path):
+    nsp.process_nsp_info_in_memory_for_sdk_object(nsp_file)
+
 def application_id_from_cnmt(cnmt_obj) -> int:
     """
     Resolve the base application title ID from a CNMT.
@@ -152,6 +155,10 @@ def process_single_nsp(nsp_file: Path, verbose: bool = False):
             print(f"\n[EXEFS] Extracting section 0 (exefs)...")
 
         nca_data = open_program_nca(metadata)
+
+        # debug print nca info:
+        #nca.NcaInfo(nca_data)
+
         exefs_data = nca.save_section(nca_data, 0)
 
         title_id = f"{cnmt_obj.title_id:016X}"
@@ -570,6 +577,7 @@ Examples:
         for nsp_file in nsp_files:
             try:
                 process_single_nsp(nsp_file, verbose=args.verbose)
+                #process_sdk_object_only(nsp_file)
             except KeyboardInterrupt:
                 print("\nInterrupted by user")
                 break
