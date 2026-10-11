@@ -950,10 +950,10 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
     ],
     "AM" : [
         PatchRule(
-            name="am-22.0.0+",
+            name="am-22.0.0", # this patch is only necessary for 22.0.0
             module="AM",
             min_version="22.0.0",
-            max_version=FW_VER_ANY,
+            max_version="22.0.0",
             pattern="682646391F0500716100005460420691794DFF97",
             offset=16,
             head_offset=0,

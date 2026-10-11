@@ -81,11 +81,11 @@ es_pattern_diffs_partial_regexes = {
     # Known pattern: A0630091....FE97A08300D1....FE97
     # Offset: 16
     # Match position: 0
-    # Valid from version: 22.0.0 to 23.0.0
+    # Valid from version: 22.0.0 to 23.0.1
     # Original known range: 22.0.0 to 99.99.99
     "02 00 00 14 F3 03 1F 2A E0 73 00 91 67 32 00 94 A0 63 00 91 8D 30 FE 97 A0 83 00 D1 2B A5 FE 97 -> E0 03 13 2A <- F4 4F 52 A9 FC 8B 40 F9 FD 7B 50 A9 FF C3 04 91 C0 03 5F D6 33 92 80 52 F5 FF FF 17 33 12 89 52 F3 07 A0 72 F2 FF FF 17 33 52 80 52 EE FF FF 17 00 00 00 00 FD 7B BC A9 FC 5F 01 A9": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "02 00 00 14 F3 03 1F 2A E0 73 00 91 67 32 00 94 A0 63 00 91 25 31 FE 97 A0 83 00 D1 C3 A5 FE 97 -> E0 03 13 2A <- F4 4F 52 A9 FC 8B 40 F9 FD 7B 50 A9 FF C3 04 91 C0 03 5F D6 33 92 80 52 F5 FF FF 17 33 12 89 52 F3 07 A0 72 F2 FF FF 17 33 52 80 52 EE FF FF 17 00 00 00 00 FD 7B BC A9 FC 5F 01 A9": [{'version': '22.5.0'}],
-    "02 00 00 14 F3 03 1F 2A E0 73 00 91 C3 F5 00 94 A0 63 00 91 39 CF FE 97 A0 83 00 D1 5B D4 FE 97 -> E0 03 13 2A <- F4 4F 52 A9 FC 8B 40 F9 FD 7B 50 A9 FF C3 04 91 C0 03 5F D6 33 92 80 52 F5 FF FF 17 33 12 89 52 F3 07 A0 72 F2 FF FF 17 33 52 80 52 EE FF FF 17 00 00 00 00 FD 7B BC A9 FC 5F 01 A9": [{'version': '23.0.0'}],
+    "02 00 00 14 F3 03 1F 2A E0 73 00 91 C3 F5 00 94 A0 63 00 91 39 CF FE 97 A0 83 00 D1 5B D4 FE 97 -> E0 03 13 2A <- F4 4F 52 A9 FC 8B 40 F9 FD 7B 50 A9 FF C3 04 91 C0 03 5F D6 33 92 80 52 F5 FF FF 17 33 12 89 52 F3 07 A0 72 F2 FF FF 17 33 52 80 52 EE FF FF 17 00 00 00 00 FD 7B BC A9 FC 5F 01 A9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -125,7 +125,7 @@ blankcal0crashfix_pattern_diffs_partial_regexes = {
     # Known pattern: 03D5..............................97....0094....00..........61
     # Offset: 2
     # Match position: 0
-    # Valid from version: 17.0.0 to 23.0.0
+    # Valid from version: 17.0.0 to 23.0.1
     # Original known range: 17.0.0 to 99.99.99
     "FF C3 00 91 1E 93 FD 17 E0 23 00 91 2C 88 FC 97 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 43 2C D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 03 21 91 FF 03 21 39 F8 81 FF 97 81 82 02 91 E0 A3 17 91 22 00 80 52 E3 03 1F AA": [{'version': '17.0.0'}, {'version': '17.0.1'}],
     "FF C3 00 91 72 8A FD 17 A0 13 00 D1 44 7B FC 97 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF C3 22 39 9C 80 FF 97 81 82 02 91 E0 23 18 91 22 00 80 52 E3 03 1F AA": [{'version': '18.0.0'}, {'version': '18.0.1'}, {'version': '18.1.0'}],
@@ -135,7 +135,7 @@ blankcal0crashfix_pattern_diffs_partial_regexes = {
     "A0 73 00 91 27 B8 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '21.0.0'}, {'version': '21.0.1'}],
     "A0 73 00 91 43 B8 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '21.1.0'}, {'version': '21.2.0'}],
     "A0 73 00 91 B7 AE FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "A0 73 00 91 8F 97 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '23.0.0'}],
+    "A0 73 00 91 8F 97 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -185,7 +185,7 @@ blockfirmwareupdates_pattern_diffs_partial_regexes = {
     # Known pattern: 41....4C............C0035FD6
     # Offset: 14
     # Match position: 0
-    # Valid from version: 12.0.0 to 23.0.0
+    # Valid from version: 12.0.0 to 23.0.1
     # Original known range: 12.0.0 to 99.99.99
     "E2 03 00 AA E3 03 1F 2A E5 03 00 AA 5A D7 FC 97 28 08 41 F9 08 4C 00 F9 E0 03 1F AA C0 03 5F D6 -> FD 7B BD A9 <- FC 57 01 A9 FD 03 00 91 F4 4F 02 A9 FF C3 28 D1 FF 83 1D 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 83 1D 91 B3 15 00 94 E8 C3 1A 91 09 C1 00 91 08 01 01 91 E8 7B 03 F9 E8 7F 03 F9": [{'version': '12.0.0'}, {'version': '12.0.1'}, {'version': '12.0.2'}, {'version': '12.0.3'}],
     "E2 03 00 AA E3 03 1F 2A E5 03 00 AA CE D6 FC 97 28 08 41 F9 08 4C 00 F9 E0 03 1F AA C0 03 5F D6 -> FD 7B BD A9 <- FC 57 01 A9 FD 03 00 91 F4 4F 02 A9 FF 43 29 D1 FF 03 1E 39 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 03 1E 91 BB 15 00 94 E8 E3 1A 91 09 C1 00 91 08 01 01 91 E8 7F 03 F9 E8 83 03 F9": [{'version': '12.1.0'}],
@@ -204,7 +204,7 @@ blockfirmwareupdates_pattern_diffs_partial_regexes = {
     "A0 73 00 91 27 B8 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '21.0.0'}, {'version': '21.0.1'}],
     "A0 73 00 91 43 B8 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '21.1.0'}, {'version': '21.2.0'}],
     "A0 73 00 91 B7 AE FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "A0 73 00 91 8F 97 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '23.0.0'}],
+    "A0 73 00 91 8F 97 FB 97 00 00 00 00 00 00 00 00 28 08 41 F9 08 4C 00 F9 E0 03 1F 2A C0 03 5F D6 -> FD 7B BC A9 <- FC 0B 00 F9 FD 03 00 91 F6 57 02 A9 F4 4F 03 A9 FF 03 2E D1 F3 03 01 AA 01 4C 40 F9 F4 03 00 AA E0 C3 22 91 FF D7 04 F9 FF D3 04 F9 FF CF 04 F9 FF CB 04 F9 FF C7 04 F9 FF C3 04 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -235,12 +235,12 @@ nifm_pattern_diffs_partial_regexes = {
     # Known pattern: 03..AA......AA..................0314AA....14AA
     # Offset: -17
     # Match position: 0
-    # Valid from version: 20.0.0 to 23.0.0
+    # Valid from version: 20.0.0 to 23.0.1
     # Original known range: 20.0.0 to 99.99.99
     "FD 03 00 91 F3 03 00 AA 00 E0 00 91 56 FF FF 97 E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8 05 01 00 14 -> FD 7B BD A9 <- F6 57 01 A9 F4 4F 02 A9 FD 03 00 91 F6 03 02 AA F5 03 01 AA F4 03 00 AA DE 02 00 94 F3 03 14 AA E0 03 14 AA 9F 02 01 39 7F 8E 04 F8 EE 01 00 94 E0 03 14 AA E1 03 15 AA 26 02 00 94": [{'version': '20.0.0'}, {'version': '20.0.1'}, {'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
     "00 E0 00 91 E7 EE FD 97 E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8 0B 01 00 14 00 00 00 00 00 00 00 00 -> FD 7B BD A9 <- F6 57 01 A9 F4 4F 02 A9 FD 03 00 91 F5 03 02 AA F6 03 01 AA F4 03 00 AA E9 02 00 94 F3 03 14 AA E0 03 14 AA 9F 02 01 39 7F 8E 04 F8 F8 01 00 94 E0 03 14 AA E1 03 16 AA 35 02 00 94": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}, {'version': '21.2.0'}],
     "00 E0 00 91 77 3A FE 97 E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8 0B 01 00 14 00 00 00 00 00 00 00 00 -> FD 7B BD A9 <- F6 57 01 A9 F4 4F 02 A9 FD 03 00 91 F5 03 02 AA F6 03 01 AA F4 03 00 AA E9 02 00 94 F3 03 14 AA E0 03 14 AA 9F 02 01 39 7F 8E 04 F8 F8 01 00 94 E0 03 14 AA E1 03 16 AA 35 02 00 94": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "00 E0 00 91 73 2F FE 97 E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8 0B 01 00 14 00 00 00 00 00 00 00 00 -> FD 7B BD A9 <- F6 57 01 A9 F4 4F 02 A9 FD 03 00 91 F5 03 02 AA F6 03 01 AA F4 03 00 AA E9 02 00 94 F3 03 14 AA E0 03 14 AA 9F 02 01 39 7F 8E 04 F8 F8 01 00 94 E0 03 14 AA E1 03 16 AA 35 02 00 94": [{'version': '23.0.0'}],
+    "00 E0 00 91 73 2F FE 97 E0 03 13 AA F3 0B 40 F9 FD 7B C2 A8 0B 01 00 14 00 00 00 00 00 00 00 00 -> FD 7B BD A9 <- F6 57 01 A9 F4 4F 02 A9 FD 03 00 91 F5 03 02 AA F6 03 01 AA F4 03 00 AA E9 02 00 94 F3 03 14 AA E0 03 14 AA 9F 02 01 39 7F 8E 04 F8 F8 01 00 94 E0 03 14 AA E1 03 16 AA 35 02 00 94": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -249,7 +249,7 @@ ns_pattern_diffs_partial_regexes = {
     # Known pattern: 35E8134039F4031F..68020039
     # Offset: 9
     # Match position: 1
-    # Valid from version: 9.0.0 to 23.0.0
+    # Valid from version: 9.0.0 to 23.0.1
     # Original known range: 9.0.0 to 99.99.99
     "E1 03 00 AA E2 03 00 AA E3 03 1F 2A E5 03 00 AA 52 95 FF 97 95 00 00 35 E8 13 40 39 F4 03 1F AA -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 80 7E 40 92 FD 7B 44 A9 F4 4F 43 A9 F6 57 42 A9 FF 43 01 91": [{'version': '9.0.0'}, {'version': '9.1.0'}, {'version': '9.2.0'}],
     "E1 03 00 AA E2 03 00 AA E3 03 1F 2A E5 03 00 AA CE 5D FF 97 95 00 00 35 E8 13 40 39 F4 03 1F AA -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 80 7E 40 92 FD 7B 44 A9 F4 4F 43 A9 F6 57 42 A9 FF 43 01 91": [{'version': '10.0.0'}, {'version': '10.0.1'}, {'version': '10.0.2'}, {'version': '10.0.3'}, {'version': '10.0.4'}, {'version': '10.1.0'}, {'version': '10.2.0'}],
@@ -267,7 +267,7 @@ ns_pattern_diffs_partial_regexes = {
     "EA CB FF 97 B4 83 1F B8 94 00 00 34 A0 23 00 D1 52 83 FF 97 94 00 00 35 E8 13 40 39 F4 03 1F 2A -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 03 14 2A F4 4F 44 A9 F6 57 43 A9 FD 7B 42 A9 FF 43 01 91": [{'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
     "D1 81 FF 97 B4 83 1F B8 94 00 00 34 A0 23 00 D1 5D 81 FF 97 94 00 00 35 E8 13 40 39 F4 03 1F 2A -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 03 14 2A F4 4F 44 A9 F6 57 43 A9 FD 7B 42 A9 FF 43 01 91": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}, {'version': '21.2.0'}],
     "F5 03 00 2A F4 03 00 2A E0 03 15 AA 22 CC FF 97 A0 03 00 37 94 00 00 35 E8 13 40 39 F4 03 1F 2A -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 03 14 2A F4 4F 44 A9 F6 57 43 A9 FD 7B 42 A9 FF 43 01 91": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "F5 03 00 2A F4 03 00 2A E0 03 15 AA 4E CB FF 97 A0 03 00 37 94 00 00 35 E8 13 40 39 F4 03 1F 2A -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 03 14 2A F4 4F 44 A9 F6 57 43 A9 FD 7B 42 A9 FF 43 01 91": [{'version': '23.0.0'}],
+    "F5 03 00 2A F4 03 00 2A E0 03 15 AA 4E CB FF 97 A0 03 00 37 94 00 00 35 E8 13 40 39 F4 03 1F 2A -> 68 02 00 39 <- E0 07 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 0B 40 F9 80 00 00 B4 08 00 40 F9 08 05 40 F9 00 01 3F D6 E0 03 14 2A F4 4F 44 A9 F6 57 43 A9 FD 7B 42 A9 FF 43 01 91": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -276,7 +276,7 @@ usb_pattern_2_diffs_partial_regexes = {
     # Known pattern: FFC300D1FD7B02A9FD83009188
     # Offset: 0
     # Match position: 0
-    # Valid from version: 11.0.0 to 23.0.0
+    # Valid from version: 11.0.0 to 23.0.1
     # Original known range: 11.0.0 to 99.99.99
     "FF C3 00 91 C0 03 5F D6 A0 03 00 F0 00 04 00 91 E1 03 00 AA E2 03 00 AA E3 03 1F 2A 66 21 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 E8 1B 00 B9 A8 03 00 90 08 51 22 91 A2 03 00 F0 42 28 02 91 09 21 40 A9 E0 13 00 91 E3 23 00 91 21 00 80 52 E9 A3 00 A9 82 15 01 94": [{'version': '11.0.0'}, {'version': '11.0.1'}],
     "FF C3 00 91 C0 03 5F D6 A0 03 00 F0 00 2C 0F 91 E1 03 00 AA E2 03 00 AA E3 03 1F 2A CE 22 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 E8 1B 00 B9 A8 03 00 90 08 79 31 91 A2 03 00 F0 42 50 11 91 09 21 40 A9 E0 13 00 91 E3 23 00 91 21 00 80 52 E9 A3 00 A9 EE 14 01 94": [{'version': '12.0.0'}, {'version': '12.0.1'}, {'version': '12.0.2'}, {'version': '12.0.3'}],
@@ -291,7 +291,7 @@ usb_pattern_2_diffs_partial_regexes = {
     "FF C3 00 91 C0 03 5F D6 86 62 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 A5 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 81 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 38 0C 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '20.0.0'}, {'version': '20.0.1'}, {'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
     "FF C3 00 91 C0 03 5F D6 D6 5F 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 05 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}, {'version': '21.2.0'}],
     "FF C3 00 91 C0 03 5F D6 2A 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "FF C3 00 91 C0 03 5F D6 B6 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '23.0.0'}],
+    "FF C3 00 91 C0 03 5F D6 B6 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -300,7 +300,7 @@ usb_pattern_3_diffs_partial_regexes = {
     # Known pattern: FFC300D1FD7B02A9FD83009188
     # Offset: 0
     # Match position: 1
-    # Valid from version: 11.0.0 to 23.0.0
+    # Valid from version: 11.0.0 to 23.0.1
     # Original known range: 11.0.0 to 99.99.99
     "FF C3 00 91 C0 03 5F D6 A0 03 00 F0 00 04 00 91 E1 03 00 AA E2 03 00 AA E3 03 1F 2A 66 21 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 E8 1B 00 B9 A8 03 00 90 08 51 22 91 A2 03 00 F0 42 28 02 91 09 21 40 A9 E0 13 00 91 E3 23 00 91 21 00 80 52 E9 A3 00 A9 82 15 01 94": [{'version': '11.0.0'}, {'version': '11.0.1'}],
     "FF C3 00 91 C0 03 5F D6 A0 03 00 F0 00 2C 0F 91 E1 03 00 AA E2 03 00 AA E3 03 1F 2A CE 22 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 E8 1B 00 B9 A8 03 00 90 08 79 31 91 A2 03 00 F0 42 50 11 91 09 21 40 A9 E0 13 00 91 E3 23 00 91 21 00 80 52 E9 A3 00 A9 EE 14 01 94": [{'version': '12.0.0'}, {'version': '12.0.1'}, {'version': '12.0.2'}, {'version': '12.0.3'}],
@@ -315,7 +315,7 @@ usb_pattern_3_diffs_partial_regexes = {
     "FF C3 00 91 C0 03 5F D6 86 62 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 A5 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 81 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 38 0C 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '20.0.0'}, {'version': '20.0.1'}, {'version': '20.1.0'}, {'version': '20.1.1'}, {'version': '20.1.5'}, {'version': '20.2.0'}, {'version': '20.3.0'}, {'version': '20.4.0'}, {'version': '20.5.0'}],
     "FF C3 00 91 C0 03 5F D6 D6 5F 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 05 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '21.0.0'}, {'version': '21.0.1'}, {'version': '21.1.0'}, {'version': '21.2.0'}],
     "FF C3 00 91 C0 03 5F D6 2A 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "FF C3 00 91 C0 03 5F D6 B6 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '23.0.0'}],
+    "FF C3 00 91 C0 03 5F D6 B6 60 00 94 FD 7B 42 A9 00 00 00 12 FF C3 00 91 C0 03 5F D6 0D 0A 00 94 -> FF C3 00 D1 <- FD 7B 02 A9 FD 83 00 91 88 AD 8C 52 88 0C A0 72 FF 13 00 39 09 03 00 F0 29 01 08 91 E8 1B 00 B9 28 25 40 A9 02 03 00 F0 42 00 0B 91 E0 13 00 91 E3 23 00 91 21 00 80 52 E8 A7 00 A9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -324,9 +324,9 @@ systemweb_pattern_diffs_0_universal_regex = {
     # Known pattern: CB..01..EB..1A0054
     # Offset: 5
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 0F 6A FD 97 E0 03 14 AA E1 03 1F 2A 06 47 FB 97": [{'version': '23.0.0'}],
+    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 0F 6A FD 97 E0 03 14 AA E1 03 1F 2A 06 47 FB 97": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_1
@@ -334,9 +334,9 @@ systemweb_pattern_diffs_1_universal_regex = {
     # Known pattern: 526208A072
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "F8 69 FD 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}],
+    "F8 69 FD 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_2
@@ -344,9 +344,9 @@ systemweb_pattern_diffs_2_universal_regex = {
     # Known pattern: 91028BA052
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "82 0E A0 52 FC 69 FD 97 60 42 1C 91 61 82 06 91 02 01 A0 52 F8 69 FD 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}],
+    "82 0E A0 52 FC 69 FD 97 60 42 1C 91 61 82 06 91 02 01 A0 52 F8 69 FD 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- F4 69 FD 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 EF 69 FD 97 60 22 27 91 61 82 06 91 82 00 A0 52 EB 69 FD 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_3
@@ -354,9 +354,9 @@ systemweb_pattern_diffs_3_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "22 09 80 52 60 46 00 F9 60 42 02 91 07 0A F9 97 00 1D 80 52 FC AF FC 97 1F 20 03 D5 A1 46 27 50 -> 82 0A A0 52 <- F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA 39 92 F9 97 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97": [{'version': '23.0.0'}],
+    "22 09 80 52 60 46 00 F9 60 42 02 91 07 0A F9 97 00 1D 80 52 FC AF FC 97 1F 20 03 D5 A1 46 27 50 -> 82 0A A0 52 <- F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA 39 92 F9 97 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_4
@@ -364,9 +364,9 @@ systemweb_pattern_diffs_4_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 20
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "FC AF FC 97 1F 20 03 D5 A1 46 27 50 82 0A A0 52 F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA -> 39 92 F9 97 <- 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97 F7 03 00 AA 81 C0 00 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}],
+    "FC AF FC 97 1F 20 03 D5 A1 46 27 50 82 0A A0 52 F8 03 00 AA 69 EC FB 97 E0 03 17 AA E1 03 18 AA -> 39 92 F9 97 <- 75 1F 00 B4 00 01 80 52 F1 AF FC 97 F7 03 00 AA D5 DB F9 97 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 EA AF FC 97 F7 03 00 AA 81 C0 00 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_5
@@ -374,9 +374,9 @@ systemweb_pattern_diffs_5_universal_regex = {
     # Known pattern: 0168A152
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 E2 69 FD 97 A0 62 01 91 76 2E 08 F9 48 6C FD 97 E0 03 15 AA -> 01 68 A1 52 <- 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9": [{'version': '23.0.0'}],
+    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 E2 69 FD 97 A0 62 01 91 76 2E 08 F9 48 6C FD 97 E0 03 15 AA -> 01 68 A1 52 <- 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # systemweb_pattern_diffs_6
@@ -384,9 +384,9 @@ systemweb_pattern_diffs_6_universal_regex = {
     # Known pattern: 60820691..68A152
     # Offset: 4
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "48 6C FD 97 E0 03 15 AA 01 68 A1 52 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}],
+    "48 6C FD 97 E0 03 15 AA 01 68 A1 52 3A 43 00 94 48 1F 00 D0 E2 03 00 AA 08 AD 41 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 DC 6B FD 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 21 AE F6 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_0
@@ -394,9 +394,9 @@ openweb_pattern_diffs_0_universal_regex = {
     # Known pattern: CB..01..EB..1A0054
     # Offset: 5
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 E5 DA FE 97 E0 03 14 AA E1 03 1F 2A 7F B7 FD 97": [{'version': '23.0.0'}],
+    "3F 05 40 F1 C8 16 00 54 E9 07 40 F9 16 00 9E 52 D6 BD A1 72 0A 01 16 8B 4A 01 15 CB 3F 01 0A EB -> 03 1A 00 54 <- 09 00 82 92 08 01 15 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB A9 1E 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 E5 DA FE 97 E0 03 14 AA E1 03 1F 2A 7F B7 FD 97": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_1
@@ -404,9 +404,9 @@ openweb_pattern_diffs_1_universal_regex = {
     # Known pattern: 526208A072
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "CE DA FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}],
+    "CE DA FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9 FD 7B 44 A9 FF 03 02 91 D1 9F 40 D3 F0 03 00 91 31 7E 12 9B": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_2
@@ -414,9 +414,9 @@ openweb_pattern_diffs_2_universal_regex = {
     # Known pattern: 91028BA052
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "82 0E A0 52 D2 DA FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 CE DA FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}],
+    "82 0E A0 52 D2 DA FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 CE DA FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- CA DA FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 C5 DA FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 C1 DA FE 97 28 00 80 52 F6 57 46 A9 68 A6 2A 39 F4 4F 47 A9 F7 2B 40 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_3
@@ -424,9 +424,9 @@ openweb_pattern_diffs_3_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "22 09 80 52 60 46 00 F9 60 42 02 91 9C DE FE 97 00 1D 80 52 18 3C 06 94 E1 0D 00 F0 21 48 0F 91 -> 82 0A A0 52 <- F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA 9E A2 FF 97 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94": [{'version': '23.0.0'}],
+    "22 09 80 52 60 46 00 F9 60 42 02 91 9C DE FE 97 00 1D 80 52 18 3C 06 94 E1 0D 00 F0 21 48 0F 91 -> 82 0A A0 52 <- F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA 9E A2 FF 97 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_4
@@ -434,9 +434,9 @@ openweb_pattern_diffs_4_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 20
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "18 3C 06 94 E1 0D 00 F0 21 48 0F 91 82 0A A0 52 F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA -> 9E A2 FF 97 <- 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94 F7 03 00 AA D6 C6 03 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}],
+    "18 3C 06 94 E1 0D 00 F0 21 48 0F 91 82 0A A0 52 F8 03 00 AA A6 4D 02 94 E0 03 17 AA E1 03 18 AA -> 9E A2 FF 97 <- 75 1F 00 B4 00 01 80 52 0D 3C 06 94 F7 03 00 AA 10 B4 03 94 60 62 00 91 E1 03 17 AA 15 01 00 94 00 08 80 52 06 3C 06 94 F7 03 00 AA D6 C6 03 94 60 82 00 91 E1 03 17 AA 34 01 00 94": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_5
@@ -444,9 +444,9 @@ openweb_pattern_diffs_5_universal_regex = {
     # Known pattern: 0168A152
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 B8 DA FE 97 A0 62 01 91 76 2E 08 F9 1E DD FE 97 E0 03 15 AA -> 01 68 A1 52 <- 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9": [{'version': '23.0.0'}],
+    "7F 0E 08 F9 7F 12 08 F9 7F 2A 10 B9 B8 DA FE 97 A0 62 01 91 76 2E 08 F9 1E DD FE 97 E0 03 15 AA -> 01 68 A1 52 <- 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 03 68 A1 52 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # openweb_pattern_diffs_6
@@ -454,9 +454,9 @@ openweb_pattern_diffs_6_universal_regex = {
     # Known pattern: 60820691..68A152
     # Offset: 4
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "1E DD FE 97 E0 03 15 AA 01 68 A1 52 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}],
+    "1E DD FE 97 E0 03 15 AA 01 68 A1 52 0C 0D FF 97 E8 20 00 90 E2 03 00 AA 08 01 44 F9 60 82 06 91 -> 03 68 A1 52 <- 01 C1 1B 91 B2 DC FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 47 92 F7 97 E8 3B 40 B9 1F 05 00 71 E1 0B 00 54 F5 17 40 F9 BF BE 7B F1 A8 0F 00 54 E9 1B 40 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_0
@@ -464,9 +464,9 @@ offlineweb_pattern_diffs_0_universal_regex = {
     # Known pattern: CB..01..EB..1A0054
     # Offset: 5
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "3F 05 40 F1 A8 16 00 54 EA 07 40 F9 09 00 9E 52 C9 BD A1 72 09 01 09 8B 29 01 14 CB 5F 01 09 EB -> 23 1A 00 54 <- 09 00 82 92 08 01 14 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB 49 1F 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 BE 76 FE 97 60 22 00 91 E1 03 1F 2A 87 A2 FD 97": [{'version': '23.0.0'}],
+    "3F 05 40 F1 A8 16 00 54 EA 07 40 F9 09 00 9E 52 C9 BD A1 72 09 01 09 8B 29 01 14 CB 5F 01 09 EB -> 23 1A 00 54 <- 09 00 82 92 08 01 14 CB C9 93 BE F2 08 01 09 8B 29 00 80 92 E9 21 BD F2 1F 01 09 EB 49 1F 00 54 60 22 0A 91 61 82 06 91 82 3D A0 52 BE 76 FE 97 60 22 00 91 E1 03 1F 2A 87 A2 FD 97": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_1
@@ -474,9 +474,9 @@ offlineweb_pattern_diffs_1_universal_regex = {
     # Known pattern: 526208A072
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "A7 76 FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91 C0 03 5F D6 E0 47 00 B0 00 30 43 F9 81 8D 19 94 20 EC FF 34": [{'version': '23.0.0'}],
+    "A7 76 FE 97 60 E2 1F 91 61 82 06 91 02 8B A0 52 A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 -> 62 08 A0 72 <- 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91 C0 03 5F D6 E0 47 00 B0 00 30 43 F9 81 8D 19 94 20 EC FF 34": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_2
@@ -484,9 +484,9 @@ offlineweb_pattern_diffs_2_universal_regex = {
     # Known pattern: 91028BA052
     # Offset: 1
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "82 0E A0 52 AB 76 FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 A7 76 FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91": [{'version': '23.0.0'}],
+    "82 0E A0 52 AB 76 FE 97 60 42 1C 91 61 82 06 91 02 01 A0 52 A7 76 FE 97 60 E2 1F 91 61 82 06 91 -> 02 8B A0 52 <- A3 76 FE 97 60 82 23 91 61 82 06 91 02 00 9C 52 62 08 A0 72 9E 76 FE 97 60 22 27 91 61 82 06 91 82 00 A0 52 9A 76 FE 97 28 00 80 52 FD 7B 44 A9 68 A6 2A 39 F4 4F 45 A9 FF 83 01 91": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_3
@@ -494,9 +494,9 @@ offlineweb_pattern_diffs_3_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "5F 23 01 39 5F FF 00 A9 5F FF 01 A9 5F FF 02 A9 5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 -> 82 0A A0 52 <- F8 03 00 AA 08 03 02 94 77 06 40 F9 78 06 00 F9 D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94": [{'version': '23.0.0'}],
+    "5F 23 01 39 5F FF 00 A9 5F FF 01 A9 5F FF 02 A9 5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 -> 82 0A A0 52 <- F8 03 00 AA 08 03 02 94 77 06 40 F9 78 06 00 F9 D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_4
@@ -504,9 +504,9 @@ offlineweb_pattern_diffs_4_universal_regex = {
     # Known pattern: 820AA052F80300AA
     # Offset: 16
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 82 0A A0 52 F8 03 00 AA 08 03 02 94 77 06 40 F9 -> 78 06 00 F9 <- D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94 37 03 40 F9 38 03 00 F9 D7 00 00 B4 E0 03 17 AA": [{'version': '23.0.0'}],
+    "5F FF 03 A9 8D 81 00 94 A1 3B 00 D0 21 48 03 91 82 0A A0 52 F8 03 00 AA 08 03 02 94 77 06 40 F9 -> 78 06 00 F9 <- D7 00 00 B4 E0 03 17 AA 27 03 02 94 E0 03 17 AA 01 1D 80 52 BC 81 00 94 95 35 00 B4 00 01 80 52 7D 81 00 94 F8 03 00 AA F3 E1 03 94 37 03 40 F9 38 03 00 F9 D7 00 00 B4 E0 03 17 AA": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_5
@@ -514,9 +514,9 @@ offlineweb_pattern_diffs_5_universal_regex = {
     # Known pattern: 0168A152
     # Offset: 0
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "2B 76 FE 97 60 A2 35 91 A9 AD 00 94 60 A2 39 91 F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 -> 01 68 A1 52 <- 7E F3 FD 97 E1 03 00 AA 60 82 06 91 02 68 A1 52 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9": [{'version': '23.0.0'}],
+    "2B 76 FE 97 60 A2 35 91 A9 AD 00 94 60 A2 39 91 F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 -> 01 68 A1 52 <- 7E F3 FD 97 E1 03 00 AA 60 82 06 91 02 68 A1 52 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # offlineweb_pattern_diffs_6
@@ -524,9 +524,9 @@ offlineweb_pattern_diffs_6_universal_regex = {
     # Known pattern: 60820691..68A152
     # Offset: 4
     # Match position: 0
-    # Valid from version: 23.0.0 to 23.0.0
+    # Valid from version: 23.0.0 to 23.0.1
     # Original known range: 23.0.0 to 99.99.99
-    "F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 01 68 A1 52 7E F3 FD 97 E1 03 00 AA 60 82 06 91 -> 02 68 A1 52 <- 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9 9F BE 7B F1 08 0F 00 54 E9 1B 40 F9 3F 41 40 F1": [{'version': '23.0.0'}],
+    "F3 6E FF 97 E0 03 14 AA C5 78 FE 97 60 E2 00 91 01 68 A1 52 7E F3 FD 97 E1 03 00 AA 60 82 06 91 -> 02 68 A1 52 <- 1A 79 FE 97 E0 23 00 91 FF 7F 03 A9 FF 07 00 F9 FF 7F 02 A9 FF 7F 01 A9 4C AB 16 94 E8 3B 40 B9 1F 05 00 71 01 0B 00 54 F4 17 40 F9 9F BE 7B F1 08 0F 00 54 E9 1B 40 F9 3F 41 40 F1": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 }
 
 # olsc_pattern_diffs
@@ -564,7 +564,7 @@ olsc_pattern_diffs_partial_regexes = {
     # Known pattern: 00..73....F9....4039
     # Offset: 42
     # Match position: 0
-    # Valid from version: 19.0.0 to 23.0.0
+    # Valid from version: 19.0.0 to 23.0.1
     # Original known range: 19.0.0 to 99.99.99
     "48 1F 00 35 42 06 00 90 42 74 2A 91 BF C3 1F 38 1F 20 03 D5 63 A0 64 50 A0 13 00 D1 21 00 80 52 -> B8 54 02 94 <- 1F 04 00 F1 E1 1E 00 54 C8 0A 00 F0 42 06 00 90 42 74 2A 91 08 85 43 F9 A9 C3 5F 38 23 06 00 F0 63 28 2F 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 AA 54 02 94 1F 04 00 F1": [{'version': '19.0.0'}, {'version': '19.0.1'}],
     "48 1F 00 35 82 06 00 90 42 B4 2D 91 BF C3 1F 38 1F 20 03 D5 E3 D9 68 50 A0 13 00 D1 21 00 80 52 -> C0 76 02 94 <- 1F 04 00 F1 E1 1E 00 54 48 0B 00 90 82 06 00 90 42 B4 2D 91 08 61 42 F9 A9 C3 5F 38 63 06 00 F0 63 58 30 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 B2 76 02 94 1F 04 00 F1": [{'version': '20.0.0'}, {'version': '20.0.1'}],
@@ -573,7 +573,7 @@ olsc_pattern_diffs_partial_regexes = {
     "08 21 00 37 02 07 00 90 42 A8 2A 91 BF C3 1F 38 1F 20 03 D5 43 A6 70 70 A0 13 00 D1 21 00 80 52 -> AA C1 02 94 <- 1F 04 00 F1 A1 20 00 54 48 0B 00 F0 02 07 00 90 42 A8 2A 91 08 CD 44 F9 A9 C3 5F 38 E3 06 00 F0 63 90 2D 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 9C C1 02 94 1F 04 00 F1": [{'version': '21.0.0'}, {'version': '21.0.1'}],
     "08 21 00 37 02 07 00 90 42 A8 2A 91 BF C3 1F 38 1F 20 03 D5 43 A6 70 70 A0 13 00 D1 21 00 80 52 -> 8A C3 02 94 <- 1F 04 00 F1 A1 20 00 54 48 0B 00 F0 02 07 00 90 42 A8 2A 91 08 D9 44 F9 A9 C3 5F 38 E3 06 00 F0 63 90 2D 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 7C C3 02 94 1F 04 00 F1": [{'version': '21.1.0'}, {'version': '21.2.0'}],
     "08 21 00 37 02 07 00 B0 42 CC 0A 91 BF C3 1F 38 1F 20 03 D5 23 3A 71 10 A0 13 00 D1 21 00 80 52 -> C6 C9 02 94 <- 1F 04 00 F1 A1 20 00 54 68 0B 00 B0 02 07 00 B0 42 CC 0A 91 08 E9 46 F9 A9 C3 5F 38 03 07 00 90 63 B8 16 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 B8 C9 02 94 1F 04 00 F1": [{'version': '22.0.0'}, {'version': '22.1.0'}, {'version': '22.5.0'}],
-    "08 21 00 37 E2 06 00 D0 42 34 05 91 BF C3 1F 38 1F 20 03 D5 63 A3 6F 70 A0 13 00 D1 21 00 80 52 -> 52 DA 02 94 <- 1F 04 00 F1 A1 20 00 54 48 0B 00 D0 E2 06 00 D0 42 34 05 91 08 F5 47 F9 A9 C3 5F 38 E3 06 00 B0 63 78 12 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 44 DA 02 94 1F 04 00 F1": [{'version': '23.0.0'}],
+    "08 21 00 37 E2 06 00 D0 42 34 05 91 BF C3 1F 38 1F 20 03 D5 63 A3 6F 70 A0 13 00 D1 21 00 80 52 -> 52 DA 02 94 <- 1F 04 00 F1 A1 20 00 54 48 0B 00 D0 E2 06 00 D0 42 34 05 91 08 F5 47 F9 A9 C3 5F 38 E3 06 00 B0 63 78 12 91 A0 13 00 D1 BF C3 1F 38 21 00 80 52 09 01 00 39 44 DA 02 94 1F 04 00 F1": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -582,9 +582,15 @@ am_pattern_diffs_partial_regexes = {
     # Known pattern: 682646391F0500716100005460420691794DFF97
     # Offset: 16
     # Match position: 0
-    # Valid from version: 22.0.0 to 22.5.0
-    # Original known range: 22.0.0 to 99.99.99
-    "88 00 00 B4 E0 03 13 AA 7F 66 00 F9 7D EF FF 97 68 26 46 39 1F 05 00 71 61 00 00 54 60 42 06 91 -> 79 4D FF 97 <- 68 E2 40 39 1F 05 00 71 A1 00 00 54 88 02 40 F9 08 85 40 F9 00 21 0B 91 21 40 00 94 68 06 40 F9 61 12 40 F9 08 85 40 F9 00 41 04 91 F2 65 00 94 60 02 01 91 A3 3A FF 97 60 C2 09 91": [{'version': '22.0.0'}, {'version': '22.1.0'}],
+    # Valid from version: 22.0.0 to 22.0.0
+    # Original known range: 22.0.0 to 22.0.0
+    "88 00 00 B4 E0 03 13 AA 7F 66 00 F9 7D EF FF 97 68 26 46 39 1F 05 00 71 61 00 00 54 60 42 06 91 -> 79 4D FF 97 <- 68 E2 40 39 1F 05 00 71 A1 00 00 54 88 02 40 F9 08 85 40 F9 00 21 0B 91 21 40 00 94 68 06 40 F9 61 12 40 F9 08 85 40 F9 00 41 04 91 F2 65 00 94 60 02 01 91 A3 3A FF 97 60 C2 09 91": [{'version': '22.0.0'}],
+
+    # Known pattern: unknown
+    # Offset: unknown
+    # Match position: 0
+    # Valid from version: 22.1.0 to 22.5.0
+    "88 00 00 B4 E0 03 13 AA 7F 66 00 F9 7D EF FF 97 68 26 46 39 1F 05 00 71 61 00 00 54 60 42 06 91 -> 79 4D FF 97 <- 68 E2 40 39 1F 05 00 71 A1 00 00 54 88 02 40 F9 08 85 40 F9 00 21 0B 91 21 40 00 94 68 06 40 F9 61 12 40 F9 08 85 40 F9 00 41 04 91 F2 65 00 94 60 02 01 91 A3 3A FF 97 60 C2 09 91": [{'version': '22.1.0'}],
     "88 00 00 B4 E0 03 13 AA 7F 66 00 F9 7D EF FF 97 68 26 46 39 1F 05 00 71 61 00 00 54 60 42 06 91 -> 79 4D FF 97 <- 68 E2 40 39 1F 05 00 71 A1 00 00 54 88 02 40 F9 08 85 40 F9 00 21 0B 91 1D 40 00 94 60 02 01 91 A8 3A FF 97 60 C2 09 91 B7 74 FF 97 68 C2 48 39 1F 05 00 71 A1 00 00 54 68 82 49 39": [{'version': '22.5.0'}],
 
 }
@@ -712,7 +718,7 @@ fat32_noncasigchk_pattern_diffs_partial_regexes = {
     # Known pattern: 0694....00..42..0091
     # Offset: -18
     # Match position: 0
-    # Valid from version: 17.0.0 to 23.0.0
+    # Valid from version: 17.0.0 to 23.0.1
     # Original known range: 17.0.0 to 99.99.99
     "61 F4 85 D2 E1 2A B1 F2 40 00 9C 52 C0 05 A0 72 A1 BE D9 F2 C1 DD EF F2 2D 00 00 14 C0 02 40 F9 -> 64 60 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 39 01 00 37 48 00 9C 52 C8 05 A0 72 E1 6E 96 D2 E1 3A BA F2 00 C9 40 91 21 72 DE F2 41 E6 E7 F2 1F 00 00 14 79 00 00 36 C0 02 40 F9 77 60 03 94": [{'version': '17.0.0'}, {'version': '17.0.1'}],
     "A1 2E 82 D2 81 A4 B7 F2 40 00 9C 52 C0 05 A0 72 41 1A C8 F2 21 9B E4 F2 2D 00 00 14 A0 02 40 F9 -> 3A 5E 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 C1 56 9D D2 21 4E A6 F2 00 C9 40 91 21 14 DC F2 61 6D E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 4F 5E 03 94": [{'version': '18.0.0'}, {'version': '18.0.1'}],
@@ -724,7 +730,7 @@ fat32_noncasigchk_pattern_diffs_partial_regexes = {
     "C1 EE 92 D2 A1 65 BE F2 41 58 C8 F2 41 F5 F5 F2 00 C9 40 91 73 00 00 14 F9 03 00 2A A0 02 40 F9 -> 12 8C 03 94 <- E8 02 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 A0 80 D2 C1 F9 AC F2 81 D6 CD F2 61 D1 FB F2 00 C9 40 91 62 00 00 14 1F 05 00 71": [{'version': '21.2.0'}],
     "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> A9 96 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 A1 8F 89 D2 A1 88 BE F2 01 F8 DF F2 01 66 FB F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> A9 96 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 92 8E D2 A1 6A BB F2 41 77 CC F2 E1 0A F4 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '22.5.0'}],
-    "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 01 A8 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 3E 85 D2 21 FC AB F2 C1 4B D8 F2 A1 1F F7 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '23.0.0'}],
+    "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 01 A8 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 3E 85 D2 21 FC AB F2 C1 4B D8 F2 A1 1F F7 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -764,7 +770,7 @@ exfat_noncasigchk_pattern_diffs_partial_regexes = {
     # Known pattern: 0694....00..42..0091
     # Offset: -18
     # Match position: 0
-    # Valid from version: 17.0.0 to 23.0.0
+    # Valid from version: 17.0.0 to 23.0.1
     # Original known range: 17.0.0 to 99.99.99
     "61 F4 85 D2 E1 2A B1 F2 40 00 9C 52 C0 05 A0 72 A1 BE D9 F2 C1 DD EF F2 2D 00 00 14 C0 02 40 F9 -> FC 8B 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 39 01 00 37 48 00 9C 52 C8 05 A0 72 E1 6E 96 D2 E1 3A BA F2 00 C9 40 91 21 72 DE F2 41 E6 E7 F2 1F 00 00 14 79 00 00 36 C0 02 40 F9 0F 8C 03 94": [{'version': '17.0.0'}, {'version': '17.0.1'}],
     "A1 2E 82 D2 81 A4 B7 F2 40 00 9C 52 C0 05 A0 72 41 1A C8 F2 21 9B E4 F2 2D 00 00 14 A0 02 40 F9 -> 5E 8A 03 94 <- 08 1C 00 12 1F 05 00 71 41 01 00 54 38 01 00 37 48 00 9C 52 C8 05 A0 72 C1 56 9D D2 21 4E A6 F2 00 C9 40 91 21 14 DC F2 61 6D E5 F2 1F 00 00 14 78 00 00 36 A0 02 40 F9 73 8A 03 94": [{'version': '18.0.0'}, {'version': '18.0.1'}],
@@ -776,7 +782,7 @@ exfat_noncasigchk_pattern_diffs_partial_regexes = {
     "C1 EE 92 D2 A1 65 BE F2 41 58 C8 F2 41 F5 F5 F2 00 C9 40 91 73 00 00 14 F9 03 00 2A A0 02 40 F9 -> 6A B8 03 94 <- E8 02 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 41 A0 80 D2 C1 F9 AC F2 81 D6 CD F2 61 D1 FB F2 00 C9 40 91 62 00 00 14 1F 05 00 71": [{'version': '21.2.0'}],
     "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 25 C3 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 A1 8F 89 D2 A1 88 BE F2 01 F8 DF F2 01 66 FB F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 25 C3 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 92 8E D2 A1 6A BB F2 41 77 CC F2 E1 0A F4 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '22.5.0'}],
-    "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 7D D4 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 3E 85 D2 21 FC AB F2 C1 4B D8 F2 A1 1F F7 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '23.0.0'}],
+    "E8 1A 1F 12 1F 11 00 71 81 10 00 54 9A 00 00 37 E8 1E 00 12 1F 11 00 71 00 0F 00 54 C0 02 40 F9 -> 7D D4 03 94 <- 08 03 40 B9 09 1C 00 12 3F 05 00 71 61 01 00 54 1F 05 00 71 60 01 00 54 48 00 9C 52 C8 05 A0 72 61 3E 85 D2 21 FC AB F2 C1 4B D8 F2 A1 1F F7 F2 00 C9 40 91 60 00 00 14 1F 05 00 71": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -897,11 +903,11 @@ ssl_pattern_1_diffs_partial_regexes = {
     # Known pattern: 08008012.9120591.F1E00F..84200B9
     # Offset: 16
     # Match position: 0
-    # Valid from version: 22.0.0 to 23.0.0
+    # Valid from version: 22.0.0 to 23.0.1
     # Original known range: 22.0.0 to 99.99.99
     "21 B0 43 F9 A0 E3 DE F2 A0 9A E9 F2 AD E4 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 F0 36 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "21 B0 43 F9 00 D9 C8 F2 E0 13 FE F2 8C E3 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 33 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.5.0'}],
-    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}],
+    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -916,11 +922,11 @@ ssl_pattern_2_diffs_partial_regexes = {
     # Known pattern: 880600121F0D0071A0000054
     # Offset: 8
     # Match position: 0
-    # Valid from version: 22.0.0 to 23.0.0
+    # Valid from version: 22.0.0 to 23.0.1
     # Original known range: 22.0.0 to 99.99.99
     "21 B0 43 F9 A0 E3 DE F2 A0 9A E9 F2 AD E4 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 F0 36 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "21 B0 43 F9 00 D9 C8 F2 E0 13 FE F2 8C E3 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 33 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.5.0'}],
-    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}],
+    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -935,11 +941,11 @@ ssl_pattern_3_diffs_partial_regexes = {
     # Known pattern: 88160012
     # Offset: 8
     # Match position: 0
-    # Valid from version: 22.0.0 to 23.0.0
+    # Valid from version: 22.0.0 to 23.0.1
     # Original known range: 22.0.0 to 99.99.99
     "21 B0 43 F9 A0 E3 DE F2 A0 9A E9 F2 AD E4 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 F0 36 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.0.0'}, {'version': '22.1.0'}],
     "21 B0 43 F9 00 D9 C8 F2 E0 13 FE F2 8C E3 FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 33 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '22.5.0'}],
-    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}],
+    "21 00 44 F9 60 EF CF F2 60 81 FA F2 A4 DD FB 97 60 8F 9F 52 09 00 00 14 88 16 00 12 E0 03 13 AA -> 68 46 01 B9 <- 75 FF FF 97 E0 03 00 2A 03 00 00 14 60 4F 81 52 20 00 A0 72 F4 4F 41 A9 FD 7B C2 A8 D1 37 00 14 FF 03 02 D1 FD 7B 05 A9 F5 33 00 F9 F4 4F 07 A9 FD 43 01 91 08 1C 40 F9 E8 00 00 B4": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -948,11 +954,11 @@ loader_pattern_diffs_partial_regexes = {
     # Known pattern: 009401C0BE121F00
     # Offset: 6
     # Match position: 0
-    # Valid from version: 22.1.0 to 23.0.0
+    # Valid from version: 22.1.0 to 23.0.1
     # Original known range: 22.1.0 to 99.99.99
     "F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FB 73 45 A9 FD 7B C8 A8 C0 03 5F D6 4C 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 C0 22 40 39 00 01 00 35 C0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 03 15 AA 88 2A 00 94 00 F0 FF 35": [{'version': '22.1.0'}],
     "E0 03 13 2A F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FD 7B C8 A8 C0 03 5F D6 20 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 A0 22 40 39 00 01 00 35 A0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 E3 01 91 E4 29 00 94 E0 EF FF 35": [{'version': '22.5.0'}],
-    "E0 03 13 2A F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FD 7B C8 A8 C0 03 5F D6 8E 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 A0 22 40 39 00 01 00 35 A0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 E3 01 91 52 2A 00 94 20 F0 FF 35": [{'version': '23.0.0'}],
+    "E0 03 13 2A F3 53 41 A9 F7 63 43 A9 F9 6B 44 A9 FD 7B C8 A8 C0 03 5F D6 8E 53 00 94 01 C0 BE 12 -> 1F 00 01 6B <- 69 FA FF 54 A0 22 40 39 00 01 00 35 A0 02 40 F9 E1 FF 9F 92 E1 DF FF F2 00 00 01 8B E1 9F 70 B2 1F 00 01 EB 42 F9 FF 54 E1 43 40 F9 22 00 80 52 E0 E3 01 91 52 2A 00 94 20 F0 FF 35": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
@@ -967,10 +973,10 @@ erpt_pattern_diffs_partial_regexes = {
     # Known pattern: FD7B02A9FD830091F55B04A9
     # Offset: -4
     # Match position: 0
-    # Valid from version: 22.5.0 to 23.0.0
+    # Valid from version: 22.5.0 to 23.0.1
     # Original known range: 22.5.0 to 99.99.99
     "5F 6B 21 38 F4 BF 00 B9 64 FF FF 17 42 04 00 11 E0 5B 40 F9 E2 BF 00 B9 92 FF FF 17 00 00 00 00 -> FF 03 05 D1 <- FD 7B 02 A9 FD 83 00 91 F5 5B 04 A9 76 04 00 D0 F5 03 01 2A F3 53 03 A9 D4 82 41 F9 F7 63 05 A9 F8 03 00 AA C0 1C 00 12 F7 03 02 AA F9 6B 06 A9 F9 03 03 2A FA 03 05 AA FB 73 07 A9": [{'version': '22.5.0'}],
-    "5F 6B 21 38 F4 BF 00 B9 64 FF FF 17 42 04 00 11 E0 5B 40 F9 E2 BF 00 B9 92 FF FF 17 00 00 00 00 -> FF 03 05 D1 <- FD 7B 02 A9 FD 83 00 91 F5 5B 04 A9 76 04 00 F0 F5 03 01 2A F3 53 03 A9 D4 9A 41 F9 F7 63 05 A9 F8 03 00 AA C0 1C 00 12 F7 03 02 AA F9 6B 06 A9 F9 03 03 2A FA 03 05 AA FB 73 07 A9": [{'version': '23.0.0'}],
+    "5F 6B 21 38 F4 BF 00 B9 64 FF FF 17 42 04 00 11 E0 5B 40 F9 E2 BF 00 B9 92 FF FF 17 00 00 00 00 -> FF 03 05 D1 <- FD 7B 02 A9 FD 83 00 91 F5 5B 04 A9 76 04 00 F0 F5 03 01 2A F3 53 03 A9 D4 9A 41 F9 F7 63 05 A9 F8 03 00 AA C0 1C 00 12 F7 03 02 AA F9 6B 06 A9 F9 03 03 2A FA 03 05 AA FB 73 07 A9": [{'version': '23.0.0'}, {'version': '23.0.1'}],
 
 }
 
