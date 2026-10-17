@@ -39,14 +39,23 @@ def get_module_id():
 
 with open('foss_browser_ssl.nro', 'rb') as fi:
     read_data = fi.read()
-    result = re.search(rb'\xE2\x13\x88\x1A\x21\x0A\x80\x52\x36\x00\x80\x52\xF8\xF0\x02\x94\xA0\xB6\x41\xF9', read_data) # 22.5.0 completely refactored browser
-    patch_1 = '%08X%s%s' % (result.start() - 4, '0004', 'E8031F2A') # VERIFY_HOST
-    patch_2 = '%08X%s%s' % (result.start() + 20, '0004', 'E2031F2A') # VERIFY_PEER
-    diff_start = result.start() - 0x20
-    diff_end = diff_start + 0x60
-    diff_bytes = read_data[diff_start:diff_end]
+    hex_data = read_data.hex().upper()
+    # 22.5.0+ FOSS browser configures the HTTPS transport through curl_easy_setopt:
+    #   setopt(ctx, CURLOPT_SSL_VERIFYHOST=0x51, 2)   ... mov w2,#2  (42 00 80 52)
+    #   setopt(ctx, CURLOPT_SSL_VERIFYPEER=0x40, 1)   mov w1,#0x40 ; mov w2,#1  (22 00 80 52)
+    # on the verify-enabled branch (the sibling branch already passes 0/0). Rewriting both value
+    # immediates to "mov w2, wzr" (E2 03 1F 2A) forces host and peer verification off on every branch.
+    # The 0x40 option-id mov anchors each pattern uniquely; two identical SSL-setup call sites exist,
+    # so each option is patched at both. This replaces the pre-22.5.0 build layout whose pattern
+    verify_host = [m.start() // 2 for m in re.finditer('01088052E2031F2A0700001442008052', hex_data)]  # mov w1,#0x40|mov w2,wzr|b|mov w2,#2
+    verify_peer = [m.start() // 2 for m in re.finditer('0108805222008052', hex_data)]                   # mov w1,#0x40|mov w2,#1
+    records = ''
+    for start in verify_host:
+        records += '%08X%s%s' % (start + 12, '0004', 'E2031F2A') # VERIFY_HOST = 0
+    for start in verify_peer:
+        records += '%08X%s%s' % (start + 4, '0004', 'E2031F2A') # VERIFY_PEER = 0
     text_file = open(get_module_id() + '.ips', 'wb')
     print('browser-ssl build-id: ' + get_module_id())
-    print('disable_browser_ca_verification offsets and patches at: ' + patch_1 + patch_2)
-    text_file.write(bytes.fromhex(str(f'4950533332' + patch_1 + patch_2 + '45454F46')))
+    print('disable_browser_ca_verification offsets and patches at: ' + records)
+    text_file.write(bytes.fromhex(str(f'4950533332' + records + '45454F46')))
     text_file.close()

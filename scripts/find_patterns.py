@@ -140,6 +140,10 @@ def find_and_patch(
     failed_rules = []  # "<tag or name> [<pattern>]" of every rule that did not match or failed its condition
 
     module_id = get_module_id(module_path)
+    if module_name == "BROWSER":
+        # Atmosphère NRO patches are keyed by the 16-byte (32 hex char) build-id, not the 20-byte
+        # read get_module_id() uses for NSO sysmodules; the first 32 chars are that build-id.
+        module_id = module_id[:32]
 
     short_hash = None
     if hash_path and os.path.exists(hash_path):
@@ -2416,31 +2420,70 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
         )
     ],
     "BROWSER" : [
+        # The FOSS browser's SSL setup configures the HTTPS transport through curl_easy_setopt:
+        #   setopt(ctx, CURLOPT_SSL_VERIFYHOST=0x51, 2)   mov w1,#0x51 ; ... ; mov w2,#2
+        #   setopt(ctx, CURLOPT_SSL_VERIFYPEER=0x40, 1)   mov w1,#0x40 ; mov w2,#1
+        # on the verification-enabled branch (the sibling branch already passes 0/0). Rewriting the
+        # two "enable" value immediates (mov w2,#2 / mov w2,#1) to "mov w2, wzr" forces host and peer
+        # verification off on every branch. The 0x40 option-id mov anchors each pattern uniquely.
+        # Two identical SSL-setup call sites exist in the .nro, so each option is patched at both
+        # (match_position 0 and 1). This replaces the pre-22.5.0 browser build layout, whose pattern
+        # (E213881A210A805236008052...) is absent from 22.5.0 / 23.0.0 / 23.0.1.
         PatchRule(
             name="verifyhost",
             module="BROWSER",
             min_version="22.5.0",
             max_version=FW_VER_ANY,
-            pattern="E213881A210A805236008052F8F00294A0B641F9",
-            offset=-4,
+            pattern="01088052E2031F2A0700001442008052",  # mov w1,#0x40 | mov w2,wzr | b | mov w2,#2
+            offset=12,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\xE8\x03\x1F\x2A",
+            patch_bytes=b"\xE2\x03\x1F\x2A",  # mov w2, wzr -> CURLOPT_SSL_VERIFYHOST = 0
             patch_size_hex="0004",
+            tag="browser_verifyhost_1",
+        ),
+        PatchRule(
+            name="verifyhost",
+            module="BROWSER",
+            min_version="22.5.0",
+            max_version=FW_VER_ANY,
+            pattern="01088052E2031F2A0700001442008052",  # mov w1,#0x40 | mov w2,wzr | b | mov w2,#2
+            offset=12,
+            head_offset=0,
+            match_position=1,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\xE2\x03\x1F\x2A",  # mov w2, wzr -> CURLOPT_SSL_VERIFYHOST = 0
+            patch_size_hex="0004",
+            tag="browser_verifyhost_2",
         ),
         PatchRule(
             name="verifypeer",
             module="BROWSER",
             min_version="22.5.0",
             max_version=FW_VER_ANY,
-            pattern="E213881A210A805236008052F8F00294A0B641F9",
-            offset=20,
+            pattern="0108805222008052",  # mov w1,#0x40 | mov w2,#1
+            offset=4,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("bic"),
-            patch_bytes=b"\xE2\x03\x1F\x2A",
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\xE2\x03\x1F\x2A",  # mov w2, wzr -> CURLOPT_SSL_VERIFYPEER = 0
             patch_size_hex="0004",
+            tag="browser_verifypeer_1",
+        ),
+        PatchRule(
+            name="verifypeer",
+            module="BROWSER",
+            min_version="22.5.0",
+            max_version=FW_VER_ANY,
+            pattern="0108805222008052",  # mov w1,#0x40 | mov w2,#1
+            offset=4,
+            head_offset=0,
+            match_position=1,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\xE2\x03\x1F\x2A",  # mov w2, wzr -> CURLOPT_SSL_VERIFYPEER = 0
+            patch_size_hex="0004",
+            tag="browser_verifypeer_2",
         )
     ],
     "SSL" : [
