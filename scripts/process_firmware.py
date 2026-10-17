@@ -34,6 +34,7 @@ import util
 import emummc_h
 from organize_firmware_files import sort_nca
 from keys import RootKeys
+import p12_to_pem
 
 def format_bytes_as_hex(data: bytes) -> str:
     """Transforms bytes into a comma-separated hex string."""
@@ -56,6 +57,15 @@ def to_c_hex_array_16(hex_str: str) -> str:
     inner = ", ".join(bytes_formatted)
     
     return f"{{ {inner} }}"
+
+def _extract_client_certificate(client_cert_nca_object, output_pem_path):
+    p12_file_object  = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 0)
+    json_file_object = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 1)
+    txt_file_object  = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 2)
+
+    pem, urls = p12_to_pem.convert_client_cert(
+        p12_file_object, json_file_object, txt_file_object, output_pem_path)
+    return urls
 
 def _extract_system_version(system_nca_object, mkeksource):
     """Extract firmware version from system update NCA object."""
@@ -129,8 +139,21 @@ def _extract_pfs0_and_get_module_id(nca_data, titleId, system_version, title_nam
         print(f"Skipping {title_name} ({titleId}) for firmware {system_version}; title is only present on 6.0.0+")
         return None
 
+    if titleId == '010000000000100A':
+        title_name = 'LibAppletWeb'
+
+    if titleId == '010000000000100B':
+        title_name = 'LibAppletShop'
+
     if titleId == '010000000000100F':
         title_name = 'LibAppletOff'
+
+    if titleId == '0100000000001010':
+        title_name = 'LibAppletLns'
+
+    if titleId == '0100000000001011':
+        title_name = 'LibAppletAuth'
+
     exefs_path = Path(f'output/{system_version}/{system_version}_{title_name}.nso0')
     exefs_data = nca.SectionExtractor.extract_section_pfs0_main_only(nca_data, exefs_path)
     exefs_data
@@ -864,7 +887,7 @@ def _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth
         return
     
     firmware_version_no_dot, firmware_revision, firmware_string = util.get_dauth_strings(dauth_file_path)
-    digest = util.get_dauth_digest(dauth_digest_path)
+    #digest = util.get_dauth_digest(dauth_digest_path)
     user_agent = util.get_user_agent(f'output/{system_version}/{system_version}_account.nso0')
     dauth_address = util.get_dauth_address(f'output/{system_version}/{system_version}_account.nso0')
     
@@ -959,6 +982,9 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
         if nca_titleId == "0100000000000809":  # system_update
             system_update_nca_path = nca_path
             system_update_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+        if nca_titleId == "0100000000000859":  # client_cert
+            client_cert_nca_path = nca_path
+            client_cert_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
         if nca_titleId == "010000000000001E":  # account
             account_nca_path = nca_path
             account_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
@@ -995,10 +1021,26 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
             usb_nca_path = nca_path
             usb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, usb_nca_object)
+        if nca_titleId == "010000000000100A":  # LibAppletWeb
+            appletweb_nca_path = nca_path
+            appletweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, appletweb_nca_object)
+        if nca_titleId == "010000000000100B":  # LibAppletShop
+            appletshop_nca_path = nca_path
+            appletshop_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, appletshop_nca_object)
         if nca_titleId == "010000000000100F":  # LibAppletOff
             offlineweb_nca_path = nca_path
             offlineweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
             PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, offlineweb_nca_object)
+        if nca_titleId == "0100000000001010":  # LibAppletLns 
+            appletlns_nca_path = nca_path
+            appletlns_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, appletlns_nca_object)
+        if nca_titleId == "0100000000001011":  # LibAppletAuth
+            appletauth_nca_path = nca_path
+            appletauth_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
+            PROGRAM_TITLES[nca_titleId] = (nca_titleid_name, appletauth_nca_object)
         if nca_titleId == "0100000000001042":  # systemWeb
             systemweb_nca_path = nca_path
             systemweb_nca_object = nca.Nca(util.InitializeFile(nca_path), isdev=False)
@@ -1054,6 +1096,14 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
     dauth_digest_path = f'output/{system_version}/{system_version}_system_digest'
     _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth_digest_path)
 
+    # Extract savanna client certificate if available (23.0.0+)
+    if util.version_to_tuple(system_version) >= util.version_to_tuple("23.0.0"):
+        urls = _extract_client_certificate(client_cert_nca_object, f'output/{system_version}/eshop_hac_prod.pem')
+        print("Savanna urls:")
+        for url in urls:
+            print(url)
+        print("\n")
+    
     # Extract FOSS browser if available (21.0.0+)
     if util.version_to_tuple(system_version) >= util.version_to_tuple("21.0.0"):
         decompressed_browser_object = nca.SectionExtractor.extract_section_romfs_browser_only(browser_nca_object)

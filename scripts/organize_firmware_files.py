@@ -3,6 +3,7 @@ import util
 import nca
 
 titleids_to_store = {
+    '0100000000000859': 'client_cert_data',
     '0100000000000809': 'system_update',
     '0100000000000819': 'fat32',
     '010000000000081B': 'exfat',
@@ -16,7 +17,11 @@ titleids_to_store = {
     "010000000000003E": "olsc",
     '0100000000000006': 'usb',
     '0100000000000803': 'browser',
-    '010000000000100F': 'LibAppletOff ',
+    '010000000000100A': 'LibAppletWeb',
+    '010000000000100B': 'LibAppletShop',
+    '0100000000001010': 'LibAppletLns',
+    '0100000000001011': 'LibAppletAuth',
+    '010000000000100F': 'LibAppletOff',
     '0100000000001042': 'systemWeb',
     '0100000000001043': 'openWeb',
 }

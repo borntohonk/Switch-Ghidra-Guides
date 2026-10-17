@@ -10,6 +10,10 @@ firmware/**
 *.tik
 *.cert
 *.nsp
+*.p12
+*.pem
+recon_out
+recon_out/**
 nsp/
 nsp/**
 temp/

@@ -31,7 +31,7 @@ import shutil
 import errno
 from urllib.request import Request, urlopen
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Tuple, List, Dict, Optional, Callable
 
 import package3_and_stratosphere
@@ -86,6 +86,17 @@ def log_patch_success(
         log_file.write(f"({module_name}) Pattern diff (context):\n{diff_str}\n")
     log_file.write("\n")
 
+@dataclass
+class PatchChain:
+    """State carried between chained find_and_patch calls (prior_patch_fragment): the raw
+    (offset, size_hex, patch_bytes) IPS records, the successful patches (for embedded output)
+    and the rules that failed so far. Only the terminating call writes anything out, and only
+    if no rule in the chain failed."""
+    records: List[Tuple[int, str, bytes]] = field(default_factory=list)
+    patches: List[Dict] = field(default_factory=list)
+    failed: List[str] = field(default_factory=list)
+
+
 def find_and_patch(
     module_path: str,
     version: str,
@@ -98,12 +109,12 @@ def find_and_patch(
     suppress_logging: bool = False,
     is_fs: bool = False,
     fs_type: str = "",
-    prior_patch_fragment: Optional[List[Tuple[int, str, bytes]]] = None,
+    prior_patch_fragment: Optional[PatchChain] = None,
     hash_path: Optional[str] = None,
     atmosphere_string: Optional[str] = None,
     rule_tag: Optional[str] = None,
     record_ips_entry: bool = True
-) -> Optional[List[Tuple[int, str, bytes]]]:
+) -> Optional[PatchChain]:
     if not os.path.exists(module_path):
         log_file.write(f"({module_name}) File not found: {module_path}\n")
         return None
@@ -120,12 +131,13 @@ def find_and_patch(
 
     if not rules:
         log_file.write(f"({module_name}) No matching PatchRule for version {version}\n")
-        return None
+        return prior_patch_fragment
 
     collected_ips_records = []
     raw_ips_components = []  # Store raw components to rebuild with correct format after magic is determined
     hekate_lines = []
     successful_patches = []  # collect for grouped logging
+    failed_rules = []  # "<tag or name> [<pattern>]" of every rule that did not match or failed its condition
 
     module_id = get_module_id(module_path)
 
@@ -151,6 +163,7 @@ def find_and_patch(
 
         if not match:
             print(f"no match found for {version} - {module_name} with the pattern of '{rule.pattern}'")
+            failed_rules.append(f"{rule.tag or rule.name} [{rule.pattern}]")
             continue
 
         found_any = True
@@ -171,6 +184,7 @@ def find_and_patch(
                 f"({module_name}) Condition failed for '{rule.name}' at 0x{patch_offset:X} "
                 f"(got {mnemonic}, expected one of {rule.condition_mnemonics})\n"
             )
+            failed_rules.append(f"{rule.tag or rule.name} [{rule.pattern}]")
             continue
 
         if module_name == "NOGC":
@@ -200,6 +214,7 @@ def find_and_patch(
             'head_offset': head_offset,
             'patch_size_int': patch_size_int,
             'patch_bytes': rule.patch_bytes,
+            'rule_tag': rule.tag,
         })
 
         # Build IPS record (will use correct format once magic is determined)
@@ -271,25 +286,40 @@ def find_and_patch(
 
     if not found_any:
         log_file.write(f"({module_name}) No valid patch location found for {version}\n\n")
-        return prior_patch_fragment
 
-    collect_embedded_patches(module_name, version, module_id, successful_patches)
+    prior = prior_patch_fragment or PatchChain()
+    chain = PatchChain(
+        records=prior.records + raw_ips_components,
+        patches=prior.patches + successful_patches,
+        failed=prior.failed + failed_rules,
+    )
 
-    # ─── IPS fragment building ───
-    # prior_patch_fragment carries the *raw* (offset, size_hex, patch_bytes) records
-    # accumulated so far in this chain (not a pre-built IPS string) so that the
-    # magic/offset-width and single trailing EOF/EEOF marker are only decided once,
-    # from the true total record count, instead of being baked in at each link and
-    # then concatenated (which produced malformed multi-record files with a stray
-    # mid-stream EOF marker and no terminating one).
-    all_raw_components = (prior_patch_fragment or []) + raw_ips_components
+    # Only the terminating call of a chain (record_ips_entry=True, the default) writes the ips /
+    # embedded / hekate output, and only when every rule in the chain applied: a partial patch set
+    # is reported by rule name instead of being recorded.
+    if record_ips_entry and chain.failed:
+        failed = list(dict.fromkeys(chain.failed))
+        warning = (f"WARNING: ({module_name}) {version}: {len(failed)} pattern(s) failed, "
+                   f"no ips/embedded/hekate patch written: {', '.join(failed)}")
+        print(warning)
+        log_file.write(warning + "\n\n")
+        return chain
 
-    full_ips_content = None
-    if all_raw_components:
-        magic = ips32_magic if len(all_raw_components) > 1 else patch_magic
+    if not record_ips_entry:
+        return chain
+
+    collect_embedded_patches(module_name, version, module_id, chain.patches)
+
+    # ─── IPS file building ───
+    # The magic/offset-width and the single trailing EOF/EEOF marker are decided once, from the
+    # total record count of the whole chain, instead of being baked in at each link and then
+    # concatenated (which produced malformed multi-record files with a stray mid-stream EOF
+    # marker and no terminating one).
+    if chain.records:
+        magic = ips32_magic if len(chain.records) > 1 else patch_magic
         end_magic = eeof_magic if magic == ips32_magic else eof_magic
         rebuilt_records = [build_ips_record(offset, size_hex, patch_data, magic)
-                          for offset, size_hex, patch_data in all_raw_components]
+                          for offset, size_hex, patch_data in chain.records]
         full_ips_content = build_ips_file(magic, rebuilt_records, end_magic)
 
         # patch path logic unchanged
@@ -303,13 +333,7 @@ def find_and_patch(
         else:
             patch_path = f"patches/atmosphere/exefs_patches/{module_name.lower()}_patches/"
 
-        # Only the terminating call of a chain (record_ips_entry=True, the default)
-        # should actually persist an entry — otherwise every intermediate link's
-        # partial fragment also gets appended, and since dedup keeps the FIRST
-        # entry per module_id, the fully-chained final result would be discarded
-        # in favor of whichever partial fragment was recorded first.
-        if record_ips_entry:
-            ips_patch_database.append((version, module_id, patch_path, full_ips_content))
+        ips_patch_database.append((version, module_id, patch_path, full_ips_content))
 
     # ─── Hekate patch block (unchanged, uses is_fs, fs_type, atmosphere_string) ───
     if hekate_patch_db is not None and hekate_lines:
@@ -334,7 +358,7 @@ def find_and_patch(
             log_file.write(f"     {ln}\n")
         log_file.write('\n')
 
-    return all_raw_components if all_raw_components else None
+    return chain
 
 def mkdirp(path):
     try:
@@ -375,27 +399,48 @@ def load_existing_pattern_diffs(filepath: str) -> Dict[str, Dict[str, str]]:
         'usb_pattern_3_diffs': {},
         'olsc_pattern_diffs': {},
         'am_pattern_diffs': {},
-        'systemweb_pattern_diffs_0': {},
         'systemweb_pattern_diffs_1': {},
         'systemweb_pattern_diffs_2': {},
         'systemweb_pattern_diffs_3': {},
         'systemweb_pattern_diffs_4': {},
         'systemweb_pattern_diffs_5': {},
         'systemweb_pattern_diffs_6': {},
-        'openweb_pattern_diffs_0': {},
         'openweb_pattern_diffs_1': {},
         'openweb_pattern_diffs_2': {},
         'openweb_pattern_diffs_3': {},
         'openweb_pattern_diffs_4': {},
         'openweb_pattern_diffs_5': {},
         'openweb_pattern_diffs_6': {},
-        'offlineweb_pattern_diffs_0': {},
         'offlineweb_pattern_diffs_1': {},
         'offlineweb_pattern_diffs_2': {},
         'offlineweb_pattern_diffs_3': {},
         'offlineweb_pattern_diffs_4': {},
         'offlineweb_pattern_diffs_5': {},
         'offlineweb_pattern_diffs_6': {},
+        'libappletweb_pattern_diffs_1': {},
+        'libappletweb_pattern_diffs_2': {},
+        'libappletweb_pattern_diffs_3': {},
+        'libappletweb_pattern_diffs_4': {},
+        'libappletweb_pattern_diffs_5': {},
+        'libappletweb_pattern_diffs_6': {},
+        'libappletshop_pattern_diffs_1': {},
+        'libappletshop_pattern_diffs_2': {},
+        'libappletshop_pattern_diffs_3': {},
+        'libappletshop_pattern_diffs_4': {},
+        'libappletshop_pattern_diffs_5': {},
+        'libappletshop_pattern_diffs_6': {},
+        'libappletlns_pattern_diffs_1': {},
+        'libappletlns_pattern_diffs_2': {},
+        'libappletlns_pattern_diffs_3': {},
+        'libappletlns_pattern_diffs_4': {},
+        'libappletlns_pattern_diffs_5': {},
+        'libappletlns_pattern_diffs_6': {},
+        'libappletauth_pattern_diffs_1': {},
+        'libappletauth_pattern_diffs_2': {},
+        'libappletauth_pattern_diffs_3': {},
+        'libappletauth_pattern_diffs_4': {},
+        'libappletauth_pattern_diffs_5': {},
+        'libappletauth_pattern_diffs_6': {},
         'fat32_noncasigchk_pattern_diffs': {},
         'exfat_noncasigchk_pattern_diffs': {},
         'fat32_noacidsigchk1_pattern_diffs': {},
@@ -481,7 +526,30 @@ def update_patch_file(filepath: str, current_db: List[Tuple], unique_index: int 
 EMBEDDED_PATCH_EXCLUDED_MODULES = {"FS", "LOADER", "NOGC", "ERPT", "OLSC", "SSL", "BROWSER"}
 EMBEDDED_MODULE_PATCH_GROUPS = {
     "NIM": ("NimPatches", "Patch NIM firmware update blocking and blank PRODINFO handling."),
+    "SYSTEMWEB": ("SystemWebMemoryPatches", "SystemWeb memory patches."),
+    "OPENWEB": ("OpenWebMemoryPatches", "OpenWeb memory patches."),
+    "OFFLINEWEB": ("OfflineWebMemoryPatches", "OfflineWeb memory patches."),
+    "LIBAPPLETWEB": ("LibAppletWebMemoryPatches", "LibAppletWeb memory patches."),
+    "LIBAPPLETSHOP": ("LibAppletShopMemoryPatches", "LibAppletShop memory patches."),
+    "LIBAPPLETLNS": ("LibAppletLnsMemoryPatches", "LibAppletLns memory patches."),
+    "LIBAPPLETAUTH": ("LibAppletAuthMemoryPatches", "LibAppletAuth memory patches."),
 }
+
+# Browser applet modules: written together to ldr_embedded_web_patches.inc (one WebMemoryPatches table, in this
+# order) instead of one file per module, with each version's entries in patch order (#1-#6, from the rule tag).
+EMBEDDED_WEB_MODULES = ["systemweb", "openweb", "offlineweb", "libappletweb", "libappletshop", "libappletlns", "libappletauth"]
+EMBEDDED_WEB_HEADER = """/* The following patches reduce memory usage by the browser applets: */
+/*   OfflineWeb (LibAppletOff): 20.0.0+ */
+/*   SystemWeb, OpenWeb: 22.0.0+ (these applets were added in 22.0.0) */
+/*   LibAppletWeb, LibAppletShop, LibAppletLns, LibAppletAuth: 20.0.0 - 21.2.0 (stubs from 22.0.0+) */
+/* Breakdown of each patch in order: */
+/* #1 - Set TotalAvailableMemorySize to 1GB. */
+/* #2 - Change the root heap "Reserved" region allocation size to 0 (from 0xF7E000 on 20.x, 0x47E000 on 21.0.0-22.0.0, 0x43E000 on 22.5.0+). */
+/* #3 - Patch the initial memory block allocation size (from 0xAE00000 to 0xAA00000 on 20.x, from 0xB400000 to 0xB000000 on 21.0.0+). */
+/* #4 - Patch the initial memory block heap size from 0xB400000 to 0xB000000 (21.0.0+) */
+/* #5 - Patch the browser engine memory capacity from 0xAA00000 to 0x9000000. */
+/* #6 - Patch the browser engine memory allocation size from 0xAA00000 to 0x9000000. */
+"""
 EMBEDDED_PATCH_NAMES = {
     ("AM", "am-22.0.0+"): ("AmDisableTeardownPatches", "Patch teardown function call to NOP."),
 }
@@ -554,12 +622,115 @@ def collect_embedded_patches(
             {
                 'module_id': module_id,
                 'entries': [],
+                'order': {},
             }
         )
 
         entry = (patch['head_offset'] - 0x100, patch['patch_bytes'])
         if entry not in version_group['entries']:
             version_group['entries'].append(entry)
+        # patch number from a chained rule's tag ("..._3" -> 3), used to write web entries in patch order
+        tag = patch.get('rule_tag') or ''
+        if re.search(r'_\d+$', tag):
+            version_group['order'][entry] = int(tag.rsplit('_', 1)[1])
+
+
+EMBEDDED_LICENSE_HEADER = """/*
+ * Copyright (c) Atmosphère-NX
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms and conditions of the GNU General Public License,
+ * version 2, as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+"""
+
+
+def _embedded_patch_variants(patch_group, in_patch_order=False):
+    """One variant per distinct (module_id, entries), in version order, with every version that shares it."""
+    patch_variants = []
+    patch_variant_map = {}
+    for version, version_group in sorted(
+        patch_group['versions'].items(),
+        key=lambda item: version_to_tuple(item[0])
+    ):
+        if in_patch_order:
+            order = version_group.get('order', {})
+            sorted_entries = tuple(sorted(version_group['entries'], key=lambda item: (order.get(item, 0), item[0])))
+        else:
+            sorted_entries = tuple(sorted(version_group['entries'], key=lambda item: item[0]))
+        variant_key = (version_group['module_id'], sorted_entries)
+        if variant_key not in patch_variant_map:
+            patch_variant = {
+                'array_version': version,
+                'module_id': version_group['module_id'],
+                'entries': sorted_entries,
+                'versions': [],
+            }
+            patch_variant_map[variant_key] = patch_variant
+            patch_variants.append(patch_variant)
+
+        patch_variant_map[variant_key]['versions'].append(version)
+    return patch_variants
+
+
+def _write_embedded_entry_arrays(f, patch_name, patch_variants):
+    for patch_variant in patch_variants:
+        version_suffix = _format_cpp_version_suffix(patch_variant['array_version'])
+        f.write(f"constexpr inline const EmbeddedPatchEntry {patch_name}_{version_suffix}[] = {{\n")
+
+        offset_width = max([6] + [len(f"{offset:X}") for offset, _ in patch_variant['entries']])
+        for offset, patch_bytes in patch_variant['entries']:
+            f.write(
+                f"    {{ 0x{offset:0{offset_width}X}, \"{_format_cpp_byte_string(patch_bytes)}\", {len(patch_bytes)} }},\n"
+            )
+
+        f.write("};\n\n")
+
+
+def _write_embedded_web_patch_file(output_dir, patch_groups):
+    """All browser applet modules in one file: entry arrays per module and version, then one WebMemoryPatches table."""
+    filepath = os.path.join(output_dir, "ldr_embedded_web_patches.inc")
+    by_module = {patch_group['module_type']: patch_group for patch_group in patch_groups}
+    modules = [(module_type, by_module[module_type]['patch_name'],
+                _embedded_patch_variants(by_module[module_type], in_patch_order=True))
+               for module_type in EMBEDDED_WEB_MODULES if module_type in by_module]
+
+    with open(filepath, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(EMBEDDED_LICENSE_HEADER)
+        f.write(EMBEDDED_WEB_HEADER)
+        f.write("\n")
+
+        for _, patch_name, patch_variants in modules:
+            _write_embedded_entry_arrays(f, patch_name, patch_variants)
+
+        rows = []
+        for _, patch_name, patch_variants in modules:
+            module_rows = []
+            for patch_variant in patch_variants:
+                entry_name = f"{patch_name}_{_format_cpp_version_suffix(patch_variant['array_version'])}"
+                module_rows.append((patch_variant['module_id'], entry_name, ", ".join(patch_variant['versions'])))
+            rows.append(module_rows)
+
+        width = max((len(entry_name) for module_rows in rows for _, entry_name, _ in module_rows), default=0)
+        f.write("constexpr inline const EmbeddedPatch WebMemoryPatches[] = {\n")
+        for i, module_rows in enumerate(rows):
+            if i:
+                f.write("\n")
+            for module_id, entry_name, versions in module_rows:
+                size_arg = f"util::size({entry_name}),".ljust(width + len("util::size(),") + 1)
+                f.write(f"    {{ ParseModuleId(\"{module_id}\"), {size_arg}{entry_name.ljust(width)} }}, /* {versions} */\n")
+        f.write("};\n")
+
+    print(f"Wrote embedded patch file: {filepath}")
 
 
 def write_embedded_patch_files(output_dir: str = 'output'):
@@ -571,59 +742,21 @@ def write_embedded_patch_files(output_dir: str = 'output'):
     for patch_group in embedded_patch_database.values():
         grouped_by_module.setdefault(patch_group['module_type'], []).append(patch_group)
 
+    web_groups = [patch_group for module_type in EMBEDDED_WEB_MODULES for patch_group in grouped_by_module.pop(module_type, [])]
+    if web_groups:
+        _write_embedded_web_patch_file(output_dir, web_groups)
+
     for module_type, patch_groups in sorted(grouped_by_module.items()):
         filepath = os.path.join(output_dir, f"ldr_embedded_{module_type}_patches.inc")
         with open(filepath, 'w', encoding='utf-8', newline='\n') as f:
-            f.write("/*\n")
-            f.write(" * Copyright (c) Atmosphère-NX\n")
-            f.write(" *\n")
-            f.write(" * This program is free software; you can redistribute it and/or modify it\n")
-            f.write(" * under the terms and conditions of the GNU General Public License,\n")
-            f.write(" * version 2, as published by the Free Software Foundation.\n")
-            f.write(" *\n")
-            f.write(" * This program is distributed in the hope it will be useful, but WITHOUT\n")
-            f.write(" * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n")
-            f.write(" * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n")
-            f.write(" * more details.\n")
-            f.write(" *\n")
-            f.write(" * You should have received a copy of the GNU General Public License\n")
-            f.write(" * along with this program.  If not, see <http://www.gnu.org/licenses/>.\n")
-            f.write(" */\n\n")
+            f.write(EMBEDDED_LICENSE_HEADER)
 
             for patch_group in sorted(patch_groups, key=lambda item: item['patch_name']):
                 patch_name = patch_group['patch_name']
                 f.write(f"/* {patch_group['comment']} */\n")
 
-                patch_variants = []
-                patch_variant_map = {}
-                for version, version_group in sorted(
-                    patch_group['versions'].items(),
-                    key=lambda item: version_to_tuple(item[0])
-                ):
-                    sorted_entries = tuple(sorted(version_group['entries'], key=lambda item: item[0]))
-                    variant_key = (version_group['module_id'], sorted_entries)
-                    if variant_key not in patch_variant_map:
-                        patch_variant = {
-                            'array_version': version,
-                            'module_id': version_group['module_id'],
-                            'entries': sorted_entries,
-                            'versions': [],
-                        }
-                        patch_variant_map[variant_key] = patch_variant
-                        patch_variants.append(patch_variant)
-
-                    patch_variant_map[variant_key]['versions'].append(version)
-
-                for patch_variant in patch_variants:
-                    version_suffix = _format_cpp_version_suffix(patch_variant['array_version'])
-                    f.write(f"constexpr inline const EmbeddedPatchEntry {patch_name}_{version_suffix}[] = {{\n")
-
-                    for offset, patch_bytes in patch_variant['entries']:
-                        f.write(
-                            f"    {{ 0x{offset:X}, \"{_format_cpp_byte_string(patch_bytes)}\", {len(patch_bytes)} }},\n"
-                        )
-
-                    f.write("};\n\n")
+                patch_variants = _embedded_patch_variants(patch_group)
+                _write_embedded_entry_arrays(f, patch_name, patch_variants)
 
                 f.write(f"constexpr inline const EmbeddedPatch {patch_name}[] = {{\n")
                 for patch_variant in patch_variants:
@@ -1264,226 +1397,198 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
     "SYSTEMWEB" : [
         PatchRule(
             name="SystemWebMemoryPatches",
-            tag="SystemWebMemoryPatches_0",
-            module="SYSTEMWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="CB..01..EB..1A0054",
-            offset=5,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_1",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="526208A072",
-            offset=1,
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("movk"),
-            patch_bytes=b"\x02\x00\x80\x52",
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_2",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="91028BA052",
-            offset=1,
+            pattern="02009C52....A072",
+            offset=4,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("mov"),
-            patch_bytes=b"\x82\x80\xA0\x52",
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_3",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
+            pattern="0168A152",
             offset=0,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x02\x00\x80\x52",
+            patch_bytes=b"\x01\x60\xA1\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_4",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
-            offset=20,
+            pattern="60820691..68A152",
+            offset=4,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("bl"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x60\xA1\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_5",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="0168A152",
-            offset=0,
+            pattern="B5......910154A152",
+            offset=5,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_bytes=b"\x01\x20\xA1\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="SystemWebMemoryPatches",
             tag="SystemWebMemoryPatches_6",
             module="SYSTEMWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="60820691..68A152",
-            offset=4,
+            pattern="A90154A152",
+            offset=1,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x03\x58\xA1\x52",
+            patch_bytes=b"\x01\x20\xA1\x52",
             patch_size_hex="0004",
         ),
     ],
     "OPENWEB" : [
         PatchRule(
             name="OpenWebMemoryPatches",
-            tag="OpenWebMemoryPatches_0",
-            module="OPENWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="CB..01..EB..1A0054",
-            offset=5,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OpenWebMemoryPatches",
             tag="OpenWebMemoryPatches_1",
             module="OPENWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="526208A072",
-            offset=1,
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("movk"),
-            patch_bytes=b"\x02\x00\x80\x52",
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="OpenWebMemoryPatches",
             tag="OpenWebMemoryPatches_2",
             module="OPENWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
-            pattern="91028BA052",
-            offset=1,
+            pattern="02009C52....A072",
+            offset=4,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("mov"),
-            patch_bytes=b"\x82\x80\xA0\x52",
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="OpenWebMemoryPatches",
             tag="OpenWebMemoryPatches_3",
             module="OPENWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
-            offset=0,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("mov"),
-            patch_bytes=b"\x02\x00\x80\x52",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OpenWebMemoryPatches",
-            tag="OpenWebMemoryPatches_4",
-            module="OPENWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
-            offset=20,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("bl"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OpenWebMemoryPatches",
-            tag="OpenWebMemoryPatches_5",
-            module="OPENWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
             pattern="0168A152",
             offset=0,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_bytes=b"\x01\x60\xA1\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="OpenWebMemoryPatches",
-            tag="OpenWebMemoryPatches_6",
+            tag="OpenWebMemoryPatches_4",
             module="OPENWEB",
-            min_version="23.0.0",
+            min_version="22.0.0",
             max_version=FW_VER_ANY,
             pattern="60820691..68A152",
             offset=4,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x03\x58\xA1\x52",
+            patch_bytes=b"\x03\x60\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_5",
+            module="OPENWEB",
+            min_version="22.0.0",
+            max_version=FW_VER_ANY,
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OpenWebMemoryPatches",
+            tag="OpenWebMemoryPatches_6",
+            module="OPENWEB",
+            min_version="22.0.0",
+            max_version=FW_VER_ANY,
+            pattern="A90154A152",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
             patch_size_hex="0004",
         ),
     ],
     "OFFLINEWEB" : [
         PatchRule(
             name="OfflineWebMemoryPatches",
-            tag="OfflineWebMemoryPatches_0",
+            tag="OfflineWebMemoryPatches_1",
             module="OFFLINEWEB",
-            min_version="23.0.0",
+            min_version="21.0.0",
             max_version=FW_VER_ANY,
-            pattern="CB..01..EB..1A0054",
-            offset=5,
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
             head_offset=0,
             match_position=0,
-            condition_mnemonics=("b.lo"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="OfflineWebMemoryPatches",
-            tag="OfflineWebMemoryPatches_1",
+            tag="OfflineWebMemoryPatches_2",
             module="OFFLINEWEB",
-            min_version="23.0.0",
+            min_version="21.0.0",
             max_version=FW_VER_ANY,
-            pattern="526208A072",
-            offset=1,
+            pattern="02009C52....A072",
+            offset=4,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("movk"),
@@ -1492,73 +1597,807 @@ PATCH_RULES: Dict[str, List[PatchRule]] = {
         ),
         PatchRule(
             name="OfflineWebMemoryPatches",
-            tag="OfflineWebMemoryPatches_2",
-            module="OFFLINEWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="91028BA052",
-            offset=1,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("mov"),
-            patch_bytes=b"\x82\x80\xA0\x52",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OfflineWebMemoryPatches",
             tag="OfflineWebMemoryPatches_3",
             module="OFFLINEWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
-            offset=0,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("mov"),
-            patch_bytes=b"\x02\x00\x80\x52",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OfflineWebMemoryPatches",
-            tag="OfflineWebMemoryPatches_4",
-            module="OFFLINEWEB",
-            min_version="23.0.0",
-            max_version=FW_VER_ANY,
-            pattern="820AA052F80300AA",
-            offset=16,
-            head_offset=0,
-            match_position=0,
-            condition_mnemonics=("str"),
-            patch_bytes=b"\x1F\x20\x03\xD5",
-            patch_size_hex="0004",
-        ),
-        PatchRule(
-            name="OfflineWebMemoryPatches",
-            tag="OfflineWebMemoryPatches_5",
-            module="OFFLINEWEB",
-            min_version="23.0.0",
+            min_version="21.0.0",
             max_version=FW_VER_ANY,
             pattern="0168A152",
             offset=0,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x01\x58\xA1\x52",
+            patch_bytes=b"\x01\x60\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_4",
+            module="OFFLINEWEB",
+            min_version="21.0.0",
+            max_version=FW_VER_ANY,
+            pattern="E10300AA60....91..68A152",
+            offset=8,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x02\x60\xA1\x52",
+            patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_5",
+            module="OFFLINEWEB",
+            min_version="21.0.0",
+            max_version=FW_VER_ANY,
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
             patch_size_hex="0004",
         ),
         PatchRule(
             name="OfflineWebMemoryPatches",
             tag="OfflineWebMemoryPatches_6",
             module="OFFLINEWEB",
-            min_version="23.0.0",
+            min_version="21.0.0",
             max_version=FW_VER_ANY,
-            pattern="60820691..68A152",
-            offset=4,
+            pattern="A90154A152",
+            offset=1,
             head_offset=0,
             match_position=0,
             condition_mnemonics=("mov"),
-            patch_bytes=b"\x02\x58\xA1\x52",
+            patch_bytes=b"\x01\x20\xA1\x52",
             patch_size_hex="0004",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_1",
+            module="OFFLINEWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="A1028052E0230091C2FF8F12E3031FAA",
+            offset=36,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_2",
+            module="OFFLINEWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="02009C52E21EA072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0xF7E000 to 0.",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_3",
+            module="OFFLINEWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="195CA152E00318AAE10319AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x19\x54\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation and heap size from 0xAE00000 to 0xAA00000.",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_5",
+            module="OFFLINEWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="0154A152E00317AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="OfflineWebMemoryPatches",
+            tag="OfflineWebMemoryPatches_6",
+            module="OFFLINEWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="1454A152E10314AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x14\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation and heap size from 0xAA00000 to 0x9000000.",
+        ),
+    ],
+    # LibAppletWeb / LibAppletShop / LibAppletLns / LibAppletAuth (20.x): same patches as the 20.x OfflineWeb group,
+    # but these are built with return-address hardening and different register allocation, so the patterns differ
+    # (initial memory block size in w23 instead of w25). No _4: _3 covers both sizes, as on OfflineWeb 20.x.
+    # 21.x uses the 21.0.0+ OfflineWeb patterns, except _4: the heap size goes in w3 (as on SystemWeb / OpenWeb).
+    # From 22.0.0 these applets are stubs, so there is nothing to patch.
+    "LIBAPPLETWEB" : [
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_1",
+            module="LIBAPPLETWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="A1028052E0230091C2FF8F12E3031FAA",
+            offset=36,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_2",
+            module="LIBAPPLETWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="02009C52E21EA072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0xF7E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_3",
+            module="LIBAPPLETWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="175CA152E00316AAE10317AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x17\x54\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation and heap size from 0xAE00000 to 0xAA00000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_5",
+            module="LIBAPPLETWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="0154A152E0031CAA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_6",
+            module="LIBAPPLETWEB",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="1454A152........F30300AAE10314AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x14\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation and heap size from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_1",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_2",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="02009C52....A072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0x47E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_3",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_4",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="E20300AA........60....910368A152",
+            offset=12,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block heap size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_5",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletWebMemoryPatches",
+            tag="LibAppletWebMemoryPatches_6",
+            module="LIBAPPLETWEB",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A90154A152",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation size from 0xAA00000 to 0x9000000.",
+        ),
+    ],
+    "LIBAPPLETSHOP" : [
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_1",
+            module="LIBAPPLETSHOP",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="A1028052E0230091C2FF8F12E3031FAA",
+            offset=36,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_2",
+            module="LIBAPPLETSHOP",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="02009C52E21EA072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0xF7E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_3",
+            module="LIBAPPLETSHOP",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="175CA152E00316AAE10317AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x17\x54\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation and heap size from 0xAE00000 to 0xAA00000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_5",
+            module="LIBAPPLETSHOP",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="0154A152E0031CAA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_6",
+            module="LIBAPPLETSHOP",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="1454A152........F30300AAE10314AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x14\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation and heap size from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_1",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_2",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="02009C52....A072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0x47E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_3",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_4",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="E20300AA........60....910368A152",
+            offset=12,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block heap size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_5",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletShopMemoryPatches",
+            tag="LibAppletShopMemoryPatches_6",
+            module="LIBAPPLETSHOP",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A90154A152",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation size from 0xAA00000 to 0x9000000.",
+        ),
+    ],
+    "LIBAPPLETLNS" : [
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_1",
+            module="LIBAPPLETLNS",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="A1028052E0230091C2FF8F12E3031FAA",
+            offset=36,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_2",
+            module="LIBAPPLETLNS",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="02009C52E21EA072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0xF7E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_3",
+            module="LIBAPPLETLNS",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="175CA152E00316AAE10317AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x17\x54\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation and heap size from 0xAE00000 to 0xAA00000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_5",
+            module="LIBAPPLETLNS",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="0154A152E0031CAA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_6",
+            module="LIBAPPLETLNS",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="1454A152........F30300AAE10314AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x14\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation and heap size from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_1",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_2",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="02009C52....A072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0x47E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_3",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_4",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="E20300AA........60....910368A152",
+            offset=12,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block heap size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_5",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletLnsMemoryPatches",
+            tag="LibAppletLnsMemoryPatches_6",
+            module="LIBAPPLETLNS",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A90154A152",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation size from 0xAA00000 to 0x9000000.",
+        ),
+    ],
+    "LIBAPPLETAUTH" : [
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_1",
+            module="LIBAPPLETAUTH",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="A1028052E0230091C2FF8F12E3031FAA",
+            offset=36,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_2",
+            module="LIBAPPLETAUTH",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="02009C52E21EA072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0xF7E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_3",
+            module="LIBAPPLETAUTH",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="175CA152E00316AAE10317AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x17\x54\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation and heap size from 0xAE00000 to 0xAA00000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_5",
+            module="LIBAPPLETAUTH",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="0154A152E0031CAA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_6",
+            module="LIBAPPLETAUTH",
+            min_version="20.0.0",
+            max_version="20.5.0",
+            pattern="1454A152........F30300AAE10314AA",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x14\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation and heap size from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_1",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A1028052C2FF8F12E3031FAA",
+            offset=32,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("ldr"),
+            patch_bytes=b"\x09\x00\xA8\xD2",
+            patch_size_hex="0004",
+            description="Set TotalAvailableMemorySize to 1GB.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_2",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="02009C52....A072",
+            offset=4,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("movk"),
+            patch_bytes=b"\x02\x00\x80\x52",
+            patch_size_hex="0004",
+            description="Change the root heap Reserved region allocation size from 0x47E000 to 0.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_3",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="0168A152",
+            offset=0,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block allocation size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_4",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="E20300AA........60....910368A152",
+            offset=12,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x03\x60\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the initial memory block heap size from 0xB400000 to 0xB000000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_5",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="B5......910154A152",
+            offset=5,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory capacity from 0xAA00000 to 0x9000000.",
+        ),
+        PatchRule(
+            name="LibAppletAuthMemoryPatches",
+            tag="LibAppletAuthMemoryPatches_6",
+            module="LIBAPPLETAUTH",
+            min_version="21.0.0",
+            max_version="21.2.0",
+            pattern="A90154A152",
+            offset=1,
+            head_offset=0,
+            match_position=0,
+            condition_mnemonics=("mov"),
+            patch_bytes=b"\x01\x20\xA1\x52",
+            patch_size_hex="0004",
+            description="Patch the browser engine memory allocation size from 0xAA00000 to 0x9000000.",
         ),
     ],
     "ERPT" : [
@@ -1719,7 +2558,6 @@ usb_pattern_2_diffs = {}
 usb_pattern_3_diffs = {}
 olsc_pattern_diffs = {}
 am_pattern_diffs = {}
-systemweb_pattern_diffs_0 = {}
 systemweb_pattern_diffs_1 = {}
 systemweb_pattern_diffs_2 = {}
 systemweb_pattern_diffs_3 = {}
@@ -1727,7 +2565,6 @@ systemweb_pattern_diffs_4 = {}
 systemweb_pattern_diffs_5 = {}
 systemweb_pattern_diffs_6 = {}
 
-openweb_pattern_diffs_0 = {}
 openweb_pattern_diffs_1 = {}
 openweb_pattern_diffs_2 = {}
 openweb_pattern_diffs_3 = {}
@@ -1735,13 +2572,40 @@ openweb_pattern_diffs_4 = {}
 openweb_pattern_diffs_5 = {}
 openweb_pattern_diffs_6 = {}
 
-offlineweb_pattern_diffs_0 = {}
 offlineweb_pattern_diffs_1 = {}
 offlineweb_pattern_diffs_2 = {}
 offlineweb_pattern_diffs_3 = {}
 offlineweb_pattern_diffs_4 = {}
 offlineweb_pattern_diffs_5 = {}
 offlineweb_pattern_diffs_6 = {}
+
+libappletweb_pattern_diffs_1 = {}
+libappletweb_pattern_diffs_2 = {}
+libappletweb_pattern_diffs_3 = {}
+libappletweb_pattern_diffs_4 = {}
+libappletweb_pattern_diffs_5 = {}
+libappletweb_pattern_diffs_6 = {}
+
+libappletshop_pattern_diffs_1 = {}
+libappletshop_pattern_diffs_2 = {}
+libappletshop_pattern_diffs_3 = {}
+libappletshop_pattern_diffs_4 = {}
+libappletshop_pattern_diffs_5 = {}
+libappletshop_pattern_diffs_6 = {}
+
+libappletlns_pattern_diffs_1 = {}
+libappletlns_pattern_diffs_2 = {}
+libappletlns_pattern_diffs_3 = {}
+libappletlns_pattern_diffs_4 = {}
+libappletlns_pattern_diffs_5 = {}
+libappletlns_pattern_diffs_6 = {}
+
+libappletauth_pattern_diffs_1 = {}
+libappletauth_pattern_diffs_2 = {}
+libappletauth_pattern_diffs_3 = {}
+libappletauth_pattern_diffs_4 = {}
+libappletauth_pattern_diffs_5 = {}
+libappletauth_pattern_diffs_6 = {}
 fat32_nocntchk_pattern_diffs = {}
 exfat_nocntchk_pattern_diffs = {}
 fat32_noncasigchk_pattern_diffs = {}
@@ -1758,9 +2622,13 @@ ssl_pattern_3_diffs = {}
 # Pattern offsets (used internally but can be simplified)
 pattern_offsets_map = {
     'es': {}, 'nifm': {}, 'olsc': {}, 'am': {}, 'nim': {}, 'ns': {}, 'usb': {}, 'browser': {},
-    'systemweb_0': {}, 'systemweb_1': {}, 'systemweb_2': {}, 'systemweb_3': {}, 'systemweb_4': {}, 'systemweb_5': {}, 'systemweb_6': {},
-    'openweb_0': {}, 'openweb_1': {}, 'openweb_2': {}, 'openweb_3': {}, 'openweb_4': {}, 'openweb_5': {}, 'openweb_6': {},
-    'offlineweb_0': {}, 'offlineweb_1': {}, 'offlineweb_2': {}, 'offlineweb_3': {}, 'offlineweb_4': {}, 'offlineweb_5': {}, 'offlineweb_6': {},
+    'systemweb_1': {}, 'systemweb_2': {}, 'systemweb_3': {}, 'systemweb_4': {}, 'systemweb_5': {}, 'systemweb_6': {},
+    'openweb_1': {}, 'openweb_2': {}, 'openweb_3': {}, 'openweb_4': {}, 'openweb_5': {}, 'openweb_6': {},
+    'offlineweb_1': {}, 'offlineweb_2': {}, 'offlineweb_3': {}, 'offlineweb_4': {}, 'offlineweb_5': {}, 'offlineweb_6': {},
+    'libappletweb_1': {}, 'libappletweb_2': {}, 'libappletweb_3': {}, 'libappletweb_4': {}, 'libappletweb_5': {}, 'libappletweb_6': {},
+    'libappletshop_1': {}, 'libappletshop_2': {}, 'libappletshop_3': {}, 'libappletshop_4': {}, 'libappletshop_5': {}, 'libappletshop_6': {},
+    'libappletlns_1': {}, 'libappletlns_2': {}, 'libappletlns_3': {}, 'libappletlns_4': {}, 'libappletlns_5': {}, 'libappletlns_6': {},
+    'libappletauth_1': {}, 'libappletauth_2': {}, 'libappletauth_3': {}, 'libappletauth_4': {}, 'libappletauth_5': {}, 'libappletauth_6': {},
     'fat32_nc': {}, 'exfat_nc': {}, 'fat32_nogc': {}, 'exfat_nogc': {}, 'ssl_1': {}, 'ssl_2': {}, 'ssl_3': {},
 }
 
@@ -1784,6 +2652,10 @@ def _process_firmware_version(version: str):
         'systemweb': f'output/{version}/{version}_systemWeb.nso0',
         'openweb': f'output/{version}/{version}_openWeb.nso0',
         'offlineweb': f'output/{version}/{version}_LibAppletOff.nso0',
+        'libappletweb': f'output/{version}/{version}_LibAppletWeb.nso0',
+        'libappletshop': f'output/{version}/{version}_LibAppletShop.nso0',
+        'libappletlns': f'output/{version}/{version}_LibAppletLns.nso0',
+        'libappletauth': f'output/{version}/{version}_LibAppletAuth.nso0',
         'fat32_hash': f'output/{version}/{version}_fat32.hash',
         'fat32': f'output/{version}/{version}_fat32_FS.kip1',
         'exfat_hash': f'output/{version}/{version}_exfat.hash',
@@ -1836,15 +2708,9 @@ def _process_firmware_version(version: str):
                     prior_patch_fragment=usb_patch_3, suppress_logging=False)
 
         if 'systemweb' in existing_files:
-            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
-                systemweb_frag_0 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
-                    systemweb_pattern_diffs_0, pattern_offsets_map['systemweb_0'], ips_patch_database,
-                    rule_tag="SystemWebMemoryPatches_0",
-                    record_ips_entry=False)
-
+            if MAKEHOSVERSION("22.0.0", FW_VER_ANY, version):
                 systemweb_frag_1 = find_and_patch(existing_files['systemweb'], version, "SYSTEMWEB", log,
                     systemweb_pattern_diffs_1, pattern_offsets_map['systemweb_1'], ips_patch_database,
-                    prior_patch_fragment=systemweb_frag_0, suppress_logging=False,
                     rule_tag="SystemWebMemoryPatches_1",
                     record_ips_entry=False)
 
@@ -1878,15 +2744,9 @@ def _process_firmware_version(version: str):
                     rule_tag="SystemWebMemoryPatches_6")
 
         if 'openweb' in existing_files:
-            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
-                openweb_frag_0 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
-                    openweb_pattern_diffs_0, pattern_offsets_map['openweb_0'], ips_patch_database,
-                    rule_tag="OpenWebMemoryPatches_0",
-                    record_ips_entry=False)
-
+            if MAKEHOSVERSION("22.0.0", FW_VER_ANY, version):
                 openweb_frag_1 = find_and_patch(existing_files['openweb'], version, "OPENWEB", log,
                     openweb_pattern_diffs_1, pattern_offsets_map['openweb_1'], ips_patch_database,
-                    prior_patch_fragment=openweb_frag_0, suppress_logging=False,
                     rule_tag="OpenWebMemoryPatches_1",
                     record_ips_entry=False)
 
@@ -1920,15 +2780,9 @@ def _process_firmware_version(version: str):
                     rule_tag="OpenWebMemoryPatches_6")
 
         if 'offlineweb' in existing_files:
-            if MAKEHOSVERSION("23.0.0", FW_VER_ANY, version):
-                offlineweb_frag_0 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
-                    offlineweb_pattern_diffs_0, pattern_offsets_map['offlineweb_0'], ips_patch_database,
-                    rule_tag="OfflineWebMemoryPatches_0",
-                    record_ips_entry=False)
-
+            if MAKEHOSVERSION("20.0.0", FW_VER_ANY, version):
                 offlineweb_frag_1 = find_and_patch(existing_files['offlineweb'], version, "OFFLINEWEB", log,
                     offlineweb_pattern_diffs_1, pattern_offsets_map['offlineweb_1'], ips_patch_database,
-                    prior_patch_fragment=offlineweb_frag_0, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_1",
                     record_ips_entry=False)
 
@@ -1960,6 +2814,150 @@ def _process_firmware_version(version: str):
                     offlineweb_pattern_diffs_6, pattern_offsets_map['offlineweb_6'], ips_patch_database,
                     prior_patch_fragment=offlineweb_frag_5, suppress_logging=False,
                     rule_tag="OfflineWebMemoryPatches_6")
+
+        if 'libappletweb' in existing_files:
+            if MAKEHOSVERSION("20.0.0", FW_VER_ANY, version):
+                libappletweb_frag_1 = find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_1, pattern_offsets_map['libappletweb_1'], ips_patch_database,
+                    rule_tag="LibAppletWebMemoryPatches_1",
+                    record_ips_entry=False)
+
+                libappletweb_frag_2 = find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_2, pattern_offsets_map['libappletweb_2'], ips_patch_database,
+                    prior_patch_fragment=libappletweb_frag_1, suppress_logging=False,
+                    rule_tag="LibAppletWebMemoryPatches_2",
+                    record_ips_entry=False)
+
+                libappletweb_frag_3 = find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_3, pattern_offsets_map['libappletweb_3'], ips_patch_database,
+                    prior_patch_fragment=libappletweb_frag_2, suppress_logging=False,
+                    rule_tag="LibAppletWebMemoryPatches_3",
+                    record_ips_entry=False)
+
+                libappletweb_frag_4 = find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_4, pattern_offsets_map['libappletweb_4'], ips_patch_database,
+                    prior_patch_fragment=libappletweb_frag_3, suppress_logging=False,
+                    rule_tag="LibAppletWebMemoryPatches_4",
+                    record_ips_entry=False)
+
+                libappletweb_frag_5 = find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_5, pattern_offsets_map['libappletweb_5'], ips_patch_database,
+                    prior_patch_fragment=libappletweb_frag_4, suppress_logging=False,
+                    rule_tag="LibAppletWebMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['libappletweb'], version, "LIBAPPLETWEB", log,
+                    libappletweb_pattern_diffs_6, pattern_offsets_map['libappletweb_6'], ips_patch_database,
+                    prior_patch_fragment=libappletweb_frag_5, suppress_logging=False,
+                    rule_tag="LibAppletWebMemoryPatches_6")
+
+        if 'libappletshop' in existing_files:
+            if MAKEHOSVERSION("20.0.0", FW_VER_ANY, version):
+                libappletshop_frag_1 = find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_1, pattern_offsets_map['libappletshop_1'], ips_patch_database,
+                    rule_tag="LibAppletShopMemoryPatches_1",
+                    record_ips_entry=False)
+
+                libappletshop_frag_2 = find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_2, pattern_offsets_map['libappletshop_2'], ips_patch_database,
+                    prior_patch_fragment=libappletshop_frag_1, suppress_logging=False,
+                    rule_tag="LibAppletShopMemoryPatches_2",
+                    record_ips_entry=False)
+
+                libappletshop_frag_3 = find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_3, pattern_offsets_map['libappletshop_3'], ips_patch_database,
+                    prior_patch_fragment=libappletshop_frag_2, suppress_logging=False,
+                    rule_tag="LibAppletShopMemoryPatches_3",
+                    record_ips_entry=False)
+
+                libappletshop_frag_4 = find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_4, pattern_offsets_map['libappletshop_4'], ips_patch_database,
+                    prior_patch_fragment=libappletshop_frag_3, suppress_logging=False,
+                    rule_tag="LibAppletShopMemoryPatches_4",
+                    record_ips_entry=False)
+
+                libappletshop_frag_5 = find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_5, pattern_offsets_map['libappletshop_5'], ips_patch_database,
+                    prior_patch_fragment=libappletshop_frag_4, suppress_logging=False,
+                    rule_tag="LibAppletShopMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['libappletshop'], version, "LIBAPPLETSHOP", log,
+                    libappletshop_pattern_diffs_6, pattern_offsets_map['libappletshop_6'], ips_patch_database,
+                    prior_patch_fragment=libappletshop_frag_5, suppress_logging=False,
+                    rule_tag="LibAppletShopMemoryPatches_6")
+
+        if 'libappletlns' in existing_files:
+            if MAKEHOSVERSION("20.0.0", FW_VER_ANY, version):
+                libappletlns_frag_1 = find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_1, pattern_offsets_map['libappletlns_1'], ips_patch_database,
+                    rule_tag="LibAppletLnsMemoryPatches_1",
+                    record_ips_entry=False)
+
+                libappletlns_frag_2 = find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_2, pattern_offsets_map['libappletlns_2'], ips_patch_database,
+                    prior_patch_fragment=libappletlns_frag_1, suppress_logging=False,
+                    rule_tag="LibAppletLnsMemoryPatches_2",
+                    record_ips_entry=False)
+
+                libappletlns_frag_3 = find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_3, pattern_offsets_map['libappletlns_3'], ips_patch_database,
+                    prior_patch_fragment=libappletlns_frag_2, suppress_logging=False,
+                    rule_tag="LibAppletLnsMemoryPatches_3",
+                    record_ips_entry=False)
+
+                libappletlns_frag_4 = find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_4, pattern_offsets_map['libappletlns_4'], ips_patch_database,
+                    prior_patch_fragment=libappletlns_frag_3, suppress_logging=False,
+                    rule_tag="LibAppletLnsMemoryPatches_4",
+                    record_ips_entry=False)
+
+                libappletlns_frag_5 = find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_5, pattern_offsets_map['libappletlns_5'], ips_patch_database,
+                    prior_patch_fragment=libappletlns_frag_4, suppress_logging=False,
+                    rule_tag="LibAppletLnsMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['libappletlns'], version, "LIBAPPLETLNS", log,
+                    libappletlns_pattern_diffs_6, pattern_offsets_map['libappletlns_6'], ips_patch_database,
+                    prior_patch_fragment=libappletlns_frag_5, suppress_logging=False,
+                    rule_tag="LibAppletLnsMemoryPatches_6")
+
+        if 'libappletauth' in existing_files:
+            if MAKEHOSVERSION("20.0.0", FW_VER_ANY, version):
+                libappletauth_frag_1 = find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_1, pattern_offsets_map['libappletauth_1'], ips_patch_database,
+                    rule_tag="LibAppletAuthMemoryPatches_1",
+                    record_ips_entry=False)
+
+                libappletauth_frag_2 = find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_2, pattern_offsets_map['libappletauth_2'], ips_patch_database,
+                    prior_patch_fragment=libappletauth_frag_1, suppress_logging=False,
+                    rule_tag="LibAppletAuthMemoryPatches_2",
+                    record_ips_entry=False)
+
+                libappletauth_frag_3 = find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_3, pattern_offsets_map['libappletauth_3'], ips_patch_database,
+                    prior_patch_fragment=libappletauth_frag_2, suppress_logging=False,
+                    rule_tag="LibAppletAuthMemoryPatches_3",
+                    record_ips_entry=False)
+
+                libappletauth_frag_4 = find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_4, pattern_offsets_map['libappletauth_4'], ips_patch_database,
+                    prior_patch_fragment=libappletauth_frag_3, suppress_logging=False,
+                    rule_tag="LibAppletAuthMemoryPatches_4",
+                    record_ips_entry=False)
+
+                libappletauth_frag_5 = find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_5, pattern_offsets_map['libappletauth_5'], ips_patch_database,
+                    prior_patch_fragment=libappletauth_frag_4, suppress_logging=False,
+                    rule_tag="LibAppletAuthMemoryPatches_5",
+                    record_ips_entry=False)
+
+                find_and_patch(existing_files['libappletauth'], version, "LIBAPPLETAUTH", log,
+                    libappletauth_pattern_diffs_6, pattern_offsets_map['libappletauth_6'], ips_patch_database,
+                    prior_patch_fragment=libappletauth_frag_5, suppress_logging=False,
+                    rule_tag="LibAppletAuthMemoryPatches_6")
         
         # NIM has multiple patches (firmware block + crash fix)
         if 'nim' in existing_files:
@@ -2245,27 +3243,48 @@ if __name__ == '__main__':
         ('usb_pattern_1_diffs', usb_pattern_1_diffs),
         ('usb_pattern_2_diffs', usb_pattern_2_diffs),
         ('usb_pattern_3_diffs', usb_pattern_3_diffs),
-        ('systemweb_pattern_diffs_0', systemweb_pattern_diffs_0),
         ('systemweb_pattern_diffs_1', systemweb_pattern_diffs_1),
         ('systemweb_pattern_diffs_2', systemweb_pattern_diffs_2),
         ('systemweb_pattern_diffs_3', systemweb_pattern_diffs_3),
         ('systemweb_pattern_diffs_4', systemweb_pattern_diffs_4),
         ('systemweb_pattern_diffs_5', systemweb_pattern_diffs_5),
         ('systemweb_pattern_diffs_6', systemweb_pattern_diffs_6),
-        ('openweb_pattern_diffs_0', openweb_pattern_diffs_0),
         ('openweb_pattern_diffs_1', openweb_pattern_diffs_1),
         ('openweb_pattern_diffs_2', openweb_pattern_diffs_2),
         ('openweb_pattern_diffs_3', openweb_pattern_diffs_3),
         ('openweb_pattern_diffs_4', openweb_pattern_diffs_4),
         ('openweb_pattern_diffs_5', openweb_pattern_diffs_5),
         ('openweb_pattern_diffs_6', openweb_pattern_diffs_6),
-        ('offlineweb_pattern_diffs_0', offlineweb_pattern_diffs_0),
         ('offlineweb_pattern_diffs_1', offlineweb_pattern_diffs_1),
         ('offlineweb_pattern_diffs_2', offlineweb_pattern_diffs_2),
         ('offlineweb_pattern_diffs_3', offlineweb_pattern_diffs_3),
         ('offlineweb_pattern_diffs_4', offlineweb_pattern_diffs_4),
         ('offlineweb_pattern_diffs_5', offlineweb_pattern_diffs_5),
         ('offlineweb_pattern_diffs_6', offlineweb_pattern_diffs_6),
+        ('libappletweb_pattern_diffs_1', libappletweb_pattern_diffs_1),
+        ('libappletweb_pattern_diffs_2', libappletweb_pattern_diffs_2),
+        ('libappletweb_pattern_diffs_3', libappletweb_pattern_diffs_3),
+        ('libappletweb_pattern_diffs_4', libappletweb_pattern_diffs_4),
+        ('libappletweb_pattern_diffs_5', libappletweb_pattern_diffs_5),
+        ('libappletweb_pattern_diffs_6', libappletweb_pattern_diffs_6),
+        ('libappletshop_pattern_diffs_1', libappletshop_pattern_diffs_1),
+        ('libappletshop_pattern_diffs_2', libappletshop_pattern_diffs_2),
+        ('libappletshop_pattern_diffs_3', libappletshop_pattern_diffs_3),
+        ('libappletshop_pattern_diffs_4', libappletshop_pattern_diffs_4),
+        ('libappletshop_pattern_diffs_5', libappletshop_pattern_diffs_5),
+        ('libappletshop_pattern_diffs_6', libappletshop_pattern_diffs_6),
+        ('libappletlns_pattern_diffs_1', libappletlns_pattern_diffs_1),
+        ('libappletlns_pattern_diffs_2', libappletlns_pattern_diffs_2),
+        ('libappletlns_pattern_diffs_3', libappletlns_pattern_diffs_3),
+        ('libappletlns_pattern_diffs_4', libappletlns_pattern_diffs_4),
+        ('libappletlns_pattern_diffs_5', libappletlns_pattern_diffs_5),
+        ('libappletlns_pattern_diffs_6', libappletlns_pattern_diffs_6),
+        ('libappletauth_pattern_diffs_1', libappletauth_pattern_diffs_1),
+        ('libappletauth_pattern_diffs_2', libappletauth_pattern_diffs_2),
+        ('libappletauth_pattern_diffs_3', libappletauth_pattern_diffs_3),
+        ('libappletauth_pattern_diffs_4', libappletauth_pattern_diffs_4),
+        ('libappletauth_pattern_diffs_5', libappletauth_pattern_diffs_5),
+        ('libappletauth_pattern_diffs_6', libappletauth_pattern_diffs_6),
         ('olsc_pattern_diffs', olsc_pattern_diffs),
         ('am_pattern_diffs', am_pattern_diffs),
         ('fat32_noacidsigchk1_pattern_diffs', fat32_noacidsigchk1_pattern_diffs),
