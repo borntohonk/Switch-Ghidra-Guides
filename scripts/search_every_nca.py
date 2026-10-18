@@ -36,17 +36,24 @@ if __name__ == "__main__":
         output_folder = sys.argv[2]
     
     nca_files = sort_nca(input_folder)
+    matches = []
+
+    pattern = b"meta"
 
     for line in nca_files:
         titleId, content_type, nca_path = line
         nca_data = nca.Nca(util.InitializeFile(nca_path), master_kek_source=None)
-        
-        sections = nca_data.decrypted_sections
-        pattern = b"virtual game"
 
-        for section_idx, data_to_search in enumerate(sections):
+        for section_idx in range(len(nca_data.decrypted_sections)):
+            # Sections are decrypted lazily; sparse sections stay b"".
+            nca_data._ensure_section_decrypted(section_idx)
+            data_to_search = nca_data.decrypted_sections[section_idx]
             if not data_to_search:
                 continue
 
             for match in re.finditer(pattern, data_to_search, flags=re.IGNORECASE):
-                print(f"Match for {titleId} nca_path = {nca_path}; Section: {section_idx}; the match:: {match.group()} | Offsets: {match.span()}")
+                matches.append((titleId, match.span(), nca_path, section_idx, match.group()))
+
+    # Sort by title ID, then by match offsets
+    for titleId, span, nca_path, section_idx, group in sorted(matches, key=lambda m: (m[0], m[1])):
+        print(f"Match for {titleId} nca_path = {nca_path}; Section: {section_idx}; the match:: {group} | Offsets: {span}")
