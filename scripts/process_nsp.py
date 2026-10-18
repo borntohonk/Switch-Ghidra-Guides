@@ -95,7 +95,8 @@ def find_program_nca(metadata: nsp.NspMetadata, titlekey=None):
         if nca_info.filename.endswith(".cnmt.nca"):
             continue
         try:
-            hdr = nca.NcaHeaderOnly(util.InitializeFile(nca_info.filepath))
+            with open(nca_info.filepath, "rb") as f:
+                hdr = nca.NcaHeaderOnly(f.read(0xC00))
             if hdr.content_type == "Program":
                 return nca_info, tk
         except Exception:
@@ -129,7 +130,7 @@ def open_program_nca(metadata: nsp.NspMetadata) -> nca.Nca:
     """Open the Program NCA for an extracted NSP metadata bundle."""
     nca_info, titlekey = find_program_nca(metadata)
     return nca.Nca(
-        util.InitializeFile(nca_info.filepath),
+        util.MapFile(nca_info.filepath),
         master_kek_source=None,
         titlekey=titlekey,
     )

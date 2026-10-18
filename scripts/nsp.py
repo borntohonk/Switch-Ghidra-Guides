@@ -275,10 +275,12 @@ def process_nsp_info_in_memory_for_sdk_object(nsp_path: str, verbose_timing=Fals
     )
 
     program_nca_data = None
+    nsp_map = util.MapFile(nsp_path)
 
     for name in nca_names:
         if name in (largest_name):
-            file_data = read_file(name)
+            entry = name_to_entry[name]
+            file_data = util.FileRegion(nsp_map, header.data_offset + entry.offset, entry.size)
         try:
             nca_hdr = Nca(file_data, titlekey=titlekey)
             if nca_hdr.content_type == "Program":

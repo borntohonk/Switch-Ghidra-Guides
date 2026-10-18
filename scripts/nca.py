@@ -484,6 +484,9 @@ class Nca:
         isdev=isdev
         self.nca_data = nca_data
         self.sections = []
+        # Mapped inputs (util.MapFile / util.FileRegion) get zero-copy section
+        # views instead of copying multi-GB sections into memory.
+        section_view = nca_data if isinstance(nca_data, (bytes, bytearray)) else memoryview(nca_data)
         
         # Decrypt the NCA header
         self.encrypted_header = nca_data[0x0:NCA_HEADER_SIZE]
@@ -535,10 +538,10 @@ class Nca:
                 if st.endOffset > st.offset and st.endOffset - st.offset > end - start:
                     start = st.offset
                     end = st.endOffset
-                self.sections.append(nca_data[start:end])
+                self.sections.append(section_view[start:end])
                 fs._sparse_section_base = start
             else:
-                self.sections.append(nca_data[st.offset:st.endOffset])
+                self.sections.append(section_view[st.offset:st.endOffset])
                 fs._sparse_section_base = st.offset
 
         # Setup key area

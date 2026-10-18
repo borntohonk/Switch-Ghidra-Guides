@@ -147,7 +147,7 @@ def extract_pfs0(
         path = Path(source)
         if not path.is_file():
             raise FileNotFoundError(f"Not found or not a file: {path}")
-        raw = path.read_bytes()
+        raw = util.MapFile(path)
         source_name = path.name
     elif isinstance(source, bytes):
         raw = source
@@ -234,7 +234,8 @@ def extract_pfs0(
 
         out_path = output_dir / filename
         try:
-            out_path.write_bytes(raw[file_start:file_end])
+            with memoryview(raw)[file_start:file_end] as view:
+                out_path.write_bytes(view)
             extracted_count += 1
             if print_progress:
                 print(f"  → {filename:<40} {entry.size:>12,d} B")
@@ -275,7 +276,7 @@ def extract_pfs0_main(
         path = Path(source)
         if not path.is_file():
             raise FileNotFoundError(f"Not found or not a file: {path}")
-        raw = path.read_bytes()
+        raw = util.MapFile(path)
         source_name = path.name
     elif isinstance(source, bytes):
         raw = source
@@ -405,7 +406,7 @@ def extract_pfs0_sdk_object(
         path = Path(source)
         if not path.is_file():
             raise FileNotFoundError(f"Not found or not a file: {path}")
-        raw = path.read_bytes()
+        raw = util.MapFile(path)
         source_name = path.name
     elif isinstance(source, bytes):
         raw = source

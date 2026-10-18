@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import mmap
 import re
 import errno
 import os
@@ -212,6 +213,38 @@ def InitializeFile(input):
     with open(input, 'rb') as f:
         data = f.read()
     return data
+
+def MapFile(input) -> Union[bytes, mmap.mmap]:
+    """Memory-map a file read-only so multi-GB containers aren't loaded into RAM."""
+    with open(input, 'rb') as f:
+        if os.fstat(f.fileno()).st_size == 0:
+            return b''
+        return mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+
+class FileRegion:
+    """Read-only window [offset, offset + size) into a mapped file; slices return bytes."""
+    def __init__(self, buf, offset: int, size: int):
+        self.buf = buf
+        self.offset = offset
+        self.size = size
+
+    def __len__(self):
+        return self.size
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            start, stop, step = key.indices(self.size)
+            if step != 1:
+                raise ValueError("FileRegion does not support stepped slices")
+            return self.buf[self.offset + start:self.offset + max(start, stop)]
+        if key < 0:
+            key += self.size
+        if not 0 <= key < self.size:
+            raise IndexError("FileRegion index out of range")
+        return self.buf[self.offset + key]
+
+    def __buffer__(self, flags):
+        return memoryview(self.buf)[self.offset:self.offset + self.size]
 
 def read_file(filename: str) -> bytes:
     """Read entire file into bytes."""
