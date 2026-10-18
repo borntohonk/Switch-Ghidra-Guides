@@ -24,6 +24,7 @@ import argparse
 import difflib
 import json
 import glob
+import re
 import crypto
 from pathlib import Path
 import nca
@@ -60,12 +61,42 @@ def to_c_hex_array_16(hex_str: str) -> str:
 
 def _extract_client_certificate(client_cert_nca_object, output_pem_path):
     p12_file_object  = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 0)
+    p12_hash = sha256(p12_file_object).hexdigest().upper()
+    # TODO IF CHANGED - update the hash:
+    p12_current_hash = "A2A62FF73C0D053A4FC8FE9B2BB4AE92884C6A5B2FD0E25AC56CB7FFA35EAFDC" # 23.0.0+
+    if p12_hash != p12_current_hash:
+        print(f'The savanna certificate has changed and has a new hash:')
+        print(f'Savanna cert hash: {p12_hash}')
     json_file_object = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 1)
     txt_file_object  = nca.SectionExtractor.extract_section_romfs_client_cert_only(client_cert_nca_object, 2)
 
     pem, urls = p12_to_pem.convert_client_cert(
         p12_file_object, json_file_object, txt_file_object, output_pem_path)
     return urls
+
+def _write_systemweb_useragent(systemweb_nca_object, system_version):
+    """Extract romfs:/buildinfo/buildinfo.dat from systemWeb and reconstruct its User-Agent."""
+    buildinfo_data = nca.SectionExtractor.extract_section_romfs_buildinfo_only(systemweb_nca_object)
+    if buildinfo_data is None:
+        return
+    util.write_file(f'output/{system_version}/{system_version}_systemWeb_buildinfo.dat', buildinfo_data)
+
+    import systemweb_useragent  # needs capstone
+    lines = systemweb_useragent.describe(f'output/{system_version}/{system_version}_systemWeb.nso0', buildinfo_data)
+    util.write_file(f'output/{system_version}/{system_version}_systemWeb_useragent.txt', ('\n'.join(lines) + '\n').encode())
+    print("systemWeb User-Agent:")
+    print('\n'.join(lines))
+    print("\n")
+
+    # Compare against the UA hardcoded in simba.py (read from source, not imported)
+    shopn_uas = [l.split(': ', 1)[1] for l in lines if l.startswith('kind ') and '; ShopN' in l]
+    simba_src = Path(__file__).with_name('simba.py').read_text()
+    simba_ua = re.search(r'^UA = "(.*)"$', simba_src, re.M)
+    if shopn_uas and (simba_ua is None or simba_ua.group(1) not in shopn_uas):
+        print('ShopN useragent changed')
+        print(f'simba.py UA: {simba_ua.group(1) if simba_ua else "(not found)"}')
+        print(f'new UA     : {shopn_uas[0]}')
+        print("\n")
 
 def _extract_system_version(system_nca_object, mkeksource):
     """Extract firmware version from system update NCA object."""
@@ -1113,7 +1144,11 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
             strings_file = f'output/{system_version}/{system_version}_firmware_strings.txt'
             with open(strings_file, 'a') as f:
                 f.write(f'{system_version} foss_ssl_browser_moduleid: {browser_module_id}')
-    
+
+    # Reconstruct the systemWeb User-Agent from its NSO + romfs:/buildinfo/buildinfo.dat (22.0.0+)
+    if util.version_to_tuple(system_version) >= util.version_to_tuple("22.0.0"):
+        _write_systemweb_useragent(systemweb_nca_object, system_version)
+
     # Print summary
     hash_summary_file = f'output/{system_version}/{system_version}_hashes.txt'
     util.print_hash_summary(hash_summary_file)

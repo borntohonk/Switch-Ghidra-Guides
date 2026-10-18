@@ -3,10 +3,13 @@
 #
 # Required packages:
 #   requests    (pip install requests)
+#   brotli      (pip install brotli) -- optional; needed to send the console's exact Accept-Encoding ("..., br")
+#   graphql-core (pip install graphql-core) -- optional; prints/hashes queries exactly like the shop's Apollo client
 # Everything else is standard library (Python >= 3.8). No curl / jq / bash needed.
 # Client cert: PEM file (certificate + private key) given by CERT
 # default: eshop_hac_prod.pem
 
+import hashlib
 import html
 import itertools
 import json
@@ -19,6 +22,7 @@ import sys
 import threading
 import time
 import unicodedata
+import urllib.parse
 from contextlib import contextmanager
 
 try:
@@ -32,6 +36,12 @@ except ImportError as _e:  # pragma: no cover
     ) from _e
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+try:  # optional: exact Apollo-style query printing / hashing for persisted queries
+    from graphql import parse as _gql_parse, print_ast as _gql_print, GraphQLError as _GraphQLError
+except ImportError:  # pragma: no cover
+    _gql_parse = _gql_print = None
+    _GraphQLError = Exception
 
 # Image / media fields on applicationItem (probed OK):
 #   heroBannerUrl   — relative path e.g. /i/<hash>.jpg (banner). Confirmed live.
@@ -56,11 +66,18 @@ COUNTRY = env("COUNTRY", "US")
 LANG_CODE = env("LANG_CODE", "en")
 REGION = env("REGION", "USA")
 TIMEOUT = float(env("TIMEOUT", "60"))
-UA = ("Mozilla/5.0 (Nintendo Switch; ShopN) AppleWebKit/613.0 (KHTML, like Gecko) "
-      "NF/6.0.3.31.11 NintendoBrowser/5.1.0.55481")
+
+UA = "Mozilla/5.0 (Nintendo Switch; ShopN; Nintendo Switch) AppleWebKit/613.0 (KHTML, like Gecko) NF/6.0.3.31.11 NintendoBrowser/5.1.0.55481"
 
 H_CT = "Content-Type: application/json"
 H_ACCEPT = "Accept: application/graphql-response+json,application/json;q=0.9"
+# systemWeb: setAcceptEncoding("gzip, deflate, br") at browser init (23.0.1 0x7100741060). br needs `pip install brotli`.
+H_ACCEPT_ENCODING = "Accept-Encoding: gzip, deflate, br"
+# systemWeb: "<lang>[,<ui>;q=0.8],en;q=0.5[,<lang2>;q=0.1]" (23.0.1 0x71007382a8); English (US) console -> "en-US,en;q=0.5".
+H_ACCEPT_LANGUAGE = "Accept-Language: en-US,en;q=0.5"
+# The shop page is served from https://hac.%.savanna.srv.nintendo.net (systemWeb string), i.e. the same origin as GQL;
+# WebKit sends Origin on POST fetches.
+H_ORIGIN = "Origin: " + "/".join(GQL.split("/", 3)[:3])
 
 
 class ApiError(Exception):
@@ -390,39 +407,158 @@ def dedupe_nsuid(items):
 _session = None
 
 
-def gq(body):
-    """POST a GraphQL request body (dict). DEBUG=1 prints the equivalent curl command to stderr."""
+def _have_brotli():
+    for mod in ("brotli", "brotlicffi"):
+        try:
+            __import__(mod)
+            return True
+        except ImportError:
+            pass
+    return False
+
+
+# Automatic persisted queries, as the shop's Apollo client does them (PersistedQueryLink with
+# useGETForHashedQueries: true, uri "/graphql"):
+#   1. GET  ?operationName=..&variables=..&extensions={"persistedQuery":{"version":1,"sha256Hash":..}}  (no body)
+#   2. on PersistedQueryNotFound: POST {operationName, variables, extensions, query}
+#   on PersistedQueryNotSupported: POST {operationName, variables, query} from then on.
+# The server (module YATA) answers step 1 with PersistedQueryNotFound (errorCode 1807) for any hash it was not
+# deployed with, and does not register hashes from step 2, so for simba's own queries step 1 always fails.
+# By default simba therefore sends step 2 directly (one request); APQ_GET=1 restores the GET-first flow.
+# The hash is sha256 of graphql print() of the query (graphql-core's print_ast matches graphql-js), and only the
+# variables the operation declares are sent (Apollo's includeUnusedVariables: false).
+_apq_supported = True
+_apq_cache = {}
+APQ_GET = env("APQ_GET") == "1"
+
+
+def _apq_document(query):
+    """-> (printed query, sha256 hex, declared variable names or None without graphql-core)."""
+    hit = _apq_cache.get(query)
+    if hit is None:
+        printed, declared = query, None
+        if _gql_parse is not None:
+            try:
+                doc = _gql_parse(query)
+                printed = _gql_print(doc)
+                declared = {v.variable.name.value for d in doc.definitions
+                            for v in (getattr(d, "variable_definitions", None) or ())}
+            except _GraphQLError:
+                pass  # deliberately malformed probes: send as-is, let the server report it
+        hit = _apq_cache[query] = (printed, hashlib.sha256(printed.encode("utf-8")).hexdigest(), declared)
+    return hit
+
+
+def _pq_error(r, code):
+    """True if a response carries the given persisted-query error (message or extensions.code)."""
+    name = {"PERSISTED_QUERY_NOT_FOUND": "PersistedQueryNotFound",
+            "PERSISTED_QUERY_NOT_SUPPORTED": "PersistedQueryNotSupported"}[code]
+    for e in (r.get("errors") or []) if isinstance(r, dict) else []:
+        if isinstance(e, dict) and (e.get("message") == name or (e.get("extensions") or {}).get("code") == code):
+            return True
+    return False
+
+
+def _uri_component(s):
+    """JS encodeURIComponent."""
+    return urllib.parse.quote(s, safe="-_.!~*'()")
+
+
+def _session_get():
     global _session
-    if env("DEBUG"):
-        lines = [
-            f"curl -s --insecure --cert {shlex.quote(CERT)} \\",
-            f"  -A {shlex.quote(UA)} \\",
-            f"  -H {shlex.quote(H_CT)} \\",
-            f"  -H {shlex.quote(H_ACCEPT)} \\",
-            f"  -X POST {shlex.quote(GQL)} \\",
-            f"  -d {shlex.quote(pretty(body))} | jq .",
-        ]
-        sys.stderr.write("\n".join(lines) + "\n\n")
-        sys.stderr.flush()
     if not os.path.isfile(CERT):
         raise ApiError(f"client certificate not found: {CERT} (set CERT=...)")
     if _session is None:
         _session = requests.Session()
         _session.verify = False  # curl --insecure
         _session.cert = CERT
+        accept_encoding = H_ACCEPT_ENCODING.split(": ", 1)[1]
+        if "br" in accept_encoding and not _have_brotli():
+            # urllib3 can't decode a br body without it; advertise only what we can read
+            err("warning: brotli not installed (pip install brotli); sending Accept-Encoding without br")
+            accept_encoding = ", ".join(e for e in accept_encoding.split(", ") if e != "br")
+        # Replace (not update) requests' defaults: the console sends no Connection header
+        _session.headers.clear()
         _session.headers.update({
             "User-Agent": UA,
             "Content-Type": H_CT.split(": ", 1)[1],
             "Accept": H_ACCEPT.split(": ", 1)[1],
+            "Accept-Encoding": accept_encoding,
+            "Accept-Language": H_ACCEPT_LANGUAGE.split(": ", 1)[1],
         })
+    return _session
+
+
+def _debug_curl(method, url, body=None):
+    lines = [
+        f"curl -s --insecure --cert {shlex.quote(CERT)} \\",
+        f"  -A {shlex.quote(UA)} \\",
+        f"  -H {shlex.quote(H_CT)} \\",
+        f"  -H {shlex.quote(H_ACCEPT)} \\",
+        f"  -H {shlex.quote(H_ACCEPT_ENCODING)} --compressed \\",
+        f"  -H {shlex.quote(H_ACCEPT_LANGUAGE)} \\",
+    ]
+    if method == "POST":
+        lines += [f"  -H {shlex.quote(H_ORIGIN)} \\",
+                  f"  -X POST {shlex.quote(url)} \\",
+                  f"  -d {shlex.quote(pretty(body))} | jq ."]
+    else:
+        lines += [f"  {shlex.quote(url)} | jq ."]
+    sys.stderr.write("\n".join(lines) + "\n\n")
+    sys.stderr.flush()
+
+
+def _send(method, url, body=None):
+    session = _session_get()
+    if env("DEBUG"):
+        _debug_curl(method, url, body)
     try:
-        resp = _session.post(GQL, data=compact(body).encode("utf-8"), timeout=TIMEOUT)
+        if method == "GET":
+            resp = session.get(url, timeout=TIMEOUT)
+        else:
+            # WebKit adds Origin to POST fetches, not to same-origin GETs
+            resp = session.post(url, data=compact(body).encode("utf-8"), timeout=TIMEOUT,
+                                headers={"Origin": H_ORIGIN.split(": ", 1)[1]})
     except requests.RequestException as e:
         raise ApiError(f"request failed: {e}") from e
     try:
         return resp.json()
     except ValueError as e:
         raise ApiError(f"non-JSON response (HTTP {resp.status_code}): {resp.text[:200]!r}") from e
+
+
+def gq(body):
+    """Send a GraphQL request ({operationName, query, variables}) the way the shop's Apollo client does (see
+    _apq_document). DEBUG=1 prints the equivalent curl command(s) to stderr."""
+    global _apq_supported
+    op = body.get("operationName")
+    printed, sha, declared = _apq_document(body["query"])
+    variables = body.get("variables")
+    if declared is not None and variables is not None:
+        variables = {k: v for k, v in variables.items() if k in declared}
+
+    post = {}
+    if op:
+        post["operationName"] = op
+    if variables is not None:
+        post["variables"] = variables
+
+    if _apq_supported:
+        ext = {"persistedQuery": {"version": 1, "sha256Hash": sha}}
+        r = None
+        if APQ_GET:
+            params = [(k, post[k] if k == "operationName" else compact(post[k])) for k in post]
+            params.append(("extensions", compact(ext)))
+            url = GQL + ("&" if "?" in GQL else "?") + "&".join(f"{k}={_uri_component(v)}" for k, v in params)
+            r = _send("GET", url)
+            if not (_pq_error(r, "PERSISTED_QUERY_NOT_FOUND") or _pq_error(r, "PERSISTED_QUERY_NOT_SUPPORTED")):
+                return r
+        if r is None or not _pq_error(r, "PERSISTED_QUERY_NOT_SUPPORTED"):
+            r = _send("POST", GQL, {**post, "extensions": ext, "query": printed})
+            if not _pq_error(r, "PERSISTED_QUERY_NOT_SUPPORTED"):
+                return r
+        _apq_supported = False
+    return _send("POST", GQL, {**post, "query": printed})
 
 
 # Per-thread store override set by simba_context() (the Simba compatibility layer): {"country", "language", "region"}.
@@ -750,7 +886,7 @@ def paged(query, variables, start, quiet=False):
 
 def _search_vars(sales, sort, freeword, platform, limit):
     return {"region": _ctx_get("region") or REGION, "freeword": freeword, "sort": sort, "labelPlatforms": [platform],
-            "itemTypes": ["APPLICATION"], "salesStatus": sales, "limit": limit}
+            "itemTypes": env("ITEM_TYPES", "APPLICATION").split(), "salesStatus": sales, "limit": limit}
 
 
 def search(offset=0, *, sales=None, sort=None, freeword=None, platform=None,
@@ -944,15 +1080,33 @@ def item(ns, language=None):
     out(out_obj)
 
 
+def item_root(ns):
+    """item.<root>(nsUid) for an nsUid: ROOT if set, else by prefix (7001 applicationItem, 7003 demoItem,
+    7005 dlcItem, 7007 bundleItem; anything else applicationItem)."""
+    return env("ROOT") or _EXTRA_ROOT.get(str(int(ns))[:4], _EXTRA_ROOT["7001"])[1]
+
+
 def raw(ns, selection, language=None):
     q = ("query R($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!) "
          "@inContext(shopId: $shopId, country: $country, language: $language) "
-         "{ item { applicationItem(nsUid: $nsUid) { " + selection + " } } }")
+         "{ item { " + item_root(ns) + "(nsUid: $nsUid) { " + selection + " } } }")
     req("R", q, {"nsUid": int(ns)}, language or store_language())
 
 
+def gql(selection, language=None):
+    """Run any root-level selection in the store context (SHOP / COUNTRY / LANG_CODE, the @inContext every query
+    here uses) and print the response. For what the item-scoped commands cannot reach: root fields other than
+    item { <root>(nsUid) } (membership, country, searchV4 with its own arguments), lookups that do not take an nsUid
+    (item { ticketItemGroup(ticketItemGroupId: N) }) and several roots in one request. Queries that need a
+    signed-in user ($idToken: prices, rights, tickets owned) are not possible."""
+    q = ("query G($shopId: Int!, $country: CountryCode!, $language: LanguageCode!) "
+         "@inContext(shopId: $shopId, country: $country, language: $language) { " + selection + " }")
+    req("G", q, {}, language or store_language())
+
+
 def fields(ns, names):
-    """Field-name oracle on item.applicationItem: unknown field -> error, known -> accepted."""
+    """Field-name oracle on item.<root>(nsUid) (item_root: by nsUid prefix, or ROOT): unknown field -> error,
+    known -> accepted."""
     parent = env("PARENT")
     opn = close = ""
     if parent:
@@ -978,7 +1132,7 @@ def fields(ns, names):
         for sel in (f, f + " { __typename }"):
             q = ("query F($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!) "
                  "@inContext(shopId: $shopId, country: $country, language: $language) "
-                 "{ item { applicationItem(nsUid: $nsUid) { " + f"{opn} {sel} {close}" + " } } }")
+                 "{ item { " + item_root(ns) + "(nsUid: $nsUid) { " + f"{opn} {sel} {close}" + " } } }")
             r = rawreq("F", q, {"nsUid": int(ns)}, store_language())
             if not has_errors(r):
                 ok = sel
@@ -2631,12 +2785,18 @@ def usage():
   title <titleId>...          application items by title ID
   extra <nsUid|country> [field...]  fields the schema has that nothing else here uses (all, or the named ones)
   extra-fields [kind]         list them (application demo dlc bundle country)
-  fields <nsUid> [name...]    probe which field names exist on item.applicationItem
+  fields <nsUid> [name...]    probe which field names exist on item.applicationItem / demoItem / dlcItem /
+                              bundleItem (by nsUid prefix 7001/7003/7005/7007; ROOT=<field> overrides)
                               (PARENT=relatedItems fields ... probes inside a field)
   dlc-fields <titleId> [name...]  probe which field names exist on DlcItem (set DLC_RECORD_FIELDS to trim)
   lookup-probe [name...]      which item {{ <field>(nsUid: N) }} root fields exist (demo/DLC/bundle lookup by nsUid)
   bundle-fields [name...]     probe which field names exist on BundleItem (via a validation-only search)
-  raw <nsUid> '<selection>'   run item.applicationItem(nsUid) {{ <selection> }}, print response
+  raw <nsUid> '<selection>'   run item.<root>(nsUid) {{ <selection> }} (root as for fields), print response
+  gql '<selection>' [lang]    run any root-level {{ <selection> }} in the store context, print response: for root
+                              fields other than item.<root>(nsUid) and lookups not keyed by nsUid, e.g.
+                              gql 'membership {{ membershipItems {{ nsUid imageUrl }} }}'
+                              gql 'item {{ ticketItemGroup(ticketItemGroupId: N) {{ id formalName }} }}'
+                              (queries needing a signed-in user's idToken are not possible)
   dlc <nsUid> [offset]        DLC of an application (aocs equivalent) as titledb records, one {{nsUid: record}}
                               per line, bundles skipped; RAW=1 = raw GraphQL rows; ALL=1 for every page
   dlc-titles <titleId>...     DLC items by DLC title ID
@@ -2693,6 +2853,7 @@ env: CERT GQL SHOP COUNTRY LANG_CODE REGION TIMEOUT
      search / dlc-search:
              SORT (RELEASE_DATE_DESC; BOTH = DESC + ASC passes, deduped) PLATFORM (HAC) SALES (ONSALE_OR_PRE_ORDER)
              FREEWORD ("") LIMIT (100, the API maximum) ALL (unset; 1 = fetch every page) MAX_PAGES (1000) SLEEP (0)
+             ITEM_TYPES (search only; APPLICATION; space-separated SearchItemType values, e.g. TICKET)
              BUNDLE (default 1 = keep BundleItem rows, as full data rows; BUNDLE=0 filters them out; scrape-all and
              update-titledb turn them into titledb bundle entries; BUNDLE_FIELDS = own selection, skips probing)
      sort values: RELEASE_DATE_DESC RELEASE_DATE_ASC SALES_AMOUNT_DESC DL_COUNT_DESC
@@ -2823,6 +2984,10 @@ def main(argv):
         if len(a) < 2:
             usage()
         raw(a[0], a[1], a[2] if len(a) > 2 else None)
+    elif cmd == "gql":
+        if not a:
+            usage()
+        gql(a[0], a[1] if len(a) > 1 else None)
     elif cmd == "title":
         if not a:
             usage()

@@ -2224,7 +2224,48 @@ class SectionExtractor:
         except Exception as e:
             print(f"Error extracting client certificate file {cert_type} from RomFS section {section_idx}: {e}")
             return None
-    
+
+    @staticmethod
+    def extract_section_romfs_buildinfo_only(nca):
+        """
+        Extract buildinfo.dat from a browser NCA's RomFS (romfs:/buildinfo/buildinfo.dat).
+
+        Automatically finds the RomFS section in the NCA. The file is a "key:value" text file
+        (revision, platform, configuration, date, netfront_*, nup_version, ...).
+
+        Args:
+            nca: Nca object (e.g. systemWeb 0100000000001042)
+
+        Returns:
+            bytes: buildinfo.dat contents, or None if not found or on error
+        """
+        target_paths = ["buildinfo/buildinfo.dat", "buildinfo.dat"]
+
+        section_idx = SectionExtractor._find_romfs_section(nca)
+        if section_idx == -1:
+            print("The input NCA has no RomFS")
+            return None
+
+        try:
+            full_data = nca.get_decrypted_section_bytes(section_idx)
+            fs_header = nca.fsheaders[section_idx]
+            romfs_data = full_data[fs_header.content_start:fs_header.content_end]  # Slice to pure RomFS
+
+            # Try each path format until one succeeds
+            for path in target_paths:
+                try:
+                    buildinfo_data = romfs.extract_file_from_romfs(romfs_data, path)
+                    if buildinfo_data is not None:
+                        return buildinfo_data
+                except:
+                    continue
+
+            print(f"Could not find buildinfo at any of these paths: {', '.join(target_paths)}")
+            return None
+        except Exception as e:
+            print(f"Error extracting buildinfo from RomFS section {section_idx}: {e}")
+            return None
+
     @staticmethod
     def list_romfs_contents(nca):
         """

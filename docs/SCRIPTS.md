@@ -306,7 +306,8 @@ python scripts/simba.py <command> [args]
 | `DEBUG` | unset | `1` prints the equivalent `curl` command of every request to stderr. |
 | `GQL` / `CERT` / `TIMEOUT` | eShop endpoint / `eshop_hac_prod.pem` / `60` | Endpoint, certificate path, request timeout (seconds). |
 
-Advanced, for probing the API: `PARENT` (for `fields`), `DLC_RECORD_FIELDS`, `DLC_ROM_SIZES=off`,
+Advanced, for probing the API: `PARENT` (for `fields`), `ROOT` (item root for `fields` / `raw`, e.g. `ticketItem`),
+`ITEM_TYPES` (`searchV4` item types for `search`, default `APPLICATION`), `DLC_RECORD_FIELDS`, `DLC_ROM_SIZES=off`,
 `ROM_SIZES`, `BUNDLE_FIELDS`, `DEMO_FIELDS`, `PUBLIC_STATUSES`, `SALES_STATUSES`,
 `SCRAPE_SALES_STATUSES`, `INCLUDE_BUNDLES`.
 
@@ -349,10 +350,11 @@ Advanced, for probing the API: `PARENT` (for `fields`), `DLC_RECORD_FIELDS`, `DL
 
 | Command | Purpose |
 |---|---|
-| `fields <nsUid> [name...]` | Which field names exist on `applicationItem` (`PARENT=relatedItems fields ...` probes inside a field). |
+| `fields <nsUid> [name...]` | Which field names exist on the item: `applicationItem`, `demoItem`, `dlcItem` or `bundleItem` by nsUid prefix (7001 / 7003 / 7005 / 7007), or the root named by `ROOT` (`PARENT=relatedItems fields ...` probes inside a field). |
 | `dlc-fields <titleId> [name...]`, `bundle-fields [name...]` | The same for `DlcItem` and `BundleItem`. |
 | `lookup-probe [nsUid\|name...]` | Which `item { <field>(nsUid: N) }` root fields exist. |
-| `raw <nsUid> '<selection>'` | Run an arbitrary `applicationItem` selection and print the response. |
+| `raw <nsUid> '<selection>'` | Run an arbitrary selection on the item (root chosen as for `fields`, e.g. `ROOT=ticketItem`) and print the response. |
+| `gql '<selection>' [lang]` | Run any root-level selection in the store context and print the response. For what `raw` cannot reach: other root fields (`membership { membershipItems { nsUid } }`, `country`, a `searchV4` with its own arguments), lookups not keyed by nsUid (`item { ticketItemGroup(ticketItemGroupId: N) { ... } }`) and several roots in one request. Queries that need a signed-in user (`$idToken`: prices, owned rights and tickets) are not possible. |
 | `extra <nsUid\|country> [field...]` | The extra fields (below) of an item (root follows the nsUid prefix) or of the store; all, or the named ones. |
 | `extra-fields [kind]` | List the extra fields (`application demo dlc bundle country`). Offline. |
 
