@@ -328,6 +328,8 @@ Advanced, for probing the API: `PARENT` (for `fields`), `ROOT` (item root for `f
 | `dlc <nsUid> [offset]` | DLC of an **application** (needs the base title's nsUid) as titledb records, one per line (`ALL=1` for every page, `RAW=1` for raw rows). |
 | `dlc-titles <titleId>...` | DLC items by DLC title ID. |
 | `search [offset]`, `dlc-search [offset]`, `search-count` | Search applications / DLC; result count for the current filters. Bundle rows come back as full-data rows. |
+| `application-full`, `bundle-full`, `dlc-full`, `demo-full <nsUid>...` | Every field the schema map (`docs/savanna_map.md`, refreshed with `savanna_schema_map.py mine`) lists for `ApplicationItem` / `BundleItem` / `DlcItem` / `DemoItem`, plus the extra fields, as one raw row per nsUid. The selection is checked once against the first nsUid; fields the server rejects or that need a signed-in user are reported and left out. `<KIND>_FULL_FIELDS` replaces the selection, `SCHEMA_MAP` sets the map path. Only these commands (and `dlc-search-full`) read the map; simba works without it otherwise. |
+| `dlc-search-full [offset]` | `dlc-search` with the `dlc-full` fields (raw rows). The full selection costs much more per row, so `LIMIT` defaults to 50 here (100 is over the server's query cost limit, error 1806); a page that is still too expensive halves it until one is accepted. |
 | `get-latest` | Newest page only. Ignores `ALL`, `FREEWORD`, `SORT`, `SALES`, `LIMIT`, `BUNDLE`, `MAX_PAGES`; respects `PLATFORM`, `SHOP`, `COUNTRY`, `LANG_CODE`, `REGION`. |
 | `search-all` | Every item, by walking `FREEWORD` prefix shards (one query cannot page past offset 999). |
 | `scan-range <from> <to>` | Exact nsUid scan, no search depth limit, `BATCH` nsUids per request, progress and ETA on stderr. The lookup depends on the nsUid prefix, and `<from>` and `<to>` must share it: `7001` applications (search-shaped rows), `7003` demos, `7005` DLC, `7007` bundles (the last three give full-data rows). |
@@ -563,6 +565,32 @@ Non-200 responses are never written; the only deletion is the `pretty_<name>` co
 `.js` files that contain an HTML error page (from older runs) are listed at the end.
 Requirements: `pip install requests`; optional `jsbeautifier`; `node` (evaluates the build manifest).
 Usage: `python scripts/recon_savanna.py [buildId]`.
+
+### [savanna_schema_map.py](../scripts/savanna_schema_map.py) — map the eShop GraphQL schema
+
+The eShop GraphQL server has introspection disabled, so this rebuilds its schema from two sources and compares the
+result with what simba.py requests. `mine` (offline) collects every query the web client ships (from `recon_out/`,
+written by recon_savanna.py): fields those queries select are proven valid under their parent. `crawl` (live) asks
+the server's own validation about candidate field names in batches, which also finds fields the client never uses.
+`check` compares both maps with simba.py's selections; `show <Type|root>` prints what the maps say about one type.
+`crawl`, `check` and `show` read `docs/savanna_map.json`, or `docs/savanna_map.md` when there is no `.json`; `crawl`
+tests every field name in that map, in simba.py's queries and in its extra fields (`WORDS` adds your own guesses).
+
+| Command | Purpose |
+|---|---|
+| `mine [chunk_dir] [out.json]` | Offline. Writes `out.json` and `out.md` (defaults `recon_out`, `docs/savanna_map.json`, so a plain `mine` refreshes `docs/savanna_map.md`, the map simba.py's `*-full` commands read). |
+| `crawl [out.json] [root ...]` | Live, validation-only. Roots: `application demo dlc bundle country searchV4 item-lookups query` (default all); default out `schema_probed.json`. |
+| `audit [probed.json] [root ...]` | Live. Re-verifies crawled nodes and re-crawls the ones the server rejects (after a `REUSE=1` crawl). |
+| `check [observed.json] [probed.json]` | Offline. simba.py's fields against both maps, and the fields the maps know that simba.py does not request; writes `schema_check.md`. |
+| `show <Type\|root> [...]` | What the maps say about a type or crawl root. |
+
+`crawl` and `audit` need no real nsUids: they only test whether the server accepts a field (an error from running a
+field that passed validation is ignored), so the item roots use fixed placeholder nsUids and an item that does not
+exist changes nothing. Each root is calibrated first (an unknown field must be rejected) or skipped.
+env: `CERT` and the store settings as in simba.py, `BATCH` (100), `DEPTH` (5), `WORDS` / `TYPES` (extra candidate
+field / type names), `REUSE=1`, `SLEEP`, `DEBUG=1`.
+Requirements: `pip install requests` for `crawl`, `audit` and `check`; `mine` and `show` need nothing extra.
+Usage: `python scripts/savanna_schema_map.py <command> [args]` (no command prints the full help).
 
 ### disable_ca_verification_patch.py / disable_browser_ca_verification_patch.py
 

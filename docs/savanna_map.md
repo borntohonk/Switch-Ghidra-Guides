@@ -1,0 +1,3541 @@
+# GraphQL as used by the web client
+
+230 chunks, 167 operations, 220 fragments. Fields below are selected by queries that ship with the site, so they are valid under that parent.
+
+## Operations
+
+- mutation UseValidateCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $creditCardTransactionId: CreditCardTransactionId!, $xDeviceAuthorization: String)  <- static_chunks_1356-54bb07a96fe7cac5.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_1356-54bb07a96fe7cac5.js
+- query KakaopayInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_1577-91d4500fcbab6769.js
+- query UseRequestRomIcons($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $applicationIds: [TitleId!]!, $naOriginLanguage: String!)  <- static_chunks_186-055d69e9aadccfd5.js
+- mutation PreInstallRedeem($idToken: String!, $titleId: TitleId!, $xDeviceAuthorization: String!, $country: CountryCode!, $language: LanguageCode!, $shopId: Int!)  <- static_chunks_186-055d69e9aadccfd5.js
+- mutation OwnedTitlesDownload($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $titleIds: [TitleId!]!, $xDeviceAuthorization: String!)  <- static_chunks_2307-93573bead25e8395.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_2307-93573bead25e8395.js
+- query TaxLocationInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_2668-6bce77639745be93.js
+- mutation UsSetTaxLocation($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $geoCode: String!, $postalCode: String!)  <- static_chunks_2691-cd881452af745471.js
+- mutation CaSetTaxLocation($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $geoCode: String!)  <- static_chunks_2691-cd881452af745471.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_3322-c3cb187403e20126.js
+- mutation UseHandleCreditCardCompleteRegistration($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $checkoutId: String!, $creditCardTransactionId: CreditCardTransactionId!)  <- static_chunks_3413-bf804bd422585277.js
+- mutation UseStartCreditCardRegistration($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $redirectUrl: String!, $xDeviceAuthorization: String)  <- static_chunks_3413-bf804bd422585277.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_3413-bf804bd422585277.js
+- query ConfirmApplicationItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ConfirmDlcItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ConfirmBundleItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ConfirmConsumableItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!, $shouldFetchTitle: Boolean!, $applicationItemNsUid: NsUid)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ConfirmTicketItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!, $shouldFetchTitle: Boolean!, $applicationItemNsUid: NsUid)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ConfirmPromotionItem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_3516-566627c5b09dd5f0.js
+- mutation SpecificItemDownload($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!, $xDeviceAuthorization: String)  <- static_chunks_3516-566627c5b09dd5f0.js
+- mutation UpdatePayment($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $paymentMethod: RequestableAutoReplenishPaymentMethod!)  <- static_chunks_3516-566627c5b09dd5f0.js
+- mutation DemosDownload($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!, $xDeviceAuthorization: String)  <- static_chunks_3516-566627c5b09dd5f0.js
+- query ShelfFromNsuids($shopId: Int!, $nsUids: [NsUid!]!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_3663-577d27b05f673764.js
+- query KakaopayInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_3772-b8f26eb533602310.js
+- query PurchaseConfirm($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $consumeGoldPoint: String, $items: [PrePurchaseItemInputV2!]!, $xDeviceAuthorization: String)  <- static_chunks_383-de91c2222aa2c5c3.js
+- mutation Purchase($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $items: [PurchaseItemInputV2!]!, $consumeGoldPoint: String, $xDeviceAuthorization: String)  <- static_chunks_383-de91c2222aa2c5c3.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_4002-ead7a8e2f0055a37.js
+- query GenreDetails($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_4490-2b1fa61c1d750f32.js
+- query HowToPlayDetails($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $tagIds: [TagId!]!)  <- static_chunks_4490-2b1fa61c1d750f32.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_4679-74bf4a41d1daaa63.js
+- mutation UseChargeByPaypal($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $serviceTransactionId: ServiceTransactionId!, $tokenId: String!, $security: BalanceApmCommitBySavedV2SecurityInput, $paymentType: RequestableWharfPaymentMethod!, $xDeviceAuthorization: String)  <- static_chunks_4784-0f3e5f564a5c5567.js
+- mutation UseConfirmPaypal($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $nsUids: [NsUid!], $paymentType: RequestableWharfPaymentMethod!)  <- static_chunks_4784-0f3e5f564a5c5567.js
+- mutation UseConfirmKakaopay($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $nsUids: [NsUid!], $paymentType: RequestableWharfPaymentMethod!)  <- static_chunks_4784-0f3e5f564a5c5567.js
+- mutation TradeApply($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $tradeDiscountRateId: Int53!, $discountValue: String!)  <- static_chunks_4784-0f3e5f564a5c5567.js
+- mutation UseChargeByKakaopay($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $serviceTransactionId: ServiceTransactionId!, $tokenId: String!, $security: BalanceApmCommitBySavedV2SecurityInput, $paymentType: RequestableWharfPaymentMethod!, $xDeviceAuthorization: String)  <- static_chunks_4784-0f3e5f564a5c5567.js
+- query CatalogTicketRights($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!)  <- static_chunks_4831-eed8862a74f880b6.js
+- query TargetApplicationItemsForCatalogTicket($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $catalogTicketId: Int53!, $limit: Int!, $offset: Int!)  <- static_chunks_4831-eed8862a74f880b6.js
+- mutation CancelSubscribing($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $nsUid: NsUid!)  <- static_chunks_5-91d7338cf25087c1.js
+- query Membership($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_5193-2625be8228c720ae.js
+- mutation Redeem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $downloadCode: String!, $nsUid: NsUid!, $isSubscription: Boolean!, $extraGpId: Int, $xDeviceAuthorization: String)  <- static_chunks_5258-b5e433644ab120cb.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_5479-0efe11f24bab194a.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_575-b9d382459b1ce063.js
+- query MembershipContracts($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_5962-6d4ef3b38a83d0e6.js
+- query UpgradeInfoByTitleId($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $applicationIds: [TitleId!]!)  <- static_chunks_6066-5ebaf9245773f53a.js
+- mutation UseRedeemPrepaidCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $eCardCode: String!, $xDeviceAuthorization: String)  <- static_chunks_6939-5314b1952d1baf55.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_7154-0c9dd13d6265a3d7.js
+- query Compatibility($applicationIds: [TitleId!], $regionCode: RequestableRegion!, $country: CountryCode!, $language: LanguageCode!, $shopId: Int!)  <- static_chunks_7363-1d2d94ae3bb164fc.js
+- mutation ProcessScheduledOrder($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!, $amount: String!, $priceId: Int53!, $discountId: Int53, $extraGoldPointId: Int53, $isUseGoldPoint: Boolean!, $xDeviceAuthorization: String)  <- static_chunks_7499-8f7ada0bbbc84ee6.js
+- query MyContract($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_7591-faa847a83fbfb5ae.js
+- mutation UseDeleteWishList($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!)  <- static_chunks_7903-6053f292fb4d49f2.js
+- mutation UsePutWishList($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!)  <- static_chunks_7903-6053f292fb4d49f2.js
+- query Pickup($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_805-e9f73d2bacc53b20.js
+- query FuturePrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_8426-2c23853cf7bb3014.js
+- query ScheduledOrders($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_8657-8c6f8c8e94acf639.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_8774-a985cf613516e6b3.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_8774-a985cf613516e6b3.js
+- mutation UseConfirmSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $nsUids: [NsUid!])  <- static_chunks_8925-a682bfe76b546a46.js
+- mutation UseChargeBySavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $cardId: String!, $creditCardTransactionId: CreditCardTransactionId!, $redirectUrl: String!, $security: BalanceCreditCardCommitBySavedSecurityInput, $xDeviceAuthorization: String)  <- static_chunks_8925-a682bfe76b546a46.js
+- mutation UseConfirmNewCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $creditCardTransactionId: CreditCardTransactionId!)  <- static_chunks_8925-a682bfe76b546a46.js
+- mutation UseChargeByNewCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $creditCardTransactionId: CreditCardTransactionId!, $redirectUrl: String!, $xDeviceAuthorization: String)  <- static_chunks_8925-a682bfe76b546a46.js
+- mutation UseStartReplenishWithNewCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $redirectUrl: String!, $nsUids: [NsUid!], $xDeviceAuthorization: String)  <- static_chunks_9324-a34820249f229199.js
+- query UseCheckRedeemableCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $downloadCode: String!, $xDeviceAuthorization: String)  <- static_chunks_9396-6b1653d49b8cd54d.js
+- query ScheduledOrderConfirm($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $isUseGoldPoint: Boolean!, $nsUid: NsUid!, $xDeviceAuthorization: String)  <- static_chunks_9698-c79467f6e196b220.js
+- query UseMembershipItems($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_9716-dad9d6fbb147128b.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_9812-06168411ef634742.js
+- query UseOwnedTitleIds($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $offset: Int!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseScheduledOrderNsUids($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query SeasonPassNsUids($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseWishList($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- mutation DeviceUnlinkAll($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $xDeviceAuthorization: String)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ApplicationItemsByTitleId($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $titleIds: [TitleId!]!, $publicStatuses: [RequestablePublicStatus!]!, $selectFirst: Boolean!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query Country($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseShopAccountInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseFetchDigitalBundleRights($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $xDeviceAuthorization: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query CachedOnlinePrices($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query BaseCachedOnlinePrices($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UserCachedOnlinePrices($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- mutation ShopLogin($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ScheduledOrderNsUidsItemDetail($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query FetchSavedPaymentMethod($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query PreInstallGroups($xDeviceAuthorization: String!, $country: CountryCode!, $language: LanguageCode!, $shopId: Int!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ConsumableItemGroupApplicationItem($nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ConsumableItemGroupListApplicationItem($nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ConsumableItemGroupsApplicationItem($nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ApplicationItemDetailDemo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query DlcItemsPagerDlcItems($dlcItemsLimit: Int!, $dlcItemsOffset: Int!, $nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ApplicationItemDlcItems($dlcItemsLimit: Int!, $dlcItemsOffset: Int!, $nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ApplicationItemDetailV2($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query BundleItemDetailV2($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query IncludedBundleItemsDetail($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query CoreParentApplicationItemPrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query DlcItemDetailV2($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query IncludedBundleItemsShelfNsUids($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query IncludedBundleItemsShelfItems($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query ApplicationItemLink($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query DuplicationConfirm($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseDetailedWishList($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query StaticShopAccountInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query (anonymous)()  <- static_chunks_pages__app-e7a46e34d7da5a76.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_add_fund_credit_card_confirm-c5452fc72fb8a811.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_add_fund_credit_card_replenish_amounts-34bb6a1d2383fcff.js
+- mutation UseConfirmKakaopay($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $nsUids: [NsUid!], $paymentType: RequestableWharfPaymentMethod!)  <- static_chunks_pages_add_fund_kakaopay_confirm-1d132cd0a7eb7466.js
+- mutation UseChargeByKakaopay($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $serviceTransactionId: ServiceTransactionId!, $tokenId: String!, $security: BalanceApmCommitBySavedV2SecurityInput, $paymentType: RequestableWharfPaymentMethod!, $xDeviceAuthorization: String)  <- static_chunks_pages_add_fund_kakaopay_confirm-1d132cd0a7eb7466.js
+- query KakaopayInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_add_fund_kakaopay_information-5da510bb71775a15.js
+- mutation UseChargeByPaypal($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $serviceTransactionId: ServiceTransactionId!, $tokenId: String!, $security: BalanceApmCommitBySavedV2SecurityInput, $paymentType: RequestableWharfPaymentMethod!, $xDeviceAuthorization: String)  <- static_chunks_pages_add_fund_paypal_confirm-86886023371109fc.js
+- mutation UseConfirmPaypal($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $nsUids: [NsUid!], $paymentType: RequestableWharfPaymentMethod!)  <- static_chunks_pages_add_fund_paypal_confirm-86886023371109fc.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_add_fund_paypal_information-eb4f4186408ce07f.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_add_fund_paypal_replenish_amounts-d0c275d97019f436.js
+- query ScheduledOrders($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_catalog_tickets_[catalogTicketId]-cd39f9d78d695c34.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]-e3c16ef1e57d9dbf.js
+- query ApplicationItemAboutUpgrade($nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_detail_application_items_[nsUid]_about_upgrade-0da7b4c4639c5c76.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_consumable_item_groups-8da9183850c0c26e.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_consumable_item_groups-8da9183850c0c26e.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_consumable_item_groups_[consumableItemGroupId]_list-02f1521af2110258.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_consumable_item_groups_[consumableItemGroupId]_list-02f1521af2110258.js
+- query UseGetMyGoldPoint($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_dlc_items-8f540432a3281ed4.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_detail_application_items_[nsUid]_dlc_items-8f540432a3281ed4.js
+- query ApplicationItemTicketItemGroups($nsUid: NsUid!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_detail_application_items_[nsUid]_ticket_item_groups-4a7f01191adddfc7.js
+- query TicketItemGroupDetail($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $applicationItemNsUid: NsUid!, $ticketItemGroupId: TicketItemGroupId!, $includeTicketItemInfo: Boolean, $ticketItemNsUid: NsUid)  <- static_chunks_pages_detail_application_items_[nsUid]_ticket_item_groups_[ticketItemGroupId]-dc2a6c4842120d4b.js
+- query TicketItemGroupsRights($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $ticketItemGroupId: TicketItemGroupId!)  <- static_chunks_pages_detail_application_items_[nsUid]_ticket_item_groups_[ticketItemGroupId]-dc2a6c4842120d4b.js
+- query LawPayment($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_legal_law_payment-06b492e2ac6b8764.js
+- query LawSales($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_legal_law_sales-26118de66aab5d38.js
+- query MembershipTicketItemPrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!, $idToken: String!)  <- static_chunks_pages_membership-bed27464078402a1.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- mutation ScheduledOrderCancel($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $scheduledOrderId: Int53!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- mutation ScheduledOrderReleaseSuspended($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $scheduledOrderId: Int53!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- query UseScheduledOrdersWithItems($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- mutation MyIndexDeleteCreditCardRegistration($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $cardId: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- mutation DeleteApmAgreement($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $tokenId: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- mutation CancelMembershipSubscribing($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $nsUid: NsUid!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- query ScheduledOrders($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_my-152f8ff44a8b9a78.js
+- query SearchFilter($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_search_result_conditions-c82dd48b4f2e1016.js
+- query Search($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $region: RequestableRegion!, $ageMax: Float, $ageMin: Float, $discountTypes: [RequestableSearchDiscount!], $freeword: String, $isHavingTrialOnly: Boolean, $isMembershipOnlinePlayOnly: Boolean, $itemTypes: [SearchItemType!], $labelPlatforms: [RequestableDeviceType!], $limit: Int!, $offset: Int!, $platformIds: [String!], $priceMax: Float, $priceMin: Float, $publisherId: String, $releaseDateAfter: String, $releaseDateBefore: String, $salesStatus: RequestableSearchSalesStatus, $sort: SearchSort!, $subCategoryIds: [SubCategoryId!], $tagIds: [TagId!])  <- static_chunks_pages_search_result_conditions-c82dd48b4f2e1016.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_setting_account_payment-d0e43d4c0d59ecfe.js
+- query KakaopayInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_setting_account_payment-d0e43d4c0d59ecfe.js
+- mutation UpdatePaymentSetting($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $paymentMethod: RequestableAutoReplenishPaymentMethod!)  <- static_chunks_pages_setting_account_payment-d0e43d4c0d59ecfe.js
+- query UsTaxLocation($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $postalCode: String!)  <- static_chunks_pages_setting_location_select-52bdc18e7ac60e88.js
+- query CaTaxLocation($country: CountryCode!, $language: LanguageCode!, $shopId: Int!)  <- static_chunks_pages_setting_location_select-52bdc18e7ac60e88.js
+- query PublisherShelf($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $region: RequestableRegion!, $publisherId: String!, $sort: SearchSort!, $limit: Int!, $offset: Int!)  <- static_chunks_pages_shelf_publisher_[publisherId]-5bd9095922993b02.js
+- query MembershipTicketItemPrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!, $idToken: String!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query GenreAppSearch($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $region: RequestableRegion!, $limit: Int!, $offset: Int!, $sort: SearchSort!, $contentFiltering: RequestableContentFiltering, $salesStatus: RequestableSearchSalesStatus, $labelPlatforms: [RequestableDeviceType!], $subCategoryIds: [SubCategoryId!])  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query TagSearchItemDetail($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUids: [NsUid!]!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query HowToPlayAppSearch($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $region: RequestableRegion!, $limit: Int!, $offset: Int!, $sort: SearchSort!, $contentFiltering: RequestableContentFiltering, $salesStatus: RequestableSearchSalesStatus, $labelPlatforms: [RequestableDeviceType!], $skipShare: Boolean)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query TopSearchQueryIndex($sort: SearchSort!, $limit: Int!, $offset: Int!, $shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $region: RequestableRegion!, $priceMin: Float, $freeword: String!, $itemTypes: [SearchItemType!], $labelPlatforms: [RequestableDeviceType!], $salesStatus: RequestableSearchSalesStatus, $contentFiltering: RequestableContentFiltering, $discountTypes: [RequestableSearchDiscount!], $releaseDateAfter: String, $releaseDateBefore: String, $platformIds: [String!])  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query ItemsByTitleIds($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $titleIds: [TitleId!]!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query SearchWordSuggestions($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query SubCategoryTagId($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $categoryIds: [Int53!]!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query TagsFromTitleIds($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $publicStatuses: [RequestablePublicStatus!]!, $selectFirst: Boolean!, $titleIds: [TitleId!]!, $type: RequestableItemWithTitleIdType!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query TopRecommend($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $recommendationKey: String!, $fallbackRequestId: String!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query UseGetFriend($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_top-b01f13bf013f1c8b.js
+- query ScheduledOrders($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_catalog_ticket_redeem_[itemPathType]_[nsUid]_complete-cfe3fc0be8def0d9.js
+- mutation UseProcessCatalogTicketRightUse($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!, $catalogTicketRightId: Int53!, $xDeviceAuthorization: String)  <- static_chunks_pages_transaction_catalog_ticket_redeem_[itemPathType]_[nsUid]_confirm-0c0f9c96b2a68f25.js
+- mutation UseProcessScheduledOrderByCatalogTicket($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $nsUid: NsUid!, $catalogTicketId: Int53!, $xDeviceAuthorization: String)  <- static_chunks_pages_transaction_catalog_ticket_redeem_[itemPathType]_[nsUid]_confirm-0c0f9c96b2a68f25.js
+- mutation DigitalBundleRedeem($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $xDeviceAuthorization: String!, $nsUids: [NsUid!]!)  <- static_chunks_pages_transaction_digital_bundle_confirm-8667f59bc43fe128.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_insufficient-7c07dd60c86412f8.js
+- query UseBalanceGetBalance($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_purchase_commit_[itemPathType]_[nsUid]-9fb9b8be6fab9066.js
+- mutation UseStartReplenishWithNewCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!, $replenishAmount: String!, $redirectUrl: String!, $nsUids: [NsUid!], $xDeviceAuthorization: String)  <- static_chunks_pages_transaction_purchase_confirm_application_items_[nsUid]-efc1ed0caa7ba90a.js
+- query UseMembershipItems($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_transaction_purchase_confirm_subscriptions_[nsUid]-5c5a8ce350b9a397.js
+- query UseMembershipItems($shopId: Int!, $country: CountryCode!, $language: LanguageCode!)  <- static_chunks_pages_transaction_purchase_confirm_ticket_items_[nsUid]-ebfa902a6a813e4b.js
+- mutation ResumeSubscribing($country: CountryCode!, $language: LanguageCode!, $shopId: Int!, $idToken: String!, $nsUid: NsUid!)  <- static_chunks_pages_transaction_resume_confirm_subscriptions_[nsUid]-e5bf7b20e874cefd.js
+- query KakaopayInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_scheduled_order_payment_[itemPathType]_[nsUid]-0e89b5a87f10417d.js
+- query PaypalInfo($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_subscription_select_[operation]_[itemPathType]_[nsUid]-1d303fec7dc04854.js
+- query UseGetSavedCreditCard($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $idToken: String!)  <- static_chunks_pages_transaction_subscription_select_[operation]_[itemPathType]_[nsUid]-1d303fec7dc04854.js
+- query UseSubscriptionSelectViewPrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!, $idToken: String!)  <- static_chunks_pages_transaction_subscription_select_[operation]_[itemPathType]_[nsUid]-1d303fec7dc04854.js
+- query SubscriptionSettingPrice($shopId: Int!, $country: CountryCode!, $language: LanguageCode!, $nsUid: NsUid!, $idToken: String!)  <- static_chunks_pages_transaction_subscription_setting_[operation]_[itemPathType]_[nsUid]-0725e6951fa9ac5a.js
+
+## Paths (from the operation root)
+
+### mutation
+
+- balanceApmBeginBySavedV2(idToken, nsUids, paymentType, replenishAmount)
+  - serviceTransactionId
+- balanceApmCommitBySavedV2(idToken, paymentType, security, serviceTransactionId, tokenId, xDeviceAuthorization)
+  - forwardUrl
+  - neiTransactionId
+- balanceCreditCardBegin(idToken, nsUids, redirectUrl, replenishAmount, xDeviceAuthorization)
+  - redirectUrl
+- balanceCreditCardBeginBySaved(idToken, nsUids, replenishAmount)
+  - creditCardTransactionId
+- balanceCreditCardCheckValidity(creditCardTransactionId, idToken, xDeviceAuthorization)
+  - neiTransactionId
+- balanceCreditCardCommit(creditCardTransactionId, idToken, redirectUrl, xDeviceAuthorization)
+  - forwardUrl
+  - neiTransactionId
+- balanceCreditCardCommitBySaved(cardId, creditCardTransactionId, idToken, redirectUrl, security, xDeviceAuthorization)
+  - forwardUrl
+  - neiTransactionId
+- balanceCreditCardConfirm(creditCardTransactionId, idToken)
+  - amount
+    - rawValue
+  - card
+    - brand
+    - expMonth
+    - expYear
+    - lastFourDigits
+- balancePrepaidReplenish(eCardCode, idToken, xDeviceAuthorization)
+  - neiTransactionId
+- catalogTicketRightUse(catalogTicketRightId, idToken, nsUid, xDeviceAuthorization)
+  - transaction
+    - businessType
+    - eciTransactionId
+    - privileges
+      - __typename
+      - code   [on PrivilegeCode]
+      - description
+      - name   [on PrivilegeRight]
+- demosDownload(idToken, nsUid, xDeviceAuthorization)
+- devicesHacUnlinkAll(xDeviceAuthorization)
+- digitalBundleRedeem(idToken, nsUids, xDeviceAuthorization)
+  - transactions
+    - businessType
+    - eciTransactionId
+    - nsUid
+- itemRedeem(downloadCode, extraGoldPointId, idToken, isSubscription, nsUid, xDeviceAuthorization)
+  - transaction
+    - businessType
+    - eciTransactionId
+    - giftGoldPoints
+      - total
+        - point
+    - nsUid
+    - privileges
+      - __typename
+      - code   [on PrivilegeCode]
+      - description
+      - name   [on PrivilegeRight]
+- itemScheduledOrderByCatalogTicket(catalogTicketId, idToken, nsUid, xDeviceAuthorization)
+  - scheduledPrivileges
+    - __typename
+    - description
+    - name
+    - type
+- itemScheduledOrderByPurchase(amount, discountId, extraGoldPointId, idToken, isSubscription, isUseGoldPoint, nsUid, priceId, xDeviceAuthorization)
+  - goldPoint
+    - total
+      - point
+  - order
+    - id
+  - scheduledPrivileges
+    - description
+    - name
+    - type
+- itemsPurchase(consumeGoldPoint, idToken, items, xDeviceAuthorization)
+  - totalGoldPoint
+    - gift
+  - transactions
+    - businessType
+    - eciTransactionId
+    - privileges
+      - __typename
+      - code   [on PrivilegeCode]
+      - description
+      - name   [on PrivilegeRight]
+- ownedTitlesDownload(idToken, titleIds, xDeviceAuthorization)
+- paymentAgreementApmDelete(idToken, tokenId)
+- paymentAgreementCreditCardComplete(checkoutId, creditCardTransactionId)
+- paymentAgreementCreditCardCreate(idToken, redirectUrl, xDeviceAuthorization)
+  - redirectUrl
+- paymentAgreementCreditCardDelete(cardId, idToken)
+- paymentDefaultMethodPutV2(idToken, paymentMethod)
+- preInstallRedeem(idToken, titleId, xDeviceAuthorization)
+  - transactions
+    - businessType
+    - eciTransactionId
+- scheduledOrderCancel(idToken, scheduledOrderId)
+- scheduledOrderReleaseSuspended(idToken, scheduledOrderId)
+- shopLogin(idToken)
+  - shopAccount
+    - analyticsPermissions
+      - dataCollection
+        - editableBy
+          - self
+        - isPermitted
+      - targetMarketing
+        - editableBy
+          - self
+        - isPermitted
+    - isChild
+    - isShopAnalyticsOptedIn
+    - na
+      - age
+      - country
+      - naId
+      - region
+      - screenName
+    - parentalControl
+      - isGameRatingRestricted
+      - isShoppingRestricted
+    - payment
+    - shopAccountId
+- specificItemDownload(idToken, nsUid, xDeviceAuthorization)
+- subscriptionsCancel(idToken, nsUid)
+- subscriptionsResume(idToken, nsUid)
+- taxLocationCaPut(geoCode, idToken)
+- taxLocationUsPut(geoCode, idToken, postalCode)
+- tradeApply(discountValue, idToken, tradeDiscountRateId)
+  - id
+- wishlistDeleteV2(idToken, nsUid)
+- wishlistPutV2(idToken, nsUid)
+  - __typename
+
+### query
+
+- account
+  - balance
+    - current(idToken)
+      - formattedValue
+      - rawValue
+  - friend
+    - __typename
+    - targetMarketingPermittedFriends(idToken)
+      - nsaId
+  - goldPointV2(idToken)
+    - goldPoint
+  - recommendedItems(fallbackRequestId, idToken, recommendationKey)
+    - createdDatetime
+    - isFallback
+    - items
+      - item
+        - __typename
+        - formalName
+        - freePlayDeliveryInfos
+          - dlTerm
+            - end
+            - start
+          - freePlayType
+          - isFeatureLimited
+          - nsUid
+          - playTerm
+            - end
+            - start
+          - promotion
+            - description
+          - requiredMembershipType
+        - heroBannerUrl
+        - isFreeForExMembership
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+        - labelPlatform
+        - movies
+          - __typename
+          - movieMetaId   [on NemoMovie]
+          - movieUrl   [on EshopMovie]
+          - thumbnailUrl   [on EshopMovie]
+        - nsUid
+        - publicStatus
+        - publisher
+          - id
+          - name
+        - ratingInfo
+          - __typename
+          - rating
+            - age
+            - id
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - screenshotUrls
+        - tagIds
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - nsUid
+    - modelId
+  - rights
+    - catalogTicketsV2(catalogTicketRightStatuses, idToken)
+      - catalogTicket
+        - id
+        - imageUrl
+        - name
+      - catalogTicketRights
+        - expirationDatetime
+        - id
+    - membershipsV2(idToken)
+      - ticketItemGroup
+        - formalName
+        - id
+        - subscriptionType
+      - ticketRights
+        - __typename
+        - expirationDatetime   [on InUseTicketRightV2]
+        - isTrial
+        - naId
+        - subscriptionContract
+          - nextContractUpdateDatetime
+          - notAgreePriceIds
+            - nextPriceId
+            - previousPriceId
+          - status
+          - ticketItem
+            - __typename
+            - grantMinutes   [on NormalSubscriptionTicketItem]
+            - nsUid
+            - publicStatus   [on NormalSubscriptionTicketItem]
+    - seasonPassRights(idToken)
+      - bundledItems
+        - nsUid
+      - nsUid
+    - ticketItemGroups(idToken, ticketItemGroupId)
+      - ticketItemGroupId
+      - ticketRights
+        - __typename
+        - expirationDatetime   [on InUseTicketRightV2]
+        - isTrial
+        - naId
+        - subscriptionContract
+          - countryWhenContracted
+          - nextContractUpdateDatetime
+          - notAgreePriceIds
+            - nextPriceId
+            - previousPriceId
+          - status
+          - ticketItem
+            - __typename
+            - grantMinutes   [on NormalSubscriptionTicketItem]
+            - grantMonths   [on MonthlySubscriptionTicketItem]
+            - nsUid
+            - publicStatus   [on MonthlySubscriptionTicketItem, NormalSubscriptionTicketItem]
+        - ticketItemGroup
+          - formalName
+          - id
+          - subscriptionType
+          - summaryPublicStatus
+          - targetApplicationItems(salesStatuses)
+            - formalName
+            - heroBannerUrl
+            - labelPlatform
+            - nsUid
+          - ticketItemsV2(publicStatuses)
+            - __typename
+            - nsUid
+        - unusedMinutes   [on UnusedTicketRightV2]
+    - ticketsV2(idToken)
+      - __typename
+      - expirationDatetime   [on InUseTicketRightV2]
+      - isTrial
+      - naId
+      - subscriptionContract
+        - countryWhenContracted
+        - nextContractUpdateDatetime
+        - notAgreePriceIds
+          - nextPriceId
+          - previousPriceId
+        - status
+        - ticketItem
+          - __typename
+          - grantMinutes   [on NormalSubscriptionTicketItem]
+          - grantMonths   [on MonthlySubscriptionTicketItem]
+          - nsUid
+          - publicStatus   [on MonthlySubscriptionTicketItem, NormalSubscriptionTicketItem]
+      - ticketItemGroup
+        - formalName
+        - id
+        - subscriptionType
+        - summaryPublicStatus
+        - targetApplicationItems(salesStatuses)
+          - formalName
+          - heroBannerUrl
+          - labelPlatform
+          - nsUid
+        - ticketItemsV2(publicStatuses)
+          - __typename
+          - nsUid
+      - unusedMinutes   [on UnusedTicketRightV2]
+    - titleIds(idToken, limit, offset)
+      - offsetInfo
+        - length
+        - offset
+        - total
+      - titleIds
+  - savedPayment
+    - __typename
+    - apms(idToken)
+      - __typename
+      - kakaopays
+        - pspId
+        - tokenId
+      - paypals
+        - countryCode
+        - email
+        - pspId
+        - tokenId
+    - creditCards(idToken)
+      - brand
+      - cardId
+      - expMonth
+      - expYear
+      - lastFourDigits
+      - pspId
+  - scheduledOrdersV2(idToken)
+    - __typename
+    - catalogTicketId   [on ScheduledOrderByCatalogTicket]
+    - id
+    - isSuspended
+    - itemV2
+      - __typename
+      - formalName   [on ApplicationItem, BundleItem, DlcItem]
+      - heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+      - itemsV2(publicStatuses)   [on BundleItem]
+        - item
+          - __typename
+          - consumableItemGroup   [on ConsumableItemV2]
+            - formalName
+            - id
+          - formalName   [on ApplicationItem, ConsumableItemV2, DlcItem]
+          - nsUid   [on Item]
+      - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+      - nsUid   [on ApplicationItem, BundleItem, DlcItem]
+      - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+    - nsUid
+    - scheduledPaymentAmount   [on ScheduledOrderByPurchaseV2]
+      - formattedValue
+      - rawValue
+    - settlementTryDate
+  - shopAccount(idToken)
+    - analyticsPermissions
+      - dataCollection
+        - editableBy
+          - self
+        - isPermitted
+      - targetMarketing
+        - editableBy
+          - self
+        - isPermitted
+    - isChild
+    - isShopAnalyticsOptedIn
+    - na
+      - age
+      - country
+      - naId
+      - region
+      - screenName
+    - parentalControl
+      - isGameRatingRestricted
+      - isShoppingRestricted
+    - payment
+    - shopAccountId
+  - taxLocation(idToken)
+    - __typename
+    - postalCode   [on UsAccountTaxLocation]
+    - state   [on CaAccountTaxLocation, UsAccountTaxLocation]
+  - wishlist
+    - wishlistItems(idToken, limit, offset)
+      - items
+        - nsUid
+- compatibilities(applicationIds, regionCode)
+  - caption
+  - captionNote
+  - details
+  - status
+- country
+  - availableLanguages
+    - code
+    - id
+  - balanceLimit
+    - formattedValue
+    - rawValue
+  - caTaxLocations
+    - geoCode
+    - state
+  - defaultLanguage
+    - code
+    - id
+  - goldPointExchangeRate
+  - id
+  - isCreditCardAvailable
+  - isKakaopayAvailable
+  - isPaypalAvailable
+  - isPrepaidCardAvailable
+  - isTaxExcludedCountry
+  - isTaxFreeCountry
+  - isoCode
+  - minimumCurrencyUnit
+  - priceFormat
+    - formats
+      - formats
+        - digit
+        - format
+      - patternId
+    - negativePrefix
+    - negativeSuffix
+    - positivePrefix
+    - positiveSuffix
+  - regionCode
+  - replenishAmounts
+    - formattedValue
+    - rawValue
+  - shopStatuses
+    - bee
+      - shopOpenStatus
+    - hac
+      - shopOpenStatus
+  - usTaxLocations(postalCode)
+    - city
+    - county
+    - geoCode
+    - postalCode
+    - state
+- devices
+  - digitalBundle(xDeviceAuthorization)
+    - isRedeemed
+    - items
+      - isRedeemed
+      - item
+        - __typename   [on ApplicationItem, BundleItem, DlcItem]
+        - applications   [on ApplicationItem]
+          - id
+        - formalName   [on ApplicationItem, BundleItem, DlcItem]
+        - heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+        - isInAppPurchase   [on ApplicationItem]
+        - itemStatuses   [on ApplicationItem, DlcItem]
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - itemsV2(publicStatuses)   [on BundleItem]
+          - item
+            - __typename   [on ApplicationItem, DlcItem]
+            - applications   [on ApplicationItem]
+              - id
+            - formalName   [on ApplicationItem, DlcItem]
+            - heroBannerUrl   [on ApplicationItem, DlcItem]
+            - isInAppPurchase   [on ApplicationItem]
+            - itemStatuses   [on ApplicationItem, DlcItem]
+              - bee
+                - salesStatus
+              - hac
+                - salesStatus
+            - labelPlatform   [on ApplicationItem, DlcItem]
+            - nsUid   [on ApplicationItem, DlcItem]
+            - price   [on ApplicationItem, DlcItem]
+              - __typename
+            - ratingInfo   [on ApplicationItem, DlcItem]
+              - contentDescriptors
+                - __typename
+                - imageUrl
+                - name
+                - svgImageUrl
+                - type
+              - rating
+                - __typename
+                - id
+                - imageUrl
+                - isProvisional
+                - name
+                - svgImageUrl
+              - ratingSystem
+                - id
+                - name
+            - romRights   [on ApplicationItem, DlcItem]
+              - isVgc
+              - titleId
+            - strongDisclaimer   [on ApplicationItem, DlcItem]
+            - targetApplicationItems(salesStatuses)   [on DlcItem]
+              - applications
+                - id
+              - nsUid
+            - upgradeInfo   [on ApplicationItem, DlcItem]
+              - baseApplicationItem
+                - romRights
+                  - titleId
+              - upgradeApplicationItemNsUid
+              - upgradeDlcItemNsUid
+        - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+        - nsUid   [on ApplicationItem, BundleItem, DlcItem]
+        - price   [on ApplicationItem, BundleItem, DlcItem]
+          - __typename
+        - ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+          - contentDescriptors
+            - __typename
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - __typename
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+        - romRights   [on ApplicationItem, BundleItem, DlcItem]
+          - isVgc
+          - titleId
+        - strongDisclaimer   [on ApplicationItem, BundleItem, DlcItem]
+        - targetApplicationItems(salesStatuses)   [on DlcItem]
+          - applications
+            - id
+          - nsUid
+        - upgradeInfo   [on ApplicationItem, DlcItem]
+          - baseApplicationItem
+            - romRights
+              - titleId
+          - upgradeApplicationItemNsUid
+          - upgradeDlcItemNsUid
+      - nsUid
+  - preInstallGroups(xDeviceAuthorization)
+    - isRedeemed
+    - items
+      - item
+        - __typename   [on ApplicationItem, DlcItem]
+        - applications   [on ApplicationItem]
+          - id
+        - formalName   [on ApplicationItem, DlcItem]
+        - heroBannerUrl   [on ApplicationItem, DlcItem]
+        - isInAppPurchase   [on ApplicationItem]
+        - labelPlatform   [on ApplicationItem, DlcItem]
+        - nsUid   [on ApplicationItem, DlcItem]
+        - priceV2   [on ApplicationItem, DlcItem]
+          - itemStatuses
+            - bee
+              - salesStatus
+            - hac
+              - salesStatus
+        - ratingInfo   [on ApplicationItem, DlcItem]
+          - contentDescriptors
+            - __typename
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - __typename
+            - id
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+        - romRights   [on ApplicationItem, DlcItem]
+          - isVgc
+          - titleId
+        - strongDisclaimer   [on ApplicationItem, DlcItem]
+        - targetApplicationItems(salesStatuses)   [on DlcItem]
+          - applications
+            - id
+          - nsUid
+          - romRights
+            - titleId
+        - upgradeInfo   [on ApplicationItem, DlcItem]
+          - baseApplicationItem
+            - romRights
+              - titleId
+          - upgradeApplicationItemNsUid
+          - upgradeDlcItemNsUid
+      - nsUid
+      - titleId
+- downloadCodeInfoV2(downloadCode, idToken, xDeviceAuthorization)
+  - cash   [on ECashDownloadCodeInfo]
+    - formattedValue
+    - rawValue
+  - items   [on ItemDownloadCodeInfo]
+    - giftGoldPoints
+      - extra
+        - applicableCondition
+        - id
+      - total
+        - point
+    - isFree
+    - isPaymentTypeRegistrationRequired
+    - itemV2
+      - __typename
+      - applications   [on ApplicationItem]
+        - id
+      - classicGameType   [on ApplicationItem]
+      - consumableItemGroup   [on ConsumableItemV2]
+        - formalName
+        - id
+        - imageUrl
+        - isSimpleStyle
+        - ratingInfo
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+        - strongDisclaimer
+        - targetApplicationItems(salesStatuses)
+          - nsUid
+          - ratingInfo
+            - __typename
+            - contentDescriptors
+              - id
+              - imageUrl
+              - name
+              - svgImageUrl
+              - type
+            - rating
+              - age
+              - id
+              - imageUrl
+              - isProvisional
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+              - name
+      - formalName   [on ApplicationItem, BundleItem, ConsumableItemV2, DemoItem, DlcItem]
+      - freePlayDeliveryInfos   [on ApplicationItem]
+        - dlTerm
+          - end
+          - start
+        - freePlayType
+        - isFeatureLimited
+        - nsUid
+        - playTerm
+          - end
+          - start
+        - promotion
+          - description
+        - requiredMembershipType
+      - grantMinutes   [on NormalTicketItem]
+      - grantMonths   [on MonthlyTicketItem]
+      - hasUnreleasedItems   [on BundleItem]
+      - heroBannerUrl   [on ApplicationItem, BundleItem, ConsumableItemV2, DlcItem]
+      - isFreeForExMembership   [on BundleItem, DlcItem]
+      - isInAppPurchase   [on ApplicationItem]
+      - isOp2LimitedRight   [on NormalTicketItem]
+      - itemStatuses   [on ApplicationItem, BundleItem, DlcItem]
+        - bee
+          - salesStatus
+        - hac
+          - salesStatus
+      - itemsV2(publicStatuses)   [on BundleItem]
+        - deliveryDateOnEshop
+        - item
+          - __typename
+          - applications   [on ApplicationItem]
+            - id
+          - consumableItemGroup   [on ConsumableItemV2]
+            - formalName
+            - id
+            - targetApplicationItems(salesStatuses)
+              - nsUid
+          - formalName   [on ApplicationItem, ConsumableItemV2, DlcItem]
+          - heroBannerUrl   [on ApplicationItem, ConsumableItemV2, DlcItem]
+          - isInAppPurchase   [on ApplicationItem]
+          - itemStatuses   [on ApplicationItem, DlcItem]
+            - bee
+              - salesStatus
+            - hac
+              - salesStatus
+          - labelPlatform   [on ApplicationItem, DlcItem]
+          - nsUid   [on ApplicationItem, ConsumableItemV2, DlcItem]
+          - ratingInfo   [on ApplicationItem]
+            - __typename
+            - contentDescriptors
+              - id
+              - imageUrl
+              - name
+              - svgImageUrl
+              - type
+            - rating
+              - age
+              - id
+              - imageUrl
+              - isProvisional
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+              - name
+          - releaseDateOnEshop   [on DlcItem]
+          - romRights   [on ApplicationItem, DlcItem]
+            - isVgc
+            - titleId
+          - targetApplicationItems(salesStatuses)   [on DlcItem]
+            - applications
+              - id
+            - nsUid
+          - upgradeInfo   [on ApplicationItem, DlcItem]
+            - baseApplicationItem
+              - formalName
+              - itemStatuses
+                - bee
+                  - salesStatus
+                - hac
+                  - salesStatus
+              - nsUid
+              - romRights
+                - titleId
+            - baseApplicationItemNsUid
+            - upgradeApplicationItem
+              - itemStatuses
+                - bee
+                  - salesStatus
+              - nsUid
+              - romRights
+                - titleId
+            - upgradeApplicationItemNsUid
+            - upgradeDlcItem
+              - formalName
+              - itemStatuses
+                - bee
+                  - salesStatus
+              - nsUid
+              - romRights
+                - titleId
+            - upgradeDlcItemNsUid
+      - labelPlatform   [on ApplicationItem, BundleItem, DemoItem, DlcItem]
+      - nsUid   [on ApplicationItem, BundleItem, ConsumableItemV2, DemoItem, DlcItem, TicketItem]
+      - ratingInfo   [on ApplicationItem, BundleItem, DemoItem, DlcItem]
+        - __typename
+        - contentDescriptors
+          - id
+          - imageUrl
+          - name
+          - svgImageUrl
+          - type
+        - rating
+          - age
+          - id
+          - imageUrl
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+      - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+      - romRights   [on ApplicationItem, BundleItem, DlcItem]
+        - isVgc
+        - titleId
+      - strongDisclaimer   [on ApplicationItem, BundleItem, ConsumableItemV2, DlcItem]
+      - subscriptionTicketItem   [on MonthlyTicketItem, NormalTicketItem]
+        - __typename
+        - grantMinutes   [on NormalSubscriptionTicketItem]
+        - grantMonths   [on MonthlySubscriptionTicketItem]
+        - nsUid
+      - targetApplicationItems(salesStatuses)   [on DemoItem, DlcItem]
+        - applications
+          - id
+        - nsUid
+        - ratingInfo
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+      - ticketItemGroup   [on TicketItem]
+        - formalName
+        - id
+        - strongDisclaimer
+        - targetApplicationItems(salesStatuses)
+          - heroBannerUrl
+          - labelPlatform
+          - nsUid
+          - ratingInfo
+            - __typename
+            - contentDescriptors
+              - id
+              - imageUrl
+              - name
+              - svgImageUrl
+              - type
+            - rating
+              - age
+              - id
+              - imageUrl
+              - isProvisional
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+              - name
+      - upgradeInfo   [on ApplicationItem, DlcItem]
+        - baseApplicationItem
+          - formalName
+          - itemStatuses
+            - bee
+              - salesStatus
+            - hac
+              - salesStatus
+          - nsUid
+          - romRights
+            - titleId
+        - upgradeApplicationItem
+          - itemStatuses
+            - bee
+              - salesStatus
+          - nsUid
+          - romRights
+            - titleId
+        - upgradeDlcItem
+          - itemStatuses
+            - bee
+              - salesStatus
+          - nsUid
+          - romRights
+            - titleId
+        - upgradeDlcItemNsUid
+- futurePrices(nsUids)
+  - nsUid
+  - regularPrices
+    - endDatetime
+    - monthlyPrice
+      - formattedValue
+      - rawValue
+    - regularPrice
+      - formattedValue
+      - id
+      - rawValue
+    - startDatetime
+- item
+  - applicationItem(nsUid)
+    - __typename
+    - accessoryDescription
+    - applications
+      - id
+    - catchCopy
+    - classicGameType
+    - cloudBackupType
+    - consumableItemGroups(summaryPublicStatuses)
+      - __typename
+      - consumableItems(publicStatuses)
+        - __typename
+        - description
+        - disclaimer
+        - formalName
+        - heroBannerUrl
+        - isMembershipRequired
+        - notices
+          - text
+          - type
+        - nsUid
+        - publicStatus
+        - strongDisclaimer
+      - description
+      - disclaimer
+      - formalName
+      - id
+      - imageUrl
+      - isSimpleStyle
+      - notices
+        - text
+        - type
+      - publisher
+        - name
+      - strongDisclaimer
+    - copyrightText
+    - demoItems
+      - formalName
+      - labelPlatform
+      - nsUid
+    - description
+    - disclaimer
+    - dlcItems(isIncludeBundleItem, limit, offset, publicStatuses, salesStatuses)
+      - items
+        - __typename
+        - formalName   [on BundleItem, DlcItem]
+        - heroBannerUrl   [on BundleItem, DlcItem]
+        - isMembershipRequired   [on DlcItem]
+        - isNew   [on BundleItem, DlcItem]
+        - itemsV2(publicStatuses)   [on BundleItem]
+          - item
+            - nsUid   [on Item]
+            - romRights   [on ApplicationItem, DlcItem]
+              - titleId
+            - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+              - heroBannerUrl
+              - nsUid
+        - labelPlatform   [on BundleItem, DlcItem]
+        - nsUid   [on BundleItem, DlcItem, Item]
+        - ratingInfo   [on BundleItem, DlcItem]
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop   [on BundleItem, DlcItem]
+        - romRights   [on BundleItem, DlcItem]
+          - titleId
+        - targetApplicationItems(salesStatuses)   [on DlcItem]
+          - heroBannerUrl
+          - nsUid
+        - upgradeInfo   [on DlcItem]
+          - upgradeDlcItemNsUid
+    - features
+      - id
+    - formalName
+    - freePlayDeliveryInfos
+      - dlTerm
+        - end
+        - start
+      - freePlayType
+      - isFeatureLimited
+      - nsUid
+      - playTerm
+        - end
+        - start
+      - promotion
+        - description
+      - requiredMembershipType
+    - heroBannerUrl
+    - includedBundleItems(publicStatuses, salesStatuses)
+      - nsUid
+    - includedCatalogTicketIds
+    - isInAppPurchase
+    - isMembershipRequired
+    - isNew
+    - itemStatuses
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - labelPlatform
+    - languages
+      - isoCode
+      - name
+    - miscDescription
+    - movies
+      - __typename
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+      - thumbnailUrl   [on EshopMovie]
+    - networkFeatureDescription
+    - notices
+      - __typename
+      - text
+      - type
+    - nsUid
+    - playStyles
+      - id
+      - name
+    - playerNumber
+      - localMax
+      - localMin
+      - offlineMax
+      - offlineMin
+      - onlineMax
+      - onlineMin
+    - playerNumberDescription
+    - publicStatus
+    - publisher
+      - id
+      - name
+    - ratingInfo
+      - __typename
+      - contentDescriptors
+        - __typename
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - __typename
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - relatedItems
+      - itemV2
+        - __typename   [on Item]
+        - formalName   [on ApplicationItem, BundleItem, DlcItem]
+        - heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+        - isNew   [on ApplicationItem, BundleItem, DlcItem]
+        - itemType   [on ApplicationItem, BundleItem, DlcItem]
+        - itemsV2(publicStatuses)   [on BundleItem]
+          - item
+            - __typename
+            - nsUid   [on Item]
+            - romRights   [on ApplicationItem, DlcItem]
+              - titleId
+        - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+        - nsUid   [on Item]
+        - publicStatus   [on ApplicationItem, BundleItem, DlcItem]
+        - ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+          - rating
+            - age
+            - id
+            - name
+          - ratingSystem
+            - id
+        - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+        - romRights   [on ApplicationItem, BundleItem, DlcItem]
+          - titleId
+        - upgradeInfo   [on DlcItem]
+          - upgradeDlcItemNsUid
+      - nsUid
+    - releaseDateOnEshop
+    - romRights
+      - isLendable
+      - isVgc
+      - titleId
+    - romSizes
+      - bee
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+      - hac
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+    - screenshotUrls
+    - strongDisclaimer
+    - tags
+      - name
+      - subCategory
+        - categoryId
+        - name
+      - tagId
+    - ticketItemGroups(summaryPublicStatuses)
+      - formalName
+      - id
+      - ticketItemsV2(publicStatuses)
+        - nsUid
+        - publicStatus
+    - upgradeDescription
+    - upgradeInfo
+      - baseApplicationItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeApplicationItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeApplicationItemNsUid
+      - upgradeDlcItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(salesStatuses)
+          - nsUid
+        - isFreeForExMembership
+        - isMembershipRequired
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - targetApplicationItems(salesStatuses)
+          - heroBannerUrl
+          - nsUid
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeDlcItemNsUid
+  - bundleItem(nsUid)
+    - __typename
+    - catchCopy
+    - copyrightText
+    - description
+    - disclaimer
+    - formalName
+    - hasUnreleasedItems
+    - heroBannerUrl
+    - isFreeForExMembership
+    - isMembershipRequired
+    - isNew
+    - itemStatuses
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - itemsV2(publicStatuses)
+      - deliveryDateOnEshop
+      - item
+        - __typename
+        - accessoryDescription   [on ApplicationItem]
+        - applications   [on ApplicationItem]
+          - id
+        - cloudBackupType   [on ApplicationItem]
+        - consumableItemGroup   [on ConsumableItemV2]
+          - formalName
+          - id
+          - imageUrl
+          - targetApplicationItems(salesStatuses)
+            - heroBannerUrl
+            - nsUid
+        - features   [on ApplicationItem]
+          - id
+        - formalName   [on ApplicationItem, ConsumableItemV2, DlcItem]
+        - heroBannerUrl   [on ApplicationItem, ConsumableItemV2, DlcItem]
+        - isFreeForExMembership   [on DlcItem]
+        - isInAppPurchase   [on ApplicationItem]
+        - isMembershipRequired   [on DlcItem]
+        - isNew   [on ApplicationItem, DlcItem]
+        - isUpgrade   [on DlcItem]
+        - itemStatuses   [on ApplicationItem, DlcItem]
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - labelPlatform   [on ApplicationItem, DlcItem]
+        - languages   [on ApplicationItem]
+          - isoCode
+          - name
+        - miscDescription   [on ApplicationItem]
+        - networkFeatureDescription   [on ApplicationItem]
+        - nsUid   [on ApplicationItem, ConsumableItemV2, DlcItem, Item]
+        - playStyles   [on ApplicationItem]
+          - id
+          - name
+        - playerNumber   [on ApplicationItem]
+          - localMax
+          - localMin
+          - offlineMax
+          - offlineMin
+          - onlineMax
+          - onlineMin
+        - playerNumberDescription   [on ApplicationItem]
+        - publisher   [on ApplicationItem]
+          - id
+          - name
+        - ratingInfo   [on ApplicationItem, DlcItem]
+          - __typename
+          - contentDescriptors
+            - __typename
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - __typename
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+        - releaseDateOnEshop   [on ApplicationItem, DlcItem]
+        - romRights   [on ApplicationItem, DlcItem]
+          - isLendable
+          - isVgc
+          - titleId
+        - romSizes   [on ApplicationItem, DlcItem]
+          - bee
+            - estimatedRomSize
+              - rawValue
+            - totalRomSize
+              - rawValue
+          - hac
+            - estimatedRomSize
+              - rawValue
+            - totalRomSize
+              - rawValue
+        - tags   [on ApplicationItem]
+          - name
+          - subCategory
+            - categoryId
+            - name
+          - tagId
+        - targetApplicationItems(salesStatuses)   [on DlcItem]
+          - __typename
+          - applications
+            - id
+          - formalName
+          - heroBannerUrl
+          - isNew
+          - labelPlatform
+          - nsUid
+          - ratingInfo
+            - rating
+              - age
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+          - releaseDateOnEshop
+          - romRights
+            - titleId
+          - upgradeInfo
+            - upgradeDlcItemNsUid
+        - upgradeInfo   [on ApplicationItem, DlcItem]
+          - baseApplicationItem
+            - __typename
+            - formalName
+            - heroBannerUrl
+            - includedBundleItems(publicStatuses, salesStatuses)
+              - nsUid
+            - isNew
+            - labelPlatform
+            - nsUid
+            - ratingInfo
+              - rating
+                - age
+                - name
+                - svgImageUrl
+              - ratingSystem
+                - id
+            - releaseDateOnEshop
+            - romRights
+              - titleId
+            - upgradeInfo
+              - upgradeDlcItemNsUid
+          - baseApplicationItemNsUid
+          - upgradeApplicationItem
+            - includedBundleItems(publicStatuses, salesStatuses)
+              - nsUid
+            - nsUid
+          - upgradeApplicationItemNsUid
+          - upgradeDlcItem
+            - formalName
+            - includedBundleItems(salesStatuses)
+              - nsUid
+            - isFreeForExMembership
+            - nsUid
+            - romRights
+              - titleId
+          - upgradeDlcItemNsUid
+    - labelPlatform
+    - movies
+      - __typename
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+      - thumbnailUrl   [on EshopMovie]
+    - notices
+      - __typename
+      - text
+      - type
+    - nsUid
+    - publicStatus
+    - publisher
+      - id
+      - name
+    - ratingInfo
+      - __typename
+      - contentDescriptors
+        - __typename
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - __typename
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - releaseDateOnEshop
+    - romRights
+      - isVgc
+      - titleId
+    - romSizes
+      - bee
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+      - hac
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+    - screenshotUrls
+    - strongDisclaimer
+  - consumableItem(nsUid)
+    - __typename
+    - consumableItemGroup
+      - formalName
+      - id
+      - imageUrl
+      - isSimpleStyle
+      - ratingInfo
+        - __typename
+        - contentDescriptors
+          - id
+          - imageUrl
+          - name
+          - svgImageUrl
+          - type
+        - rating
+          - age
+          - id
+          - imageUrl
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+      - strongDisclaimer
+    - formalName
+    - heroBannerUrl
+    - nsUid
+    - strongDisclaimer
+  - dlcItem(nsUid)
+    - __typename
+    - catchCopy
+    - copyrightText
+    - description
+    - disclaimer
+    - formalName
+    - heroBannerUrl
+    - includedBundleItems(salesStatuses)
+      - nsUid
+    - isFreeForExMembership
+    - isMembershipRequired
+    - isNew
+    - itemStatuses
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - labelPlatform
+    - movies
+      - __typename
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+      - thumbnailUrl   [on EshopMovie]
+    - notices
+      - __typename
+      - text
+      - type
+    - nsUid
+    - publicStatus
+    - publisher
+      - id
+      - name
+    - ratingInfo
+      - __typename
+      - contentDescriptors
+        - __typename
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - __typename
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - releaseDateOnEshop
+    - romRights
+      - isVgc
+      - titleId
+    - romSizes
+      - bee
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+      - hac
+        - estimatedRomSize
+          - rawValue
+        - totalRomSize
+          - rawValue
+    - screenshotUrls
+    - strongDisclaimer
+    - targetApplicationItems(salesStatuses)
+      - __typename
+      - applications
+        - id
+      - dlcItems(isIncludeBundleItem, limit, offset, publicStatuses, salesStatuses)
+        - items
+          - __typename
+          - formalName   [on BundleItem, DlcItem]
+          - heroBannerUrl   [on BundleItem, DlcItem]
+          - isMembershipRequired   [on DlcItem]
+          - isNew   [on BundleItem, DlcItem]
+          - itemsV2(publicStatuses)   [on BundleItem]
+            - item
+              - nsUid   [on Item]
+              - romRights   [on ApplicationItem, DlcItem]
+                - titleId
+              - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+                - heroBannerUrl
+                - nsUid
+          - labelPlatform   [on BundleItem, DlcItem]
+          - nsUid   [on BundleItem, DlcItem, Item]
+          - ratingInfo   [on BundleItem, DlcItem]
+            - rating
+              - age
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+          - releaseDateOnEshop   [on BundleItem, DlcItem]
+          - romRights   [on BundleItem, DlcItem]
+            - titleId
+          - targetApplicationItems(salesStatuses)   [on DlcItem]
+            - heroBannerUrl
+            - nsUid
+          - upgradeInfo   [on DlcItem]
+            - upgradeDlcItemNsUid
+      - formalName
+      - heroBannerUrl
+      - isNew
+      - labelPlatform
+      - nsUid
+      - ratingInfo
+        - rating
+          - age
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+      - releaseDateOnEshop
+      - romRights
+        - titleId
+      - upgradeInfo
+        - upgradeDlcItemNsUid
+    - upgradeDescription
+    - upgradeInfo
+      - baseApplicationItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeApplicationItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeDlcItem
+        - __typename
+        - formalName
+        - heroBannerUrl
+        - includedBundleItems(salesStatuses)
+          - nsUid
+        - isMembershipRequired
+        - isNew
+        - itemStatuses
+          - bee
+            - salesStatus
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - rating
+            - age
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+        - releaseDateOnEshop
+        - romRights
+          - titleId
+        - targetApplicationItems(salesStatuses)
+          - heroBannerUrl
+          - nsUid
+        - upgradeInfo
+          - upgradeDlcItemNsUid
+      - upgradeDlcItemNsUid
+  - dlcItemsByApplicationItem(isIncludeBundleItem, limit, nsUid, offset, publicStatuses, salesStatuses)
+    - __typename
+    - items
+      - __typename
+      - formalName   [on BundleItem, DlcItem]
+      - heroBannerUrl   [on BundleItem, DlcItem]
+      - isMembershipRequired   [on DlcItem]
+      - isNew   [on BundleItem, DlcItem]
+      - itemsV2(publicStatuses)   [on BundleItem]
+        - item
+          - nsUid   [on Item]
+          - romRights   [on ApplicationItem, DlcItem]
+            - titleId
+          - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+            - heroBannerUrl
+            - nsUid
+      - labelPlatform   [on BundleItem, DlcItem]
+      - nsUid   [on Item]
+      - ratingInfo   [on BundleItem, DlcItem]
+        - rating
+          - age
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+      - releaseDateOnEshop   [on BundleItem, DlcItem]
+      - romRights   [on BundleItem, DlcItem]
+        - titleId
+      - targetApplicationItems(salesStatuses)   [on DlcItem]
+        - heroBannerUrl
+        - nsUid
+      - upgradeInfo   [on DlcItem]
+        - upgradeDlcItemNsUid
+    - offsetInfo
+      - total
+  - itemsByTitleIdsV2(publicStatuses, selectFirst, titleIds, type)
+    - __typename
+    - itemV2
+      - __typename
+      - formalName   [on ApplicationItem]
+      - heroBannerUrl   [on ApplicationItem]
+      - isNew   [on ApplicationItem]
+      - itemType   [on ApplicationItem]
+      - labelPlatform   [on ApplicationItem]
+      - movies   [on ApplicationItem]
+        - isInline   [on NemoMovie]
+        - movieMetaId   [on NemoMovie]
+        - movieUrl   [on EshopMovie]
+      - nsUid   [on ApplicationItem]
+      - publicStatus   [on ApplicationItem]
+      - publisher   [on ApplicationItem]
+        - id
+        - name
+      - ratingInfo   [on ApplicationItem]
+        - __typename
+        - rating
+          - age
+          - id
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+      - releaseDateOnEshop   [on ApplicationItem]
+      - romRights   [on ApplicationItem]
+        - titleId
+      - screenshotUrls   [on ApplicationItem]
+      - tagIds   [on ApplicationItem]
+      - upgradeInfo   [on ApplicationItem]
+        - baseApplicationItem
+          - publicStatus
+        - baseApplicationItemNsUid
+        - upgradeApplicationItem
+          - __typename
+          - formalName
+          - heroBannerUrl
+          - isNew
+          - itemType
+          - labelPlatform
+          - movies
+            - isInline   [on NemoMovie]
+            - movieMetaId   [on NemoMovie]
+            - movieUrl   [on EshopMovie]
+          - nsUid
+          - publicStatus
+          - publisher
+            - id
+            - name
+          - ratingInfo
+            - __typename
+            - rating
+              - age
+              - id
+              - isProvisional
+              - name
+              - svgImageUrl
+            - ratingSystem
+              - id
+              - name
+          - releaseDateOnEshop
+          - romRights
+            - titleId
+          - screenshotUrls
+          - tagIds
+          - upgradeInfo
+            - upgradeDlcItemNsUid
+        - upgradeApplicationItemNsUid
+        - upgradeDlcItem
+          - publicStatus
+        - upgradeDlcItemNsUid
+    - nsUid
+    - titleId
+  - itemsV2(nsUids)
+    - __typename
+    - consumableItemGroup   [on ConsumableItemV2]
+      - consumableItems(publicStatuses)
+        - nsUid
+        - publicStatus
+      - formalName
+      - id
+      - imageUrl
+      - targetApplicationItems(salesStatuses)
+        - formalName
+        - heroBannerUrl
+        - nsUid
+    - formalName   [on ApplicationItem, BundleItem, CatalogTicketItem, ConsumableItemV2, DlcItem]
+    - heroBannerUrl   [on ApplicationItem, BundleItem, CatalogTicketItem, ConsumableItemV2, DlcItem]
+    - includedBundleItems(publicStatuses, salesStatuses)   [on ApplicationItem, DlcItem]
+      - nsUid
+    - isFreeForExMembership   [on ApplicationItem, BundleItem, CatalogTicketItem, ConsumableItemV2, DlcItem, TicketItem]
+    - isMembershipRequired   [on ApplicationItem, BundleItem, DlcItem]
+    - isNew   [on ApplicationItem, BundleItem, CatalogTicketItem, DlcItem]
+    - itemsV2(publicStatuses)   [on BundleItem]
+      - __typename
+      - item
+        - __typename
+        - nsUid   [on ApplicationItem, DlcItem, Item]
+        - romRights   [on ApplicationItem, DlcItem]
+          - titleId
+        - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+          - formalName
+          - heroBannerUrl
+          - nsUid
+        - upgradeInfo   [on ApplicationItem, DlcItem]
+          - baseApplicationItem
+            - includedBundleItems(publicStatuses, salesStatuses)
+              - nsUid
+            - nsUid
+            - romRights
+              - titleId
+          - upgradeApplicationItem
+            - includedBundleItems(publicStatuses, salesStatuses)
+              - nsUid
+          - upgradeApplicationItemNsUid
+          - upgradeDlcItem
+            - includedBundleItems(salesStatuses)
+              - nsUid
+            - nsUid
+            - romRights
+              - titleId
+          - upgradeDlcItemNsUid
+    - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+    - movies   [on ApplicationItem, BundleItem, DlcItem]
+      - isInline   [on NemoMovie]
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+    - nsUid
+    - publicStatus
+    - ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+      - __typename
+      - rating
+        - age
+        - id
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+    - releaseDateOnEshop   [on ApplicationItem, BundleItem, CatalogTicketItem, DlcItem]
+    - romRights   [on ApplicationItem, BundleItem, DlcItem]
+      - titleId
+    - screenshotUrls   [on ApplicationItem, BundleItem, DlcItem]
+    - targetApplicationItems(salesStatuses)   [on DlcItem]
+      - formalName
+      - heroBannerUrl
+      - nsUid
+    - ticketItemGroup   [on MonthlyTicketItem, NormalTicketItem, TicketItem]
+      - formalName
+      - targetApplicationItems(salesStatuses)
+        - formalName
+        - heroBannerUrl
+        - nsUid
+    - upgradeInfo   [on ApplicationItem, DlcItem]
+      - __typename
+      - baseApplicationItem
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - nsUid
+        - romRights
+          - titleId
+      - baseApplicationItemNsUid
+      - upgradeApplicationItem
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+      - upgradeApplicationItemNsUid
+      - upgradeDlcItem
+        - includedBundleItems(salesStatuses)
+          - nsUid
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeDlcItemNsUid
+  - targetApplicationItemsForCatalogTicket(catalogTicketId, limit, offset)
+    - items
+      - __typename
+      - formalName
+      - heroBannerUrl
+      - isFreeForExMembership
+      - isNew
+      - labelPlatform
+      - movies
+        - isInline   [on NemoMovie]
+        - movieMetaId   [on NemoMovie]
+        - movieUrl   [on EshopMovie]
+      - nsUid
+      - ratingInfo
+        - __typename
+        - rating
+          - age
+          - id
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+      - releaseDateOnEshop
+      - romRights
+        - titleId
+      - screenshotUrls
+      - upgradeInfo
+        - upgradeDlcItemNsUid
+    - offsetInfo
+      - length
+      - offset
+      - total
+  - ticketItem(nsUid)
+    - __typename
+    - grantMinutes   [on NormalTicketItem]
+    - grantMonths   [on MonthlyTicketItem]
+    - isOp2LimitedRight
+    - nsUid
+    - subscriptionTicketItem
+      - __typename
+      - grantMinutes   [on NormalSubscriptionTicketItem]
+      - grantMonths   [on MonthlySubscriptionTicketItem]
+      - nsUid
+    - ticketItemGroup
+      - formalName
+      - id
+      - ratingInfo
+        - __typename
+        - contentDescriptors
+          - id
+          - imageUrl
+          - name
+          - svgImageUrl
+          - type
+        - rating
+          - age
+          - id
+          - imageUrl
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+      - strongDisclaimer
+      - targetApplicationItems(salesStatuses)
+        - heroBannerUrl
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+  - ticketItemGroup(ticketItemGroupId)
+    - description
+    - disclaimer
+    - formalName
+    - id
+    - isDeviceCommonRight
+    - maxTicketDays
+    - notices
+      - __typename
+      - text
+      - type
+    - publisher
+      - id
+      - name
+    - strongDisclaimer
+    - subscriptionType
+    - targetApplicationItems(salesStatuses)
+      - heroBannerUrl
+      - labelPlatform
+      - nsUid
+    - ticketItemsV2(publicStatuses)
+      - __typename
+      - grantMinutes   [on NormalTicketItem]
+      - grantMonths   [on MonthlyTicketItem]
+      - isMembershipRequired
+      - itemType
+      - nsUid
+      - publicStatus
+      - subscriptionTicketItem
+        - __typename
+        - grantMinutes   [on NormalSubscriptionTicketItem]
+        - grantMonths   [on MonthlySubscriptionTicketItem]
+        - nsUid
+- itemPreScheduledOrder(idToken, isSubscription, isUseGoldPoint, nsUid, xDeviceAuthorization)
+  - isTaxExcluded
+  - scheduledOrderItem
+    - nsUid
+    - payment
+      - discountPrice
+        - __typename
+        - id
+      - giftGoldPoints
+        - extra
+          - id
+      - regularPrice
+        - id
+    - preOrderInfoV2
+      - settlementDate
+    - salesStatus
+  - totalAmount
+    - discountPrice
+      - formattedValue
+      - rawValue
+    - offerPrice
+      - formattedValue
+      - rawValue
+    - regularPrice
+      - formattedValue
+      - rawValue
+    - taxAmount
+      - rawValue
+    - totalAmount
+      - formattedValue
+      - rawValue
+    - totalGoldPoint
+      - gift
+- itemsPrePurchase(consumeGoldPoint, idToken, items, xDeviceAuthorization)
+  - currentBalance
+    - formattedValue
+    - rawValue
+  - isTaxExcluded
+  - items
+    - nsUid
+    - payment
+      - discountPrice
+        - formattedValue
+        - id
+        - rawValue
+      - giftGoldPoints
+        - extra
+          - id
+        - total
+          - rate
+      - offerPrice
+        - formattedValue
+        - id
+        - rawValue
+      - regularPrice
+        - formattedValue
+        - id
+        - rawValue
+      - totalAmount
+        - formattedValue
+        - rawValue
+    - salesStatus
+  - postBalance
+    - formattedValue
+    - rawValue
+  - totalAmount
+    - discountPrice
+      - formattedValue
+      - rawValue
+    - offerPrice
+      - formattedValue
+      - rawValue
+    - regularPrice
+      - formattedValue
+      - rawValue
+    - taxAmount
+      - formattedValue
+      - rawValue
+    - totalAmount
+      - formattedValue
+      - rawValue
+    - totalGoldPoint
+      - gift
+- membership
+  - membershipItems
+    - imageUrl
+    - nsUid
+  - ticketItemGroups
+    - exFamily
+      - formalName
+      - id
+      - maxTicketDays
+      - strongDisclaimer
+      - ticketItemsV2(publicStatuses)
+        - __typename
+        - grantMinutes   [on NormalTicketItem]
+        - isOp2LimitedRight
+        - nsUid
+        - subscriptionTicketItem
+          - __typename
+          - grantMinutes   [on NormalSubscriptionTicketItem]
+          - nsUid
+    - exFamilyId
+    - exIndividual
+      - formalName
+      - id
+      - maxTicketDays
+      - strongDisclaimer
+      - ticketItemsV2(publicStatuses)
+        - __typename
+        - grantMinutes   [on NormalTicketItem]
+        - isOp2LimitedRight
+        - nsUid
+        - subscriptionTicketItem
+          - __typename
+          - grantMinutes   [on NormalSubscriptionTicketItem]
+          - nsUid
+    - exIndividualId
+    - family
+      - formalName
+      - id
+      - maxTicketDays
+      - strongDisclaimer
+      - ticketItemsV2(publicStatuses)
+        - __typename
+        - grantMinutes   [on NormalTicketItem]
+        - isOp2LimitedRight
+        - nsUid
+        - subscriptionTicketItem
+          - __typename
+          - grantMinutes   [on NormalSubscriptionTicketItem]
+          - nsUid
+    - familyId
+    - individual
+      - formalName
+      - id
+      - maxTicketDays
+      - strongDisclaimer
+      - ticketItemsV2(publicStatuses)
+        - __typename
+        - grantMinutes   [on NormalTicketItem]
+        - isOp2LimitedRight
+        - nsUid
+        - subscriptionTicketItem
+          - __typename
+          - grantMinutes   [on NormalSubscriptionTicketItem]
+          - nsUid
+    - individualId
+- message
+  - lawPayment
+  - lawSales
+- pickupShelves
+  - __typename
+  - analysisName
+  - description
+  - dominantColors
+    - backgroundColor
+    - textColor1
+    - textColor2
+  - headerText
+  - heroBannerUrl
+  - items
+    - heroBannerUrl
+    - itemV2
+      - __typename
+      - consumableItemGroup   [on ConsumableItemV2]
+        - id
+        - targetApplicationItems(salesStatuses)
+          - nsUid
+      - formalName   [on ApplicationItem, BundleItem, DlcItem]
+      - heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+      - isNew   [on ApplicationItem, BundleItem, CatalogTicketItem, DlcItem]
+      - itemsV2(publicStatuses)   [on BundleItem]
+        - item
+          - __typename
+          - nsUid   [on ApplicationItem, DlcItem]
+          - romRights   [on ApplicationItem, DlcItem]
+            - titleId
+      - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+      - movies   [on ApplicationItem, BundleItem, DlcItem]
+        - isInline   [on NemoMovie]
+        - movieMetaId   [on NemoMovie]
+        - movieUrl   [on EshopMovie]
+      - nsUid
+      - ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+        - __typename
+        - rating
+          - age
+          - id
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+      - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+      - romRights   [on ApplicationItem, BundleItem, DlcItem]
+        - titleId
+      - screenshotUrls   [on ApplicationItem, BundleItem, DlcItem]
+      - upgradeInfo   [on ApplicationItem, DlcItem]
+        - upgradeDlcItemNsUid
+    - nsUid
+    - reason
+  - type
+- prices(idToken, nsUids)
+  - __typename
+  - discountPrice
+    - __typename
+    - endDatetime
+    - formattedValue
+    - id
+    - rawValue
+    - startDatetime
+  - giftGoldPoints
+    - basic
+      - point
+    - conditionals
+      - endDatetime
+      - id
+      - targetScope
+      - totalPoint
+    - extra
+      - __typename
+      - endDatetime
+      - extraPoint   [on FixedExtraGiftGoldPoint]
+      - id
+      - targetScope
+      - times   [on TimesExtraGiftGoldPoint]
+      - totalPoint   [on FixedExtraGiftGoldPoint, TimesExtraGiftGoldPoint]
+  - itemStatuses
+    - bee
+      - salesStatus
+    - hac
+      - salesStatus
+  - monthlyPrice
+    - currency
+    - formattedValue
+    - rawValue
+  - nsUid
+  - preOrderInfoV2
+    - isDownloadReady
+  - purchaseTimeLimitV2
+    - __typename
+    - endDatetime
+    - limitCount
+    - remainingCount
+  - regularPrice
+    - __typename
+    - formattedValue
+    - id
+    - rawValue
+  - tradeDiscountRates
+    - id
+    - ticketItemGroupId
+    - unitMinutes
+    - value
+- pricesV2(nsUids)
+  - __typename
+  - hasOwnerDiscountPrice
+  - itemStatuses
+    - bee
+      - salesStatus
+    - hac
+      - salesStatus
+  - monthlyPrice
+    - currency
+    - formattedValue
+    - rawValue
+  - nsUid
+  - preOrderInfoV2
+    - isDownloadReady
+  - purchaseTimeLimitV3
+    - __typename
+    - endDatetime
+    - limitCount
+  - regularPrice
+    - formattedValue
+    - id
+    - rawValue
+  - termDiscountPrice
+    - __typename
+    - endDatetime
+    - formattedValue
+    - id
+    - rawValue
+    - startDatetime
+- romIcons(applicationIds, language)
+  - applicationId
+  - nx
+    - base
+      - url
+    - upgraded
+      - url
+  - ounce
+    - base
+      - url
+    - upgraded
+      - url
+- searchOption
+  - priceRanges
+    - lower
+      - currency
+      - formattedValue
+      - rawValue
+    - upper
+      - currency
+      - formattedValue
+      - rawValue
+- searchV4(ageMax, ageMin, contentFiltering, discountTypes, freeword, isHavingTrialOnly, isMembershipOnlinePlayOnly, itemTypes, labelPlatforms, limit, offset, platformIds, priceMax, priceMin, publisherId, region, releaseDateAfter, releaseDateBefore, salesStatus, sort, subCategoryIds, tagIds)
+  - items
+    - __typename   [on Item]
+    - formalName   [on ApplicationItem, BundleItem, DlcItem]
+    - heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+    - isFreeForExMembership   [on ApplicationItem, BundleItem, DlcItem]
+    - isMembershipRequired   [on DlcItem]
+    - isNew   [on ApplicationItem, BundleItem, DlcItem]
+    - itemType   [on ApplicationItem, BundleItem, DlcItem]
+    - itemsV2(publicStatuses)   [on BundleItem]
+      - __typename
+      - item
+        - __typename
+        - nsUid   [on ApplicationItem, DlcItem, Item]
+        - romRights   [on ApplicationItem, DlcItem]
+          - titleId
+        - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+          - formalName
+          - heroBannerUrl
+          - nsUid
+    - labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+    - movies   [on ApplicationItem, BundleItem, DlcItem]
+      - isInline   [on NemoMovie]
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+    - nsUid   [on Item]
+    - ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+      - __typename
+      - rating
+        - age
+        - id
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+    - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+    - romRights   [on ApplicationItem, BundleItem, DlcItem]
+      - titleId
+    - screenshotUrls   [on ApplicationItem, BundleItem, DlcItem]
+    - targetApplicationItems(salesStatuses)   [on DlcItem]
+      - formalName
+      - heroBannerUrl
+      - nsUid
+    - upgradeInfo   [on ApplicationItem, DlcItem]
+      - upgradeDlcItemNsUid
+  - offsetInfo
+    - length
+    - offset
+    - total
+- searchV5(ageMax, contentFiltering, itemTypes, labelPlatforms, limit, offset, region, salesStatus, sort, subCategoryIds, tagIds)
+  - products
+    - nsUid
+- searchWordSuggestions
+  - reading
+  - word
+- tag
+  - categories(categoryIds)
+    - subCategories
+      - name
+      - subCategoryId
+      - tagIds
+  - tags(tagIds)
+    - name
+    - tagId
+- upgradeInfos(applicationIds, selectFirst)
+  - upgradeInfo
+    - baseApplicationItem
+      - publicStatus
+    - baseApplicationItemNsUid
+    - upgradeApplicationItem
+      - publicStatus
+    - upgradeApplicationItemNsUid
+    - upgradeDlcItem
+      - publicStatus
+    - upgradeDlcItemNsUid
+
+## Types (fields selected under a type condition)
+
+### ApplicationItem
+
+- __typename   [on ApplicationItem]
+- accessoryDescription   [on ApplicationItem]
+- applications   [on ApplicationItem]
+  - id
+- classicGameType   [on ApplicationItem]
+- cloudBackupType   [on ApplicationItem]
+- features   [on ApplicationItem]
+  - id
+- formalName   [on ApplicationItem]
+- freePlayDeliveryInfos   [on ApplicationItem]
+  - dlTerm
+    - end
+    - start
+  - freePlayType
+  - isFeatureLimited
+  - nsUid
+  - playTerm
+    - end
+    - start
+  - promotion
+    - description
+  - requiredMembershipType
+- heroBannerUrl   [on ApplicationItem]
+- includedBundleItems(publicStatuses, salesStatuses)   [on ApplicationItem]
+  - nsUid
+- isFreeForExMembership   [on ApplicationItem]
+- isInAppPurchase   [on ApplicationItem]
+- isMembershipRequired   [on ApplicationItem]
+- isNew   [on ApplicationItem]
+- itemStatuses   [on ApplicationItem]
+  - bee
+    - salesStatus
+  - hac
+    - salesStatus
+- itemType   [on ApplicationItem]
+- labelPlatform   [on ApplicationItem]
+- languages   [on ApplicationItem]
+  - isoCode
+  - name
+- miscDescription   [on ApplicationItem]
+- movies   [on ApplicationItem]
+  - isInline   [on NemoMovie]
+  - movieMetaId   [on NemoMovie]
+  - movieUrl   [on EshopMovie]
+- networkFeatureDescription   [on ApplicationItem]
+- nsUid   [on ApplicationItem]
+- playStyles   [on ApplicationItem]
+  - id
+  - name
+- playerNumber   [on ApplicationItem]
+  - localMax
+  - localMin
+  - offlineMax
+  - offlineMin
+  - onlineMax
+  - onlineMin
+- playerNumberDescription   [on ApplicationItem]
+- price   [on ApplicationItem]
+  - __typename
+- priceV2   [on ApplicationItem]
+  - itemStatuses
+    - bee
+      - salesStatus
+    - hac
+      - salesStatus
+- publicStatus   [on ApplicationItem]
+- publisher   [on ApplicationItem]
+  - id
+  - name
+- ratingInfo   [on ApplicationItem]
+  - __typename
+  - contentDescriptors
+    - __typename
+    - id
+    - imageUrl
+    - name
+    - svgImageUrl
+    - type
+  - rating
+    - __typename
+    - age
+    - id
+    - imageUrl
+    - isProvisional
+    - name
+    - svgImageUrl
+  - ratingSystem
+    - id
+    - name
+- releaseDateOnEshop   [on ApplicationItem]
+- romRights   [on ApplicationItem]
+  - isLendable
+  - isVgc
+  - titleId
+- romSizes   [on ApplicationItem]
+  - bee
+    - estimatedRomSize
+      - rawValue
+    - totalRomSize
+      - rawValue
+  - hac
+    - estimatedRomSize
+      - rawValue
+    - totalRomSize
+      - rawValue
+- screenshotUrls   [on ApplicationItem]
+- strongDisclaimer   [on ApplicationItem]
+- tagIds   [on ApplicationItem]
+- tags   [on ApplicationItem]
+  - name
+  - subCategory
+    - categoryId
+    - name
+  - tagId
+- upgradeInfo   [on ApplicationItem]
+  - __typename
+  - baseApplicationItem
+    - formalName
+    - includedBundleItems(publicStatuses, salesStatuses)
+      - nsUid
+    - itemStatuses
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - nsUid
+    - publicStatus
+    - romRights
+      - titleId
+  - baseApplicationItemNsUid
+  - upgradeApplicationItem
+    - __typename
+    - formalName
+    - heroBannerUrl
+    - includedBundleItems(publicStatuses, salesStatuses)
+      - nsUid
+    - isNew
+    - itemStatuses
+      - bee
+        - salesStatus
+    - itemType
+    - labelPlatform
+    - movies
+      - isInline   [on NemoMovie]
+      - movieMetaId   [on NemoMovie]
+      - movieUrl   [on EshopMovie]
+    - nsUid
+    - publicStatus
+    - publisher
+      - id
+      - name
+    - ratingInfo
+      - __typename
+      - rating
+        - age
+        - id
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - releaseDateOnEshop
+    - romRights
+      - titleId
+    - screenshotUrls
+    - tagIds
+    - upgradeInfo
+      - upgradeDlcItemNsUid
+  - upgradeApplicationItemNsUid
+  - upgradeDlcItem
+    - formalName
+    - includedBundleItems(salesStatuses)
+      - nsUid
+    - isFreeForExMembership
+    - itemStatuses
+      - bee
+        - salesStatus
+    - nsUid
+    - publicStatus
+    - romRights
+      - titleId
+  - upgradeDlcItemNsUid
+
+### BundleItem
+
+- __typename   [on BundleItem]
+- formalName   [on BundleItem]
+- hasUnreleasedItems   [on BundleItem]
+- heroBannerUrl   [on BundleItem]
+- isFreeForExMembership   [on BundleItem]
+- isMembershipRequired   [on BundleItem]
+- isNew   [on BundleItem]
+- itemStatuses   [on BundleItem]
+  - bee
+    - salesStatus
+  - hac
+    - salesStatus
+- itemType   [on BundleItem]
+- itemsV2(publicStatuses)   [on BundleItem]
+  - __typename
+  - deliveryDateOnEshop
+  - item
+    - __typename
+    - applications   [on ApplicationItem]
+      - id
+    - consumableItemGroup   [on ConsumableItemV2]
+      - formalName
+      - id
+      - targetApplicationItems(salesStatuses)
+        - nsUid
+    - formalName   [on ApplicationItem, ConsumableItemV2, DlcItem]
+    - heroBannerUrl   [on ApplicationItem, ConsumableItemV2, DlcItem]
+    - isInAppPurchase   [on ApplicationItem]
+    - itemStatuses   [on ApplicationItem, DlcItem]
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - labelPlatform   [on ApplicationItem, DlcItem]
+    - nsUid   [on ApplicationItem, ConsumableItemV2, DlcItem, Item]
+    - price   [on ApplicationItem, DlcItem]
+      - __typename
+    - ratingInfo   [on ApplicationItem, DlcItem]
+      - __typename
+      - contentDescriptors
+        - __typename
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - __typename
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - releaseDateOnEshop   [on DlcItem]
+    - romRights   [on ApplicationItem, DlcItem]
+      - isVgc
+      - titleId
+    - strongDisclaimer   [on ApplicationItem, DlcItem]
+    - targetApplicationItems(salesStatuses)   [on DlcItem, ITargetApplicationItems]
+      - applications
+        - id
+      - formalName
+      - heroBannerUrl
+      - nsUid
+    - upgradeInfo   [on ApplicationItem, DlcItem]
+      - baseApplicationItem
+        - formalName
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - itemStatuses
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - baseApplicationItemNsUid
+      - upgradeApplicationItem
+        - includedBundleItems(publicStatuses, salesStatuses)
+          - nsUid
+        - itemStatuses
+          - bee
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeApplicationItemNsUid
+      - upgradeDlcItem
+        - formalName
+        - includedBundleItems(salesStatuses)
+          - nsUid
+        - itemStatuses
+          - bee
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeDlcItemNsUid
+- labelPlatform   [on BundleItem]
+- movies   [on BundleItem]
+  - isInline   [on NemoMovie]
+  - movieMetaId   [on NemoMovie]
+  - movieUrl   [on EshopMovie]
+- nsUid   [on BundleItem]
+- price   [on BundleItem]
+  - __typename
+- publicStatus   [on BundleItem]
+- ratingInfo   [on BundleItem]
+  - __typename
+  - contentDescriptors
+    - __typename
+    - id
+    - imageUrl
+    - name
+    - svgImageUrl
+    - type
+  - rating
+    - __typename
+    - age
+    - id
+    - imageUrl
+    - isProvisional
+    - name
+    - svgImageUrl
+  - ratingSystem
+    - id
+    - name
+- releaseDateOnEshop   [on BundleItem]
+- romRights   [on BundleItem]
+  - titleId
+- screenshotUrls   [on BundleItem]
+- strongDisclaimer   [on BundleItem]
+
+### CaAccountTaxLocation
+
+- state   [on CaAccountTaxLocation]
+
+### CatalogTicketItem
+
+- formalName   [on CatalogTicketItem]
+- heroBannerUrl   [on CatalogTicketItem]
+- isFreeForExMembership   [on CatalogTicketItem]
+- isNew   [on CatalogTicketItem]
+- releaseDateOnEshop   [on CatalogTicketItem]
+
+### ConsumableItemV2
+
+- consumableItemGroup   [on ConsumableItemV2]
+  - consumableItems(publicStatuses)
+    - nsUid
+    - publicStatus
+  - formalName
+  - id
+  - imageUrl
+  - isSimpleStyle
+  - ratingInfo
+    - __typename
+    - contentDescriptors
+      - id
+      - imageUrl
+      - name
+      - svgImageUrl
+      - type
+    - rating
+      - age
+      - id
+      - imageUrl
+      - isProvisional
+      - name
+      - svgImageUrl
+    - ratingSystem
+      - id
+      - name
+  - strongDisclaimer
+  - targetApplicationItems(salesStatuses)
+    - formalName
+    - heroBannerUrl
+    - nsUid
+    - ratingInfo
+      - __typename
+      - contentDescriptors
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+- formalName   [on ConsumableItemV2]
+- heroBannerUrl   [on ConsumableItemV2]
+- isFreeForExMembership   [on ConsumableItemV2]
+- nsUid   [on ConsumableItemV2]
+- strongDisclaimer   [on ConsumableItemV2]
+
+### DemoItem
+
+- formalName   [on DemoItem]
+- labelPlatform   [on DemoItem]
+- nsUid   [on DemoItem]
+- ratingInfo   [on DemoItem]
+  - __typename
+  - contentDescriptors
+    - id
+    - imageUrl
+    - name
+    - svgImageUrl
+    - type
+  - rating
+    - age
+    - id
+    - imageUrl
+    - isProvisional
+    - name
+    - svgImageUrl
+  - ratingSystem
+    - id
+    - name
+- targetApplicationItems(salesStatuses)   [on DemoItem]
+  - nsUid
+  - ratingInfo
+    - __typename
+    - contentDescriptors
+      - id
+      - imageUrl
+      - name
+      - svgImageUrl
+      - type
+    - rating
+      - age
+      - id
+      - imageUrl
+      - isProvisional
+      - name
+      - svgImageUrl
+    - ratingSystem
+      - id
+      - name
+
+### DlcItem
+
+- __typename   [on DlcItem]
+- formalName   [on DlcItem]
+- heroBannerUrl   [on DlcItem]
+- includedBundleItems(salesStatuses)   [on DlcItem]
+  - nsUid
+- isFreeForExMembership   [on DlcItem]
+- isMembershipRequired   [on DlcItem]
+- isNew   [on DlcItem]
+- isUpgrade   [on DlcItem]
+- itemStatuses   [on DlcItem]
+  - bee
+    - salesStatus
+  - hac
+    - salesStatus
+- itemType   [on DlcItem]
+- labelPlatform   [on DlcItem]
+- movies   [on DlcItem]
+  - isInline   [on NemoMovie]
+  - movieMetaId   [on NemoMovie]
+  - movieUrl   [on EshopMovie]
+- nsUid   [on DlcItem]
+- price   [on DlcItem]
+  - __typename
+- priceV2   [on DlcItem]
+  - itemStatuses
+    - bee
+      - salesStatus
+    - hac
+      - salesStatus
+- publicStatus   [on DlcItem]
+- ratingInfo   [on DlcItem]
+  - __typename
+  - contentDescriptors
+    - __typename
+    - id
+    - imageUrl
+    - name
+    - svgImageUrl
+    - type
+  - rating
+    - __typename
+    - age
+    - id
+    - imageUrl
+    - isProvisional
+    - name
+    - svgImageUrl
+  - ratingSystem
+    - id
+    - name
+- releaseDateOnEshop   [on DlcItem]
+- romRights   [on DlcItem]
+  - isLendable
+  - isVgc
+  - titleId
+- romSizes   [on DlcItem]
+  - bee
+    - estimatedRomSize
+      - rawValue
+    - totalRomSize
+      - rawValue
+  - hac
+    - estimatedRomSize
+      - rawValue
+    - totalRomSize
+      - rawValue
+- screenshotUrls   [on DlcItem]
+- strongDisclaimer   [on DlcItem]
+- targetApplicationItems(salesStatuses)   [on DlcItem]
+  - __typename
+  - applications
+    - id
+  - formalName
+  - heroBannerUrl
+  - isNew
+  - labelPlatform
+  - nsUid
+  - ratingInfo
+    - rating
+      - age
+      - name
+      - svgImageUrl
+    - ratingSystem
+      - id
+  - releaseDateOnEshop
+  - romRights
+    - titleId
+  - upgradeInfo
+    - upgradeDlcItemNsUid
+- upgradeInfo   [on DlcItem]
+  - baseApplicationItem
+    - __typename
+    - formalName
+    - heroBannerUrl
+    - includedBundleItems(publicStatuses, salesStatuses)
+      - nsUid
+    - isNew
+    - itemStatuses
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - labelPlatform
+    - nsUid
+    - ratingInfo
+      - rating
+        - age
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+    - releaseDateOnEshop
+    - romRights
+      - titleId
+    - upgradeInfo
+      - upgradeDlcItemNsUid
+  - upgradeApplicationItem
+    - includedBundleItems(publicStatuses, salesStatuses)
+      - nsUid
+    - itemStatuses
+      - bee
+        - salesStatus
+    - nsUid
+    - romRights
+      - titleId
+  - upgradeApplicationItemNsUid
+  - upgradeDlcItem
+    - includedBundleItems(salesStatuses)
+      - nsUid
+    - itemStatuses
+      - bee
+        - salesStatus
+    - nsUid
+    - romRights
+      - titleId
+  - upgradeDlcItemNsUid
+
+### ECashDownloadCodeInfo
+
+- cash   [on ECashDownloadCodeInfo]
+  - formattedValue
+  - rawValue
+
+### EshopMovie
+
+- movieUrl   [on EshopMovie]
+- thumbnailUrl   [on EshopMovie]
+
+### FixedExtraGiftGoldPoint
+
+- extraPoint   [on FixedExtraGiftGoldPoint]
+- totalPoint   [on FixedExtraGiftGoldPoint]
+
+### ITargetApplicationItems
+
+- targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+  - formalName
+  - heroBannerUrl
+  - nsUid
+
+### InUseTicketRightV2
+
+- expirationDatetime   [on InUseTicketRightV2]
+
+### Item
+
+- __typename   [on Item]
+- formalName   [on ApplicationItem, BundleItem, DlcItem]
+- heroBannerUrl   [on ApplicationItem, BundleItem, DlcItem]
+- isFreeForExMembership   [on ApplicationItem, BundleItem, DlcItem]
+- isMembershipRequired   [on DlcItem]
+- isNew   [on ApplicationItem, BundleItem, DlcItem]
+- itemType   [on ApplicationItem, BundleItem, DlcItem]
+- itemsV2(publicStatuses)   [on BundleItem]
+  - __typename
+  - item
+    - __typename
+    - nsUid   [on ApplicationItem, DlcItem, Item]
+    - romRights   [on ApplicationItem, DlcItem]
+      - titleId
+    - targetApplicationItems(salesStatuses)   [on ITargetApplicationItems]
+      - formalName
+      - heroBannerUrl
+      - nsUid
+- labelPlatform   [on ApplicationItem, BundleItem, DlcItem]
+- movies   [on ApplicationItem, BundleItem, DlcItem]
+  - isInline   [on NemoMovie]
+  - movieMetaId   [on NemoMovie]
+  - movieUrl   [on EshopMovie]
+- nsUid   [on Item]
+- publicStatus   [on ApplicationItem, BundleItem, DlcItem]
+- ratingInfo   [on ApplicationItem, BundleItem, DlcItem]
+  - __typename
+  - rating
+    - age
+    - id
+    - name
+    - svgImageUrl
+  - ratingSystem
+    - id
+- releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+- romRights   [on ApplicationItem, BundleItem, DlcItem]
+  - titleId
+- screenshotUrls   [on ApplicationItem, BundleItem, DlcItem]
+- targetApplicationItems(salesStatuses)   [on DlcItem]
+  - formalName
+  - heroBannerUrl
+  - nsUid
+- upgradeInfo   [on ApplicationItem, DlcItem]
+  - baseApplicationItem
+    - nsUid
+    - romRights
+      - titleId
+  - upgradeApplicationItemNsUid
+  - upgradeDlcItem
+    - nsUid
+    - romRights
+      - titleId
+  - upgradeDlcItemNsUid
+
+### ItemDownloadCodeInfo
+
+- items   [on ItemDownloadCodeInfo]
+  - giftGoldPoints
+    - extra
+      - applicableCondition
+      - id
+    - total
+      - point
+  - isFree
+  - isPaymentTypeRegistrationRequired
+  - itemV2
+    - __typename
+    - applications   [on ApplicationItem]
+      - id
+    - classicGameType   [on ApplicationItem]
+    - consumableItemGroup   [on ConsumableItemV2]
+      - formalName
+      - id
+      - imageUrl
+      - isSimpleStyle
+      - ratingInfo
+        - __typename
+        - contentDescriptors
+          - id
+          - imageUrl
+          - name
+          - svgImageUrl
+          - type
+        - rating
+          - age
+          - id
+          - imageUrl
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+      - strongDisclaimer
+      - targetApplicationItems(salesStatuses)
+        - nsUid
+        - ratingInfo
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+    - formalName   [on ApplicationItem, BundleItem, ConsumableItemV2, DemoItem, DlcItem]
+    - freePlayDeliveryInfos   [on ApplicationItem]
+      - dlTerm
+        - end
+        - start
+      - freePlayType
+      - isFeatureLimited
+      - nsUid
+      - playTerm
+        - end
+        - start
+      - promotion
+        - description
+      - requiredMembershipType
+    - grantMinutes   [on NormalTicketItem]
+    - grantMonths   [on MonthlyTicketItem]
+    - hasUnreleasedItems   [on BundleItem]
+    - heroBannerUrl   [on ApplicationItem, BundleItem, ConsumableItemV2, DlcItem]
+    - isFreeForExMembership   [on BundleItem, DlcItem]
+    - isInAppPurchase   [on ApplicationItem]
+    - isOp2LimitedRight   [on NormalTicketItem]
+    - itemStatuses   [on ApplicationItem, BundleItem, DlcItem]
+      - bee
+        - salesStatus
+      - hac
+        - salesStatus
+    - itemsV2(publicStatuses)   [on BundleItem]
+      - deliveryDateOnEshop
+      - item
+        - __typename
+        - applications   [on ApplicationItem]
+          - id
+        - consumableItemGroup   [on ConsumableItemV2]
+          - formalName
+          - id
+          - targetApplicationItems(salesStatuses)
+            - nsUid
+        - formalName   [on ApplicationItem, ConsumableItemV2, DlcItem]
+        - heroBannerUrl   [on ApplicationItem, ConsumableItemV2, DlcItem]
+        - isInAppPurchase   [on ApplicationItem]
+        - itemStatuses   [on ApplicationItem, DlcItem]
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - labelPlatform   [on ApplicationItem, DlcItem]
+        - nsUid   [on ApplicationItem, ConsumableItemV2, DlcItem]
+        - ratingInfo   [on ApplicationItem]
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+        - releaseDateOnEshop   [on DlcItem]
+        - romRights   [on ApplicationItem, DlcItem]
+          - isVgc
+          - titleId
+        - targetApplicationItems(salesStatuses)   [on DlcItem]
+          - applications
+            - id
+          - nsUid
+        - upgradeInfo   [on ApplicationItem, DlcItem]
+          - baseApplicationItem
+            - formalName
+            - itemStatuses
+              - bee
+                - salesStatus
+              - hac
+                - salesStatus
+            - nsUid
+            - romRights
+              - titleId
+          - baseApplicationItemNsUid
+          - upgradeApplicationItem
+            - itemStatuses
+              - bee
+                - salesStatus
+            - nsUid
+            - romRights
+              - titleId
+          - upgradeApplicationItemNsUid
+          - upgradeDlcItem
+            - formalName
+            - itemStatuses
+              - bee
+                - salesStatus
+            - nsUid
+            - romRights
+              - titleId
+          - upgradeDlcItemNsUid
+    - labelPlatform   [on ApplicationItem, BundleItem, DemoItem, DlcItem]
+    - nsUid   [on ApplicationItem, BundleItem, ConsumableItemV2, DemoItem, DlcItem, TicketItem]
+    - ratingInfo   [on ApplicationItem, BundleItem, DemoItem, DlcItem]
+      - __typename
+      - contentDescriptors
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+    - releaseDateOnEshop   [on ApplicationItem, BundleItem, DlcItem]
+    - romRights   [on ApplicationItem, BundleItem, DlcItem]
+      - isVgc
+      - titleId
+    - strongDisclaimer   [on ApplicationItem, BundleItem, ConsumableItemV2, DlcItem]
+    - subscriptionTicketItem   [on MonthlyTicketItem, NormalTicketItem]
+      - __typename
+      - grantMinutes   [on NormalSubscriptionTicketItem]
+      - grantMonths   [on MonthlySubscriptionTicketItem]
+      - nsUid
+    - targetApplicationItems(salesStatuses)   [on DemoItem, DlcItem]
+      - applications
+        - id
+      - nsUid
+      - ratingInfo
+        - __typename
+        - contentDescriptors
+          - id
+          - imageUrl
+          - name
+          - svgImageUrl
+          - type
+        - rating
+          - age
+          - id
+          - imageUrl
+          - isProvisional
+          - name
+          - svgImageUrl
+        - ratingSystem
+          - id
+          - name
+    - ticketItemGroup   [on TicketItem]
+      - formalName
+      - id
+      - strongDisclaimer
+      - targetApplicationItems(salesStatuses)
+        - heroBannerUrl
+        - labelPlatform
+        - nsUid
+        - ratingInfo
+          - __typename
+          - contentDescriptors
+            - id
+            - imageUrl
+            - name
+            - svgImageUrl
+            - type
+          - rating
+            - age
+            - id
+            - imageUrl
+            - isProvisional
+            - name
+            - svgImageUrl
+          - ratingSystem
+            - id
+            - name
+    - upgradeInfo   [on ApplicationItem, DlcItem]
+      - baseApplicationItem
+        - formalName
+        - itemStatuses
+          - bee
+            - salesStatus
+          - hac
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeApplicationItem
+        - itemStatuses
+          - bee
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeDlcItem
+        - itemStatuses
+          - bee
+            - salesStatus
+        - nsUid
+        - romRights
+          - titleId
+      - upgradeDlcItemNsUid
+
+### MonthlySubscriptionTicketItem
+
+- grantMonths   [on MonthlySubscriptionTicketItem]
+- publicStatus   [on MonthlySubscriptionTicketItem]
+
+### MonthlyTicketItem
+
+- grantMonths   [on MonthlyTicketItem]
+- subscriptionTicketItem   [on MonthlyTicketItem]
+  - __typename
+  - grantMonths   [on MonthlySubscriptionTicketItem]
+  - nsUid
+- ticketItemGroup   [on MonthlyTicketItem]
+  - targetApplicationItems(salesStatuses)
+    - heroBannerUrl
+    - nsUid
+
+### NemoMovie
+
+- isInline   [on NemoMovie]
+- movieMetaId   [on NemoMovie]
+
+### NormalSubscriptionTicketItem
+
+- grantMinutes   [on NormalSubscriptionTicketItem]
+- publicStatus   [on NormalSubscriptionTicketItem]
+
+### NormalTicketItem
+
+- grantMinutes   [on NormalTicketItem]
+- isOp2LimitedRight   [on NormalTicketItem]
+- subscriptionTicketItem   [on NormalTicketItem]
+  - __typename
+  - grantMinutes   [on NormalSubscriptionTicketItem]
+  - nsUid
+- ticketItemGroup   [on NormalTicketItem]
+  - targetApplicationItems(salesStatuses)
+    - heroBannerUrl
+    - nsUid
+
+### PrivilegeCode
+
+- code   [on PrivilegeCode]
+
+### PrivilegeRight
+
+- name   [on PrivilegeRight]
+
+### ScheduledOrderByCatalogTicket
+
+- catalogTicketId   [on ScheduledOrderByCatalogTicket]
+
+### ScheduledOrderByPurchaseV2
+
+- scheduledPaymentAmount   [on ScheduledOrderByPurchaseV2]
+  - formattedValue
+  - rawValue
+
+### TicketItem
+
+- isFreeForExMembership   [on TicketItem]
+- nsUid   [on TicketItem]
+- ticketItemGroup   [on TicketItem]
+  - formalName
+  - id
+  - strongDisclaimer
+  - targetApplicationItems(salesStatuses)
+    - formalName
+    - heroBannerUrl
+    - labelPlatform
+    - nsUid
+    - ratingInfo
+      - __typename
+      - contentDescriptors
+        - id
+        - imageUrl
+        - name
+        - svgImageUrl
+        - type
+      - rating
+        - age
+        - id
+        - imageUrl
+        - isProvisional
+        - name
+        - svgImageUrl
+      - ratingSystem
+        - id
+        - name
+
+### TimesExtraGiftGoldPoint
+
+- times   [on TimesExtraGiftGoldPoint]
+- totalPoint   [on TimesExtraGiftGoldPoint]
+
+### UnusedTicketRightV2
+
+- unusedMinutes   [on UnusedTicketRightV2]
+
+### UsAccountTaxLocation
+
+- postalCode   [on UsAccountTaxLocation]
+- state   [on UsAccountTaxLocation]
+
