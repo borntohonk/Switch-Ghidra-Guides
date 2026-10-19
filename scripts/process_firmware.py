@@ -78,7 +78,7 @@ def _write_systemweb_useragent(systemweb_nca_object, system_version):
     """Extract romfs:/buildinfo/buildinfo.dat from systemWeb and reconstruct its User-Agent."""
     buildinfo_data = nca.SectionExtractor.extract_section_romfs_buildinfo_only(systemweb_nca_object)
     if buildinfo_data is None:
-        return
+        return None
     util.write_file(f'output/{system_version}/{system_version}_systemWeb_buildinfo.dat', buildinfo_data)
 
     import systemweb_useragent  # needs capstone
@@ -97,6 +97,7 @@ def _write_systemweb_useragent(systemweb_nca_object, system_version):
         print(f'simba.py UA: {simba_ua.group(1) if simba_ua else "(not found)"}')
         print(f'new UA     : {shopn_uas[0]}')
         print("\n")
+    return shopn_uas[0] if shopn_uas else None
 
 def _extract_system_version(system_nca_object, mkeksource):
     """Extract firmware version from system update NCA object."""
@@ -912,22 +913,23 @@ def _write_atmosphere_patch(system_version, fat32_hash=None, exfat_hash=None):
     print(f"Apply with: cd atmosphere && git apply ../{patch_path}")
 
 
-def _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth_digest_path):
+def _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth_digest_path, shopn_ua=None):
     """Write dAuth firmware strings for firmware update."""
     if util.version_to_tuple(system_version) < util.version_to_tuple("9.0.0"):
         return
     
     firmware_version_no_dot, firmware_revision, firmware_string = util.get_dauth_strings(dauth_file_path)
-    #digest = util.get_dauth_digest(dauth_digest_path)
     user_agent = util.get_user_agent(f'output/{system_version}/{system_version}_account.nso0')
     dauth_address = util.get_dauth_address(f'output/{system_version}/{system_version}_account.nso0')
     
     if util.version_to_tuple(system_version) <= util.version_to_tuple("19.99.99"):
-        firmware_revision = digest
+        firmware_revision = util.get_dauth_digest(dauth_digest_path)
     
     strings_file = f'output/{system_version}/{system_version}_firmware_strings.txt'
     with open(strings_file, 'w') as f:
         f.write('    "cdn": {\n')
+        if shopn_ua:
+            f.write(f'        "savanna_userAgent": "{shopn_ua}",\n')
         f.write(f'        "firmware": "{firmware_string}",\n')
         f.write('        "calibration": "PRODINFO.bin",\n')
         f.write('        "dAuth": {\n')
@@ -1125,7 +1127,12 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
     
     dauth_file_path = f'output/{system_version}/{system_version}_system_update_file'
     dauth_digest_path = f'output/{system_version}/{system_version}_system_digest'
-    _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth_digest_path)
+    # Reconstruct the systemWeb User-Agent from its NSO + romfs:/buildinfo/buildinfo.dat (22.0.0+)
+    shopn_ua = None
+    if util.version_to_tuple(system_version) >= util.version_to_tuple("22.0.0"):
+        shopn_ua = _write_systemweb_useragent(systemweb_nca_object, system_version)
+
+    _write_firmware_strings(system_version, key_revision, dauth_file_path, dauth_digest_path, shopn_ua)
 
     # Extract savanna client certificate if available (23.0.0+)
     if util.version_to_tuple(system_version) >= util.version_to_tuple("23.0.0"):
@@ -1144,10 +1151,6 @@ def sort_and_process_single(firmware_location='firmware', key_sources_override=N
             strings_file = f'output/{system_version}/{system_version}_firmware_strings.txt'
             with open(strings_file, 'a') as f:
                 f.write(f'{system_version} foss_ssl_browser_moduleid: {browser_module_id}')
-
-    # Reconstruct the systemWeb User-Agent from its NSO + romfs:/buildinfo/buildinfo.dat (22.0.0+)
-    if util.version_to_tuple(system_version) >= util.version_to_tuple("22.0.0"):
-        _write_systemweb_useragent(systemweb_nca_object, system_version)
 
     # Print summary
     hash_summary_file = f'output/{system_version}/{system_version}_hashes.txt'
