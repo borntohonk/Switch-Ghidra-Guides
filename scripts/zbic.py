@@ -350,13 +350,12 @@ def fse_write_ncount(normalized: List[int], table_log: int) -> bytes:
     if remaining != 1:
         raise ZbicError("writeNCount remaining != 1 (got %d)" % remaining)
 
-    # Final flush: write enough bytes for the remaining bits (not a full
-    # 2-byte flush that would then truncate the whole buffer).
+    # Final flush: write enough bytes for the remaining bits.  Zero-run
+    # repeat codes are not flushed as they are emitted, so more than 16
+    # bits can be pending here (e.g. a long zero run late in the table).
     final_bytes = (bit_count + 7) // 8
-    if final_bytes >= 1:
-        out.append(bit_stream & 0xFF)
-    if final_bytes >= 2:
-        out.append((bit_stream >> 8) & 0xFF)
+    for i in range(final_bytes):
+        out.append((bit_stream >> (8 * i)) & 0xFF)
     return bytes(out)
 
 
