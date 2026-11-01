@@ -1,0 +1,197 @@
+{
+  "host1x_services": {
+    "_services": ["clkrst", "fatal:u", "host1x", "psc:m", "spl:nv", "srepo:a", "srepo:u", "syslog:u"],
+    "_invokes": {
+      "clkrst": {
+        "interface": "nn::clkrst::IClkrstManager",
+        "commands": {
+          "0": { "name": "OpenSession", "vt_off": "0x20", "stub": "0x710000f750", "cmd_proof_offset": "0x710000f900", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710000f128"] },
+          "1": { "name": "GetTemperatureThresholds", "vt_off": "0x28", "stub": "0x710000f800", "cmd_proof_offset": "0x710000f80c", "cmd_proof_instruction": "mov w5,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "NotifyTemperature", "vt_off": "0x30", "stub": "0x710000f830", "cmd_proof_offset": "0x710000f838", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetClkrstStateTable", "vt_off": "0x38", "stub": "0x710000f840", "cmd_proof_offset": "0x710000f84c", "cmd_proof_instruction": "mov w5,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "4": { "name": "GetClkrstStateTableUpdateEvent", "vt_off": "0x40", "stub": "0x710000f870", "cmd_proof_offset": "0x710000f874", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetClkrstStateTableCount", "vt_off": "0x48", "stub": "0x710000f880", "cmd_proof_offset": "0x710000f884", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "6": { "name": "PrintClockTree", "vt_off": "0x50", "stub": "0x710000f890", "cmd_proof_offset": "0x710000f894", "cmd_proof_instruction": "mov w1,#0x6", "cmd_hex_and_dec": "0x6 / 6", "stub_only": true, "calls": [] },
+          "7": { "name": "Cmd7", "vt_off": "0x58", "stub": "0x710000f8a0", "cmd_proof_offset": "0x710000f8a4", "cmd_proof_instruction": "mov w2,#0x7", "cmd_hex_and_dec": "0x7 / 7", "stub_only": true, "calls": [] }
+        },
+        "sub_interfaces": {
+          "0 (nn::clkrst::IClkrstSession)": {
+            "0": { "name": "EnableClock", "vt_off": "0x20", "stub": "0x710000fb30", "cmd_proof_offset": "0x710000fb34", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000011cc", "0x7100001db0", "0x7100001e7c", "0x7100001f3c"] },
+            "1": { "name": "DisableClock", "vt_off": "0x28", "stub": "0x710000fb40", "cmd_proof_offset": "0x710000fb44", "cmd_proof_instruction": "mov w1,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x710000138c", "0x710000144c", "0x71000014f4"] },
+            "2": { "name": "AssertReset", "vt_off": "0x30", "stub": "0x710000fb50", "cmd_proof_offset": "0x710000fb54", "cmd_proof_instruction": "mov w1,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x71000011b0", "0x7100001368", "0x7100001428", "0x71000018e4", "0x7100001958", "0x7100001a24", "0x7100001d94", "0x7100001e60", "0x7100001f20", "0x710000f1a0"] },
+            "3": { "name": "DeassertReset", "vt_off": "0x38", "stub": "0x710000fb60", "cmd_proof_offset": "0x710000fb64", "cmd_proof_instruction": "mov w1,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000011fc", "0x7100001900", "0x7100001974", "0x7100001a40", "0x7100001de0", "0x7100001eac", "0x7100001f6c"] },
+            "4": { "name": "EnablePower", "vt_off": "0x40", "stub": "0x710000fb70", "cmd_proof_offset": "0x710000fb74", "cmd_proof_instruction": "mov w1,#0x4", "cmd_hex_and_dec": "0x4 / 4", "calls": ["0x7100001188", "0x7100001d6c", "0x7100001e38", "0x7100001ef8"] },
+            "5": { "name": "DisablePower", "vt_off": "0x48", "stub": "0x710000fb80", "cmd_proof_offset": "0x710000fb84", "cmd_proof_instruction": "mov w1,#0x5", "cmd_hex_and_dec": "0x5 / 5", "calls": ["0x71000013b4", "0x7100001474", "0x710000f1f0"] },
+            "8": { "name": "GetClockRate", "vt_off": "0x60", "stub": "0x710000fbb0", "cmd_proof_offset": "0x710000fbb4", "cmd_proof_instruction": "mov w2,#0x8", "cmd_hex_and_dec": "0x8 / 8", "calls": ["0x71000009b8"] }
+          }
+        }
+      },
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x7100010b60", "cmd_proof_offset": "0x7100010bfc", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x7100010b70", "cmd_proof_offset": "0x7100010d04", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100010b80", "cmd_proof_offset": "0x7100010e7c", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x71000106d8"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x7100010ba0", "cmd_proof_offset": "0x7100010f98", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      },
+      "host1x": {
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x710000f750", "cmd_proof_offset": "0x710000f900", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710000f128"] },
+          "1": { "vt_off": "0x28", "stub": "0x710000f800", "cmd_proof_offset": "0x710000f80c", "cmd_proof_instruction": "mov w5,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "vt_off": "0x30", "stub": "0x710000f830", "cmd_proof_offset": "0x710000f838", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "vt_off": "0x38", "stub": "0x710000f840", "cmd_proof_offset": "0x710000f84c", "cmd_proof_instruction": "mov w5,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "4": { "vt_off": "0x40", "stub": "0x710000f870", "cmd_proof_offset": "0x710000f874", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "vt_off": "0x48", "stub": "0x710000f880", "cmd_proof_offset": "0x710000f884", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "6": { "vt_off": "0x50", "stub": "0x710000f890", "cmd_proof_offset": "0x710000f894", "cmd_proof_instruction": "mov w1,#0x6", "cmd_hex_and_dec": "0x6 / 6", "stub_only": true, "calls": [] },
+          "7": { "vt_off": "0x58", "stub": "0x710000f8a0", "cmd_proof_offset": "0x710000f8a4", "cmd_proof_instruction": "mov w2,#0x7", "cmd_hex_and_dec": "0x7 / 7", "stub_only": true, "calls": [] }
+        }
+      },
+      "spl:nv": {
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x710000e2a0", "cmd_proof_offset": "0x710000e2a8", "cmd_proof_instruction": "mov w3,wzr", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "vt_off": "0x28", "stub": "0x710000e2c0", "cmd_proof_offset": "0x710000e2c4", "cmd_proof_instruction": "mov w3,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x710000dc00"] },
+          "2": { "vt_off": "0x30", "stub": "0x710000e2d0", "cmd_proof_offset": "0x710000e2d4", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "vt_off": "0x38", "stub": "0x710000e2e0", "cmd_proof_offset": "0x710000e2e4", "cmd_proof_instruction": "mov w2,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "4": { "vt_off": "0x40", "stub": "0x710000e2f0", "cmd_proof_offset": "0x710000e2f4", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "vt_off": "0x48", "stub": "0x710000e300", "cmd_proof_offset": "0x710000e308", "cmd_proof_instruction": "mov w4,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "6000": { "vt_off": "0x50", "stub": "0x710000e320", "cmd_proof_offset": "0x710000e324", "cmd_proof_instruction": "mov w2,#0x1770", "cmd_hex_and_dec": "0x1770 / 6000", "calls": ["0x71000197c0"] },
+          "6001": { "vt_off": "0x58", "stub": "0x710000e330", "cmd_proof_offset": "0x710000e460", "cmd_proof_instruction": "mov w10,#0x1771", "cmd_hex_and_dec": "0x1771 / 6001", "stub_only": true, "calls": [] },
+          "6002": { "vt_off": "0x60", "stub": "0x710000e350", "cmd_proof_offset": "0x710000e354", "cmd_proof_instruction": "mov w1,#0x1772", "cmd_hex_and_dec": "0x1772 / 6002", "stub_only": true, "calls": [] }
+        }
+      },
+      "srepo:a": {
+        "interface": "nn::srepo::detail::ipc::ISrepoService",
+        "commands": {
+          "10100": { "name": "SaveReport", "vt_off": "0x20", "stub": "0x7100014d20", "cmd_proof_offset": "0x7100015400", "cmd_proof_instruction": "mov w11,#0x2774", "cmd_hex_and_dec": "0x2774 / 10100", "stub_only": true, "calls": [] },
+          "10101": { "name": "SaveReportWithUser", "vt_off": "0x28", "stub": "0x7100014d50", "cmd_proof_offset": "0x7100015628", "cmd_proof_instruction": "mov w10,#0x2775", "cmd_hex_and_dec": "0x2775 / 10101", "stub_only": true, "calls": [] },
+          "10200": { "name": "SaveReportForAntiPiracy", "vt_off": "0x30", "stub": "0x7100014d80", "cmd_proof_offset": "0x7100015840", "cmd_proof_instruction": "mov w10,#0x27d8", "cmd_hex_and_dec": "0x27d8 / 10200", "stub_only": true, "calls": [] },
+          "10201": { "name": "SaveReportWithUserForAntiPiracy", "vt_off": "0x38", "stub": "0x7100014da0", "cmd_proof_offset": "0x7100015a44", "cmd_proof_instruction": "mov w10,#0x27d9", "cmd_hex_and_dec": "0x27d9 / 10201", "stub_only": true, "calls": [] },
+          "10300": { "name": "SendReportWithUser", "vt_off": "0x40", "stub": "0x7100014dc0", "cmd_proof_offset": "0x7100015c7c", "cmd_proof_instruction": "mov w12,#0x283c", "cmd_hex_and_dec": "0x283c / 10300", "stub_only": true, "calls": [] },
+          "11000": { "name": "NotifyUserList", "vt_off": "0x48", "stub": "0x7100014eb0", "cmd_proof_offset": "0x7100016214", "cmd_proof_instruction": "mov w10,#0x2af8", "cmd_hex_and_dec": "0x2af8 / 11000", "stub_only": true, "calls": [] },
+          "11001": { "name": "NotifyUserDeleted", "vt_off": "0x50", "stub": "0x7100014ed0", "cmd_proof_offset": "0x7100014ed4", "cmd_proof_instruction": "mov w2,#0x2af9", "cmd_hex_and_dec": "0x2af9 / 11001", "stub_only": true, "calls": [] },
+          "11002": { "name": "NotifyUserRegistered", "vt_off": "0x58", "stub": "0x7100014ee0", "cmd_proof_offset": "0x7100014ee4", "cmd_proof_instruction": "mov w2,#0x2afa", "cmd_hex_and_dec": "0x2afa / 11002", "stub_only": true, "calls": [] },
+          "11005": { "name": "NotifyUserClosedWithApplicationId", "vt_off": "0x60", "stub": "0x7100014ef0", "cmd_proof_offset": "0x7100014ef4", "cmd_proof_instruction": "mov w3,#0x2afd", "cmd_hex_and_dec": "0x2afd / 11005", "stub_only": true, "calls": [] },
+          "11006": { "name": "NotifyUserOpenedWithApplicationId", "vt_off": "0x68", "stub": "0x7100014f00", "cmd_proof_offset": "0x7100014f04", "cmd_proof_instruction": "mov w3,#0x2afe", "cmd_hex_and_dec": "0x2afe / 11006", "stub_only": true, "calls": [] },
+          "11100": { "name": "NotifyCompletedNetworkRequestChanged", "vt_off": "0x70", "stub": "0x7100014f10", "cmd_proof_offset": "0x7100016690", "cmd_proof_instruction": "mov w9,#0x2b5c", "cmd_hex_and_dec": "0x2b5c / 11100", "stub_only": true, "calls": [] },
+          "11200": { "name": "NotifyFriendPresenceChanged", "vt_off": "0x78", "stub": "0x7100014f20", "cmd_proof_offset": "0x71000167ec", "cmd_proof_instruction": "mov w10,#0x2bc0", "cmd_hex_and_dec": "0x2bc0 / 11200", "stub_only": true, "calls": [] },
+          "11300": { "name": "NotifyNotificationConnectivityChanged", "vt_off": "0x80", "stub": "0x7100014f30", "cmd_proof_offset": "0x7100014f38", "cmd_proof_instruction": "mov w2,#0x2c24", "cmd_hex_and_dec": "0x2c24 / 11300", "stub_only": true, "calls": [] },
+          "11400": { "name": "NotifyDeviceOperationModeChanged", "vt_off": "0x88", "stub": "0x7100014f40", "cmd_proof_offset": "0x7100014f48", "cmd_proof_instruction": "mov w2,#0x2c88", "cmd_hex_and_dec": "0x2c88 / 11400", "stub_only": true, "calls": [] },
+          "11500": { "name": "NotifySystemPowerStateChanged", "vt_off": "0x90", "stub": "0x7100014f50", "cmd_proof_offset": "0x7100014f58", "cmd_proof_instruction": "mov w2,#0x2cec", "cmd_hex_and_dec": "0x2cec / 11500", "stub_only": true, "calls": [] },
+          "11600": { "name": "NotifyAppletLaunched", "vt_off": "0x98", "stub": "0x7100014f60", "cmd_proof_offset": "0x7100014f64", "cmd_proof_instruction": "mov w2,#0x2d50", "cmd_hex_and_dec": "0x2d50 / 11600", "stub_only": true, "calls": [] },
+          "11601": { "name": "NotifyAppletExited", "vt_off": "0xa0", "stub": "0x7100014f70", "cmd_proof_offset": "0x7100014f74", "cmd_proof_instruction": "mov w2,#0x2d51", "cmd_hex_and_dec": "0x2d51 / 11601", "stub_only": true, "calls": [] },
+          "11602": { "name": "NotifyForegroundAppletChanged", "vt_off": "0xa8", "stub": "0x7100014f80", "cmd_proof_offset": "0x7100014f84", "cmd_proof_instruction": "mov w2,#0x2d52", "cmd_hex_and_dec": "0x2d52 / 11602", "stub_only": true, "calls": [] },
+          "11700": { "name": "NotifyControllerCountChanged", "vt_off": "0xb0", "stub": "0x7100014f90", "cmd_proof_offset": "0x7100016af4", "cmd_proof_instruction": "mov w9,#0x2db4", "cmd_hex_and_dec": "0x2db4 / 11700", "stub_only": true, "calls": [] },
+          "11800": { "name": "NotifyAudioInStarted", "vt_off": "0xb8", "stub": "0x7100014fb0", "cmd_proof_offset": "0x7100014fb8", "cmd_proof_instruction": "mov w4,#0x2e18", "cmd_hex_and_dec": "0x2e18 / 11800", "stub_only": true, "calls": [] },
+          "11801": { "name": "NotifyAudioInStopped", "vt_off": "0xc0", "stub": "0x7100014fd0", "cmd_proof_offset": "0x7100014fd8", "cmd_proof_instruction": "mov w4,#0x2e19", "cmd_hex_and_dec": "0x2e19 / 11801", "stub_only": true, "calls": [] },
+          "11810": { "name": "NotifyLaunchApplicationStorage", "vt_off": "0xc8", "stub": "0x7100014ff0", "cmd_proof_offset": "0x7100016e6c", "cmd_proof_instruction": "mov w10,#0x2e22", "cmd_hex_and_dec": "0x2e22 / 11810", "stub_only": true, "calls": [] },
+          "11811": { "name": "NotifyApplicationRightsInfo", "vt_off": "0xd0", "stub": "0x7100015000", "cmd_proof_offset": "0x710001700c", "cmd_proof_instruction": "mov w10,#0x2e23", "cmd_hex_and_dec": "0x2e23 / 11811", "stub_only": true, "calls": [] },
+          "12000": { "name": "RegisterWatchdog", "vt_off": "0xd8", "stub": "0x7100015010", "cmd_proof_offset": "0x71000171f8", "cmd_proof_instruction": "mov w10,#0x2ee0", "cmd_hex_and_dec": "0x2ee0 / 12000", "stub_only": true, "calls": [] },
+          "12001": { "name": "UnregisterWatchdog", "vt_off": "0xe0", "stub": "0x7100015020", "cmd_proof_offset": "0x7100017384", "cmd_proof_instruction": "mov w10,#0x2ee1", "cmd_hex_and_dec": "0x2ee1 / 12001", "stub_only": true, "calls": [] },
+          "12010": { "name": "Cmd12010", "vt_off": "0xe8", "stub": "0x7100015030", "cmd_proof_offset": "0x7100015034", "cmd_proof_instruction": "mov w2,#0x2eea", "cmd_hex_and_dec": "0x2eea / 12010", "stub_only": true, "calls": [] },
+          "13000": { "name": "GetSyslogLogger", "vt_off": "0xf0", "stub": "0x7100015040", "cmd_proof_offset": "0x7100017504", "cmd_proof_instruction": "mov w10,#0x32c8", "cmd_hex_and_dec": "0x32c8 / 13000", "stub_only": true, "calls": [] },
+          "13002": { "name": "Cmd13002", "vt_off": "0xf8", "stub": "0x7100015110", "cmd_proof_offset": "0x71000178f4", "cmd_proof_instruction": "mov w11,#0x32ca", "cmd_hex_and_dec": "0x32ca / 13002", "stub_only": true, "calls": [] },
+          "13003": { "name": "Cmd13003", "vt_off": "0x100", "stub": "0x7100015130", "cmd_proof_offset": "0x7100017b18", "cmd_proof_instruction": "mov w10,#0x32cb", "cmd_hex_and_dec": "0x32cb / 13003", "stub_only": true, "calls": [] },
+          "13004": { "name": "Cmd13004", "vt_off": "0x108", "stub": "0x7100015150", "cmd_proof_offset": "0x7100017d14", "cmd_proof_instruction": "mov w10,#0x32cc", "cmd_hex_and_dec": "0x32cc / 13004", "stub_only": true, "calls": [] },
+          "13005": { "name": "Cmd13005", "vt_off": "0x110", "stub": "0x7100015160", "cmd_proof_offset": "0x7100017ebc", "cmd_proof_instruction": "mov w9,#0x32cd", "cmd_hex_and_dec": "0x32cd / 13005", "calls": ["0x7100013c2c"] },
+          "20100": { "name": "PopReport", "vt_off": "0x118", "stub": "0x7100015240", "cmd_proof_offset": "0x71000181ac", "cmd_proof_instruction": "mov w10,#0x4e84", "cmd_hex_and_dec": "0x4e84 / 20100", "stub_only": true, "calls": [] },
+          "20200": { "name": "GetPushEventReadableHandle", "vt_off": "0x120", "stub": "0x7100015290", "cmd_proof_offset": "0x7100015294", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "stub_only": true, "calls": [] },
+          "20300": { "name": "Shutdown", "vt_off": "0x128", "stub": "0x71000152a0", "cmd_proof_offset": "0x71000152a4", "cmd_proof_instruction": "mov w1,#0x4f4c", "cmd_hex_and_dec": "0x4f4c / 20300", "stub_only": true, "calls": [] },
+          "20400": { "name": "PopLostByBufferShortageInfo", "vt_off": "0x130", "stub": "0x71000152b0", "cmd_proof_offset": "0x7100018394", "cmd_proof_instruction": "mov w9,#0x4fb0", "cmd_hex_and_dec": "0x4fb0 / 20400", "stub_only": true, "calls": [] },
+          "20401": { "name": "GetBufferUsageInfo", "vt_off": "0x138", "stub": "0x71000152c0", "cmd_proof_offset": "0x71000184fc", "cmd_proof_instruction": "mov w10,#0x4fb1", "cmd_hex_and_dec": "0x4fb1 / 20401", "stub_only": true, "calls": [] },
+          "20402": { "name": "SetDurationReportChatteringDetectionThreshold", "vt_off": "0x140", "stub": "0x71000152d0", "cmd_proof_offset": "0x710001867c", "cmd_proof_instruction": "mov w10,#0x4fb2", "cmd_hex_and_dec": "0x4fb2 / 20402", "stub_only": true, "calls": [] },
+          "20500": { "name": "GetWatchdogStatistics", "vt_off": "0x148", "stub": "0x71000152e0", "cmd_proof_offset": "0x71000187e4", "cmd_proof_instruction": "mov w10,#0x5014", "cmd_hex_and_dec": "0x5014 / 20500", "stub_only": true, "calls": [] },
+          "20600": { "name": "NotifyForegroundTransmissionResult", "vt_off": "0x150", "stub": "0x71000152f0", "cmd_proof_offset": "0x710001894c", "cmd_proof_instruction": "mov w10,#0x5078", "cmd_hex_and_dec": "0x5078 / 20600", "stub_only": true, "calls": [] }
+        }
+      },
+      "srepo:u": {
+        "interface": "nn::srepo::detail::ipc::ISrepoService",
+        "commands": {
+          "10100": { "name": "SaveReport", "vt_off": "0x20", "stub": "0x7100014d20", "cmd_proof_offset": "0x7100015400", "cmd_proof_instruction": "mov w11,#0x2774", "cmd_hex_and_dec": "0x2774 / 10100", "stub_only": true, "calls": [] },
+          "10101": { "name": "SaveReportWithUser", "vt_off": "0x28", "stub": "0x7100014d50", "cmd_proof_offset": "0x7100015628", "cmd_proof_instruction": "mov w10,#0x2775", "cmd_hex_and_dec": "0x2775 / 10101", "stub_only": true, "calls": [] },
+          "10200": { "name": "SaveReportForAntiPiracy", "vt_off": "0x30", "stub": "0x7100014d80", "cmd_proof_offset": "0x7100015840", "cmd_proof_instruction": "mov w10,#0x27d8", "cmd_hex_and_dec": "0x27d8 / 10200", "stub_only": true, "calls": [] },
+          "10201": { "name": "SaveReportWithUserForAntiPiracy", "vt_off": "0x38", "stub": "0x7100014da0", "cmd_proof_offset": "0x7100015a44", "cmd_proof_instruction": "mov w10,#0x27d9", "cmd_hex_and_dec": "0x27d9 / 10201", "stub_only": true, "calls": [] },
+          "10300": { "name": "SendReportWithUser", "vt_off": "0x40", "stub": "0x7100014dc0", "cmd_proof_offset": "0x7100015c7c", "cmd_proof_instruction": "mov w12,#0x283c", "cmd_hex_and_dec": "0x283c / 10300", "stub_only": true, "calls": [] },
+          "11000": { "name": "NotifyUserList", "vt_off": "0x48", "stub": "0x7100014eb0", "cmd_proof_offset": "0x7100016214", "cmd_proof_instruction": "mov w10,#0x2af8", "cmd_hex_and_dec": "0x2af8 / 11000", "stub_only": true, "calls": [] },
+          "11001": { "name": "NotifyUserDeleted", "vt_off": "0x50", "stub": "0x7100014ed0", "cmd_proof_offset": "0x7100014ed4", "cmd_proof_instruction": "mov w2,#0x2af9", "cmd_hex_and_dec": "0x2af9 / 11001", "stub_only": true, "calls": [] },
+          "11002": { "name": "NotifyUserRegistered", "vt_off": "0x58", "stub": "0x7100014ee0", "cmd_proof_offset": "0x7100014ee4", "cmd_proof_instruction": "mov w2,#0x2afa", "cmd_hex_and_dec": "0x2afa / 11002", "stub_only": true, "calls": [] },
+          "11005": { "name": "NotifyUserClosedWithApplicationId", "vt_off": "0x60", "stub": "0x7100014ef0", "cmd_proof_offset": "0x7100014ef4", "cmd_proof_instruction": "mov w3,#0x2afd", "cmd_hex_and_dec": "0x2afd / 11005", "stub_only": true, "calls": [] },
+          "11006": { "name": "NotifyUserOpenedWithApplicationId", "vt_off": "0x68", "stub": "0x7100014f00", "cmd_proof_offset": "0x7100014f04", "cmd_proof_instruction": "mov w3,#0x2afe", "cmd_hex_and_dec": "0x2afe / 11006", "stub_only": true, "calls": [] },
+          "11100": { "name": "NotifyCompletedNetworkRequestChanged", "vt_off": "0x70", "stub": "0x7100014f10", "cmd_proof_offset": "0x7100016690", "cmd_proof_instruction": "mov w9,#0x2b5c", "cmd_hex_and_dec": "0x2b5c / 11100", "stub_only": true, "calls": [] },
+          "11200": { "name": "NotifyFriendPresenceChanged", "vt_off": "0x78", "stub": "0x7100014f20", "cmd_proof_offset": "0x71000167ec", "cmd_proof_instruction": "mov w10,#0x2bc0", "cmd_hex_and_dec": "0x2bc0 / 11200", "stub_only": true, "calls": [] },
+          "11300": { "name": "NotifyNotificationConnectivityChanged", "vt_off": "0x80", "stub": "0x7100014f30", "cmd_proof_offset": "0x7100014f38", "cmd_proof_instruction": "mov w2,#0x2c24", "cmd_hex_and_dec": "0x2c24 / 11300", "stub_only": true, "calls": [] },
+          "11400": { "name": "NotifyDeviceOperationModeChanged", "vt_off": "0x88", "stub": "0x7100014f40", "cmd_proof_offset": "0x7100014f48", "cmd_proof_instruction": "mov w2,#0x2c88", "cmd_hex_and_dec": "0x2c88 / 11400", "stub_only": true, "calls": [] },
+          "11500": { "name": "NotifySystemPowerStateChanged", "vt_off": "0x90", "stub": "0x7100014f50", "cmd_proof_offset": "0x7100014f58", "cmd_proof_instruction": "mov w2,#0x2cec", "cmd_hex_and_dec": "0x2cec / 11500", "stub_only": true, "calls": [] },
+          "11600": { "name": "NotifyAppletLaunched", "vt_off": "0x98", "stub": "0x7100014f60", "cmd_proof_offset": "0x7100014f64", "cmd_proof_instruction": "mov w2,#0x2d50", "cmd_hex_and_dec": "0x2d50 / 11600", "stub_only": true, "calls": [] },
+          "11601": { "name": "NotifyAppletExited", "vt_off": "0xa0", "stub": "0x7100014f70", "cmd_proof_offset": "0x7100014f74", "cmd_proof_instruction": "mov w2,#0x2d51", "cmd_hex_and_dec": "0x2d51 / 11601", "stub_only": true, "calls": [] },
+          "11602": { "name": "NotifyForegroundAppletChanged", "vt_off": "0xa8", "stub": "0x7100014f80", "cmd_proof_offset": "0x7100014f84", "cmd_proof_instruction": "mov w2,#0x2d52", "cmd_hex_and_dec": "0x2d52 / 11602", "stub_only": true, "calls": [] },
+          "11700": { "name": "NotifyControllerCountChanged", "vt_off": "0xb0", "stub": "0x7100014f90", "cmd_proof_offset": "0x7100016af4", "cmd_proof_instruction": "mov w9,#0x2db4", "cmd_hex_and_dec": "0x2db4 / 11700", "stub_only": true, "calls": [] },
+          "11800": { "name": "NotifyAudioInStarted", "vt_off": "0xb8", "stub": "0x7100014fb0", "cmd_proof_offset": "0x7100014fb8", "cmd_proof_instruction": "mov w4,#0x2e18", "cmd_hex_and_dec": "0x2e18 / 11800", "stub_only": true, "calls": [] },
+          "11801": { "name": "NotifyAudioInStopped", "vt_off": "0xc0", "stub": "0x7100014fd0", "cmd_proof_offset": "0x7100014fd8", "cmd_proof_instruction": "mov w4,#0x2e19", "cmd_hex_and_dec": "0x2e19 / 11801", "stub_only": true, "calls": [] },
+          "11810": { "name": "NotifyLaunchApplicationStorage", "vt_off": "0xc8", "stub": "0x7100014ff0", "cmd_proof_offset": "0x7100016e6c", "cmd_proof_instruction": "mov w10,#0x2e22", "cmd_hex_and_dec": "0x2e22 / 11810", "stub_only": true, "calls": [] },
+          "11811": { "name": "NotifyApplicationRightsInfo", "vt_off": "0xd0", "stub": "0x7100015000", "cmd_proof_offset": "0x710001700c", "cmd_proof_instruction": "mov w10,#0x2e23", "cmd_hex_and_dec": "0x2e23 / 11811", "stub_only": true, "calls": [] },
+          "12000": { "name": "RegisterWatchdog", "vt_off": "0xd8", "stub": "0x7100015010", "cmd_proof_offset": "0x71000171f8", "cmd_proof_instruction": "mov w10,#0x2ee0", "cmd_hex_and_dec": "0x2ee0 / 12000", "stub_only": true, "calls": [] },
+          "12001": { "name": "UnregisterWatchdog", "vt_off": "0xe0", "stub": "0x7100015020", "cmd_proof_offset": "0x7100017384", "cmd_proof_instruction": "mov w10,#0x2ee1", "cmd_hex_and_dec": "0x2ee1 / 12001", "stub_only": true, "calls": [] },
+          "12010": { "name": "Cmd12010", "vt_off": "0xe8", "stub": "0x7100015030", "cmd_proof_offset": "0x7100015034", "cmd_proof_instruction": "mov w2,#0x2eea", "cmd_hex_and_dec": "0x2eea / 12010", "stub_only": true, "calls": [] },
+          "13000": { "name": "GetSyslogLogger", "vt_off": "0xf0", "stub": "0x7100015040", "cmd_proof_offset": "0x7100017504", "cmd_proof_instruction": "mov w10,#0x32c8", "cmd_hex_and_dec": "0x32c8 / 13000", "stub_only": true, "calls": [] },
+          "13002": { "name": "Cmd13002", "vt_off": "0xf8", "stub": "0x7100015110", "cmd_proof_offset": "0x71000178f4", "cmd_proof_instruction": "mov w11,#0x32ca", "cmd_hex_and_dec": "0x32ca / 13002", "stub_only": true, "calls": [] },
+          "13003": { "name": "Cmd13003", "vt_off": "0x100", "stub": "0x7100015130", "cmd_proof_offset": "0x7100017b18", "cmd_proof_instruction": "mov w10,#0x32cb", "cmd_hex_and_dec": "0x32cb / 13003", "stub_only": true, "calls": [] },
+          "13004": { "name": "Cmd13004", "vt_off": "0x108", "stub": "0x7100015150", "cmd_proof_offset": "0x7100017d14", "cmd_proof_instruction": "mov w10,#0x32cc", "cmd_hex_and_dec": "0x32cc / 13004", "stub_only": true, "calls": [] },
+          "13005": { "name": "Cmd13005", "vt_off": "0x110", "stub": "0x7100015160", "cmd_proof_offset": "0x7100017ebc", "cmd_proof_instruction": "mov w9,#0x32cd", "cmd_hex_and_dec": "0x32cd / 13005", "calls": ["0x7100013c2c"] },
+          "20100": { "name": "PopReport", "vt_off": "0x118", "stub": "0x7100015240", "cmd_proof_offset": "0x71000181ac", "cmd_proof_instruction": "mov w10,#0x4e84", "cmd_hex_and_dec": "0x4e84 / 20100", "stub_only": true, "calls": [] },
+          "20200": { "name": "GetPushEventReadableHandle", "vt_off": "0x120", "stub": "0x7100015290", "cmd_proof_offset": "0x7100015294", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "stub_only": true, "calls": [] },
+          "20300": { "name": "Shutdown", "vt_off": "0x128", "stub": "0x71000152a0", "cmd_proof_offset": "0x71000152a4", "cmd_proof_instruction": "mov w1,#0x4f4c", "cmd_hex_and_dec": "0x4f4c / 20300", "stub_only": true, "calls": [] },
+          "20400": { "name": "PopLostByBufferShortageInfo", "vt_off": "0x130", "stub": "0x71000152b0", "cmd_proof_offset": "0x7100018394", "cmd_proof_instruction": "mov w9,#0x4fb0", "cmd_hex_and_dec": "0x4fb0 / 20400", "stub_only": true, "calls": [] },
+          "20401": { "name": "GetBufferUsageInfo", "vt_off": "0x138", "stub": "0x71000152c0", "cmd_proof_offset": "0x71000184fc", "cmd_proof_instruction": "mov w10,#0x4fb1", "cmd_hex_and_dec": "0x4fb1 / 20401", "stub_only": true, "calls": [] },
+          "20402": { "name": "SetDurationReportChatteringDetectionThreshold", "vt_off": "0x140", "stub": "0x71000152d0", "cmd_proof_offset": "0x710001867c", "cmd_proof_instruction": "mov w10,#0x4fb2", "cmd_hex_and_dec": "0x4fb2 / 20402", "stub_only": true, "calls": [] },
+          "20500": { "name": "GetWatchdogStatistics", "vt_off": "0x148", "stub": "0x71000152e0", "cmd_proof_offset": "0x71000187e4", "cmd_proof_instruction": "mov w10,#0x5014", "cmd_hex_and_dec": "0x5014 / 20500", "stub_only": true, "calls": [] },
+          "20600": { "name": "NotifyForegroundTransmissionResult", "vt_off": "0x150", "stub": "0x71000152f0", "cmd_proof_offset": "0x710001894c", "cmd_proof_instruction": "mov w10,#0x5078", "cmd_hex_and_dec": "0x5078 / 20600", "stub_only": true, "calls": [] }
+        }
+      },
+      "syslog:u": {
+        "interface": "nn::srepo::detail::ipc::ISrepoService",
+        "commands": {
+          "10100": { "name": "SaveReport", "vt_off": "0x20", "stub": "0x7100014d20", "cmd_proof_offset": "0x7100015400", "cmd_proof_instruction": "mov w11,#0x2774", "cmd_hex_and_dec": "0x2774 / 10100", "stub_only": true, "calls": [] },
+          "10101": { "name": "SaveReportWithUser", "vt_off": "0x28", "stub": "0x7100014d50", "cmd_proof_offset": "0x7100015628", "cmd_proof_instruction": "mov w10,#0x2775", "cmd_hex_and_dec": "0x2775 / 10101", "stub_only": true, "calls": [] },
+          "10200": { "name": "SaveReportForAntiPiracy", "vt_off": "0x30", "stub": "0x7100014d80", "cmd_proof_offset": "0x7100015840", "cmd_proof_instruction": "mov w10,#0x27d8", "cmd_hex_and_dec": "0x27d8 / 10200", "stub_only": true, "calls": [] },
+          "10201": { "name": "SaveReportWithUserForAntiPiracy", "vt_off": "0x38", "stub": "0x7100014da0", "cmd_proof_offset": "0x7100015a44", "cmd_proof_instruction": "mov w10,#0x27d9", "cmd_hex_and_dec": "0x27d9 / 10201", "stub_only": true, "calls": [] },
+          "10300": { "name": "SendReportWithUser", "vt_off": "0x40", "stub": "0x7100014dc0", "cmd_proof_offset": "0x7100015c7c", "cmd_proof_instruction": "mov w12,#0x283c", "cmd_hex_and_dec": "0x283c / 10300", "stub_only": true, "calls": [] },
+          "11000": { "name": "NotifyUserList", "vt_off": "0x48", "stub": "0x7100014eb0", "cmd_proof_offset": "0x7100016214", "cmd_proof_instruction": "mov w10,#0x2af8", "cmd_hex_and_dec": "0x2af8 / 11000", "stub_only": true, "calls": [] },
+          "11001": { "name": "NotifyUserDeleted", "vt_off": "0x50", "stub": "0x7100014ed0", "cmd_proof_offset": "0x7100014ed4", "cmd_proof_instruction": "mov w2,#0x2af9", "cmd_hex_and_dec": "0x2af9 / 11001", "stub_only": true, "calls": [] },
+          "11002": { "name": "NotifyUserRegistered", "vt_off": "0x58", "stub": "0x7100014ee0", "cmd_proof_offset": "0x7100014ee4", "cmd_proof_instruction": "mov w2,#0x2afa", "cmd_hex_and_dec": "0x2afa / 11002", "stub_only": true, "calls": [] },
+          "11005": { "name": "NotifyUserClosedWithApplicationId", "vt_off": "0x60", "stub": "0x7100014ef0", "cmd_proof_offset": "0x7100014ef4", "cmd_proof_instruction": "mov w3,#0x2afd", "cmd_hex_and_dec": "0x2afd / 11005", "stub_only": true, "calls": [] },
+          "11006": { "name": "NotifyUserOpenedWithApplicationId", "vt_off": "0x68", "stub": "0x7100014f00", "cmd_proof_offset": "0x7100014f04", "cmd_proof_instruction": "mov w3,#0x2afe", "cmd_hex_and_dec": "0x2afe / 11006", "stub_only": true, "calls": [] },
+          "11100": { "name": "NotifyCompletedNetworkRequestChanged", "vt_off": "0x70", "stub": "0x7100014f10", "cmd_proof_offset": "0x7100016690", "cmd_proof_instruction": "mov w9,#0x2b5c", "cmd_hex_and_dec": "0x2b5c / 11100", "stub_only": true, "calls": [] },
+          "11200": { "name": "NotifyFriendPresenceChanged", "vt_off": "0x78", "stub": "0x7100014f20", "cmd_proof_offset": "0x71000167ec", "cmd_proof_instruction": "mov w10,#0x2bc0", "cmd_hex_and_dec": "0x2bc0 / 11200", "stub_only": true, "calls": [] },
+          "11300": { "name": "NotifyNotificationConnectivityChanged", "vt_off": "0x80", "stub": "0x7100014f30", "cmd_proof_offset": "0x7100014f38", "cmd_proof_instruction": "mov w2,#0x2c24", "cmd_hex_and_dec": "0x2c24 / 11300", "stub_only": true, "calls": [] },
+          "11400": { "name": "NotifyDeviceOperationModeChanged", "vt_off": "0x88", "stub": "0x7100014f40", "cmd_proof_offset": "0x7100014f48", "cmd_proof_instruction": "mov w2,#0x2c88", "cmd_hex_and_dec": "0x2c88 / 11400", "stub_only": true, "calls": [] },
+          "11500": { "name": "NotifySystemPowerStateChanged", "vt_off": "0x90", "stub": "0x7100014f50", "cmd_proof_offset": "0x7100014f58", "cmd_proof_instruction": "mov w2,#0x2cec", "cmd_hex_and_dec": "0x2cec / 11500", "stub_only": true, "calls": [] },
+          "11600": { "name": "NotifyAppletLaunched", "vt_off": "0x98", "stub": "0x7100014f60", "cmd_proof_offset": "0x7100014f64", "cmd_proof_instruction": "mov w2,#0x2d50", "cmd_hex_and_dec": "0x2d50 / 11600", "stub_only": true, "calls": [] },
+          "11601": { "name": "NotifyAppletExited", "vt_off": "0xa0", "stub": "0x7100014f70", "cmd_proof_offset": "0x7100014f74", "cmd_proof_instruction": "mov w2,#0x2d51", "cmd_hex_and_dec": "0x2d51 / 11601", "stub_only": true, "calls": [] },
+          "11602": { "name": "NotifyForegroundAppletChanged", "vt_off": "0xa8", "stub": "0x7100014f80", "cmd_proof_offset": "0x7100014f84", "cmd_proof_instruction": "mov w2,#0x2d52", "cmd_hex_and_dec": "0x2d52 / 11602", "stub_only": true, "calls": [] },
+          "11700": { "name": "NotifyControllerCountChanged", "vt_off": "0xb0", "stub": "0x7100014f90", "cmd_proof_offset": "0x7100016af4", "cmd_proof_instruction": "mov w9,#0x2db4", "cmd_hex_and_dec": "0x2db4 / 11700", "stub_only": true, "calls": [] },
+          "11800": { "name": "NotifyAudioInStarted", "vt_off": "0xb8", "stub": "0x7100014fb0", "cmd_proof_offset": "0x7100014fb8", "cmd_proof_instruction": "mov w4,#0x2e18", "cmd_hex_and_dec": "0x2e18 / 11800", "stub_only": true, "calls": [] },
+          "11801": { "name": "NotifyAudioInStopped", "vt_off": "0xc0", "stub": "0x7100014fd0", "cmd_proof_offset": "0x7100014fd8", "cmd_proof_instruction": "mov w4,#0x2e19", "cmd_hex_and_dec": "0x2e19 / 11801", "stub_only": true, "calls": [] },
+          "11810": { "name": "NotifyLaunchApplicationStorage", "vt_off": "0xc8", "stub": "0x7100014ff0", "cmd_proof_offset": "0x7100016e6c", "cmd_proof_instruction": "mov w10,#0x2e22", "cmd_hex_and_dec": "0x2e22 / 11810", "stub_only": true, "calls": [] },
+          "11811": { "name": "NotifyApplicationRightsInfo", "vt_off": "0xd0", "stub": "0x7100015000", "cmd_proof_offset": "0x710001700c", "cmd_proof_instruction": "mov w10,#0x2e23", "cmd_hex_and_dec": "0x2e23 / 11811", "stub_only": true, "calls": [] },
+          "12000": { "name": "RegisterWatchdog", "vt_off": "0xd8", "stub": "0x7100015010", "cmd_proof_offset": "0x71000171f8", "cmd_proof_instruction": "mov w10,#0x2ee0", "cmd_hex_and_dec": "0x2ee0 / 12000", "stub_only": true, "calls": [] },
+          "12001": { "name": "UnregisterWatchdog", "vt_off": "0xe0", "stub": "0x7100015020", "cmd_proof_offset": "0x7100017384", "cmd_proof_instruction": "mov w10,#0x2ee1", "cmd_hex_and_dec": "0x2ee1 / 12001", "stub_only": true, "calls": [] },
+          "12010": { "name": "Cmd12010", "vt_off": "0xe8", "stub": "0x7100015030", "cmd_proof_offset": "0x7100015034", "cmd_proof_instruction": "mov w2,#0x2eea", "cmd_hex_and_dec": "0x2eea / 12010", "stub_only": true, "calls": [] },
+          "13000": { "name": "GetSyslogLogger", "vt_off": "0xf0", "stub": "0x7100015040", "cmd_proof_offset": "0x7100017504", "cmd_proof_instruction": "mov w10,#0x32c8", "cmd_hex_and_dec": "0x32c8 / 13000", "stub_only": true, "calls": [] },
+          "13002": { "name": "Cmd13002", "vt_off": "0xf8", "stub": "0x7100015110", "cmd_proof_offset": "0x71000178f4", "cmd_proof_instruction": "mov w11,#0x32ca", "cmd_hex_and_dec": "0x32ca / 13002", "stub_only": true, "calls": [] },
+          "13003": { "name": "Cmd13003", "vt_off": "0x100", "stub": "0x7100015130", "cmd_proof_offset": "0x7100017b18", "cmd_proof_instruction": "mov w10,#0x32cb", "cmd_hex_and_dec": "0x32cb / 13003", "stub_only": true, "calls": [] },
+          "13004": { "name": "Cmd13004", "vt_off": "0x108", "stub": "0x7100015150", "cmd_proof_offset": "0x7100017d14", "cmd_proof_instruction": "mov w10,#0x32cc", "cmd_hex_and_dec": "0x32cc / 13004", "stub_only": true, "calls": [] },
+          "13005": { "name": "Cmd13005", "vt_off": "0x110", "stub": "0x7100015160", "cmd_proof_offset": "0x7100017ebc", "cmd_proof_instruction": "mov w9,#0x32cd", "cmd_hex_and_dec": "0x32cd / 13005", "calls": ["0x7100013c2c"] },
+          "20100": { "name": "PopReport", "vt_off": "0x118", "stub": "0x7100015240", "cmd_proof_offset": "0x71000181ac", "cmd_proof_instruction": "mov w10,#0x4e84", "cmd_hex_and_dec": "0x4e84 / 20100", "stub_only": true, "calls": [] },
+          "20200": { "name": "GetPushEventReadableHandle", "vt_off": "0x120", "stub": "0x7100015290", "cmd_proof_offset": "0x7100015294", "cmd_proof_instruction": "mov w2,#0x4ee8", "cmd_hex_and_dec": "0x4ee8 / 20200", "stub_only": true, "calls": [] },
+          "20300": { "name": "Shutdown", "vt_off": "0x128", "stub": "0x71000152a0", "cmd_proof_offset": "0x71000152a4", "cmd_proof_instruction": "mov w1,#0x4f4c", "cmd_hex_and_dec": "0x4f4c / 20300", "stub_only": true, "calls": [] },
+          "20400": { "name": "PopLostByBufferShortageInfo", "vt_off": "0x130", "stub": "0x71000152b0", "cmd_proof_offset": "0x7100018394", "cmd_proof_instruction": "mov w9,#0x4fb0", "cmd_hex_and_dec": "0x4fb0 / 20400", "stub_only": true, "calls": [] },
+          "20401": { "name": "GetBufferUsageInfo", "vt_off": "0x138", "stub": "0x71000152c0", "cmd_proof_offset": "0x71000184fc", "cmd_proof_instruction": "mov w10,#0x4fb1", "cmd_hex_and_dec": "0x4fb1 / 20401", "stub_only": true, "calls": [] },
+          "20402": { "name": "SetDurationReportChatteringDetectionThreshold", "vt_off": "0x140", "stub": "0x71000152d0", "cmd_proof_offset": "0x710001867c", "cmd_proof_instruction": "mov w10,#0x4fb2", "cmd_hex_and_dec": "0x4fb2 / 20402", "stub_only": true, "calls": [] },
+          "20500": { "name": "GetWatchdogStatistics", "vt_off": "0x148", "stub": "0x71000152e0", "cmd_proof_offset": "0x71000187e4", "cmd_proof_instruction": "mov w10,#0x5014", "cmd_hex_and_dec": "0x5014 / 20500", "stub_only": true, "calls": [] },
+          "20600": { "name": "NotifyForegroundTransmissionResult", "vt_off": "0x150", "stub": "0x71000152f0", "cmd_proof_offset": "0x710001894c", "cmd_proof_instruction": "mov w10,#0x5078", "cmd_hex_and_dec": "0x5078 / 20600", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}

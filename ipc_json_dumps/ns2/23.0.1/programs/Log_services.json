@@ -1,0 +1,41 @@
+{
+  "log_services": {
+    "program_identified": "Log_services",
+    "nn::lm::ILogService": {
+      "_srv": "SRV_710001AC48",
+      "_hash": "fc2696b950876c4c",
+      "0": {"vt":  "0x20", "func": "0x7100010160", "lr": "0x710000A630", "inbytes":   "0x8", "outbytes":   "0x0", "pid": true, "outinterfaces": ["nn::lm::ILogger"], "_srv_outinterfaces": "SRV_710001AC50", "name": "OpenLogger", "wire_order": "in_data[0x8]"}
+    },
+    "nn::lm::ILogger": {
+      "_srv": "SRV_710001AC50",
+      "_hash": "77db5741a0fb3461",
+      "0":  {"vt":  "0x20", "func": "0x7100011380", "lr": "0x710000ABBC", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "Log", "wire_order": "buffers=[in]"},
+      "1":  {"vt":  "0x28", "func": "0x71000113B0", "lr": "0x710000A9D0", "inbytes":   "0x4", "outbytes":   "0x0", "name": "SetDestination", "wire_order": "in_data[0x4]"},
+      "2":  {"vt":  "0x30", "func": "0x7100011440", "lr": "0x710000AA74", "inbytes":   "0x0", "outbytes":   "0x0", "buffers": [33], "name": "TransmitHashedLog", "wire_order": "buffers=[in]"},
+      "3":  {"vt":  "0x38", "func": "0x7100005830", "lr": "0x710000AAD8", "inbytes":  "0x28", "outbytes":   "0x0", "buffers": [33], "name": "DevNotify", "wire_order": "in_data[0x28]; buffers=[in]"},
+      "11": {"vt":  "0x40", "func": "0x7100011450", "lr": "0x710000A934", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::lm::ISharedMemoryAccessor"], "_srv_outinterfaces": "SRV_710001AC58", "name": "OpenSharedMemoryAccessorForHashedLog", "wire_order": "N/A"}
+    },
+    "nn::lm::ISharedMemoryAccessor": {
+      "_srv": "SRV_710001AE20",
+      "_hash": "110f14166ba3f72c",
+      "_likely_basis": "DB position 4/4 in Log_services, anchored",
+      "0": {"vt":  "0x20", "func": "0x7100011380", "lr": "0x710000EBC8", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000113B0", "lr": "0x710000EA2C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100011440", "lr": "0x710000EAA4", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100005830", "lr": "0x710000EB10", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x7100011450", "lr": "0x710000E990", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["fatal:u", "psc:m"],
+    "_invokes": {
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x7100005840", "cmd_proof_offset": "0x71000058fc", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x7100005850", "cmd_proof_offset": "0x7100005bf4", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x7100005860", "cmd_proof_offset": "0x7100005d6c", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x71000051d8"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x7100005880", "cmd_proof_offset": "0x7100006528", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}

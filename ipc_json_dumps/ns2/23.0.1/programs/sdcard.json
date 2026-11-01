@@ -1,0 +1,116 @@
+{
+  "fs": {
+    "program_identified": "Filesystem_services",
+    "SRV_710006CAE8": {
+      "_srv": "SRV_710006CAE8",
+      "_hash": "e53655ddaa378dcd",
+      "0":  {"vt":  "0x20", "func": "0x7100005990", "lr": "0x7100003A10", "inbytes":   "0x0", "outbytes":   "0x1", "name": "NOT_IN_DATABASE", "wire_order": "out_data[0x1]"},
+      "1":  {"vt":  "0x28", "func": "0x710003D300", "lr": "0x7100003750", "inbytes":   "0x4", "outbytes":   "0x1", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x4]; out_data[0x1]"},
+      "2":  {"vt":  "0x30", "func": "0x7100005AB0", "lr": "0x7100003B80", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sf::cmif::server::CmifServerDomainManager::Domain"], "_srv_outinterfaces": "SRV_710006CAF0", "name": "NOT_IN_DATABASE", "wire_order": "N/A"},
+      "3":  {"vt":  "0x38", "func": "0x7100003090", "lr": "0x710000391C", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["nn::sf::cmif::server::CmifServerDomainManager::Domain"], "_srv_outinterfaces": "SRV_710006CAF0", "name": "NOT_IN_DATABASE", "wire_order": "N/A"},
+      "10": {"vt":  "0x40", "func": "0x710003D480", "lr": "0x7100003AC0", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["SRV_710006CAF8"], "_srv_outinterfaces": "SRV_710006CAF8", "name": "NOT_IN_DATABASE", "wire_order": "N/A"},
+      "20": {"vt":  "0x48", "func": "0x710003D4A0", "lr": "0x7100003840", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["SRV_710006CB00"], "_srv_outinterfaces": "SRV_710006CB00", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x8]"},
+      "21": {"vt":  "0x50", "func": "0x710003D4B0", "lr": "0x7100003BF8", "inbytes":   "0x8", "outbytes":   "0x0", "outinterfaces": ["nn::fssrv::sf::IStorage"], "_srv_outinterfaces": "SRV_710006CB08", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x8]"},
+      "34": {"vt":  "0x58", "func": "0x710003D4C0", "lr": "0x7100003978", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NOT_IN_DATABASE", "wire_order": "N/A"}
+    },
+    "nn::sf::cmif::server::CmifServerDomainManager::Domain": {
+      "_srv": "SRV_710006CAF0",
+      "_hash": "e75f6a0a19f5fa67",
+      "0": {"vt":  "0x20", "func": "0x710003B1A0", "lr": "0x7100003F8C", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [1], "name": "NOT_IN_DATABASE", "wire_order": "N/A"}
+    },
+    "SRV_710006CAF8": {
+      "_srv": "SRV_710006CAF8",
+      "_hash": "2e51e1266100c060",
+      "0":  {"vt":  "0x20", "func": "0x7100005990", "lr": "0x71000044AC", "inbytes":   "0x4", "outbytes":   "0x0", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710003D300", "lr": "0x7100004648", "inbytes":  "0x18", "outbytes":   "0x0", "buffers": [69], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x18]; buffers=[in]"},
+      "10": {"vt":  "0x30", "func": "0x7100005AB0", "lr": "0x7100004224", "inbytes":   "0x4", "outbytes":   "0x8", "buffers": [70], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x4]; out_data[0x8]; buffers=[out]"},
+      "11": {"vt":  "0x38", "func": "0x7100003090", "lr": "0x7100004554", "inbytes":   "0x4", "outbytes":  "0x10", "buffers": [70, 70], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x4]; out_data[0x10]; buffers=[out, out]"},
+      "20": {"vt":  "0x40", "func": "0x710003D480", "lr": "0x7100004750", "inbytes":  "0x18", "outbytes":   "0x8", "buffers": [70, 69], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x18]; out_data[0x8]; buffers=[out, in]"},
+      "21": {"vt":  "0x48", "func": "0x710003D4A0", "lr": "0x7100004374", "inbytes":  "0x18", "outbytes":   "0x8", "buffers": [70, 69, 69], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x18]; out_data[0x8]; buffers=[out, in, in]"}
+    },
+    "SRV_710006CB00": {
+      "_srv": "SRV_710006CB00",
+      "_hash": "0765dc3b0469c073",
+      "0":  {"vt":  "0x20", "func": "0x7100005990", "lr": "0x7100004D60", "inbytes":   "0x0", "outbytes":   "0x4", "name": "NOT_IN_DATABASE", "wire_order": "out_data[0x4]"},
+      "1":  {"vt":  "0x28", "func": "0x710003D300", "lr": "0x7100004BDC", "inbytes":   "0x0", "outbytes":   "0x1", "name": "NOT_IN_DATABASE", "wire_order": "out_data[0x1]"},
+      "10": {"vt":  "0x30", "func": "0x7100005AB0", "lr": "0x7100004E18", "inbytes":   "0x0", "outbytes":   "0x0", "outinterfaces": ["SRV_710006CAF8"], "_srv_outinterfaces": "SRV_710006CAF8", "name": "NOT_IN_DATABASE", "wire_order": "N/A"},
+      "20": {"vt":  "0x38", "func": "0x7100003090", "lr": "0x7100004CA4", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [70], "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x10]; buffers=[out]"},
+      "21": {"vt":  "0x40", "func": "0x710003D480", "lr": "0x7100004F38", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [69], "name": "NOT_IN_DATABASE", "wire_order": "in_buf0; in_data[0x10]"},
+      "22": {"vt":  "0x48", "func": "0x710003D4A0", "lr": "0x7100004D20", "inbytes":   "0x0", "outbytes":   "0x0", "name": "NOT_IN_DATABASE", "wire_order": "N/A"},
+      "23": {"vt":  "0x50", "func": "0x710003D4B0", "lr": "0x7100004E90", "inbytes":   "0x8", "outbytes":   "0x0", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x8]"},
+      "24": {"vt":  "0x58", "func": "0x710003D4C0", "lr": "0x7100005008", "inbytes":   "0x0", "outbytes":   "0x8", "name": "NOT_IN_DATABASE", "wire_order": "out_data[0x8]"},
+      "25": {"vt":  "0x60", "func": "0x710003D4D0", "lr": "0x7100004ABC", "inbytes":  "0x18", "outbytes":  "0x40", "name": "NOT_IN_DATABASE", "wire_order": "in_data[0x18]; out_data[0x40]"}
+    },
+    "nn::fssrv::sf::IStorage": {
+      "_srv": "SRV_710006CB08",
+      "_hash": "7c219625fd3cf5dc",
+      "0": {"vt":  "0x20", "func": "0x7100005990", "lr": "0x7100005538", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [70], "name": "Read", "wire_order": "in_data[0x10]; buffers=[out]"},
+      "1": {"vt":  "0x28", "func": "0x710003D300", "lr": "0x710000564C", "inbytes":  "0x10", "outbytes":   "0x0", "buffers": [69], "name": "Write", "wire_order": "in_data[0x10]; buffers=[in]"},
+      "2": {"vt":  "0x30", "func": "0x7100005AB0", "lr": "0x71000053D0", "inbytes":   "0x0", "outbytes":   "0x0", "name": "Flush", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x7100003090", "lr": "0x71000055A4", "inbytes":   "0x8", "outbytes":   "0x0", "name": "SetSize", "wire_order": "in_data[0x8]"},
+      "4": {"vt":  "0x40", "func": "0x710003D480", "lr": "0x710000571C", "inbytes":   "0x0", "outbytes":   "0x8", "name": "GetSize", "wire_order": "out_data[0x8]"},
+      "5": {"vt":  "0x48", "func": "0x710003D4A0", "lr": "0x7100005440", "inbytes":  "0x18", "outbytes":  "0x40", "name": "OperateRange", "wire_order": "in_u64_1; in_u64_0; in_u64_2; out_data[0x40]"}
+    },
+    "nn::sf::hipc::detail::IHipcManager": {
+      "_srv": "SRV_710006CDA0",
+      "_hash": "110f14166ba3f72c",
+      "0": {"vt":  "0x20", "func": "0x71000382C0", "lr": "0x7100039C18", "inbytes":   "0x0", "outbytes":   "0x4", "name": "ConvertCurrentObjectToDomain", "wire_order": "out_data[0x4]"},
+      "1": {"vt":  "0x28", "func": "0x71000383E0", "lr": "0x7100039A7C", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CopyFromCurrentDomain", "wire_order": "in_data[0x4]"},
+      "2": {"vt":  "0x30", "func": "0x7100038590", "lr": "0x7100039AF4", "inbytes":   "0x0", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObject", "wire_order": "N/A"},
+      "3": {"vt":  "0x38", "func": "0x71000385A0", "lr": "0x7100039B60", "inbytes":   "0x0", "outbytes":   "0x2", "name": "QueryPointerBufferSize", "wire_order": "out_data[0x2]"},
+      "4": {"vt":  "0x40", "func": "0x71000385C0", "lr": "0x71000399E0", "inbytes":   "0x4", "outbytes":   "0x0", "outhandles": [2], "name": "CloneCurrentObjectEx", "wire_order": "in_data[0x4]"}
+    },
+    "_services": ["clkrst", "ectx:w", "fatal:u", "fs:stcfg", "pinmux", "psc:m"],
+    "_invokes": {
+      "clkrst": {
+        "interface": "nn::clkrst::IClkrstManager",
+        "commands": {
+          "0": { "name": "OpenSession", "vt_off": "0x20", "stub": "0x710003ec80", "cmd_proof_offset": "0x710003ece0", "cmd_proof_instruction": "mov w4,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710003e638"] },
+          "1": { "name": "GetTemperatureThresholds", "vt_off": "0x28", "stub": "0x710003ed30", "cmd_proof_offset": "0x710003ed3c", "cmd_proof_instruction": "mov w5,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "NotifyTemperature", "vt_off": "0x30", "stub": "0x710003ed60", "cmd_proof_offset": "0x710003ed68", "cmd_proof_instruction": "mov w2,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] },
+          "3": { "name": "GetClkrstStateTable", "vt_off": "0x38", "stub": "0x710003ed70", "cmd_proof_offset": "0x710003ed7c", "cmd_proof_instruction": "mov w5,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] },
+          "4": { "name": "GetClkrstStateTableUpdateEvent", "vt_off": "0x40", "stub": "0x710003eda0", "cmd_proof_offset": "0x710003eda4", "cmd_proof_instruction": "mov w2,#0x4", "cmd_hex_and_dec": "0x4 / 4", "stub_only": true, "calls": [] },
+          "5": { "name": "GetClkrstStateTableCount", "vt_off": "0x48", "stub": "0x710003edb0", "cmd_proof_offset": "0x710003edb4", "cmd_proof_instruction": "mov w2,#0x5", "cmd_hex_and_dec": "0x5 / 5", "stub_only": true, "calls": [] },
+          "6": { "name": "PrintClockTree", "vt_off": "0x50", "stub": "0x710003edc0", "cmd_proof_offset": "0x710003edc4", "cmd_proof_instruction": "mov w1,#0x6", "cmd_hex_and_dec": "0x6 / 6", "stub_only": true, "calls": [] },
+          "7": { "name": "Cmd7", "vt_off": "0x58", "stub": "0x710003edd0", "cmd_proof_offset": "0x710003edd4", "cmd_proof_instruction": "mov w2,#0x7", "cmd_hex_and_dec": "0x7 / 7", "stub_only": true, "calls": [] }
+        },
+        "sub_interfaces": {
+          "0 (nn::clkrst::IClkrstSession)": {
+            "0": { "name": "EnableClock", "vt_off": "0x20", "stub": "0x710003f090", "cmd_proof_offset": "0x710003f094", "cmd_proof_instruction": "mov w1,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x71000240ec"] },
+            "1": { "name": "DisableClock", "vt_off": "0x28", "stub": "0x710003f0a0", "cmd_proof_offset": "0x710003f0a4", "cmd_proof_instruction": "mov w1,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x7100021c90", "0x7100021e10", "0x7100023ff4", "0x7100024034", "0x710002420c"] },
+            "2": { "name": "AssertReset", "vt_off": "0x30", "stub": "0x71000087b0", "cmd_proof_offset": "0x71000087b4", "cmd_proof_instruction": "mov w1,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100021c74", "0x7100021df4", "0x7100024228"] },
+            "3": { "name": "DeassertReset", "vt_off": "0x38", "stub": "0x710003f0b0", "cmd_proof_offset": "0x710003f0b4", "cmd_proof_instruction": "mov w1,#0x3", "cmd_hex_and_dec": "0x3 / 3", "calls": ["0x71000242dc"] },
+            "6": { "name": "GetModuleState", "vt_off": "0x50", "stub": "0x710003f0e0", "cmd_proof_offset": "0x710003f1a4", "cmd_proof_instruction": "mov w10,#0x6", "cmd_hex_and_dec": "0x6 / 6", "calls": ["0x7100021278", "0x7100023fcc", "0x71000241e4"] },
+            "7": { "name": "SetClockRate", "vt_off": "0x58", "stub": "0x7100024930", "cmd_proof_offset": "0x7100024934", "cmd_proof_instruction": "mov w2,#0x7", "cmd_hex_and_dec": "0x7 / 7", "calls": ["0x7100023a80", "0x7100023b0c", "0x71000240cc"] },
+            "8": { "name": "GetClockRate", "vt_off": "0x60", "stub": "0x7100024940", "cmd_proof_offset": "0x7100024944", "cmd_proof_instruction": "mov w2,#0x8", "cmd_hex_and_dec": "0x8 / 8", "calls": ["0x7100023a48", "0x7100023ad4", "0x710002410c"] },
+            "12": { "name": "IsParentClock", "vt_off": "0x80", "stub": "0x710003f140", "cmd_proof_offset": "0x710003f144", "cmd_proof_instruction": "mov w3,#0xc", "cmd_hex_and_dec": "0xc / 12", "calls": ["0x7100023bcc", "0x7100023c30", "0x7100023c90"] },
+            "13": { "name": "SetParentClock", "vt_off": "0x88", "stub": "0x710003f150", "cmd_proof_offset": "0x710003f154", "cmd_proof_instruction": "mov w2,#0xd", "cmd_hex_and_dec": "0xd / 13", "calls": ["0x7100023bf4", "0x7100023c58", "0x7100023cbc"] }
+          }
+        }
+      },
+      "ectx:w": {
+        "interface": "nn::err::context::IWriterForSystem",
+        "commands": {
+          "0": { "name": "CreateContextRegistrar", "vt_off": "0x20", "stub": "0x7100041690", "cmd_proof_offset": "0x71000416dc", "cmd_proof_instruction": "mov w2,wzr", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x710004279c"] },
+          "1": { "name": "CommitContext", "vt_off": "0x28", "stub": "0x7100041730", "cmd_proof_offset": "0x7100041eb8", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "calls": ["0x7100042a44"] },
+          "2": { "name": "RemoveContext", "vt_off": "0x30", "stub": "0x7100041750", "cmd_proof_offset": "0x7100042060", "cmd_proof_instruction": "mov w9,#0x2", "cmd_hex_and_dec": "0x2 / 2", "stub_only": true, "calls": [] }
+        }
+      },
+      "fatal:u": {
+        "interface": "nn::fatalsrv::IService",
+        "commands": {
+          "0": { "name": "ThrowFatal", "vt_off": "0x20", "stub": "0x71000432d0", "cmd_proof_offset": "0x710004336c", "cmd_proof_instruction": "stp x10,xzr,[x9]", "cmd_hex_and_dec": "0x0 / 0", "stub_only": true, "calls": [] },
+          "1": { "name": "ThrowFatalWithPolicy", "vt_off": "0x28", "stub": "0x71000432e0", "cmd_proof_offset": "0x7100043494", "cmd_proof_instruction": "mov w9,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] },
+          "2": { "name": "ThrowFatalWithCpuContext", "vt_off": "0x30", "stub": "0x71000432f0", "cmd_proof_offset": "0x710004362c", "cmd_proof_instruction": "mov w10,#0x2", "cmd_hex_and_dec": "0x2 / 2", "calls": ["0x7100042df8"] },
+          "3": { "name": "Cmd3", "vt_off": "0x38", "stub": "0x7100043310", "cmd_proof_offset": "0x7100043778", "cmd_proof_instruction": "mov w11,#0x3", "cmd_hex_and_dec": "0x3 / 3", "stub_only": true, "calls": [] }
+        }
+      },
+      "fs:stcfg": {
+        "commands": {
+          "0": { "vt_off": "0x20", "stub": "0x71000088b0", "cmd_proof_offset": "0x7100008934", "cmd_proof_instruction": "stp x9,xzr,[x8]", "cmd_hex_and_dec": "0x0 / 0", "calls": ["0x7100001a4c"] },
+          "1": { "vt_off": "0x28", "stub": "0x71000088c0", "cmd_proof_offset": "0x7100008a78", "cmd_proof_instruction": "mov w11,#0x1", "cmd_hex_and_dec": "0x1 / 1", "stub_only": true, "calls": [] }
+        }
+      }
+    }
+  }
+}
