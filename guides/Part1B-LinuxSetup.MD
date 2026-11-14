@@ -2,24 +2,24 @@ Part 1B: Setting up Ghidra
 
 This guide is done on Ubuntu, and assumes you have git, wget and curl. They can be gotten by doing "sudo apt-get install -y wget curl git"
 
-0. (optional) put this into your terminal "curl -sSL https://github.com/borntohonk/Switch-Ghidra-Guides/blob/master/scripts/setup_ghidra.sh | sh"
+0. (optional) put this into your terminal "curl -sSL https://raw.githubusercontent.com/borntohonk/Switch-Ghidra-Guides/master/scripts/setup_ghidra.sh | bash"
 1. or put this into your terminal: 
 
 ```
 cd $HOME/ && \
-wget https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.9%2B10/OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz && \
-mkdir -p ojdk21 && \
-tar xvzf OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz -C ojdk21 && \
-rm OpenJDK21U-jdk_x64_linux_hotspot_21.0.9_10.tar.gz && \
-export JAVA_HOME=$HOME/ojdk21/jdk-21.0.9+10 && \
-export PATH="$HOME/ojdk21/jdk-21.0.9+10/bin:$PATH" && \
-echo "export JAVA_HOME=$HOME/ojdk21/jdk-21.0.9+10" | tee -a $HOME/.bashrc && \
-echo "export PATH=$HOME/ojdk21/jdk-21.0.9+10/bin:$PATH" | tee -a $HOME/.bashrc && \
+wget https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_linux_hotspot_25.0.5_8.tar.gz && \
+mkdir -p ojdk25 && \
+tar xvzf OpenJDK25U-jdk_x64_linux_hotspot_25.0.5_8.tar.gz -C ojdk25 && \
+rm OpenJDK25U-jdk_x64_linux_hotspot_25.0.5_8.tar.gz && \
+export JAVA_HOME=$HOME/ojdk25/jdk-25.0.5+8 && \
+export PATH="$HOME/ojdk25/jdk-25.0.5+8/bin:$PATH" && \
+echo "export JAVA_HOME=$HOME/ojdk25/jdk-25.0.5+8" | tee -a $HOME/.bashrc && \
+echo "export PATH=$HOME/ojdk25/jdk-25.0.5+8/bin:$PATH" | tee -a $HOME/.bashrc && \
 source $HOME/.bashrc && \
-wget https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.2_build/ghidra_12.1.2_PUBLIC_20260605.zip -O ghidra.zip && \
+wget https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip -O ghidra.zip && \
 unzip ghidra.zip -d ghidra && \
 rm ghidra.zip && \
-GHIDRA_VERSION="ghidra_12.1.2_PUBLIC"
+GHIDRA_VERSION="ghidra_12.2_PUBLIC"
 
 GHIDRA_DIR=$(ls -1d $HOME/ghidra/ghidra_* | head -n1)
 export GHIDRA_INSTALL_DIR="$GHIDRA_DIR"
@@ -36,7 +36,7 @@ cd ../.. && \
 rm -rf Ghidra-Switch-Loader && \
 
 cat >> ~/.bashrc << EOF
-export JAVA_HOME=\$HOME/ojdk21/jdk-21.0.9+10
+export JAVA_HOME=\$HOME/ojdk25/jdk-25.0.5+8
 export PATH="\$JAVA_HOME/bin:\$PATH"
 export GHIDRA_INSTALL_DIR="$GHIDRA_INSTALL_DIR"
 ghidra() {
